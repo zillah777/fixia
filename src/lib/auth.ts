@@ -27,6 +27,7 @@ export interface SessionPayload {
     };
     iat?: number;
     exp?: number;
+    [key: string]: any;
 }
 
 /**
