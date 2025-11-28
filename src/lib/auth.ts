@@ -59,10 +59,11 @@ export async function decrypt(input: string): Promise<SessionPayload | null> {
         });
 
         // Validate critical claims exist
+        const user = (payload as any).user;
         if (
-            !payload.user?.id ||
-            !payload.user?.email ||
-            !payload.user?.role
+            !user?.id ||
+            !user?.email ||
+            !user?.role
         ) {
             return null;
         }
