@@ -2,6 +2,11 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
     /* config options here */
+    eslint: {
+        // Disable ESLint linting during build to avoid circular reference errors
+        // ESLint can be run separately: npm run lint
+        ignoreDuringBuilds: true,
+    },
     experimental: {
         // serverActions: true, // Enabled by default in Next.js 15
     },
