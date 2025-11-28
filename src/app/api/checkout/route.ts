@@ -88,11 +88,7 @@ export async function POST(req: NextRequest) {
         // ======================================================================
         const preference = await createPreference(
             'Suscripción Profesional Fixia',
-            3900,
-            {
-                userId,
-                userEmail: user.email,
-            }
+            3900
         );
 
         // SECURITY: Log transaction attempt
