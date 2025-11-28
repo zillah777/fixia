@@ -6,7 +6,15 @@ const getResend = () => {
   if (!resendInstance) {
     const apiKey = process.env.RESEND_API_KEY;
     if (!apiKey) {
-      throw new Error('RESEND_API_KEY environment variable is not set');
+      console.warn('RESEND_API_KEY not configured - emails will not be sent');
+      // Return a mock instance that won't throw during build
+      return {
+        emails: {
+          send: async () => {
+            throw new Error('RESEND_API_KEY is not configured');
+          }
+        }
+      } as any;
     }
     resendInstance = new Resend(apiKey);
   }
