@@ -1,10 +1,22 @@
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+let resendInstance: Resend | null = null;
+
+const getResend = () => {
+  if (!resendInstance) {
+    const apiKey = process.env.RESEND_API_KEY;
+    if (!apiKey) {
+      throw new Error('RESEND_API_KEY environment variable is not set');
+    }
+    resendInstance = new Resend(apiKey);
+  }
+  return resendInstance;
+};
 
 export const sendVerificationEmail = async (email: string, token: string) => {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
   const confirmLink = `${appUrl}/api/verify?token=${token}`;
+  const resend = getResend();
 
   try {
     const data = await resend.emails.send({
@@ -31,6 +43,7 @@ export const sendVerificationEmail = async (email: string, token: string) => {
 
 export const sendWelcomeEmail = async (email: string, name: string) => {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+  const resend = getResend();
 
   try {
     const data = await resend.emails.send({
