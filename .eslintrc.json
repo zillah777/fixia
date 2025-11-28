@@ -1,13 +1,3 @@
 {
-    "root": true,
-    "parser": "espree",
-    "parserOptions": {
-        "ecmaVersion": 2020,
-        "sourceType": "module"
-    },
-    "env": {
-        "browser": true,
-        "node": true,
-        "es2020": true
-    }
+    "extends": "next/core-web-vitals"
 }
