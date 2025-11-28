@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "prisma generate"
+    "postinstall": "npx prisma generate || true"
   },
   "dependencies": {
     "@ducanh2912/next-pwa": "^10.2.9",
