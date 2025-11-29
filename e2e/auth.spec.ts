@@ -26,8 +26,8 @@ test.describe('Registration Flow', () => {
   });
 
   test('should display registration form correctly', async ({ page }) => {
-    await expect(page.getByRole('heading', { name: /crear cuenta/i })).toBeVisible();
-    await expect(page.getByLabel('Nombre')).toBeVisible();
+    await expect(page.getByText('Crear Cuenta', { exact: false })).toBeVisible();
+    await expect(page.getByPlaceholder('Juan Pérez')).toBeVisible();
     await expect(page.getByLabel('Email')).toBeVisible();
     await expect(page.getByLabel('Contraseña')).toBeVisible();
     await expect(page.getByRole('button', { name: /registrarse/i })).toBeVisible();
@@ -46,20 +46,30 @@ test.describe('Registration Flow', () => {
       await route.fulfill({ status: 200, body: JSON.stringify({ success: true }) });
     });
 
-    await page.getByLabel('Nombre').fill('Test User');
+    await page.getByPlaceholder('Juan Pérez').fill('Test User');
     await page.getByLabel('Email').fill('test@example.com');
     await page.getByLabel('Teléfono').fill('1234567890');
     await page.getByLabel('Contraseña').fill('password123');
 
     // Select role (assuming radio buttons exist based on previous file read)
     // We might need to click the label or the radio input
-    await page.getByText('Cliente').click();
+    // Force click the hidden input to ensure selection
+    await page.locator('input[value="CLIENT"]').click({ force: true });
 
-    await page.getByRole('button', { name: /registrarse/i }).click();
+    // Wait for the API call to ensure the button click worked
+    const responsePromise = page.waitForResponse(response =>
+      response.url().includes('/api/auth/register') && response.status() === 200
+    );
+
+    const submitButton = page.getByRole('button', { name: /registrarse/i });
+    await expect(submitButton).toBeEnabled();
+    await submitButton.click();
+
+    await responsePromise;
 
     // Verify redirection or success message
     // Based on RegisterPage code: router.push("/auth/verify-email")
-    await expect(page).toHaveURL(/\/auth\/verify-email/);
+    await expect(page).toHaveURL(/\/auth\/verify-email/, { timeout: 10000 });
   });
 });
 
@@ -69,10 +79,10 @@ test.describe('Login Flow', () => {
   });
 
   test('should display login form correctly', async ({ page }) => {
-    await expect(page.getByRole('heading', { name: /iniciar sesión/i })).toBeVisible();
+    await expect(page.getByText('Iniciar Sesión', { exact: false })).toBeVisible();
     await expect(page.getByLabel('Email')).toBeVisible();
     await expect(page.getByLabel('Contraseña')).toBeVisible();
-    await expect(page.getByRole('button', { name: /iniciar sesión/i })).toBeVisible();
+    await expect(page.getByRole('button', { name: /ingresar/i })).toBeVisible();
   });
 
   test('should submit login form successfully', async ({ page }) => {
@@ -99,7 +109,7 @@ test.describe('Login Flow', () => {
 
     await page.getByLabel('Email').fill('test@example.com');
     await page.getByLabel('Contraseña').fill('password123');
-    await page.getByRole('button', { name: /iniciar sesión/i }).click();
+    await page.getByRole('button', { name: /ingresar/i }).click();
 
     // Verify redirection to dashboard
     // Assuming login redirects to /dashboard

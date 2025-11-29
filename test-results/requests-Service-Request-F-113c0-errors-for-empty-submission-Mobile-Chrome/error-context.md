@@ -1,7 +1,7 @@
 # Page snapshot
 
 ```yaml
-- generic [active] [ref=e1]:
+- generic [ref=e1]:
   - generic [ref=e4]:
     - generic [ref=e5]:
       - img [ref=e6]
@@ -112,9 +112,10 @@
             - generic [ref=e145]:
               - generic [ref=e146]:
                 - text: Título de la Solicitud
-                - textbox "Título de la Solicitud" [ref=e147]:
+                - textbox "Título de la Solicitud" [active] [ref=e147]:
                   - /placeholder: "Ej: Reparación de fuga en baño"
                 - paragraph [ref=e148]: Un título breve y claro de lo que necesitas.
+                - paragraph
               - generic [ref=e149]:
                 - generic [ref=e150]:
                   - text: Categoría
@@ -122,21 +123,25 @@
                     - generic: Selecciona una categoría
                     - img [ref=e152]
                   - combobox [ref=e154]
+                  - paragraph
                 - generic [ref=e155]:
                   - text: Ubicación
                   - generic [ref=e156]:
                     - img [ref=e157]
                     - textbox "Dirección o Barrio" [ref=e160]
+                  - paragraph
               - generic [ref=e161]:
                 - text: Descripción Detallada
                 - textbox "Descripción Detallada" [ref=e162]:
                   - /placeholder: Describe el problema, materiales necesarios, horarios disponibles, etc.
+                - paragraph
               - generic [ref=e163]:
                 - generic [ref=e164]:
                   - generic [ref=e165]: Fecha Preferida
                   - button "Fecha Preferida" [ref=e166]:
                     - generic [ref=e167]: Selecciona una fecha
                     - img
+                  - paragraph
                 - generic [ref=e168]:
                   - text: Presupuesto Estimado (ARS)
                   - generic [ref=e169]:

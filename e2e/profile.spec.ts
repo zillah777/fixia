@@ -21,22 +21,31 @@ test.describe('Profile Flow', () => {
         role: 'CLIENT'
     };
 
-    test.beforeEach(async ({ page, context }) => {
+    test.beforeEach(async ({ page }) => {
         // 1. Generate valid session token
         const token = await createSessionToken({ user: testUser });
 
-        // 2. Set cookie to bypass login
-        await context.addCookies([{
-            name: 'session',
-            value: token,
-            domain: 'localhost',
-            path: '/',
-            httpOnly: true,
-            secure: false,
-            sameSite: 'Strict'
-        }]);
+        // 2. Mock Login API
+        await page.route('/api/auth/login', async route => {
+            await route.fulfill({
+                status: 200,
+                body: JSON.stringify({ success: true }),
+                headers: {
+                    'set-cookie': `session=${token}; Path=/; HttpOnly`
+                }
+            });
+        });
 
-        // 3. Navigate to profile page
+        // 3. Perform Login
+        await page.goto('/login');
+        await page.getByLabel('Email').fill('client@example.com');
+        await page.getByLabel('Contraseña').fill('password123');
+        await page.getByRole('button', { name: /ingresar/i }).click();
+
+        // Wait for dashboard or redirection
+        await expect(page).toHaveURL(/\/dashboard/);
+
+        // 4. Navigate to profile page
         await page.goto('/dashboard/profile');
     });
 

@@ -139,85 +139,88 @@
                     - img
                 - generic [ref=e168]:
                   - text: Presupuesto Estimado (ARS)
-                  - generic [ref=e173]:
-                    - img [ref=e174]
-                    - generic [ref=e176]: $5.000
-                  - paragraph [ref=e177]: Este valor es orientativo para los profesionales.
-              - generic [ref=e178]:
-                - button "Cancelar" [ref=e179]
-                - button "Publicar Solicitud" [ref=e180]
-  - contentinfo [ref=e181]:
-    - generic [ref=e182]:
-      - generic [ref=e183]:
-        - generic [ref=e184]:
-          - link "F Fixia" [ref=e185] [cursor=pointer]:
+                  - generic [ref=e169]:
+                    - slider [ref=e174]
+                    - generic [ref=e175]:
+                      - img [ref=e176]
+                      - generic [ref=e178]: $5,000
+                  - paragraph [ref=e179]: Este valor es orientativo para los profesionales.
+              - generic [ref=e180]:
+                - button "Cancelar" [ref=e181]
+                - button "Publicar Solicitud" [ref=e182]
+  - contentinfo [ref=e183]:
+    - generic [ref=e184]:
+      - generic [ref=e185]:
+        - generic [ref=e186]:
+          - link "F Fixia" [ref=e187] [cursor=pointer]:
             - /url: /
-            - generic [ref=e187]: F
-            - generic [ref=e188]: Fixia
-          - paragraph [ref=e189]: La plataforma líder para conectar profesionales de confianza con clientes que valoran la calidad.
-          - generic [ref=e190]:
-            - link [ref=e191] [cursor=pointer]:
+            - generic [ref=e189]: F
+            - generic [ref=e190]: Fixia
+          - paragraph [ref=e191]: La plataforma líder para conectar profesionales de confianza con clientes que valoran la calidad.
+          - generic [ref=e192]:
+            - link [ref=e193] [cursor=pointer]:
               - /url: "#"
-              - img [ref=e192]
-            - link [ref=e194] [cursor=pointer]:
+              - img [ref=e194]
+            - link [ref=e196] [cursor=pointer]:
               - /url: "#"
-              - img [ref=e195]
-            - link [ref=e197] [cursor=pointer]:
+              - img [ref=e197]
+            - link [ref=e199] [cursor=pointer]:
               - /url: "#"
-              - img [ref=e198]
-            - link [ref=e201] [cursor=pointer]:
+              - img [ref=e200]
+            - link [ref=e203] [cursor=pointer]:
               - /url: "#"
-              - img [ref=e202]
-        - generic [ref=e206]:
-          - heading "Compañía" [level=3] [ref=e207]
-          - list [ref=e208]:
-            - listitem [ref=e209]:
-              - link "Sobre Nosotros" [ref=e210] [cursor=pointer]:
-                - /url: /about
+              - img [ref=e204]
+        - generic [ref=e208]:
+          - heading "Compañía" [level=3] [ref=e209]
+          - list [ref=e210]:
             - listitem [ref=e211]:
-              - link "Carreras" [ref=e212] [cursor=pointer]:
-                - /url: /careers
+              - link "Sobre Nosotros" [ref=e212] [cursor=pointer]:
+                - /url: /about
             - listitem [ref=e213]:
-              - link "Blog" [ref=e214] [cursor=pointer]:
-                - /url: /blog
+              - link "Carreras" [ref=e214] [cursor=pointer]:
+                - /url: /careers
             - listitem [ref=e215]:
-              - link "Prensa" [ref=e216] [cursor=pointer]:
+              - link "Blog" [ref=e216] [cursor=pointer]:
+                - /url: /blog
+            - listitem [ref=e217]:
+              - link "Prensa" [ref=e218] [cursor=pointer]:
                 - /url: /press
-        - generic [ref=e217]:
-          - heading "Servicios" [level=3] [ref=e218]
-          - list [ref=e219]:
-            - listitem [ref=e220]:
-              - link "Plomería" [ref=e221] [cursor=pointer]:
-                - /url: /services/plomeria
+        - generic [ref=e219]:
+          - heading "Servicios" [level=3] [ref=e220]
+          - list [ref=e221]:
             - listitem [ref=e222]:
-              - link "Electricidad" [ref=e223] [cursor=pointer]:
-                - /url: /services/electricidad
+              - link "Plomería" [ref=e223] [cursor=pointer]:
+                - /url: /services/plomeria
             - listitem [ref=e224]:
-              - link "Limpieza" [ref=e225] [cursor=pointer]:
-                - /url: /services/limpieza
+              - link "Electricidad" [ref=e225] [cursor=pointer]:
+                - /url: /services/electricidad
             - listitem [ref=e226]:
-              - link "Ser Profesional" [ref=e227] [cursor=pointer]:
+              - link "Limpieza" [ref=e227] [cursor=pointer]:
+                - /url: /services/limpieza
+            - listitem [ref=e228]:
+              - link "Ser Profesional" [ref=e229] [cursor=pointer]:
                 - /url: /become-a-pro
-        - generic [ref=e228]:
-          - heading "Legal" [level=3] [ref=e229]
-          - list [ref=e230]:
-            - listitem [ref=e231]:
-              - link "Términos y Condiciones" [ref=e232] [cursor=pointer]:
-                - /url: /terms
+        - generic [ref=e230]:
+          - heading "Legal" [level=3] [ref=e231]
+          - list [ref=e232]:
             - listitem [ref=e233]:
-              - link "Política de Privacidad" [ref=e234] [cursor=pointer]:
-                - /url: /privacy
+              - link "Términos y Condiciones" [ref=e234] [cursor=pointer]:
+                - /url: /terms
             - listitem [ref=e235]:
-              - link "Cookies" [ref=e236] [cursor=pointer]:
-                - /url: /cookies
+              - link "Política de Privacidad" [ref=e236] [cursor=pointer]:
+                - /url: /privacy
             - listitem [ref=e237]:
-              - link "Centro de Ayuda" [ref=e238] [cursor=pointer]:
+              - link "Cookies" [ref=e238] [cursor=pointer]:
+                - /url: /cookies
+            - listitem [ref=e239]:
+              - link "Centro de Ayuda" [ref=e240] [cursor=pointer]:
                 - /url: /help
-      - generic [ref=e239]:
-        - paragraph [ref=e240]: © 2025 Fixia Inc. Todos los derechos reservados.
-        - paragraph [ref=e241]:
+      - generic [ref=e241]:
+        - paragraph [ref=e242]: © 2025 Fixia Inc. Todos los derechos reservados.
+        - paragraph [ref=e243]:
           - text: Hecho con
-          - img [ref=e242]
+          - img [ref=e244]
           - text: en Argentina
   - region "Notifications alt+T"
+  - alert [ref=e246]
 ```
