@@ -104,9 +104,9 @@ export function ProposalDialog({ requestId, requestTitle, trigger }: ProposalDia
                                             />
                                         </div>
                                     </FormControl>
-                                    {field.value > 0 && (
+                                    {(field.value ?? 0) > 0 && (
                                         <Badge variant="secondary" className="mt-2">
-                                            ${Number(field.value).toLocaleString()}
+                                            ${Number(field.value || 0).toLocaleString()}
                                         </Badge>
                                     )}
                                     <FormMessage />

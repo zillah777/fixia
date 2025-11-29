@@ -16,6 +16,7 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { ThemeToggle } from "@/components/theme-toggle"
+import { NotificationCenter } from "@/components/notifications/notification-center"
 import {
     CommandDialog,
     CommandEmpty,
@@ -133,19 +134,8 @@ export function Navbar() {
                             </kbd>
                         </Button>
 
-                        {/* Notifications with Badge */}
-                        <Button variant="ghost" size="icon" className="relative">
-                            <Bell className="h-5 w-5" />
-                            {notificationCount > 0 && (
-                                <Badge
-                                    className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs font-bold"
-                                    variant="destructive"
-                                >
-                                    {notificationCount}
-                                </Badge>
-                            )}
-                            <span className="sr-only">Notificaciones</span>
-                        </Button>
+                        {/* Notification Center */}
+                        <NotificationCenter />
 
                         <ThemeToggle />
 
