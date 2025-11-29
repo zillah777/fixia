@@ -30,7 +30,7 @@ const userData = {
 
 interface ProfileFormProps {
     user: {
-        name: string;
+        name: string | null | undefined;
         email: string;
         role: string;
         // Add other fields as they become available in the backend
