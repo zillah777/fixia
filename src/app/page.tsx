@@ -112,7 +112,7 @@ export default function Home() {
 
                         {/* Trust Badges */}
                         <div className="flex flex-wrap justify-center gap-8 pt-8 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
-                            {["Verified Pros", "Secure Payment", "Money Back Guarantee"].map((text, i) => (
+                            {["Profesionales Verificados", "Garantía de Calidad", "Transacciones Seguras"].map((text, i) => (
                                 <div key={i} className="flex items-center gap-2 text-sm font-medium">
                                     <CheckCircle2 className="h-4 w-4 text-green-500" /> {text}
                                 </div>
