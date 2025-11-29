@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { Facebook, Twitter, Instagram, Linkedin, Heart, ChevronDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
@@ -47,9 +48,13 @@ export function Footer() {
                     {/* Logo Section */}
                     <div className="space-y-4 col-span-1 md:col-span-2 lg:col-span-1">
                         <Link href="/" className="flex items-center gap-2">
-                            <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center">
-                                <span className="text-white font-bold text-sm">F</span>
-                            </div>
+                            <Image
+                                src="/logo.png"
+                                alt="Fixia Logo"
+                                width={32}
+                                height={32}
+                                className="h-8 w-8 object-contain"
+                            />
                             <span className="font-bold text-xl tracking-tight">Fixia</span>
                         </Link>
                         <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
@@ -79,9 +84,7 @@ export function Footer() {
                         title="Compañía"
                         items={[
                             { label: "Sobre Nosotros", href: "/about" },
-                            { label: "Carreras", href: "/careers" },
                             { label: "Blog", href: "/blog" },
-                            { label: "Prensa", href: "/press" },
                         ]}
                     />
 

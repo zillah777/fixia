@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { Menu, Bell, User, LogIn } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
@@ -81,7 +82,7 @@ export function Navbar() {
                 }`}
             >
                 <div className="container flex h-16 items-center justify-between">
-                    <div className="flex items-center gap-6">
+                    <div className="flex items-center gap-6 flex-1">
                         <Sheet>
                             <SheetTrigger asChild>
                                 <Button variant="ghost" size="icon" className="md:hidden">
@@ -91,32 +92,50 @@ export function Navbar() {
                             </SheetTrigger>
                             <SheetContent side="left" className="w-[300px] sm:w-[400px]">
                                 <nav className="flex flex-col gap-4 mt-8">
-                                    <Link href="/" className="text-lg font-semibold">
-                                        Inicio
-                                    </Link>
                                     <Link href="/services" className="text-lg font-semibold">
                                         Servicios
                                     </Link>
                                     <Link href="/professionals" className="text-lg font-semibold">
                                         Profesionales
                                     </Link>
-                                    <Link href="/about" className="text-lg font-semibold">
-                                        Sobre Nosotros
+                                    <Link href="/become-a-pro" className="text-lg font-semibold">
+                                        Únete a Fixia
+                                    </Link>
+                                    <Link href="/login" className="text-lg font-semibold">
+                                        Iniciar Sesión
+                                    </Link>
+                                    <Link href="/pricing" className="text-lg font-semibold">
+                                        Planes
                                     </Link>
                                 </nav>
                             </SheetContent>
                         </Sheet>
 
-                        <Link href="/" className="flex items-center gap-2">
-                            <span className="text-2xl font-bold tracking-tighter text-primary">FIXIA</span>
+                        <Link href="/" className="flex items-center gap-2 flex-shrink-0">
+                            <Image
+                                src="/logo.png"
+                                alt="Fixia Logo"
+                                width={32}
+                                height={32}
+                                className="h-8 w-8 object-contain"
+                            />
                         </Link>
 
-                        <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
+                        <nav className="hidden md:flex items-center justify-center gap-8 text-sm font-medium flex-1">
                             <Link href="/services" className="transition-colors hover:text-foreground/80 text-foreground/60">
                                 Servicios
                             </Link>
                             <Link href="/professionals" className="transition-colors hover:text-foreground/80 text-foreground/60">
                                 Profesionales
+                            </Link>
+                            <Link href="/become-a-pro" className="transition-colors hover:text-foreground/80 text-foreground/60">
+                                Únete a Fixia
+                            </Link>
+                            <Link href="/login" className="transition-colors hover:text-foreground/80 text-foreground/60">
+                                Iniciar Sesión
+                            </Link>
+                            <Link href="/pricing" className="transition-colors hover:text-foreground/80 text-foreground/60">
+                                Planes
                             </Link>
                         </nav>
                     </div>
