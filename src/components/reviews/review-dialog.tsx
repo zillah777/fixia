@@ -103,6 +103,7 @@ export function ReviewDialog({ matchId, targetName, trigger }: ReviewDialogProps
                                                     <Star
                                                         className={cn(
                                                             "h-8 w-8 transition-colors",
+                                                            // Safe rating comparison with default 0
                                                             (hoverRating || field.value || 0) >= star
                                                                 ? "fill-yellow-400 text-yellow-400"
                                                                 : "text-muted-foreground"
