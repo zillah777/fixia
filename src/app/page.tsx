@@ -84,8 +84,8 @@ export default function Home() {
                             ✨ La forma más inteligente de contratar
                         </Badge>
 
-                        {/* OPCIÓN 1: Aurora Gradient + Glassmorphism (ACTIVA) */}
-                        <motion.h1
+                        {/* OPCIÓN 1: Aurora Gradient + Glassmorphism (COMENTADA) */}
+                        {/* <motion.h1
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.8, ease: "easeOut" }}
@@ -100,7 +100,6 @@ export default function Home() {
                                 transition={{ delay: 0.3, duration: 0.8 }}
                                 className="relative inline-block group"
                             >
-                                {/* Glassmorphism background */}
                                 <motion.span
                                     initial={{ opacity: 0, scale: 0.9 }}
                                     animate={{ opacity: 1, scale: 1 }}
@@ -110,7 +109,6 @@ export default function Home() {
                                         background: 'linear-gradient(135deg, rgba(96, 165, 250, 0.15) 0%, rgba(168, 139, 250, 0.15) 50%, rgba(236, 72, 153, 0.15) 100%)',
                                     }}
                                 />
-                                {/* Aurora animated gradient text */}
                                 <span
                                     className="relative z-10 text-transparent bg-clip-text px-4"
                                     style={{
@@ -121,7 +119,6 @@ export default function Home() {
                                 >
                                     Fixia.
                                 </span>
-                                {/* Glow effect */}
                                 <motion.span
                                     className="absolute inset-0 blur-2xl opacity-30"
                                     style={{
@@ -137,10 +134,10 @@ export default function Home() {
                                     }}
                                 />
                             </motion.span>
-                        </motion.h1>
+                        </motion.h1> */}
 
-                        {/* OPCIÓN 2: Neon Glow + Double Underline (COMENTADA) */}
-                        {/* <motion.h1
+                        {/* OPCIÓN 2: Neon Glow + Double Underline (ACTIVA) */}
+                        <motion.h1
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.8, ease: "easeOut" }}
@@ -176,7 +173,7 @@ export default function Home() {
                                     className="absolute -bottom-6 left-0 right-0 h-1 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 origin-left opacity-50"
                                 />
                             </motion.span>
-                        </motion.h1> */}
+                        </motion.h1>
 
                         {/* OPCIÓN 3: Minimal Highlight Background (COMENTADA) */}
                         {/* <motion.h1
