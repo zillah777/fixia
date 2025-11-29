@@ -36,7 +36,7 @@ export function Navbar() {
         <>
             <header
                 className={`sticky top-4 z-50 w-[95%] max-w-7xl mx-auto rounded-full border bg-background/70 backdrop-blur-xl supports-[backdrop-filter]:bg-background/40 transition-all duration-200 ${
-                    isScrolled ? "shadow-lg shadow-black/5" : ""
+                    isScrolled ? "shadow-lg shadow-primary/5" : ""
                 }`}
             >
                 <div className="container flex h-16 items-center justify-between">

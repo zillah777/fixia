@@ -70,11 +70,11 @@ export default function Home() {
     const y = useTransform(scrollYProgress, [0, 1], [0, -50]);
 
     return (
-        <div className="flex min-h-screen flex-col overflow-hidden bg-[#F3F4F6]">
+        <div className="flex min-h-screen flex-col overflow-hidden bg-background">
             {/* Hero Section with Spotlight Effect */}
             <section className="relative pt-20 pb-16 sm:pt-28 sm:pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
-                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-100 via-transparent to-transparent opacity-70" />
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-blue-400/20 blur-[120px] rounded-full pointer-events-none" />
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent opacity-70 dark:from-primary/10" />
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-primary/10 dark:bg-primary/20 blur-[120px] rounded-full pointer-events-none" />
 
                 <div className="container px-4 sm:px-6 text-center relative z-10">
                     <motion.div
@@ -83,7 +83,7 @@ export default function Home() {
                         transition={{ duration: 0.8, ease: "easeOut" }}
                         className="mx-auto max-w-4xl space-y-8"
                     >
-                        <Badge variant="outline" className="px-4 py-2 rounded-full border-blue-200 bg-blue-50 text-blue-700 backdrop-blur-sm animate-pulse">
+                        <Badge variant="outline" className="px-4 py-2 rounded-full backdrop-blur-sm animate-pulse border-primary/20 bg-primary/5 text-primary">
                             ✨ La forma más inteligente de contratar
                         </Badge>
 
@@ -242,7 +242,7 @@ export default function Home() {
                         {/* Floating Search Bar */}
                         <motion.div
                             whileHover={{ scale: 1.02 }}
-                            className="mx-auto max-w-2xl p-1.5 sm:p-2 bg-white rounded-full shadow-2xl shadow-blue-500/10 border border-white/50 backdrop-blur-xl flex items-center gap-1 sm:gap-2"
+                            className="mx-auto max-w-2xl p-1.5 sm:p-2 bg-card rounded-full shadow-2xl shadow-primary/10 border border-border backdrop-blur-xl flex items-center gap-1 sm:gap-2"
                         >
                             <div className="pl-3 sm:pl-4 text-muted-foreground">
                                 <Search className="h-4 w-4 sm:h-5 sm:w-5" />
@@ -251,7 +251,7 @@ export default function Home() {
                                 className="border-none shadow-none bg-transparent h-10 sm:h-12 text-base sm:text-lg placeholder:text-muted-foreground/50 focus-visible:ring-0"
                                 placeholder="¿Qué necesitas arreglar?"
                             />
-                            <Button size="lg" className="rounded-full px-4 sm:px-8 text-sm sm:text-base bg-black text-white hover:bg-gray-800 hover:shadow-lg transition-all whitespace-nowrap">
+                            <Button size="lg" className="rounded-full px-4 sm:px-8 text-sm sm:text-base bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-lg transition-all whitespace-nowrap">
                                 Buscar
                             </Button>
                         </motion.div>
@@ -281,7 +281,7 @@ export default function Home() {
                         {categories.map((category, index) => (
                             <TiltCard
                                 key={category.id}
-                                className="group relative h-56 sm:h-64 rounded-[2rem] bg-white p-6 sm:p-8 shadow-xl shadow-black/5 border border-white/50 backdrop-blur-sm hover:shadow-2xl hover:shadow-blue-500/10 active:shadow-2xl active:shadow-blue-500/10 transition-all duration-500 cursor-pointer"
+                                className="group relative h-56 sm:h-64 rounded-[2rem] bg-card p-6 sm:p-8 shadow-xl shadow-primary/5 border border-border backdrop-blur-sm hover:shadow-2xl hover:shadow-primary/10 active:shadow-2xl active:shadow-primary/10 transition-all duration-500 cursor-pointer"
                                 onClick={() => router.push(`/services/${category.id}`)}
                             >
                                 <div className={`absolute inset-0 bg-gradient-to-br ${category.color} opacity-0 group-hover:opacity-100 group-active:opacity-100 transition-opacity duration-500 rounded-[2rem]`} />
@@ -291,7 +291,7 @@ export default function Home() {
                                         <h3 className="text-xl sm:text-2xl font-bold mb-1">{category.name}</h3>
                                         <p className="text-muted-foreground font-medium text-sm sm:text-base">{category.count} Profesionales</p>
                                     </div>
-                                    <div className="w-10 h-10 rounded-full bg-black/5 flex items-center justify-center group-hover:bg-black group-hover:text-white group-active:bg-black group-active:text-white transition-colors duration-300">
+                                    <div className="w-10 h-10 rounded-full bg-primary/5 flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground group-active:bg-primary group-active:text-primary-foreground transition-colors duration-300">
                                         <ArrowRight className="h-5 w-5" />
                                     </div>
                                 </div>
