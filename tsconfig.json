@@ -38,7 +38,7 @@
     "exclude": [
         "node_modules",
         "creativUX",
-        "jest.setup.ts",
+        ".jest",
         "**/*.test.ts",
         "**/*.test.tsx",
         "**/*.spec.ts",
