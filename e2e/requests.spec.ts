@@ -72,15 +72,11 @@ test.describe('Service Request Flow', () => {
         await page.getByLabel(/descripción detallada/i).fill('Tengo una pérdida de agua en el baño principal que necesita reparación urgente.');
 
         // Select Date (Calendar)
+        // Select Date (Calendar)
         await page.getByRole('button', { name: /selecciona una fecha/i }).click();
-        // Click today or tomorrow. Just picking the first available day in the calendar grid usually works
-        // or specifically targeting a date.
-        // Let's just click the "next month" button to be safe and pick a day, or just pick a visible day.
-        // Assuming the calendar opens to current month.
-        const today = new Date();
-        const day = today.getDate();
-        // Simple hack: press Enter to select focused date (usually today) or click a specific day
-        await page.keyboard.press('Enter');
+        // Click the first enabled day in the calendar (usually today or 1st of month)
+        // We select by role 'gridcell' which usually represents days
+        await page.getByRole('gridcell', { disabled: false }).first().click();
 
         // Budget is a slider, default is 5000. We can leave it or drag it.
         // Leaving it as is for now.

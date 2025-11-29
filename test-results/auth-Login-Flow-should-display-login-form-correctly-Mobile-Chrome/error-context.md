@@ -1,0 +1,205 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e4]:
+    - generic [ref=e5]:
+      - img [ref=e6]
+      - generic [ref=e8]: "Electricidad: 12 solicitudes nuevas"
+      - generic [ref=e9]: "|"
+    - generic [ref=e10]:
+      - img [ref=e11]
+      - generic [ref=e15]: "Carpintería: 5 solicitudes nuevas"
+      - generic [ref=e16]: "|"
+    - generic [ref=e17]:
+      - img [ref=e18]
+      - generic [ref=e20]: "Plomería: 8 solicitudes nuevas"
+      - generic [ref=e21]: "|"
+    - generic [ref=e22]:
+      - img [ref=e23]
+      - generic [ref=e27]: "Pintura: 3 solicitudes nuevas"
+      - generic [ref=e28]: "|"
+    - generic [ref=e29]:
+      - img [ref=e30]
+      - generic [ref=e32]: "Electricidad: 12 solicitudes nuevas"
+      - generic [ref=e33]: "|"
+    - generic [ref=e34]:
+      - img [ref=e35]
+      - generic [ref=e39]: "Carpintería: 5 solicitudes nuevas"
+      - generic [ref=e40]: "|"
+    - generic [ref=e41]:
+      - img [ref=e42]
+      - generic [ref=e44]: "Electricidad: 12 solicitudes nuevas"
+      - generic [ref=e45]: "|"
+    - generic [ref=e46]:
+      - img [ref=e47]
+      - generic [ref=e51]: "Carpintería: 5 solicitudes nuevas"
+      - generic [ref=e52]: "|"
+    - generic [ref=e53]:
+      - img [ref=e54]
+      - generic [ref=e56]: "Plomería: 8 solicitudes nuevas"
+      - generic [ref=e57]: "|"
+    - generic [ref=e58]:
+      - img [ref=e59]
+      - generic [ref=e63]: "Pintura: 3 solicitudes nuevas"
+      - generic [ref=e64]: "|"
+    - generic [ref=e65]:
+      - img [ref=e66]
+      - generic [ref=e68]: "Electricidad: 12 solicitudes nuevas"
+      - generic [ref=e69]: "|"
+    - generic [ref=e70]:
+      - img [ref=e71]
+      - generic [ref=e75]: "Carpintería: 5 solicitudes nuevas"
+      - generic [ref=e76]: "|"
+    - generic [ref=e77]:
+      - img [ref=e78]
+      - generic [ref=e80]: "Electricidad: 12 solicitudes nuevas"
+      - generic [ref=e81]: "|"
+    - generic [ref=e82]:
+      - img [ref=e83]
+      - generic [ref=e87]: "Carpintería: 5 solicitudes nuevas"
+      - generic [ref=e88]: "|"
+    - generic [ref=e89]:
+      - img [ref=e90]
+      - generic [ref=e92]: "Plomería: 8 solicitudes nuevas"
+      - generic [ref=e93]: "|"
+    - generic [ref=e94]:
+      - img [ref=e95]
+      - generic [ref=e99]: "Pintura: 3 solicitudes nuevas"
+      - generic [ref=e100]: "|"
+    - generic [ref=e101]:
+      - img [ref=e102]
+      - generic [ref=e104]: "Electricidad: 12 solicitudes nuevas"
+      - generic [ref=e105]: "|"
+    - generic [ref=e106]:
+      - img [ref=e107]
+      - generic [ref=e111]: "Carpintería: 5 solicitudes nuevas"
+      - generic [ref=e112]: "|"
+  - banner [ref=e113]:
+    - generic [ref=e114]:
+      - generic [ref=e115]:
+        - button "Toggle menu" [ref=e116]:
+          - img
+          - generic [ref=e117]: Toggle menu
+        - link "FIXIA" [ref=e118] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e119]: FIXIA
+      - generic [ref=e120]:
+        - button "Notificaciones" [ref=e121]:
+          - img
+          - generic [ref=e123]: Notificaciones
+        - button "Toggle theme" [ref=e124]:
+          - img
+          - img
+          - generic [ref=e125]: Toggle theme
+        - button "CN" [ref=e126]:
+          - generic [ref=e128]: CN
+  - main [ref=e129]:
+    - generic [ref=e131]:
+      - generic [ref=e132]:
+        - heading "FIXIA" [level=1] [ref=e133]
+        - paragraph [ref=e134]: La plataforma de servicios bajo demanda.
+      - generic [ref=e136]:
+        - generic [ref=e137]:
+          - generic [ref=e138]: Iniciar Sesión
+          - generic [ref=e139]: Ingresa tu email y contraseña para acceder a tu cuenta
+        - generic [ref=e141]:
+          - generic [ref=e142]:
+            - text: Email
+            - textbox "Email" [ref=e143]:
+              - /placeholder: nombre@ejemplo.com
+          - generic [ref=e144]:
+            - text: Contraseña
+            - textbox "Contraseña" [ref=e145]:
+              - /placeholder: ••••••
+          - button "Ingresar" [ref=e146]
+        - generic [ref=e147]:
+          - generic [ref=e148]:
+            - text: ¿No tienes una cuenta?
+            - link "Regístrate" [ref=e149] [cursor=pointer]:
+              - /url: /register
+          - link "¿Olvidaste tu contraseña?" [ref=e151] [cursor=pointer]:
+            - /url: /forgot-password
+  - contentinfo [ref=e152]:
+    - generic [ref=e153]:
+      - generic [ref=e154]:
+        - generic [ref=e155]:
+          - link "F Fixia" [ref=e156] [cursor=pointer]:
+            - /url: /
+            - generic [ref=e158]: F
+            - generic [ref=e159]: Fixia
+          - paragraph [ref=e160]: La plataforma líder para conectar profesionales de confianza con clientes que valoran la calidad.
+          - generic [ref=e161]:
+            - link [ref=e162] [cursor=pointer]:
+              - /url: "#"
+              - img [ref=e163]
+            - link [ref=e165] [cursor=pointer]:
+              - /url: "#"
+              - img [ref=e166]
+            - link [ref=e168] [cursor=pointer]:
+              - /url: "#"
+              - img [ref=e169]
+            - link [ref=e172] [cursor=pointer]:
+              - /url: "#"
+              - img [ref=e173]
+        - generic [ref=e177]:
+          - heading "Compañía" [level=3] [ref=e178]
+          - list [ref=e179]:
+            - listitem [ref=e180]:
+              - link "Sobre Nosotros" [ref=e181] [cursor=pointer]:
+                - /url: /about
+            - listitem [ref=e182]:
+              - link "Carreras" [ref=e183] [cursor=pointer]:
+                - /url: /careers
+            - listitem [ref=e184]:
+              - link "Blog" [ref=e185] [cursor=pointer]:
+                - /url: /blog
+            - listitem [ref=e186]:
+              - link "Prensa" [ref=e187] [cursor=pointer]:
+                - /url: /press
+        - generic [ref=e188]:
+          - heading "Servicios" [level=3] [ref=e189]
+          - list [ref=e190]:
+            - listitem [ref=e191]:
+              - link "Plomería" [ref=e192] [cursor=pointer]:
+                - /url: /services/plomeria
+            - listitem [ref=e193]:
+              - link "Electricidad" [ref=e194] [cursor=pointer]:
+                - /url: /services/electricidad
+            - listitem [ref=e195]:
+              - link "Limpieza" [ref=e196] [cursor=pointer]:
+                - /url: /services/limpieza
+            - listitem [ref=e197]:
+              - link "Ser Profesional" [ref=e198] [cursor=pointer]:
+                - /url: /become-a-pro
+        - generic [ref=e199]:
+          - heading "Legal" [level=3] [ref=e200]
+          - list [ref=e201]:
+            - listitem [ref=e202]:
+              - link "Términos y Condiciones" [ref=e203] [cursor=pointer]:
+                - /url: /terms
+            - listitem [ref=e204]:
+              - link "Política de Privacidad" [ref=e205] [cursor=pointer]:
+                - /url: /privacy
+            - listitem [ref=e206]:
+              - link "Cookies" [ref=e207] [cursor=pointer]:
+                - /url: /cookies
+            - listitem [ref=e208]:
+              - link "Centro de Ayuda" [ref=e209] [cursor=pointer]:
+                - /url: /help
+      - generic [ref=e210]:
+        - paragraph [ref=e211]: © 2025 Fixia Inc. Todos los derechos reservados.
+        - paragraph [ref=e212]:
+          - text: Hecho con
+          - img [ref=e213]
+          - text: en Argentina
+  - region "Notifications alt+T"
+  - status [ref=e215]:
+    - generic [ref=e216]:
+      - img [ref=e218]
+      - generic [ref=e220]:
+        - text: Static route
+        - button "Hide static indicator" [ref=e221] [cursor=pointer]:
+          - img [ref=e222]
+  - alert [ref=e225]
+```

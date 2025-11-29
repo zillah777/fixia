@@ -16,6 +16,7 @@ const customJestConfig = {
     transformIgnorePatterns: [
         '/node_modules/(?!lucide-react|framer-motion|zod|react-day-picker|@hookform|react-hook-form)/',
     ],
+    testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/e2e/'],
 }
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async

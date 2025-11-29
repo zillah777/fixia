@@ -1,4 +1,17 @@
 import { test, expect } from '@playwright/test';
+import { SignJWT } from 'jose';
+
+// Helper to generate a valid session token
+async function createSessionToken(payload: any) {
+  const secretKey = process.env.JWT_SECRET;
+  if (!secretKey) throw new Error('JWT_SECRET is not defined');
+  const secret = new TextEncoder().encode(secretKey);
+  return await new SignJWT(payload)
+    .setProtectedHeader({ alg: 'HS256' })
+    .setIssuedAt()
+    .setExpirationTime('15 minutes')
+    .sign(secret);
+}
 
 test.describe('Registration Flow', () => {
   test.beforeEach(async ({ page }) => {
@@ -64,12 +77,22 @@ test.describe('Login Flow', () => {
 
   test('should submit login form successfully', async ({ page }) => {
     // Mock API response
+    // Mock API response with VALID token
+    const token = await createSessionToken({
+      user: {
+        id: 'test-user-id',
+        email: 'test@example.com',
+        name: 'Test User',
+        role: 'CLIENT'
+      }
+    });
+
     await page.route('/api/auth/login', async route => {
       await route.fulfill({
         status: 200,
         body: JSON.stringify({ success: true }),
         headers: {
-          'set-cookie': 'session=mock-session-token; Path=/; HttpOnly'
+          'set-cookie': `session=${token}; Path=/; HttpOnly`
         }
       });
     });
