@@ -4,6 +4,7 @@ import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 
 interface ServiceCardProps {
     title: string
@@ -15,6 +16,39 @@ interface ServiceCardProps {
     image: string
     category: string
     location: string
+}
+
+function StarRating({ rating, reviewsCount }: { rating: number; reviewsCount: number }) {
+    return (
+        <Tooltip>
+            <TooltipTrigger asChild>
+                <div className="cursor-help">
+                    <div className="flex items-center gap-1 bg-amber-500/15 px-2 py-1.5 rounded-lg hover:bg-amber-500/25 transition-colors">
+                        <div className="flex gap-0.5">
+                            {[...Array(5)].map((_, i) => (
+                                <Star
+                                    key={i}
+                                    className={`h-3.5 w-3.5 transition-colors ${
+                                        i < Math.floor(rating)
+                                            ? 'fill-amber-500 text-amber-500'
+                                            : i < Math.ceil(rating)
+                                            ? 'fill-amber-500/50 text-amber-500'
+                                            : 'text-gray-300 dark:text-gray-600'
+                                    }`}
+                                />
+                            ))}
+                        </div>
+                        <span className="text-sm font-bold text-amber-700 dark:text-amber-400">
+                            {rating.toFixed(1)}
+                        </span>
+                    </div>
+                </div>
+            </TooltipTrigger>
+            <TooltipContent className="text-xs">
+                {reviewsCount} reseñas verificadas
+            </TooltipContent>
+        </Tooltip>
+    )
 }
 
 export function ServiceCard({
@@ -72,15 +106,7 @@ export function ServiceCard({
                             {providerName}
                         </span>
                     </div>
-                    <div className="flex items-center gap-1 bg-yellow-500/10 px-1.5 py-0.5 rounded-md">
-                        <Star className="h-3.5 w-3.5 fill-yellow-500 text-yellow-500" />
-                        <span className="text-sm font-bold text-yellow-600 dark:text-yellow-400">
-                            {rating}
-                        </span>
-                        <span className="text-xs text-muted-foreground">
-                            ({reviewsCount})
-                        </span>
-                    </div>
+                    <StarRating rating={rating} reviewsCount={reviewsCount} />
                 </div>
             </CardContent>
 

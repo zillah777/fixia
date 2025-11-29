@@ -1,77 +1,159 @@
+"use client"
+
 import Link from "next/link"
-import { Facebook, Twitter, Instagram, Linkedin, Heart } from "lucide-react"
+import { Facebook, Twitter, Instagram, Linkedin, Heart, ChevronDown } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Separator } from "@/components/ui/separator"
+import { Input } from "@/components/ui/input"
+import {
+    Collapsible,
+    CollapsibleContent,
+    CollapsibleTrigger,
+} from "@/components/ui/collapsible"
+import { useState } from "react"
 
 export function Footer() {
+    const [openSections, setOpenSections] = useState({
+        company: true,
+        services: true,
+        legal: true,
+    })
+
     return (
-        <footer className="bg-white border-t border-border/40 pt-16 pb-8">
+        <footer className="bg-background border-t border-border/40 pt-16 pb-8">
             <div className="container px-4 mx-auto">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+                {/* Newsletter Section */}
+                <div className="grid md:grid-cols-2 gap-8 mb-16 pb-16 border-b border-border/40">
                     <div className="space-y-4">
+                        <h3 className="text-lg font-bold">Newsletter</h3>
+                        <p className="text-sm text-muted-foreground">
+                            Suscríbete para recibir notificaciones de nuevos profesionales
+                        </p>
+                    </div>
+                    <div className="flex gap-2">
+                        <Input
+                            type="email"
+                            placeholder="tu@email.com"
+                            className="flex-1"
+                        />
+                        <Button size="sm" className="px-6">
+                            Suscribirse
+                        </Button>
+                    </div>
+                </div>
+
+                {/* Links Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+                    {/* Logo Section */}
+                    <div className="space-y-4 col-span-1 md:col-span-2 lg:col-span-1">
                         <Link href="/" className="flex items-center gap-2">
-                            <div className="h-8 w-8 rounded-full bg-black flex items-center justify-center">
+                            <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center">
                                 <span className="text-white font-bold text-sm">F</span>
                             </div>
                             <span className="font-bold text-xl tracking-tight">Fixia</span>
                         </Link>
-                        <p className="text-muted-foreground leading-relaxed">
+                        <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
                             La plataforma líder para conectar profesionales de confianza con clientes que valoran la calidad.
                         </p>
-                        <div className="flex gap-4 pt-2">
-                            <Link href="#" className="text-muted-foreground hover:text-primary transition-colors">
-                                <Facebook className="h-5 w-5" />
-                            </Link>
-                            <Link href="#" className="text-muted-foreground hover:text-primary transition-colors">
-                                <Twitter className="h-5 w-5" />
-                            </Link>
-                            <Link href="#" className="text-muted-foreground hover:text-primary transition-colors">
-                                <Instagram className="h-5 w-5" />
-                            </Link>
-                            <Link href="#" className="text-muted-foreground hover:text-primary transition-colors">
-                                <Linkedin className="h-5 w-5" />
-                            </Link>
+                        <div className="flex gap-3 pt-2">
+                            {[
+                                { icon: Facebook, href: "#", label: "Facebook" },
+                                { icon: Twitter, href: "#", label: "Twitter" },
+                                { icon: Instagram, href: "#", label: "Instagram" },
+                                { icon: Linkedin, href: "#", label: "LinkedIn" },
+                            ].map((social) => (
+                                <Link
+                                    key={social.label}
+                                    href={social.href}
+                                    className="p-2 rounded-lg hover:bg-muted transition-colors"
+                                    aria-label={social.label}
+                                >
+                                    <social.icon className="h-5 w-5 text-muted-foreground hover:text-primary transition-colors" />
+                                </Link>
+                            ))}
                         </div>
                     </div>
 
-                    <div>
-                        <h3 className="font-bold text-lg mb-6">Compañía</h3>
-                        <ul className="space-y-4">
-                            <li><Link href="/about" className="text-muted-foreground hover:text-primary transition-colors">Sobre Nosotros</Link></li>
-                            <li><Link href="/careers" className="text-muted-foreground hover:text-primary transition-colors">Carreras</Link></li>
-                            <li><Link href="/blog" className="text-muted-foreground hover:text-primary transition-colors">Blog</Link></li>
-                            <li><Link href="/press" className="text-muted-foreground hover:text-primary transition-colors">Prensa</Link></li>
-                        </ul>
-                    </div>
+                    {/* Company Section */}
+                    <FooterSection
+                        title="Compañía"
+                        items={[
+                            { label: "Sobre Nosotros", href: "/about" },
+                            { label: "Carreras", href: "/careers" },
+                            { label: "Blog", href: "/blog" },
+                            { label: "Prensa", href: "/press" },
+                        ]}
+                    />
 
-                    <div>
-                        <h3 className="font-bold text-lg mb-6">Servicios</h3>
-                        <ul className="space-y-4">
-                            <li><Link href="/services/plomeria" className="text-muted-foreground hover:text-primary transition-colors">Plomería</Link></li>
-                            <li><Link href="/services/electricidad" className="text-muted-foreground hover:text-primary transition-colors">Electricidad</Link></li>
-                            <li><Link href="/services/limpieza" className="text-muted-foreground hover:text-primary transition-colors">Limpieza</Link></li>
-                            <li><Link href="/become-a-pro" className="text-muted-foreground hover:text-primary transition-colors">Ser Profesional</Link></li>
-                        </ul>
-                    </div>
+                    {/* Services Section */}
+                    <FooterSection
+                        title="Servicios"
+                        items={[
+                            { label: "Plomería", href: "/services/plomeria" },
+                            { label: "Electricidad", href: "/services/electricidad" },
+                            { label: "Limpieza", href: "/services/limpieza" },
+                            { label: "Ser Profesional", href: "/become-a-pro" },
+                        ]}
+                    />
 
-                    <div>
-                        <h3 className="font-bold text-lg mb-6">Legal</h3>
-                        <ul className="space-y-4">
-                            <li><Link href="/terms" className="text-muted-foreground hover:text-primary transition-colors">Términos y Condiciones</Link></li>
-                            <li><Link href="/privacy" className="text-muted-foreground hover:text-primary transition-colors">Política de Privacidad</Link></li>
-                            <li><Link href="/cookies" className="text-muted-foreground hover:text-primary transition-colors">Cookies</Link></li>
-                            <li><Link href="/help" className="text-muted-foreground hover:text-primary transition-colors">Centro de Ayuda</Link></li>
-                        </ul>
-                    </div>
+                    {/* Legal Section */}
+                    <FooterSection
+                        title="Legal"
+                        items={[
+                            { label: "Términos y Condiciones", href: "/terms" },
+                            { label: "Política de Privacidad", href: "/privacy" },
+                            { label: "Cookies", href: "/cookies" },
+                            { label: "Centro de Ayuda", href: "/help" },
+                        ]}
+                    />
                 </div>
 
-                <div className="border-t border-border/40 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-                    <p className="text-sm text-muted-foreground text-center md:text-left">
+                {/* Bottom Footer */}
+                <Separator className="my-8" />
+                <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+                    <p className="text-xs text-muted-foreground text-center md:text-left">
                         © {new Date().getFullYear()} Fixia Inc. Todos los derechos reservados.
                     </p>
-                    <p className="text-sm text-muted-foreground flex items-center gap-1">
-                        Hecho con <Heart className="h-4 w-4 text-red-500 fill-red-500" /> en Argentina
+                    <p className="text-xs text-muted-foreground flex items-center gap-1">
+                        Hecho con{" "}
+                        <Heart className="h-3 w-3 text-red-500 fill-red-500" /> en Argentina
                     </p>
                 </div>
             </div>
         </footer>
+    )
+}
+
+// Helper Component para secciones
+function FooterSection({
+    title,
+    items,
+}: {
+    title: string
+    items: Array<{ label: string; href: string }>
+}) {
+    const [open, setOpen] = useState(true)
+
+    return (
+        <Collapsible open={open} onOpenChange={setOpen} className="md:open">
+            <CollapsibleTrigger className="w-full md:w-auto md:pointer-events-none md:opacity-100 flex items-center justify-between md:justify-start gap-2 font-bold text-base mb-4 hover:text-primary transition-colors">
+                {title}
+                <ChevronDown className="h-4 w-4 md:hidden" />
+            </CollapsibleTrigger>
+            <CollapsibleContent className="md:block">
+                <ul className="space-y-3">
+                    {items.map((item) => (
+                        <li key={item.href}>
+                            <Link
+                                href={item.href}
+                                className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                            >
+                                {item.label}
+                            </Link>
+                        </li>
+                    ))}
+                </ul>
+            </CollapsibleContent>
+        </Collapsible>
     )
 }

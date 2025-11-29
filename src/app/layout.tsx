@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "sonner";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
@@ -34,13 +35,15 @@ export default function RootLayout({
                     enableSystem={false}
                     disableTransitionOnChange
                 >
-                    <TickerLED />
-                    <Navbar />
-                    <main className="flex-1">
-                        {children}
-                    </main>
-                    <Footer />
-                    <Toaster position="top-center" richColors />
+                    <TooltipProvider>
+                        <TickerLED />
+                        <Navbar />
+                        <main className="flex-1">
+                            {children}
+                        </main>
+                        <Footer />
+                        <Toaster position="top-center" richColors />
+                    </TooltipProvider>
                 </ThemeProvider>
             </body>
         </html>
