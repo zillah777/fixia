@@ -3,8 +3,9 @@
 import * as React from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { Menu, Bell, User, LogIn } from "lucide-react"
+import { Menu, Bell, User, LogIn, Search } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import {
     DropdownMenu,
@@ -49,6 +50,14 @@ export function Navbar() {
                             </SheetTrigger>
                             <SheetContent side="left" className="w-[300px] sm:w-[400px]">
                                 <nav className="flex flex-col gap-4 mt-8">
+                                    {/* Mobile Search */}
+                                    <div className="relative mb-2">
+                                        <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                                        <Input
+                                            placeholder="Buscar servicios..."
+                                            className="pl-9 h-11"
+                                        />
+                                    </div>
                                     <Link href="/services" className="text-lg font-semibold">
                                         Servicios
                                     </Link>
@@ -95,10 +104,22 @@ export function Navbar() {
                             <Link href="/pricing" className="transition-colors hover:text-foreground/80 text-foreground/60">
                                 Planes
                             </Link>
-                            <Link href="/login" className="transition-colors hover:text-foreground/80 text-foreground/60">
-                                Iniciar Sesión
-                            </Link>
                         </nav>
+
+                        {/* Desktop Search Bar */}
+                        <div className="hidden lg:flex items-center gap-2 mr-4">
+                            <div className="relative w-56">
+                                <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                                <Input
+                                    placeholder="Buscar servicios..."
+                                    className="pl-9 h-9 text-sm rounded-full bg-background/60"
+                                />
+                            </div>
+                        </div>
+
+                        <Link href="/login" className="hidden md:block text-sm font-medium transition-colors hover:text-foreground/80 text-foreground/60">
+                            Iniciar Sesión
+                        </Link>
                     </div>
 
                     <div className="flex items-center gap-2 sm:gap-4">

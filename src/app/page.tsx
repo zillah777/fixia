@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { motion, useScroll, useTransform, useSpring, useMotionValue, useMotionTemplate } from "framer-motion"
 import { Search, MapPin, Star, Shield, Clock, ArrowRight, CheckCircle2, Quote, Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -12,7 +13,7 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/h
 import { TestimonialsCarousel } from "@/components/testimonials-carousel"
 
 // 3D Tilt Card Component
-function TiltCard({ children, className }: { children: React.ReactNode, className?: string }) {
+function TiltCard({ children, className, onClick }: { children: React.ReactNode, className?: string, onClick?: () => void }) {
     const mouseX = useMotionValue(0);
     const mouseY = useMotionValue(0);
 
@@ -25,6 +26,7 @@ function TiltCard({ children, className }: { children: React.ReactNode, classNam
     return (
         <motion.div
             className={className}
+            onClick={onClick}
             onMouseMove={handleMouseMove}
             onMouseLeave={() => {
                 mouseX.set(0);
@@ -63,6 +65,7 @@ const stats = [
 ];
 
 export default function Home() {
+    const router = useRouter();
     const { scrollYProgress } = useScroll();
     const y = useTransform(scrollYProgress, [0, 1], [0, -50]);
 
@@ -276,21 +279,23 @@ export default function Home() {
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
                         {categories.map((category, index) => (
-                            <Link key={category.id} href={`/services/${category.id}`} className="block">
-                                <TiltCard className="group relative h-56 sm:h-64 rounded-[2rem] bg-white p-6 sm:p-8 shadow-xl shadow-black/5 border border-white/50 backdrop-blur-sm hover:shadow-2xl hover:shadow-blue-500/10 active:shadow-2xl active:shadow-blue-500/10 transition-all duration-500 cursor-pointer">
-                                    <div className={`absolute inset-0 bg-gradient-to-br ${category.color} opacity-0 group-hover:opacity-100 group-active:opacity-100 transition-opacity duration-500 rounded-[2rem]`} />
-                                    <div className="relative z-10 flex flex-col h-full justify-between">
-                                        <div className="text-5xl sm:text-6xl mb-4 transform group-hover:scale-110 group-active:scale-110 transition-transform duration-300">{category.icon}</div>
-                                        <div>
-                                            <h3 className="text-xl sm:text-2xl font-bold mb-1">{category.name}</h3>
-                                            <p className="text-muted-foreground font-medium text-sm sm:text-base">{category.count} Profesionales</p>
-                                        </div>
-                                        <div className="w-10 h-10 rounded-full bg-black/5 flex items-center justify-center group-hover:bg-black group-hover:text-white group-active:bg-black group-active:text-white transition-colors duration-300">
-                                            <ArrowRight className="h-5 w-5" />
-                                        </div>
+                            <TiltCard
+                                key={category.id}
+                                className="group relative h-56 sm:h-64 rounded-[2rem] bg-white p-6 sm:p-8 shadow-xl shadow-black/5 border border-white/50 backdrop-blur-sm hover:shadow-2xl hover:shadow-blue-500/10 active:shadow-2xl active:shadow-blue-500/10 transition-all duration-500 cursor-pointer"
+                                onClick={() => router.push(`/services/${category.id}`)}
+                            >
+                                <div className={`absolute inset-0 bg-gradient-to-br ${category.color} opacity-0 group-hover:opacity-100 group-active:opacity-100 transition-opacity duration-500 rounded-[2rem]`} />
+                                <div className="relative z-10 flex flex-col h-full justify-between">
+                                    <div className="text-5xl sm:text-6xl mb-4 transform group-hover:scale-110 group-active:scale-110 transition-transform duration-300">{category.icon}</div>
+                                    <div>
+                                        <h3 className="text-xl sm:text-2xl font-bold mb-1">{category.name}</h3>
+                                        <p className="text-muted-foreground font-medium text-sm sm:text-base">{category.count} Profesionales</p>
                                     </div>
-                                </TiltCard>
-                            </Link>
+                                    <div className="w-10 h-10 rounded-full bg-black/5 flex items-center justify-center group-hover:bg-black group-hover:text-white group-active:bg-black group-active:text-white transition-colors duration-300">
+                                        <ArrowRight className="h-5 w-5" />
+                                    </div>
+                                </div>
+                            </TiltCard>
                         ))}
                     </div>
                 </div>
