@@ -1,3 +1,5 @@
+"use client"
+
 import React from "react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
@@ -6,6 +8,13 @@ import { Search, HelpCircle, FileText, CreditCard, ShieldCheck } from "lucide-re
 import Link from "next/link";
 
 export default function HelpPage() {
+    const scrollToSection = (sectionId: string) => {
+        const element = document.getElementById(sectionId);
+        if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    };
+
     return (
         <div className="container mx-auto px-4 py-12 max-w-4xl">
             <div className="text-center mb-12">
@@ -20,11 +29,17 @@ export default function HelpPage() {
             </div>
 
             <div className="grid md:grid-cols-2 gap-6 mb-12">
-                <div className="p-6 border rounded-xl text-center hover:bg-muted/50 transition-colors cursor-pointer">
+                <div
+                    onClick={() => scrollToSection('guias-basicas')}
+                    className="p-6 border rounded-xl text-center hover:bg-muted/50 transition-colors cursor-pointer"
+                >
                     <FileText className="h-8 w-8 mx-auto mb-3 text-primary" />
                     <h3 className="font-semibold">Guías Básicas</h3>
                 </div>
-                <div className="p-6 border rounded-xl text-center hover:bg-muted/50 transition-colors cursor-pointer">
+                <div
+                    onClick={() => scrollToSection('seguridad-cuenta')}
+                    className="p-6 border rounded-xl text-center hover:bg-muted/50 transition-colors cursor-pointer"
+                >
                     <ShieldCheck className="h-8 w-8 mx-auto mb-3 text-primary" />
                     <h3 className="font-semibold">Seguridad y Cuenta</h3>
                 </div>
@@ -34,7 +49,7 @@ export default function HelpPage() {
                 <div>
                     <h2 className="text-2xl font-bold mb-4">Preguntas Frecuentes</h2>
                     {/* Guías Básicas Section */}
-                    <h3 className="text-xl font-bold mb-4 text-primary">Guías Básicas</h3>
+                    <h3 id="guias-basicas" className="text-xl font-bold mb-4 text-primary scroll-mt-8">Guías Básicas</h3>
                     <Accordion type="single" collapsible className="w-full mb-12">
                         <AccordionItem value="basic-1">
                             <AccordionTrigger>¿Cómo me registro en Fixia?</AccordionTrigger>
@@ -69,7 +84,7 @@ export default function HelpPage() {
                     </Accordion>
 
                     {/* Seguridad y Cuenta Section */}
-                    <h3 className="text-xl font-bold mb-4 text-primary">Seguridad y Cuenta</h3>
+                    <h3 id="seguridad-cuenta" className="text-xl font-bold mb-4 text-primary scroll-mt-8">Seguridad y Cuenta</h3>
                     <Accordion type="single" collapsible className="w-full">
                         <AccordionItem value="security-1">
                             <AccordionTrigger>¿Cómo protegen mi información personal?</AccordionTrigger>
