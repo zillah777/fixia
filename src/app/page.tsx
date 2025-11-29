@@ -3,11 +3,12 @@
 import { useState, useRef } from "react"
 import Link from "next/link"
 import { motion, useScroll, useTransform, useSpring, useMotionValue, useMotionTemplate } from "framer-motion"
-import { Search, MapPin, Star, Shield, Clock, ArrowRight, CheckCircle2, Quote } from "lucide-react"
+import { Search, MapPin, Star, Shield, Clock, ArrowRight, CheckCircle2, Quote, Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card"
 import { TestimonialsCarousel } from "@/components/testimonials-carousel"
 
 // 3D Tilt Card Component
@@ -83,10 +84,64 @@ export default function Home() {
                             ✨ La forma más inteligente de contratar
                         </Badge>
 
-                        <h1 className="text-6xl font-bold tracking-tight sm:text-8xl bg-clip-text text-transparent bg-gradient-to-b from-gray-900 to-gray-600 drop-shadow-sm">
-                            El profesional perfecto,<br />
-                            <span className="text-aurora text-glow">cuando lo necesitas.</span>
-                        </h1>
+                        <motion.h1
+                            initial={{ opacity: 0, y: 40, scale: 0.95 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+                            className="text-6xl font-bold tracking-tight sm:text-8xl"
+                        >
+                            <motion.span
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ delay: 0.3, duration: 0.8 }}
+                                className="block bg-clip-text text-transparent bg-gradient-to-r from-gray-900 via-gray-700 to-gray-900 dark:from-gray-100 dark:via-gray-300 dark:to-gray-100"
+                            >
+                                Tu vida, más simple.
+                            </motion.span>
+                            <HoverCard>
+                                <HoverCardTrigger asChild>
+                                    <motion.span
+                                        initial={{ opacity: 0, scale: 0.8 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        transition={{ delay: 0.6, duration: 0.8, type: "spring", bounce: 0.3 }}
+                                        className="block mt-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 cursor-pointer inline-block"
+                                        style={{
+                                            backgroundSize: '200% 200%',
+                                            animation: 'gradient 4s ease infinite',
+                                        }}
+                                    >
+                                        <span className="relative">
+                                            Fixia.
+                                            <motion.span
+                                                className="absolute -inset-4 bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 blur-2xl -z-10"
+                                                animate={{
+                                                    opacity: [0.3, 0.6, 0.3],
+                                                    scale: [0.95, 1.05, 0.95],
+                                                }}
+                                                transition={{
+                                                    duration: 3,
+                                                    repeat: Infinity,
+                                                    ease: "easeInOut",
+                                                }}
+                                            />
+                                        </span>
+                                    </motion.span>
+                                </HoverCardTrigger>
+                                <HoverCardContent className="w-80" align="center">
+                                    <div className="flex items-start gap-4">
+                                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600">
+                                            <Sparkles className="h-5 w-5 text-white" />
+                                        </div>
+                                        <div className="space-y-1">
+                                            <h4 className="text-sm font-semibold">Tu asistente del hogar 24/7</h4>
+                                            <p className="text-sm text-muted-foreground">
+                                                Miles de profesionales verificados listos para ayudarte con cualquier necesidad en tu hogar.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </HoverCardContent>
+                            </HoverCard>
+                        </motion.h1>
 
                         <p className="mx-auto max-w-2xl text-xl text-muted-foreground leading-relaxed">
                             Conectamos tus necesidades con los mejores profesionales de tu zona.
