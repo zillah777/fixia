@@ -247,7 +247,7 @@ export default function CreateRequestPage() {
                                                     <div className="flex items-center justify-between border rounded-md p-2 bg-muted/50">
                                                         <DollarSign className="h-4 w-4 text-muted-foreground" />
                                                         <span className="font-mono font-medium text-lg">
-                                                            ${field.value[0].toLocaleString()}
+                                                            ${field.value?.[0]?.toLocaleString() || '0'}
                                                         </span>
                                                     </div>
                                                 </div>
