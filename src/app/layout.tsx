@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -9,8 +8,6 @@ import { Footer } from "@/components/layout/footer";
 import { TickerLED } from "@/components/ticker-led";
 
 import GoogleAnalytics from "@/components/google-analytics";
-
-const fontSans = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
     title: "Fixia - Servicios Bajo Demanda",
@@ -25,7 +22,7 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="es" suppressHydrationWarning>
-            <body className={`${fontSans.variable} font-sans antialiased min-h-screen flex flex-col`}>
+            <body className="font-sans antialiased min-h-screen flex flex-col">
                 {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
                     <GoogleAnalytics GA_MEASUREMENT_ID={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
                 )}
