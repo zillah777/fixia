@@ -69,63 +69,77 @@ export default function LoginPage() {
 
     return (
         <div className="flex min-h-screen items-center justify-center bg-muted/50 p-4">
-            <Card className="w-full max-w-md">
-                <CardHeader className="space-y-1">
-                    <CardTitle className="text-2xl font-bold">Iniciar Sesión</CardTitle>
-                    <CardDescription>
-                        Ingresa tu email y contraseña para acceder a tu cuenta
-                    </CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                            <FormField
-                                control={form.control}
-                                name="email"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Email</FormLabel>
-                                        <FormControl>
-                                            <Input placeholder="nombre@ejemplo.com" {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name="password"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Contraseña</FormLabel>
-                                        <FormControl>
-                                            <Input type="password" placeholder="••••••" {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <Button type="submit" className="w-full" disabled={isLoading}>
-                                {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                Ingresar
-                            </Button>
-                        </form>
-                    </Form>
-                </CardContent>
-                <CardFooter className="flex flex-col gap-2">
-                    <div className="text-sm text-muted-foreground text-center">
-                        ¿No tienes una cuenta?{" "}
-                        <Link href="/register" className="text-primary hover:underline">
-                            Regístrate
-                        </Link>
-                    </div>
-                    <div className="text-sm text-muted-foreground text-center">
-                        <Link href="/forgot-password" className="hover:underline">
-                            ¿Olvidaste tu contraseña?
-                        </Link>
-                    </div>
-                </CardFooter>
-            </Card>
+            <div className="w-full max-w-md space-y-8">
+                {/* Logo */}
+                <Link href="/" className="flex items-center justify-center">
+                    <svg width="120" height="40" viewBox="0 0 120 40" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-primary">
+                        <rect x="2" y="2" width="36" height="36" rx="8" fill="currentColor" opacity="0.1" />
+                        <path d="M14 18L18 14M22 18L18 14M18 14V26" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                        <circle cx="18" cy="28" r="2" fill="currentColor" />
+                        <path d="M24 12L28 16M28 16L24 20M28 16H16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                        <text x="46" y="28" fontFamily="system-ui, -apple-system, sans-serif" fontSize="24" fontWeight="700" fill="currentColor">FIXIA</text>
+                    </svg>
+                </Link>
+
+                <Card className="w-full max-w-md">
+
+                    <CardHeader className="space-y-1">
+                        <CardTitle className="text-2xl font-bold">Iniciar Sesión</CardTitle>
+                        <CardDescription>
+                            Ingresa tu email y contraseña para acceder a tu cuenta
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <Form {...form}>
+                            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                                <FormField
+                                    control={form.control}
+                                    name="email"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Email</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="nombre@ejemplo.com" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="password"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Contraseña</FormLabel>
+                                            <FormControl>
+                                                <Input type="password" placeholder="••••••" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <Button type="submit" className="w-full" disabled={isLoading}>
+                                    {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                                    Ingresar
+                                </Button>
+                            </form>
+                        </Form>
+                    </CardContent>
+                    <CardFooter className="flex flex-col gap-2">
+                        <div className="text-sm text-muted-foreground text-center">
+                            ¿No tienes una cuenta?{" "}
+                            <Link href="/register" className="text-primary hover:underline">
+                                Regístrate
+                            </Link>
+                        </div>
+                        <div className="text-sm text-muted-foreground text-center">
+                            <Link href="/forgot-password" className="hover:underline">
+                                ¿Olvidaste tu contraseña?
+                            </Link>
+                        </div>
+                    </CardFooter>
+                </Card>
+            </div>
         </div>
     )
 }
