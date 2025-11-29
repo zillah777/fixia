@@ -39,6 +39,8 @@
         "node_modules",
         "creativUX",
         ".jest",
+        "playwright.config.ts",
+        "e2e/**",
         "**/*.test.ts",
         "**/*.test.tsx",
         "**/*.spec.ts",
