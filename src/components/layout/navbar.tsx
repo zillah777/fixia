@@ -98,14 +98,16 @@ export function Navbar() {
                                     <Link href="/professionals" className="text-lg font-semibold">
                                         Profesionales
                                     </Link>
-                                    <Link href="/become-a-pro" className="text-lg font-semibold">
-                                        Únete a Fixia
-                                    </Link>
-                                    <Link href="/login" className="text-lg font-semibold">
-                                        Iniciar Sesión
+                                    <Link href="/become-a-pro" className="w-full">
+                                        <Button className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold shadow-lg shadow-green-500/30">
+                                            Únete a Fixia
+                                        </Button>
                                     </Link>
                                     <Link href="/pricing" className="text-lg font-semibold">
                                         Planes
+                                    </Link>
+                                    <Link href="/login" className="text-lg font-semibold">
+                                        Iniciar Sesión
                                     </Link>
                                 </nav>
                             </SheetContent>
@@ -121,21 +123,23 @@ export function Navbar() {
                             />
                         </Link>
 
-                        <nav className="hidden md:flex items-center justify-center gap-8 text-sm font-medium flex-1">
+                        <nav className="hidden md:flex items-center justify-center gap-6 text-sm font-medium flex-1">
                             <Link href="/services" className="transition-colors hover:text-foreground/80 text-foreground/60">
                                 Servicios
                             </Link>
                             <Link href="/professionals" className="transition-colors hover:text-foreground/80 text-foreground/60">
                                 Profesionales
                             </Link>
-                            <Link href="/become-a-pro" className="transition-colors hover:text-foreground/80 text-foreground/60">
-                                Únete a Fixia
-                            </Link>
-                            <Link href="/login" className="transition-colors hover:text-foreground/80 text-foreground/60">
-                                Iniciar Sesión
+                            <Link href="/become-a-pro">
+                                <Button size="sm" className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold shadow-lg shadow-green-500/30 hover:shadow-xl hover:shadow-green-500/40 transition-all">
+                                    Únete a Fixia
+                                </Button>
                             </Link>
                             <Link href="/pricing" className="transition-colors hover:text-foreground/80 text-foreground/60">
                                 Planes
+                            </Link>
+                            <Link href="/login" className="transition-colors hover:text-foreground/80 text-foreground/60">
+                                Iniciar Sesión
                             </Link>
                         </nav>
                     </div>
