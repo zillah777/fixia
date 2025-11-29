@@ -18,40 +18,9 @@ import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { NotificationCenter } from "@/components/notifications/notification-center"
-import {
-    CommandDialog,
-    CommandEmpty,
-    CommandGroup,
-    CommandInput,
-    CommandItem,
-    CommandList,
-} from "@/components/ui/command"
-
-// Datos de búsqueda (reemplazar con datos dinámicos)
-const SEARCH_DATA = [
-    {
-        category: "Servicios",
-        items: [
-            { id: "1", name: "Plomería", href: "/services/plomeria" },
-            { id: "2", name: "Electricidad", href: "/services/electricidad" },
-            { id: "3", name: "Limpieza", href: "/services/limpieza" },
-            { id: "4", name: "Jardinería", href: "/services/jardineria" },
-        ],
-    },
-    {
-        category: "Páginas",
-        items: [
-            { id: "5", name: "Profesionales", href: "/professionals" },
-            { id: "6", name: "Sobre Nosotros", href: "/about" },
-            { id: "7", name: "Contacto", href: "/contact" },
-            { id: "8", name: "Cómo Funciona", href: "/how-it-works" },
-        ],
-    },
-]
 
 export function Navbar() {
     const [isScrolled, setIsScrolled] = React.useState(false)
-    const [open, setOpen] = React.useState(false)
     const [notificationCount] = React.useState(3) // Reemplazar con dato dinámico
 
     React.useEffect(() => {
@@ -60,18 +29,6 @@ export function Navbar() {
         }
         window.addEventListener("scroll", handleScroll)
         return () => window.removeEventListener("scroll", handleScroll)
-    }, [])
-
-    // Cmd+K shortcut
-    React.useEffect(() => {
-        const down = (e: KeyboardEvent) => {
-            if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
-                e.preventDefault()
-                setOpen((open) => !open)
-            }
-        }
-        document.addEventListener("keydown", down)
-        return () => document.removeEventListener("keydown", down)
     }, [])
 
     return (
@@ -145,18 +102,6 @@ export function Navbar() {
                     </div>
 
                     <div className="flex items-center gap-4">
-                        {/* Search Button con Cmd+K - Only for authenticated users */}
-                        <Button
-                            variant="outline"
-                            className="hidden md:inline-flex w-[200px] lg:w-[300px] justify-start text-muted-foreground"
-                            onClick={() => setOpen(true)}
-                        >
-                            <span className="text-sm">Buscar servicios...</span>
-                            <kbd className="ml-auto text-xs px-2 py-1 bg-muted rounded border border-border/40 font-mono">
-                                ⌘K
-                            </kbd>
-                        </Button>
-
                         <ThemeToggle />
 
                         {/* Show user menu and notifications only when logged in */}
@@ -184,29 +129,6 @@ export function Navbar() {
                     </div>
                 </div>
             </header>
-
-            {/* Command Dialog para búsqueda */}
-            <CommandDialog open={open} onOpenChange={setOpen}>
-                <CommandInput placeholder="Buscar servicios, profesionales..." />
-                <CommandList>
-                    <CommandEmpty>No se encontraron resultados.</CommandEmpty>
-                    {SEARCH_DATA.map((group) => (
-                        <CommandGroup key={group.category} heading={group.category}>
-                            {group.items.map((item) => (
-                                <CommandItem
-                                    key={item.id}
-                                    onSelect={() => {
-                                        window.location.href = item.href
-                                        setOpen(false)
-                                    }}
-                                >
-                                    <span>{item.name}</span>
-                                </CommandItem>
-                            ))}
-                        </CommandGroup>
-                    ))}
-                </CommandList>
-            </CommandDialog>
         </>
     )
 }
