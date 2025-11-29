@@ -84,7 +84,63 @@ export default function Home() {
                             ✨ La forma más inteligente de contratar
                         </Badge>
 
+                        {/* OPCIÓN 1: Aurora Gradient + Glassmorphism (ACTIVA) */}
                         <motion.h1
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.8, ease: "easeOut" }}
+                            className="text-6xl sm:text-7xl lg:text-8xl font-bold tracking-tight"
+                        >
+                            <span className="block text-foreground mb-4">
+                                Tu vida, más simple.
+                            </span>
+                            <motion.span
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.3, duration: 0.8 }}
+                                className="relative inline-block group"
+                            >
+                                {/* Glassmorphism background */}
+                                <motion.span
+                                    initial={{ opacity: 0, scale: 0.9 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    transition={{ delay: 0.5, duration: 0.8 }}
+                                    className="absolute -inset-4 rounded-3xl bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10 backdrop-blur-xl border border-white/20"
+                                    style={{
+                                        background: 'linear-gradient(135deg, rgba(96, 165, 250, 0.15) 0%, rgba(168, 139, 250, 0.15) 50%, rgba(236, 72, 153, 0.15) 100%)',
+                                    }}
+                                />
+                                {/* Aurora animated gradient text */}
+                                <span
+                                    className="relative z-10 text-transparent bg-clip-text px-4"
+                                    style={{
+                                        backgroundImage: 'linear-gradient(135deg, #60a5fa 0%, #a78bfa 50%, #ec4899 100%)',
+                                        backgroundSize: '200% 200%',
+                                        animation: 'gradient 4s ease infinite',
+                                    }}
+                                >
+                                    Fixia.
+                                </span>
+                                {/* Glow effect */}
+                                <motion.span
+                                    className="absolute inset-0 blur-2xl opacity-30"
+                                    style={{
+                                        background: 'linear-gradient(135deg, #60a5fa 0%, #a78bfa 50%, #ec4899 100%)',
+                                    }}
+                                    animate={{
+                                        opacity: [0.2, 0.4, 0.2],
+                                    }}
+                                    transition={{
+                                        duration: 3,
+                                        repeat: Infinity,
+                                        ease: "easeInOut",
+                                    }}
+                                />
+                            </motion.span>
+                        </motion.h1>
+
+                        {/* OPCIÓN 2: Neon Glow + Double Underline (COMENTADA) */}
+                        {/* <motion.h1
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.8, ease: "easeOut" }}
@@ -99,17 +155,84 @@ export default function Home() {
                                 transition={{ delay: 0.3, duration: 0.8 }}
                                 className="relative inline-block"
                             >
-                                <span className="relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600">
+                                <span
+                                    className="relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600"
+                                    style={{
+                                        textShadow: '0 0 40px rgba(168, 139, 250, 0.5), 0 0 80px rgba(168, 139, 250, 0.3)',
+                                    }}
+                                >
                                     Fixia.
                                 </span>
                                 <motion.span
                                     initial={{ scaleX: 0 }}
                                     animate={{ scaleX: 1 }}
                                     transition={{ delay: 0.8, duration: 0.6, ease: "easeOut" }}
-                                    className="absolute -bottom-2 left-0 right-0 h-3 bg-gradient-to-r from-blue-600/20 via-purple-600/20 to-pink-600/20 origin-left"
+                                    className="absolute -bottom-4 left-0 right-0 h-1 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 origin-left"
+                                />
+                                <motion.span
+                                    initial={{ scaleX: 0 }}
+                                    animate={{ scaleX: 1 }}
+                                    transition={{ delay: 0.9, duration: 0.6, ease: "easeOut" }}
+                                    className="absolute -bottom-6 left-0 right-0 h-1 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 origin-left opacity-50"
                                 />
                             </motion.span>
-                        </motion.h1>
+                        </motion.h1> */}
+
+                        {/* OPCIÓN 3: Minimal Highlight Background (COMENTADA) */}
+                        {/* <motion.h1
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.8, ease: "easeOut" }}
+                            className="text-6xl sm:text-7xl lg:text-8xl font-bold tracking-tight"
+                        >
+                            <span className="block text-foreground mb-4">
+                                Tu vida, más simple.
+                            </span>
+                            <motion.span
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.3, duration: 0.8 }}
+                                className="relative inline-block"
+                            >
+                                <span className="relative z-10 px-4 text-foreground font-black">
+                                    Fixia.
+                                </span>
+                                <motion.span
+                                    initial={{ scaleX: 0, opacity: 0 }}
+                                    animate={{ scaleX: 1, opacity: 1 }}
+                                    transition={{ delay: 0.6, duration: 0.8, ease: "easeOut" }}
+                                    className="absolute inset-0 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 origin-left -skew-x-12 -z-10"
+                                />
+                            </motion.span>
+                        </motion.h1> */}
+
+                        {/* OPCIÓN 4: Outline Text + Shadow Depth (COMENTADA) */}
+                        {/* <motion.h1
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.8, ease: "easeOut" }}
+                            className="text-6xl sm:text-7xl lg:text-8xl font-bold tracking-tight"
+                        >
+                            <span className="block text-foreground mb-4">
+                                Tu vida, más simple.
+                            </span>
+                            <motion.span
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.3, duration: 0.8 }}
+                                className="relative inline-block"
+                                style={{
+                                    WebkitTextStroke: '2px transparent',
+                                    WebkitTextFillColor: 'transparent',
+                                    backgroundImage: 'linear-gradient(135deg, #60a5fa 0%, #a78bfa 50%, #ec4899 100%)',
+                                    WebkitBackgroundClip: 'text',
+                                    backgroundClip: 'text',
+                                    filter: 'drop-shadow(4px 4px 0px rgba(96, 165, 250, 0.3)) drop-shadow(8px 8px 0px rgba(168, 139, 250, 0.2))',
+                                }}
+                            >
+                                Fixia.
+                            </motion.span>
+                        </motion.h1> */}
 
                         <p className="mx-auto max-w-2xl text-xl text-muted-foreground leading-relaxed">
                             Conectamos tus necesidades con los mejores profesionales de tu zona.
