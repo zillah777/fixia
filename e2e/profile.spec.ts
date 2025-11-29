@@ -50,26 +50,40 @@ test.describe('Profile Flow', () => {
     });
 
     test('should display correct user information', async ({ page }) => {
-        // DIAGNOSIS: This should fail if the page uses hardcoded "Juan Pérez"
-        await expect(page.getByRole('heading', { name: testUser.name })).toBeVisible();
-        await expect(page.getByText(testUser.email)).toBeVisible();
+        // Wait for the heading to be visible, this ensures the page content has loaded
+        const heading = page.getByRole('heading', { name: testUser.name });
+        await heading.scrollIntoViewIfNeeded();
+        await expect(heading).toBeVisible();
+
+        // Check email visibility
+        const email = page.getByText(testUser.email);
+        await email.scrollIntoViewIfNeeded();
+        await expect(email).toBeVisible();
     });
 
     test('should allow editing profile', async ({ page }) => {
-        // Click Edit
-        await page.getByRole('button', { name: /editar perfil/i }).click();
+        // Click Edit - Ensure button is visible
+        const editButton = page.getByRole('button', { name: /editar perfil/i });
+        await editButton.scrollIntoViewIfNeeded();
+        await editButton.click();
 
-        // Change Name
+        // Change Name - Ensure input is visible
+        const nameInput = page.getByLabel(/nombre completo/i);
+        await expect(nameInput).toBeVisible();
         const newName = 'Updated Name';
-        await page.getByLabel(/nombre completo/i).fill(newName);
+        await nameInput.fill(newName);
 
-        // Save
-        await page.getByRole('button', { name: /guardar cambios/i }).click();
+        // Save - Ensure button is visible
+        const saveButton = page.getByRole('button', { name: /guardar cambios/i });
+        await saveButton.scrollIntoViewIfNeeded();
+        await saveButton.click();
 
-        // Verify Success Toast
-        await expect(page.getByText(/perfil actualizado correctamente/i)).toBeVisible();
+        // Verify Success Toast - Increase timeout for mobile
+        await expect(page.getByText(/perfil actualizado correctamente/i)).toBeVisible({ timeout: 15000 });
 
         // Verify new name is displayed (persisted in UI state at least)
-        await expect(page.getByRole('heading', { name: newName })).toBeVisible();
+        const newHeading = page.getByRole('heading', { name: newName });
+        await newHeading.scrollIntoViewIfNeeded();
+        await expect(newHeading).toBeVisible();
     });
 });

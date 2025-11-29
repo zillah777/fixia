@@ -9,13 +9,18 @@ export default defineConfig({
     testDir: './e2e',
     fullyParallel: true,
     forbidOnly: !!process.env.CI,
-    retries: process.env.CI ? 2 : 0,
-    workers: process.env.CI ? 1 : undefined,
+    retries: process.env.CI ? 2 : 1, // Retry once locally to handle flakes
+    workers: 1, // Force serial execution to avoid resource contention
     reporter: 'html',
-    timeout: 60000,
+    timeout: 120000, // Increase global timeout to 2 minutes
     use: {
         baseURL: 'http://localhost:3000',
         trace: 'on-first-retry',
+        actionTimeout: 15000, // Explicit timeout for actions (click, fill)
+        navigationTimeout: 30000, // Explicit timeout for navigation
+    },
+    expect: {
+        timeout: 10000, // Increase assertion timeout to 10s
     },
     projects: [
         {

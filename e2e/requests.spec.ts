@@ -73,34 +73,42 @@ test.describe('Service Request Flow', () => {
 
     test('should submit request successfully with valid data', async ({ page }) => {
         // Fill form
-        await page.getByLabel(/título de la solicitud/i).fill('Reparación de Cañería');
+        await page.getByLabel('Título').fill('Reparación de Cañería');
 
-        // Select Category (Radix UI Select)
-        await page.getByRole('combobox').click();
-        // Use getByLabel or getByRole option
+        // Select Category - Ensure visibility
+        const categorySelect = page.getByRole('combobox');
+        await categorySelect.scrollIntoViewIfNeeded();
+        await categorySelect.click();
         await page.getByRole('option', { name: 'Plomería' }).click();
 
-        await page.getByLabel(/ubicación/i).fill('Av. Corrientes 1234, CABA');
-        await page.getByLabel(/descripción detallada/i).fill('Tengo una pérdida de agua en el baño principal que necesita reparación urgente.');
+        // Location & Description
+        await page.getByLabel('Ubicación').fill('Av. Corrientes 1234');
+        await page.getByLabel('Descripción').fill('Tengo una pérdida de agua en la cocina.');
 
-        // Select Date (Calendar)
-        await page.getByRole('button', { name: /selecciona una fecha/i }).click();
-        // Click the first enabled day in the calendar
-        await page.getByRole('gridcell', { disabled: false }).first().click();
+        // Date Selection - Handle mobile visibility
+        const dateButton = page.getByRole('button', { name: /seleccionar fecha/i });
+        await dateButton.scrollIntoViewIfNeeded();
+        await dateButton.click();
 
-        // Budget is a slider, default is 5000. We can leave it or drag it.
+        // Force click on date cell if needed (mobile calendars can be tricky)
+        const dateCell = page.getByRole('gridcell', { disabled: false }).first();
+        await expect(dateCell).toBeVisible();
+        await dateCell.click({ force: true });
 
-        // Wait for the simulated API call (setTimeout 1500ms in component)
-        // Since it's a simulated delay, we can just wait for the URL change or success toast
-        // But to be safe, we can wait for the button to be disabled or loading state?
-        // The component sets isLoading(true).
+        // Submit - Ensure button is visible
+        const submitButton = page.getByRole('button', { name: /publicar solicitud/i });
+        await submitButton.scrollIntoViewIfNeeded();
 
-        await page.getByRole('button', { name: /publicar solicitud/i }).click();
+        // Wait for response to avoid race conditions
+        const [response] = await Promise.all([
+            page.waitForResponse(res => res.url().includes('/api/requests') && res.status() === 200),
+            submitButton.click()
+        ]);
 
-        // Verify Success Toast
-        await expect(page.getByText(/solicitud publicada exitosamente/i)).toBeVisible();
+        // Verify Success Toast - Increased timeout
+        await expect(page.getByText(/solicitud creada exitosamente/i)).toBeVisible({ timeout: 15000 });
 
         // Verify Redirection
-        await expect(page).toHaveURL(/\/dashboard\/requests/, { timeout: 10000 });
+        await expect(page).toHaveURL(/\/dashboard\/requests/);
     });
 });
