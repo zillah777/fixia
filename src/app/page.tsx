@@ -69,11 +69,11 @@ export default function Home() {
     return (
         <div className="flex min-h-screen flex-col overflow-hidden bg-[#F3F4F6]">
             {/* Hero Section with Spotlight Effect */}
-            <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+            <section className="relative pt-20 pb-16 sm:pt-28 sm:pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-100 via-transparent to-transparent opacity-70" />
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-blue-400/20 blur-[120px] rounded-full pointer-events-none" />
 
-                <div className="container px-4 text-center relative z-10">
+                <div className="container px-4 sm:px-6 text-center relative z-10">
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -136,8 +136,8 @@ export default function Home() {
                             </motion.span>
                         </motion.h1> */}
 
-                        {/* OPCIÓN 2: Neon Glow + Double Underline (ACTIVA) */}
-                        <motion.h1
+                        {/* OPCIÓN 2: Neon Glow + Double Underline (COMENTADA) */}
+                        {/* <motion.h1
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.8, ease: "easeOut" }}
@@ -173,7 +173,7 @@ export default function Home() {
                                     className="absolute -bottom-6 left-0 right-0 h-1 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 origin-left opacity-50"
                                 />
                             </motion.span>
-                        </motion.h1>
+                        </motion.h1> */}
 
                         {/* OPCIÓN 3: Minimal Highlight Background (COMENTADA) */}
                         {/* <motion.h1
@@ -203,14 +203,14 @@ export default function Home() {
                             </motion.span>
                         </motion.h1> */}
 
-                        {/* OPCIÓN 4: Outline Text + Shadow Depth (COMENTADA) */}
-                        {/* <motion.h1
+                        {/* OPCIÓN 4: Outline Text + Shadow Depth (ACTIVA) */}
+                        <motion.h1
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.8, ease: "easeOut" }}
-                            className="text-6xl sm:text-7xl lg:text-8xl font-bold tracking-tight"
+                            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight"
                         >
-                            <span className="block text-foreground mb-4">
+                            <span className="block text-foreground mb-3 sm:mb-4">
                                 Tu vida, más simple.
                             </span>
                             <motion.span
@@ -224,12 +224,12 @@ export default function Home() {
                                     backgroundImage: 'linear-gradient(135deg, #60a5fa 0%, #a78bfa 50%, #ec4899 100%)',
                                     WebkitBackgroundClip: 'text',
                                     backgroundClip: 'text',
-                                    filter: 'drop-shadow(4px 4px 0px rgba(96, 165, 250, 0.3)) drop-shadow(8px 8px 0px rgba(168, 139, 250, 0.2))',
+                                    filter: 'drop-shadow(3px 3px 0px rgba(96, 165, 250, 0.4)) drop-shadow(6px 6px 0px rgba(168, 139, 250, 0.2))',
                                 }}
                             >
                                 Fixia.
                             </motion.span>
-                        </motion.h1> */}
+                        </motion.h1>
 
                         <p className="mx-auto max-w-2xl text-xl text-muted-foreground leading-relaxed">
                             Conectamos tus necesidades con los mejores profesionales de tu zona.
@@ -239,25 +239,26 @@ export default function Home() {
                         {/* Floating Search Bar */}
                         <motion.div
                             whileHover={{ scale: 1.02 }}
-                            className="mx-auto max-w-2xl p-2 bg-white rounded-full shadow-2xl shadow-blue-500/10 border border-white/50 backdrop-blur-xl flex items-center gap-2"
+                            className="mx-auto max-w-2xl p-1.5 sm:p-2 bg-white rounded-full shadow-2xl shadow-blue-500/10 border border-white/50 backdrop-blur-xl flex items-center gap-1 sm:gap-2"
                         >
-                            <div className="pl-4 text-muted-foreground">
-                                <Search className="h-5 w-5" />
+                            <div className="pl-3 sm:pl-4 text-muted-foreground">
+                                <Search className="h-4 w-4 sm:h-5 sm:w-5" />
                             </div>
                             <Input
-                                className="border-none shadow-none bg-transparent h-12 text-lg placeholder:text-muted-foreground/50 focus-visible:ring-0"
-                                placeholder="¿Qué necesitas arreglar hoy?"
+                                className="border-none shadow-none bg-transparent h-10 sm:h-12 text-base sm:text-lg placeholder:text-muted-foreground/50 focus-visible:ring-0"
+                                placeholder="¿Qué necesitas arreglar?"
                             />
-                            <Button size="lg" className="rounded-full px-8 bg-black text-white hover:bg-gray-800 hover:shadow-lg transition-all">
+                            <Button size="lg" className="rounded-full px-4 sm:px-8 text-sm sm:text-base bg-black text-white hover:bg-gray-800 hover:shadow-lg transition-all whitespace-nowrap">
                                 Buscar
                             </Button>
                         </motion.div>
 
                         {/* Trust Badges */}
-                        <div className="flex flex-wrap justify-center gap-8 pt-8 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
+                        <div className="flex flex-wrap justify-center gap-4 sm:gap-6 lg:gap-8 pt-6 sm:pt-8 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
                             {["Profesionales Verificados", "Garantía de Calidad", "100% Confiable"].map((text, i) => (
-                                <div key={i} className="flex items-center gap-2 text-sm font-medium">
-                                    <CheckCircle2 className="h-4 w-4 text-green-500" /> {text}
+                                <div key={i} className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-medium">
+                                    <CheckCircle2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-green-500 flex-shrink-0" />
+                                    <span className="whitespace-nowrap">{text}</span>
                                 </div>
                             ))}
                         </div>
@@ -266,16 +267,16 @@ export default function Home() {
             </section>
 
             {/* 3D Tilt Categories Section */}
-            <section className="py-24 relative">
-                <div className="container px-4">
-                    <div className="text-center mb-16">
-                        <h2 className="text-3xl font-bold tracking-tight sm:text-4xl mb-4">Servicios Populares</h2>
-                        <p className="text-muted-foreground text-lg">Los profesionales más solicitados de la semana.</p>
+            <section className="py-16 sm:py-20 lg:py-24 relative">
+                <div className="container px-4 sm:px-6">
+                    <div className="text-center mb-12 sm:mb-16">
+                        <h2 className="text-2xl sm:text-3xl font-bold tracking-tight lg:text-4xl mb-3 sm:mb-4">Servicios Populares</h2>
+                        <p className="text-muted-foreground text-base sm:text-lg">Los profesionales más solicitados de la semana.</p>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
                         {categories.map((category, index) => (
-                            <TiltCard key={category.id} className="group relative h-64 rounded-[2rem] bg-white p-8 shadow-xl shadow-black/5 border border-white/50 backdrop-blur-sm hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-500">
+                            <TiltCard key={category.id} className="group relative h-56 sm:h-64 rounded-[2rem] bg-white p-6 sm:p-8 shadow-xl shadow-black/5 border border-white/50 backdrop-blur-sm hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-500">
                                 <div className={`absolute inset-0 bg-gradient-to-br ${category.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[2rem]`} />
                                 <div className="relative z-10 flex flex-col h-full justify-between">
                                     <div className="text-6xl mb-4 transform group-hover:scale-110 transition-transform duration-300">{category.icon}</div>
