@@ -141,7 +141,7 @@ export function Navbar() {
                     </div>
 
                     <div className="flex items-center gap-4">
-                        {/* Search Button con Cmd+K */}
+                        {/* Search Button con Cmd+K - Only for authenticated users */}
                         <Button
                             variant="outline"
                             className="hidden md:inline-flex w-[200px] lg:w-[300px] justify-start text-muted-foreground"
@@ -153,12 +153,11 @@ export function Navbar() {
                             </kbd>
                         </Button>
 
-                        {/* Notification Center */}
-                        <NotificationCenter />
-
                         <ThemeToggle />
 
-                        {/* User Menu */}
+                        {/* Show user menu and notifications only when logged in */}
+                        {/* TODO: Implement session check to show/hide authenticated elements */}
+                        {/* <NotificationCenter />
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <Button variant="ghost" size="icon" className="rounded-full">
@@ -177,7 +176,7 @@ export function Navbar() {
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem className="text-red-600">Cerrar Sesión</DropdownMenuItem>
                             </DropdownMenuContent>
-                        </DropdownMenu>
+                        </DropdownMenu> */}
                     </div>
                 </div>
             </header>
