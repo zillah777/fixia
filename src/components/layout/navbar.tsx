@@ -101,7 +101,14 @@ export function Navbar() {
                         </nav>
                     </div>
 
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2 sm:gap-4">
+                        {/* Mobile-only CTA Button */}
+                        <Link href="/become-a-pro" className="md:hidden">
+                            <Button size="sm" variant="default" className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold text-xs px-3">
+                                Únete
+                            </Button>
+                        </Link>
+
                         <ThemeToggle />
 
                         {/* Show user menu and notifications only when logged in */}
