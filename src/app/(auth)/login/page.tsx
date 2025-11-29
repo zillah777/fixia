@@ -2,7 +2,9 @@
 
 import { useState } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { useRouter } from "next/navigation"
+
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -71,15 +73,19 @@ export default function LoginPage() {
         <div className="flex min-h-screen items-center justify-center bg-muted/50 p-4">
             <div className="w-full max-w-md space-y-8">
                 {/* Logo */}
-                <Link href="/" className="flex items-center justify-center">
-                    <svg width="120" height="40" viewBox="0 0 120 40" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-primary">
-                        <rect x="2" y="2" width="36" height="36" rx="8" fill="currentColor" opacity="0.1" />
-                        <path d="M14 18L18 14M22 18L18 14M18 14V26" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                        <circle cx="18" cy="28" r="2" fill="currentColor" />
-                        <path d="M24 12L28 16M28 16L24 20M28 16H16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                        <text x="46" y="28" fontFamily="system-ui, -apple-system, sans-serif" fontSize="24" fontWeight="700" fill="currentColor">FIXIA</text>
-                    </svg>
+                <Link href="/" className="flex items-center justify-center gap-2">
+                    <div className="relative h-12 w-auto aspect-[3/1]">
+                        <Image
+                            src="/logo.png"
+                            alt="Fixia Logo"
+                            width={120}
+                            height={40}
+                            className="object-contain"
+                            priority
+                        />
+                    </div>
                 </Link>
+
 
                 <Card className="w-full max-w-md">
 
