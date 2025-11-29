@@ -84,8 +84,8 @@ export default function Home() {
                         </Badge>
 
                         <h1 className="text-6xl font-bold tracking-tight sm:text-8xl bg-clip-text text-transparent bg-gradient-to-b from-gray-900 to-gray-600 drop-shadow-sm">
-                            Expertos en tu hogar,<br />
-                            <span className="text-aurora text-glow">al instante.</span>
+                            El profesional perfecto,<br />
+                            <span className="text-aurora text-glow">cuando lo necesitas.</span>
                         </h1>
 
                         <p className="mx-auto max-w-2xl text-xl text-muted-foreground leading-relaxed">
