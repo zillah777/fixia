@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { TestimonialsCarousel } from "@/components/testimonials-carousel"
 
 // 3D Tilt Card Component
 function TiltCard({ children, className }: { children: React.ReactNode, className?: string }) {
@@ -47,10 +48,10 @@ const categories = [
 ];
 
 const testimonials = [
-    { name: "Ana García", role: "Cliente Verificado", text: "¡Increíble servicio! Encontré un plomero en 5 minutos.", avatar: "/avatars/01.png" },
-    { name: "Carlos Ruiz", role: "Cliente Verificado", text: "La mejor app para solucionar problemas del hogar.", avatar: "/avatars/02.png" },
-    { name: "Sofia Lopez", role: "Cliente Verificado", text: "Profesionales muy amables y trabajo impecable.", avatar: "/avatars/03.png" },
-    { name: "Miguel Diaz", role: "Cliente Verificado", text: "Me salvó el fin de semana. Recomendadísimo.", avatar: "/avatars/04.png" },
+    { id: "1", name: "Ana García", role: "Cliente Verificado", text: "¡Increíble servicio! Encontré un plomero en 5 minutos.", avatar: "/avatars/01.png", rating: 5 },
+    { id: "2", name: "Carlos Ruiz", role: "Cliente Verificado", text: "La mejor app para solucionar problemas del hogar.", avatar: "/avatars/02.png", rating: 5 },
+    { id: "3", name: "Sofia Lopez", role: "Cliente Verificado", text: "Profesionales muy amables y trabajo impecable.", avatar: "/avatars/03.png", rating: 5 },
+    { id: "4", name: "Miguel Diaz", role: "Cliente Verificado", text: "Me salvó el fin de semana. Recomendadísimo.", avatar: "/avatars/04.png", rating: 5 },
 ];
 
 const stats = [
@@ -149,34 +150,14 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* Infinite Marquee Testimonials */}
-            <section className="py-24 bg-white overflow-hidden">
-                <div className="container px-4 mb-12 text-center">
-                    <h2 className="text-3xl font-bold tracking-tight">Lo que dicen nuestros clientes</h2>
-                </div>
-                <div className="relative flex overflow-x-hidden group">
-                    <div className="animate-marquee whitespace-nowrap flex gap-8">
-                        {[...testimonials, ...testimonials, ...testimonials].map((t, i) => (
-                            <div key={i} className="inline-block w-[350px] p-8 rounded-[2rem] bg-gray-50 border border-gray-100 mx-4 whitespace-normal hover:bg-white hover:shadow-xl transition-all duration-300">
-                                <div className="flex gap-1 mb-4">
-                                    {[1, 2, 3, 4, 5].map((_, starI) => (
-                                        <Star key={starI} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                                    ))}
-                                </div>
-                                <p className="text-lg text-gray-700 mb-6 leading-relaxed">"{t.text}"</p>
-                                <div className="flex items-center gap-4">
-                                    <Avatar>
-                                        <AvatarImage src={t.avatar} />
-                                        <AvatarFallback>{t.name[0]}</AvatarFallback>
-                                    </Avatar>
-                                    <div>
-                                        <p className="font-bold text-sm">{t.name}</p>
-                                        <p className="text-xs text-muted-foreground">{t.role}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
+            {/* Testimonials Carousel */}
+            <section className="py-24 bg-background overflow-hidden">
+                <div className="container px-4">
+                    <div className="mb-12 text-center">
+                        <h2 className="text-3xl font-bold tracking-tight sm:text-4xl mb-4">Lo que dicen nuestros clientes</h2>
+                        <p className="text-muted-foreground max-w-2xl mx-auto">Miles de usuarios han encontrado el profesional perfecto a través de Fixia</p>
                     </div>
+                    <TestimonialsCarousel testimonials={testimonials} />
                 </div>
             </section>
 
