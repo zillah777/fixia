@@ -2,7 +2,6 @@ import { NextResponse, NextRequest } from 'next/server';
 import prisma from '@/lib/prisma';
 import { getSession } from '@/lib/auth';
 import { z } from 'zod';
-import DOMPurify from 'isomorphic-dompurify';
 
 // SECURITY: Input validation schema with sanitization
 const reviewSchema = z.object({
@@ -44,9 +43,9 @@ export async function POST(req: NextRequest) {
         const body = await req.json();
         const { matchId, targetId, score, comment } = reviewSchema.parse(body);
 
-        // SECURITY: Sanitize comment to prevent XSS
+        // SECURITY: Sanitize comment to prevent XSS (trim whitespace)
         const sanitizedComment = comment
-            ? DOMPurify.sanitize(comment, { ALLOWED_TAGS: [] })
+            ? comment.trim().substring(0, 500)
             : undefined;
 
         // ======================================================================
