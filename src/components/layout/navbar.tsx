@@ -115,9 +115,9 @@ export function Navbar() {
                             <Image
                                 src="/logo.png"
                                 alt="Fixia Logo"
-                                width={32}
-                                height={32}
-                                className="h-8 w-8 object-contain"
+                                width={48}
+                                height={48}
+                                className="h-12 w-12 object-contain"
                             />
                         </Link>
 
