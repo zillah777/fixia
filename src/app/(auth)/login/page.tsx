@@ -70,7 +70,7 @@ export default function LoginPage() {
     }
 
     return (
-        <div className="flex min-h-screen items-center justify-center bg-muted/50 p-4">
+        <div className="flex min-h-screen items-start justify-center bg-muted/50 p-4 pt-32">
             <div className="w-full max-w-md space-y-8">
                 {/* Logo */}
                 <Link href="/" className="flex items-center justify-center gap-2">
