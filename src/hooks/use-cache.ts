@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useRef, useEffect } from "react"
+import { useCallback, useRef, useEffect, useState } from "react"
 
 interface CacheEntry<T> {
     data: T
@@ -30,7 +30,7 @@ export const useCache: UseCache = (key, fetcher, ttl = 5 * 60 * 1000) => {
     const dataRef = useRef<any | undefined>(undefined)
     const isLoadingRef = useRef(false)
     const errorRef = useRef<Error | undefined>(undefined)
-    const [, setUpdateTrigger] = useCallback([0], (i: number) => [i + 1])
+    const [, setUpdateTrigger] = useState(0)
 
     const isCacheValid = useCallback(() => {
         const entry = cacheStore.get(key)
@@ -51,7 +51,7 @@ export const useCache: UseCache = (key, fetcher, ttl = 5 * 60 * 1000) => {
 
         isLoadingRef.current = true
         errorRef.current = undefined
-        setUpdateTrigger((i) => i + 1)
+        setUpdateTrigger((i: number) => i + 1)
 
         try {
             const result = await fetcher()
@@ -65,7 +65,7 @@ export const useCache: UseCache = (key, fetcher, ttl = 5 * 60 * 1000) => {
             errorRef.current = error instanceof Error ? error : new Error(String(error))
         } finally {
             isLoadingRef.current = false
-            setUpdateTrigger((i) => i + 1)
+            setUpdateTrigger((i: number) => i + 1)
         }
     }, [key, fetcher, ttl, isCacheValid])
 
@@ -78,7 +78,7 @@ export const useCache: UseCache = (key, fetcher, ttl = 5 * 60 * 1000) => {
             const entry = cacheStore.get(key)
             if (entry) {
                 dataRef.current = entry.data
-                setUpdateTrigger((i) => i + 1)
+                setUpdateTrigger((i: number) => i + 1)
             }
         }
     }, [key, isCacheValid, fetchData])
