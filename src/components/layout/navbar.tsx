@@ -35,9 +35,8 @@ export function Navbar() {
     return (
         <>
             <header
-                className={`sticky top-4 z-50 w-[95%] max-w-7xl mx-auto rounded-full border bg-background/70 backdrop-blur-xl supports-[backdrop-filter]:bg-background/40 transition-all duration-200 ${
-                    isScrolled ? "shadow-lg shadow-primary/5" : ""
-                }`}
+                className={`sticky top-4 z-50 w-[95%] max-w-7xl mx-auto rounded-full border bg-background/70 backdrop-blur-xl supports-[backdrop-filter]:bg-background/40 transition-all duration-200 ${isScrolled ? "shadow-lg shadow-primary/5" : ""
+                    }`}
             >
                 <div className="container flex h-16 items-center justify-between">
                     <div className="flex items-center gap-6 flex-1">
@@ -117,9 +116,6 @@ export function Navbar() {
                             </div>
                         </div>
 
-                        <Link href="/login" className="hidden md:block text-sm font-medium transition-colors hover:text-foreground/80 text-foreground/60">
-                            Iniciar Sesión
-                        </Link>
                     </div>
 
                     <div className="flex items-center gap-2 sm:gap-4">
@@ -130,7 +126,12 @@ export function Navbar() {
                             </Button>
                         </Link>
 
+                        <Link href="/login" className="hidden md:block text-sm font-medium transition-colors hover:text-foreground/80 text-foreground/60">
+                            Iniciar Sesión
+                        </Link>
+
                         <ThemeToggle />
+
 
                         {/* Show user menu and notifications only when logged in */}
                         {/* TODO: Implement session check to show/hide authenticated elements */}
