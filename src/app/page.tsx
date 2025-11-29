@@ -344,18 +344,18 @@ export default function Home() {
                         transition={{ duration: 0.5 }}
                         className="bg-aurora p-[1px] rounded-[3rem] inline-block"
                     >
-                        <div className="bg-white rounded-[3rem] p-16 md:p-24 shadow-2xl shadow-blue-500/20 backdrop-blur-xl">
-                            <h2 className="text-4xl md:text-6xl font-bold mb-8 tracking-tight">
+                        <div className="bg-card rounded-[3rem] p-16 md:p-24 shadow-2xl shadow-primary/20 backdrop-blur-xl border border-border">
+                            <h2 className="text-4xl md:text-6xl font-bold mb-8 tracking-tight text-foreground">
                                 ¿Listo para transformar tu hogar?
                             </h2>
                             <p className="text-xl text-muted-foreground mb-12 max-w-2xl mx-auto">
                                 Únete a miles de usuarios que ya disfrutan de un servicio de calidad, rápido y seguro.
                             </p>
                             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                                <Button size="lg" className="h-14 px-10 rounded-full text-lg bg-black text-white hover:scale-105 transition-transform shadow-xl shadow-black/20 shimmer">
+                                <Button size="lg" className="h-14 px-10 rounded-full text-lg bg-primary text-primary-foreground hover:scale-105 transition-transform shadow-xl shadow-primary/20 shimmer">
                                     Comenzar Ahora
                                 </Button>
-                                <Button size="lg" variant="outline" className="h-14 px-10 rounded-full text-lg border-2 hover:bg-gray-50">
+                                <Button size="lg" variant="outline" className="h-14 px-10 rounded-full text-lg border-2 hover:bg-muted">
                                     Ver Servicios
                                 </Button>
                             </div>
