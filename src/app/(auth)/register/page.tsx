@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -43,6 +43,9 @@ const formSchema = z.object({
 
 export default function RegisterPage() {
     const router = useRouter()
+    const searchParams = useSearchParams()
+    const defaultRole = searchParams.get("role") === "professional" ? "PROFESSIONAL" : "CLIENT"
+
     const [isLoading, setIsLoading] = useState(false)
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -52,9 +55,10 @@ export default function RegisterPage() {
             email: "",
             phone: "",
             password: "",
-            role: "CLIENT",
+            role: defaultRole,
         },
     })
+
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         setIsLoading(true)
