@@ -149,10 +149,16 @@ export default function BecomeProPage() {
                             <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-slate-200 dark:border-slate-800">
                                 <div className="aspect-video bg-slate-100 dark:bg-slate-800 relative">
                                     <Image
-                                        src="/images/marketing/professional-dashboard-mockup.svg"
+                                        src="/images/marketing/professional-dashboard-mockup-light.svg"
                                         alt="Dashboard de Profesional"
                                         fill
-                                        className="object-cover"
+                                        className="object-cover dark:hidden"
+                                    />
+                                    <Image
+                                        src="/images/marketing/professional-dashboard-mockup-dark.svg"
+                                        alt="Dashboard de Profesional"
+                                        fill
+                                        className="object-cover hidden dark:block"
                                     />
                                 </div>
                             </div>
@@ -217,10 +223,16 @@ export default function BecomeProPage() {
                             <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-slate-200 dark:border-slate-800 transform md:rotate-2 hover:rotate-0 transition-transform duration-500">
                                 <div className="aspect-[4/5] bg-white dark:bg-slate-800 relative">
                                     <Image
-                                        src="/images/marketing/client-search-mockup.svg"
+                                        src="/images/marketing/client-search-mockup-light.svg"
                                         alt="Búsqueda de Servicios"
                                         fill
-                                        className="object-cover"
+                                        className="object-cover dark:hidden"
+                                    />
+                                    <Image
+                                        src="/images/marketing/client-search-mockup-dark.svg"
+                                        alt="Búsqueda de Servicios"
+                                        fill
+                                        className="object-cover hidden dark:block"
                                     />
                                 </div>
                             </div>
