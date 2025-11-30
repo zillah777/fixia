@@ -6,10 +6,9 @@ import { X } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { type InputProps } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
 
-interface TagInputProps extends Omit<InputProps, "value" | "onChange"> {
+interface TagInputProps extends Omit<React.ComponentProps<"input">, "value" | "onChange"> {
     value: string[]
     onChange: (value: string[]) => void
     placeholder?: string
