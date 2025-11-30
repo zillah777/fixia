@@ -160,13 +160,34 @@ export default function BecomeProPage() {
                             <div className="absolute -bottom-6 -left-6 bg-white dark:bg-slate-900 p-4 rounded-xl shadow-xl border border-slate-100 dark:border-slate-800 max-w-[200px]">
                                 <div className="flex items-center gap-2 mb-2">
                                     <div className="flex -space-x-2">
-                                        {[1, 2, 3].map(i => (
-                                            <div key={i} className="h-8 w-8 rounded-full bg-slate-200 border-2 border-white dark:border-slate-900"></div>
-                                        ))}
+                                        <div className="h-8 w-8 rounded-full overflow-hidden border-2 border-white dark:border-slate-900">
+                                            <Image
+                                                src="/images/marketing/avatar-1.svg"
+                                                alt="Cliente 1"
+                                                width={32}
+                                                height={32}
+                                            />
+                                        </div>
+                                        <div className="h-8 w-8 rounded-full overflow-hidden border-2 border-white dark:border-slate-900">
+                                            <Image
+                                                src="/images/marketing/avatar-2.svg"
+                                                alt="Cliente 2"
+                                                width={32}
+                                                height={32}
+                                            />
+                                        </div>
+                                        <div className="h-8 w-8 rounded-full overflow-hidden border-2 border-white dark:border-slate-900">
+                                            <Image
+                                                src="/images/marketing/avatar-3.svg"
+                                                alt="Cliente 3"
+                                                width={32}
+                                                height={32}
+                                            />
+                                        </div>
                                     </div>
-                                    <span className="text-xs font-bold">+12</span>
+                                    <span className="text-xs font-bold text-slate-900 dark:text-white">+12</span>
                                 </div>
-                                <p className="text-sm font-medium">Nuevos clientes esta semana</p>
+                                <p className="text-sm font-medium text-slate-700 dark:text-slate-300">Nuevos clientes esta semana</p>
                             </div>
                         </div>
                     </div>
