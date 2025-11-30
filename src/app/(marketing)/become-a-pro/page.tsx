@@ -147,8 +147,13 @@ export default function BecomeProPage() {
                         </div>
                         <div className="flex-1 relative">
                             <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-slate-200 dark:border-slate-800">
-                                <div className="aspect-video bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
-                                    <span className="text-muted-foreground">[Imagen: Profesional usando la app]</span>
+                                <div className="aspect-video bg-slate-100 dark:bg-slate-800 relative">
+                                    <Image
+                                        src="/images/marketing/professional-dashboard-mockup.svg"
+                                        alt="Dashboard de Profesional"
+                                        fill
+                                        className="object-cover"
+                                    />
                                 </div>
                             </div>
                             {/* Floating card */}
@@ -209,30 +214,14 @@ export default function BecomeProPage() {
                             </div>
                         </div>
                         <div className="flex-1">
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="space-y-4 mt-8">
-                                    <div className="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-sm border">
-                                        <div className="h-20 bg-slate-100 dark:bg-slate-700 rounded-xl mb-3"></div>
-                                        <div className="h-4 w-3/4 bg-slate-100 dark:bg-slate-700 rounded mb-2"></div>
-                                        <div className="h-3 w-1/2 bg-slate-100 dark:bg-slate-700 rounded"></div>
-                                    </div>
-                                    <div className="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-sm border">
-                                        <div className="h-20 bg-slate-100 dark:bg-slate-700 rounded-xl mb-3"></div>
-                                        <div className="h-4 w-3/4 bg-slate-100 dark:bg-slate-700 rounded mb-2"></div>
-                                        <div className="h-3 w-1/2 bg-slate-100 dark:bg-slate-700 rounded"></div>
-                                    </div>
-                                </div>
-                                <div className="space-y-4">
-                                    <div className="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-sm border">
-                                        <div className="h-20 bg-slate-100 dark:bg-slate-700 rounded-xl mb-3"></div>
-                                        <div className="h-4 w-3/4 bg-slate-100 dark:bg-slate-700 rounded mb-2"></div>
-                                        <div className="h-3 w-1/2 bg-slate-100 dark:bg-slate-700 rounded"></div>
-                                    </div>
-                                    <div className="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-sm border">
-                                        <div className="h-20 bg-slate-100 dark:bg-slate-700 rounded-xl mb-3"></div>
-                                        <div className="h-4 w-3/4 bg-slate-100 dark:bg-slate-700 rounded mb-2"></div>
-                                        <div className="h-3 w-1/2 bg-slate-100 dark:bg-slate-700 rounded"></div>
-                                    </div>
+                            <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-slate-200 dark:border-slate-800 transform md:rotate-2 hover:rotate-0 transition-transform duration-500">
+                                <div className="aspect-[4/5] bg-white dark:bg-slate-800 relative">
+                                    <Image
+                                        src="/images/marketing/client-search-mockup.svg"
+                                        alt="Búsqueda de Servicios"
+                                        fill
+                                        className="object-cover"
+                                    />
                                 </div>
                             </div>
                         </div>
