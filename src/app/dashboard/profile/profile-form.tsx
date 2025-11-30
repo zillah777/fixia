@@ -10,8 +10,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { CheckCircle2, MapPin, Upload } from "lucide-react"
 import { toast } from "sonner"
+import { TagInput } from "@/components/ui/tag-input"
 
-// Mock user data
+// Mock user data (extended)
 const userData = {
     name: "Juan Pérez",
     email: "juan.perez@example.com",
@@ -20,7 +21,10 @@ const userData = {
     bio: "Electricista matriculado con más de 10 años de experiencia en instalaciones residenciales y comerciales.",
     location: "Palermo, CABA",
     phone: "+54 9 11 1234 5678",
-    certifications: ["Matrícula Nacional #12345", "Curso de Seguridad Eléctrica"],
+    certification: "Matrícula Nacional #12345",
+    licenseNumber: "MN-12345",
+    experience: "10 años",
+    tags: ["Electricidad", "Instalaciones", "Reparaciones", "Industrial", "Hogar"],
     subscription: {
         plan: "PROFESSIONAL",
         status: "ACTIVE",
@@ -79,7 +83,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
                             <div className="relative mb-4">
                                 <Avatar className="h-24 w-24">
                                     <AvatarImage src={formData.image} />
-                                    <AvatarFallback>{formData.name.substring(0, 2)}</AvatarFallback>
+                                    <AvatarFallback>{formData.name?.substring(0, 2)}</AvatarFallback>
                                 </Avatar>
                                 <Button size="icon" variant="secondary" className="absolute bottom-0 right-0 h-8 w-8 rounded-full">
                                     <Upload className="h-4 w-4" />
@@ -140,7 +144,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
                                     <Label htmlFor="name">Nombre Completo</Label>
                                     <Input
                                         id="name"
-                                        value={formData.name}
+                                        value={formData.name || ""}
                                         disabled={!isEditing}
                                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                     />
@@ -171,7 +175,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="bio">Biografía / Experiencia</Label>
+                                <Label htmlFor="bio">Biografía / Presentación</Label>
                                 <Textarea
                                     id="bio"
                                     className="min-h-[100px]"
@@ -181,22 +185,56 @@ export function ProfileForm({ user }: ProfileFormProps) {
                                 />
                             </div>
 
-                            <div className="space-y-2">
-                                <Label>Certificaciones</Label>
-                                <div className="space-y-2">
-                                    {formData.certifications.map((cert, index) => (
-                                        <div key={index} className="flex items-center gap-2 text-sm bg-muted p-2 rounded-md">
-                                            <CheckCircle2 className="h-4 w-4 text-blue-500" />
-                                            <span>{cert}</span>
+                            {formData.role === "PROFESSIONAL" && (
+                                <>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="space-y-2">
+                                            <Label htmlFor="certification">Certificación / Título</Label>
+                                            <Input
+                                                id="certification"
+                                                value={formData.certification}
+                                                disabled={!isEditing}
+                                                onChange={(e) => setFormData({ ...formData, certification: e.target.value })}
+                                                placeholder="Ej. Electricista Matriculado"
+                                            />
                                         </div>
-                                    ))}
-                                    {isEditing && (
-                                        <Button variant="outline" size="sm" className="w-full border-dashed">
-                                            + Agregar Certificación
-                                        </Button>
-                                    )}
-                                </div>
-                            </div>
+                                        <div className="space-y-2">
+                                            <Label htmlFor="licenseNumber">Nro. Matrícula / Licencia</Label>
+                                            <Input
+                                                id="licenseNumber"
+                                                value={formData.licenseNumber}
+                                                disabled={!isEditing}
+                                                onChange={(e) => setFormData({ ...formData, licenseNumber: e.target.value })}
+                                                placeholder="Ej. MN-12345"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <Label htmlFor="experience">Experiencia</Label>
+                                        <Input
+                                            id="experience"
+                                            value={formData.experience}
+                                            disabled={!isEditing}
+                                            onChange={(e) => setFormData({ ...formData, experience: e.target.value })}
+                                            placeholder="Ej. 10 años en el rubro"
+                                        />
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <Label>Tags de Expertise (Máx. 5)</Label>
+                                        <TagInput
+                                            value={formData.tags}
+                                            onChange={(tags) => setFormData({ ...formData, tags })}
+                                            disabled={!isEditing}
+                                            placeholder="Escribe una habilidad y presiona Enter..."
+                                        />
+                                        <p className="text-xs text-muted-foreground">
+                                            Palabras clave que describen tus habilidades (ej. "Electricidad", "Plomería", "Urgencias").
+                                        </p>
+                                    </div>
+                                </>
+                            )}
                         </CardContent>
                     </Card>
                 </div>

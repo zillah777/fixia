@@ -7,7 +7,9 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { toast } from "sonner"
-import { Loader2, User, Briefcase } from "lucide-react"
+import { Loader2, User, Briefcase, CalendarIcon } from "lucide-react"
+import { format } from "date-fns"
+import { es } from "date-fns/locale"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -19,9 +21,13 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { PasswordInput } from "@/components/ui/password-input"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Calendar } from "@/components/ui/calendar"
+import { cn } from "@/lib/utils"
 
 const formSchema = z.object({
     name: z.string().min(2, {
@@ -32,6 +38,21 @@ const formSchema = z.object({
     }),
     phone: z.string().min(10, {
         message: "Ingresa un número de teléfono válido.",
+    }),
+    dni: z.string().min(7, {
+        message: "El DNI debe tener al menos 7 dígitos.",
+    }).max(9, {
+        message: "El DNI no puede tener más de 9 dígitos.",
+    }).regex(/^\d+$/, {
+        message: "El DNI solo debe contener números.",
+    }),
+    birthdate: z.date({
+        required_error: "La fecha de nacimiento es obligatoria.",
+    }).refine((date) => {
+        const age = new Date().getFullYear() - date.getFullYear();
+        return age >= 18;
+    }, {
+        message: "Debes ser mayor de 18 años para registrarte.",
     }),
     password: z.string().min(6, {
         message: "La contraseña debe tener al menos 6 caracteres.",
@@ -54,6 +75,7 @@ function RegisterForm() {
             name: "",
             email: "",
             phone: "",
+            dni: "",
             password: "",
             role: defaultRole,
         },
@@ -156,6 +178,66 @@ function RegisterForm() {
                                 )}
                             />
 
+                            <div className="grid grid-cols-2 gap-4">
+                                <FormField
+                                    control={form.control}
+                                    name="dni"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>DNI</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="12345678" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="birthdate"
+                                    render={({ field }) => (
+                                        <FormItem className="flex flex-col">
+                                            <FormLabel className="mb-1.5 mt-0.5">Fecha de Nacimiento</FormLabel>
+                                            <Popover>
+                                                <PopoverTrigger asChild>
+                                                    <FormControl>
+                                                        <Button
+                                                            variant={"outline"}
+                                                            className={cn(
+                                                                "w-full pl-3 text-left font-normal",
+                                                                !field.value && "text-muted-foreground"
+                                                            )}
+                                                        >
+                                                            {field.value ? (
+                                                                format(field.value, "PPP", { locale: es })
+                                                            ) : (
+                                                                <span>Seleccionar</span>
+                                                            )}
+                                                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                        </Button>
+                                                    </FormControl>
+                                                </PopoverTrigger>
+                                                <PopoverContent className="w-auto p-0" align="start">
+                                                    <Calendar
+                                                        mode="single"
+                                                        selected={field.value}
+                                                        onSelect={field.onChange}
+                                                        disabled={(date) =>
+                                                            date > new Date() || date < new Date("1900-01-01")
+                                                        }
+                                                        initialFocus
+                                                        captionLayout="dropdown-buttons"
+                                                        fromYear={1900}
+                                                        toYear={new Date().getFullYear()}
+                                                    />
+                                                </PopoverContent>
+                                            </Popover>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
+
                             <FormField
                                 control={form.control}
                                 name="email"
@@ -191,7 +273,7 @@ function RegisterForm() {
                                     <FormItem>
                                         <FormLabel>Contraseña</FormLabel>
                                         <FormControl>
-                                            <Input type="password" placeholder="••••••" {...field} />
+                                            <PasswordInput placeholder="••••••" {...field} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>

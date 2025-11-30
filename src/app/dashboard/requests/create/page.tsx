@@ -34,6 +34,7 @@ import { Slider } from "@/components/ui/slider"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Calendar } from "@/components/ui/calendar"
 import { cn } from "@/lib/utils"
+import { TagInput } from "@/components/ui/tag-input"
 
 const formSchema = z.object({
     title: z.string().min(5, {
@@ -54,6 +55,9 @@ const formSchema = z.object({
     date: z.date({
         required_error: "Selecciona una fecha preferida.",
     }),
+    tags: z.array(z.string()).max(5, {
+        message: "Máximo 5 tags permitidos.",
+    }).optional(),
 })
 
 export default function CreateRequestPage() {
@@ -67,6 +71,7 @@ export default function CreateRequestPage() {
             description: "",
             location: "",
             budget: [5000], // Default budget
+            tags: [],
         },
     })
 
@@ -181,6 +186,27 @@ export default function CreateRequestPage() {
                                                 {...field}
                                             />
                                         </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
+                                name="tags"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Tags / Palabras Clave (Opcional)</FormLabel>
+                                        <FormControl>
+                                            <TagInput
+                                                value={field.value || []}
+                                                onChange={field.onChange}
+                                                placeholder="Ej. Urgente, Materiales incluidos..."
+                                            />
+                                        </FormControl>
+                                        <FormDescription>
+                                            Agrega palabras clave para ayudar a los profesionales a encontrar tu solicitud.
+                                        </FormDescription>
                                         <FormMessage />
                                     </FormItem>
                                 )}

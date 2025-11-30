@@ -44,6 +44,8 @@ model User {
   email          String     @unique
   name           String?
   phone          String?    @unique
+  dni            String?    @unique // DNI/ID Number
+  birthdate      DateTime?  // Date of birth
   password       String
   verificationToken String?
   role           Role       @default(CLIENT)
@@ -92,6 +94,12 @@ model Profile {
   ratingAvg       Float    @default(0)
   badges          String[] // ["VERIFIED", "PREMIUM", "NEW"]
   
+  // New Professional Fields
+  certification   String?  // Certification name/details
+  licenseNumber   String?  // Professional license number
+  experience      String?  // Years of experience or description
+  tags            String[] // Expertise tags (max 5)
+
   user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
@@ -103,6 +111,7 @@ model Service {
   categoryId  String   // Can be an Enum or a separate Category model if needed, keeping simple as String for now or ID
   price       Decimal  @db.Decimal(10, 2)
   images      String[] // Cloudinary URLs
+  tags        String[] // Service tags
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -120,6 +129,7 @@ model Request {
   locationLat Float?
   locationLng Float?
   budget      Decimal?      @db.Decimal(10, 2)
+  tags        String[]      // Request tags
   status      RequestStatus @default(OPEN)
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt

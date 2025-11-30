@@ -11,19 +11,22 @@ const registerSchema = z.object({
     password: z.string().min(6),
     role: z.enum(["CLIENT", "PROFESSIONAL"]),
     phone: z.string().optional(),
+    dni: z.string().min(7).max(9),
+    birthdate: z.string().transform((str) => new Date(str)), // Receive as string, convert to Date
 });
 
 export async function POST(req: Request) {
     try {
         const body = await req.json();
-        const { name, email, password, role, phone } = registerSchema.parse(body);
+        const { name, email, password, role, phone, dni, birthdate } = registerSchema.parse(body);
 
-        // Check if user exists (email or phone)
+        // Check if user exists (email, phone or dni)
         const existingUser = await prisma.user.findFirst({
             where: {
                 OR: [
                     { email },
-                    { phone: phone || undefined }
+                    { phone: phone || undefined },
+                    { dni }
                 ]
             }
         });
@@ -34,6 +37,9 @@ export async function POST(req: Request) {
             }
             if (existingUser.phone === phone) {
                 return new NextResponse("El teléfono ya está registrado", { status: 409 });
+            }
+            if (existingUser.dni === dni) {
+                return new NextResponse("El DNI ya está registrado", { status: 409 });
             }
         }
 
@@ -49,6 +55,8 @@ export async function POST(req: Request) {
                 password: hashedPassword,
                 role,
                 phone,
+                dni,
+                birthdate,
                 verificationToken,
             },
         });
@@ -73,7 +81,7 @@ export async function POST(req: Request) {
         }
         // Handle Prisma Unique Constraint Violation
         if (error.code === 'P2002') {
-            return new NextResponse("El usuario ya existe (email o teléfono)", { status: 409 });
+            return new NextResponse("El usuario ya existe (email, teléfono o DNI)", { status: 409 });
         }
         return new NextResponse(`Error interno del servidor: ${error.message}`, { status: 500 });
     }
