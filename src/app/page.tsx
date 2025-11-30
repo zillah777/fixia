@@ -213,8 +213,11 @@ export default function Home() {
                             transition={{ duration: 0.8, ease: "easeOut" }}
                             className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight"
                         >
+                            <span className="block text-foreground mb-2 sm:mb-3 font-medium">
+                                Tu vida,
+                            </span>
                             <span className="block text-foreground mb-3 sm:mb-4">
-                                Tu vida, más simple.
+                                más simple.
                             </span>
                             <motion.span
                                 initial={{ opacity: 0, y: 20 }}
@@ -241,17 +244,23 @@ export default function Home() {
 
                         {/* Floating Search Bar */}
                         <motion.div
-                            whileHover={{ scale: 1.02 }}
-                            className="mx-auto max-w-2xl p-1.5 sm:p-2 bg-card rounded-full shadow-2xl shadow-primary/10 border border-border backdrop-blur-xl flex items-center gap-1 sm:gap-2"
+                            whileHover={{ scale: 1.03, boxShadow: "0 25px 50px -12px rgba(96, 165, 250, 0.15)" }}
+                            whileTap={{ scale: 0.98 }}
+                            className="mx-auto max-w-2xl p-1.5 sm:p-2 bg-card rounded-full shadow-2xl shadow-primary/5 border border-border/80 backdrop-blur-xl flex items-center gap-1 sm:gap-2 transition-all duration-300"
                         >
                             <div className="pl-3 sm:pl-4 text-muted-foreground">
-                                <Search className="h-4 w-4 sm:h-5 sm:w-5" />
+                                <motion.div
+                                    whileHover={{ scale: 1.1 }}
+                                    transition={{ type: "spring", stiffness: 300 }}
+                                >
+                                    <Search className="h-4 w-4 sm:h-5 sm:w-5" />
+                                </motion.div>
                             </div>
                             <Input
-                                className="border-none shadow-none bg-transparent h-10 sm:h-12 text-base sm:text-lg placeholder:text-muted-foreground/50 focus-visible:ring-0"
+                                className="border-none shadow-none bg-transparent h-10 sm:h-12 text-base sm:text-lg placeholder:text-muted-foreground/60 focus-visible:ring-0"
                                 placeholder="¿Qué necesitas arreglar?"
                             />
-                            <Button size="lg" className="rounded-full px-4 sm:px-8 text-sm sm:text-base bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-lg transition-all whitespace-nowrap">
+                            <Button size="lg" className="rounded-full px-4 sm:px-8 text-sm sm:text-base bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/20 hover:shadow-xl transition-all whitespace-nowrap font-semibold">
                                 Buscar
                             </Button>
                         </motion.div>
@@ -279,35 +288,59 @@ export default function Home() {
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
                         {categories.map((category, index) => (
-                            <TiltCard
+                            <motion.div
                                 key={category.id}
-                                className="group relative h-56 sm:h-64 rounded-[2rem] bg-card p-6 sm:p-8 shadow-xl shadow-primary/5 border border-border backdrop-blur-sm hover:shadow-2xl hover:shadow-primary/10 active:shadow-2xl active:shadow-primary/10 transition-all duration-500 cursor-pointer"
-                                onClick={() => router.push(`/services/${category.id}`)}
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                transition={{ delay: index * 0.1, duration: 0.5 }}
+                                viewport={{ once: true }}
                             >
-                                <div className={`absolute inset-0 bg-gradient-to-br ${category.color} opacity-0 group-hover:opacity-100 group-active:opacity-100 transition-opacity duration-500 rounded-[2rem]`} />
-                                <div className="relative z-10 flex flex-col h-full justify-between">
-                                    <div className="text-5xl sm:text-6xl mb-4 transform group-hover:scale-110 group-active:scale-110 transition-transform duration-300">{category.icon}</div>
-                                    <div>
-                                        <h3 className="text-xl sm:text-2xl font-bold mb-1">{category.name}</h3>
-                                        <p className="text-muted-foreground font-medium text-sm sm:text-base">{category.count} Profesionales</p>
+                                <TiltCard
+                                    className="group relative h-56 sm:h-64 rounded-[2rem] bg-card p-6 sm:p-8 shadow-xl shadow-primary/5 border border-border/60 backdrop-blur-sm hover:border-border hover:shadow-2xl hover:shadow-primary/15 active:shadow-2xl active:shadow-primary/15 transition-all duration-500 cursor-pointer"
+                                    onClick={() => router.push(`/services/${category.id}`)}
+                                >
+                                    <div className={`absolute inset-0 bg-gradient-to-br ${category.color} opacity-0 group-hover:opacity-100 group-active:opacity-100 transition-opacity duration-500 rounded-[2rem]`} />
+                                    <div className="relative z-10 flex flex-col h-full justify-between">
+                                        <motion.div
+                                            className="text-5xl sm:text-6xl mb-4"
+                                            whileHover={{ scale: 1.15, rotate: 5 }}
+                                            transition={{ type: "spring", stiffness: 300 }}
+                                        >
+                                            {category.icon}
+                                        </motion.div>
+                                        <div>
+                                            <h3 className="text-xl sm:text-2xl font-bold mb-1">{category.name}</h3>
+                                            <p className="text-muted-foreground font-medium text-sm sm:text-base">{category.count} Profesionales</p>
+                                        </div>
+                                        <motion.div
+                                            className="w-10 h-10 rounded-full bg-primary/5 flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground group-active:bg-primary group-active:text-primary-foreground transition-colors duration-300"
+                                            whileHover={{ scale: 1.15, rotate: 90 }}
+                                            transition={{ type: "spring", stiffness: 400 }}
+                                        >
+                                            <ArrowRight className="h-5 w-5" />
+                                        </motion.div>
                                     </div>
-                                    <div className="w-10 h-10 rounded-full bg-primary/5 flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground group-active:bg-primary group-active:text-primary-foreground transition-colors duration-300">
-                                        <ArrowRight className="h-5 w-5" />
-                                    </div>
-                                </div>
-                            </TiltCard>
+                                </TiltCard>
+                            </motion.div>
                         ))}
                     </div>
                 </div>
             </section>
 
             {/* Testimonials Carousel */}
-            <section className="py-24 bg-background overflow-hidden">
-                <div className="container px-4">
-                    <div className="mb-12 text-center">
+            <section className="py-24 bg-background overflow-hidden relative">
+                <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent pointer-events-none" />
+                <div className="container px-4 relative z-10">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6 }}
+                        viewport={{ once: true }}
+                        className="mb-12 text-center"
+                    >
                         <h2 className="text-3xl font-bold tracking-tight sm:text-4xl mb-4">Lo que dicen nuestros clientes</h2>
-                        <p className="text-muted-foreground max-w-2xl mx-auto">Miles de usuarios han encontrado el profesional perfecto a través de Fixia</p>
-                    </div>
+                        <p className="text-muted-foreground max-w-2xl mx-auto text-lg">Miles de usuarios han encontrado el profesional perfecto a través de Fixia</p>
+                    </motion.div>
                     <TestimonialsCarousel testimonials={testimonials} />
                 </div>
             </section>
@@ -315,20 +348,27 @@ export default function Home() {
             {/* Animated Stats Section */}
             <section className="py-24 bg-black text-white relative overflow-hidden">
                 <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center opacity-20 mix-blend-overlay" />
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10 mix-blend-soft-light pointer-events-none" />
                 <div className="container px-4 relative z-10">
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 text-center">
                         {stats.map((stat, index) => (
                             <motion.div
                                 key={index}
                                 initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
-                                transition={{ delay: index * 0.1 }}
+                                transition={{ delay: index * 0.1, duration: 0.6 }}
                                 viewport={{ once: true }}
+                                className="group"
                             >
-                                <div className="text-5xl md:text-6xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-b from-white to-white/50">
-                                    {stat.value}
-                                </div>
-                                <div className="text-white/60 font-medium">{stat.label}</div>
+                                <motion.div
+                                    whileHover={{ scale: 1.05 }}
+                                    transition={{ type: "spring", stiffness: 300 }}
+                                >
+                                    <div className="text-4xl md:text-6xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-b from-white via-white to-white/60 group-hover:from-blue-300 group-hover:via-purple-300 group-hover:to-pink-300 transition-all duration-500">
+                                        {stat.value}
+                                    </div>
+                                    <div className="text-white/70 font-medium text-sm md:text-base group-hover:text-white/90 transition-colors">{stat.label}</div>
+                                </motion.div>
                             </motion.div>
                         ))}
                     </div>
@@ -337,28 +377,61 @@ export default function Home() {
 
             {/* Immersive CTA */}
             <section className="py-32 relative overflow-hidden">
-                <div className="container px-4 text-center">
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-transparent pointer-events-none" />
+                <div className="container px-4 text-center relative z-10">
                     <motion.div
                         initial={{ scale: 0.9, opacity: 0 }}
                         whileInView={{ scale: 1, opacity: 1 }}
-                        transition={{ duration: 0.5 }}
+                        transition={{ duration: 0.6, type: "spring", stiffness: 100 }}
+                        viewport={{ once: true }}
                         className="bg-aurora p-[1px] rounded-[3rem] inline-block"
                     >
-                        <div className="bg-card rounded-[3rem] p-16 md:p-24 shadow-2xl shadow-primary/20 backdrop-blur-xl border border-border">
-                            <h2 className="text-4xl md:text-6xl font-bold mb-8 tracking-tight text-foreground">
-                                ¿Listo para transformar tu hogar?
-                            </h2>
-                            <p className="text-xl text-muted-foreground mb-12 max-w-2xl mx-auto">
+                        <div className="bg-card rounded-[3rem] p-12 sm:p-16 md:p-24 shadow-2xl shadow-primary/25 backdrop-blur-xl border border-border/80">
+                            <motion.div
+                                initial={{ opacity: 0, y: 10 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.2, duration: 0.6 }}
+                                viewport={{ once: true }}
+                            >
+                                <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 sm:mb-8 tracking-tight text-foreground">
+                                    ¿Listo para transformar tu hogar?
+                                </h2>
+                            </motion.div>
+                            <motion.p
+                                initial={{ opacity: 0, y: 10 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.3, duration: 0.6 }}
+                                viewport={{ once: true }}
+                                className="text-lg sm:text-xl text-muted-foreground mb-10 sm:mb-12 max-w-2xl mx-auto"
+                            >
                                 Únete a miles de usuarios que ya disfrutan de un servicio de calidad, rápido y seguro.
-                            </p>
-                            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                                <Button size="lg" className="h-14 px-10 rounded-full text-lg bg-primary text-primary-foreground hover:scale-105 transition-transform shadow-xl shadow-primary/20 shimmer">
-                                    Comenzar Ahora
-                                </Button>
-                                <Button size="lg" variant="outline" className="h-14 px-10 rounded-full text-lg border-2 hover:bg-muted">
-                                    Ver Servicios
-                                </Button>
-                            </div>
+                            </motion.p>
+                            <motion.div
+                                initial={{ opacity: 0, y: 10 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.4, duration: 0.6 }}
+                                viewport={{ once: true }}
+                                className="flex flex-col sm:flex-row gap-4 justify-center"
+                            >
+                                <motion.div
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    transition={{ type: "spring", stiffness: 400 }}
+                                >
+                                    <Button size="lg" className="h-14 px-8 sm:px-10 rounded-full text-base sm:text-lg bg-primary text-primary-foreground shadow-xl shadow-primary/30 hover:shadow-2xl hover:shadow-primary/40 transition-all font-semibold whitespace-nowrap shimmer">
+                                        Comenzar Ahora
+                                    </Button>
+                                </motion.div>
+                                <motion.div
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    transition={{ type: "spring", stiffness: 400 }}
+                                >
+                                    <Button size="lg" variant="outline" className="h-14 px-8 sm:px-10 rounded-full text-base sm:text-lg border-2 hover:bg-muted font-semibold whitespace-nowrap transition-all">
+                                        Ver Servicios
+                                    </Button>
+                                </motion.div>
+                            </motion.div>
                         </div>
                     </motion.div>
                 </div>
