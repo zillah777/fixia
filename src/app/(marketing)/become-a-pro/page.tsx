@@ -8,45 +8,45 @@ export default function BecomeProPage() {
     return (
         <div className="flex flex-col min-h-screen">
             {/* Hero Section - Split Focus */}
-            <section className="relative py-20 lg:py-32 overflow-hidden bg-slate-950">
-                <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]"></div>
-                <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 via-transparent to-blue-500/10 blur-3xl"></div>
+            <section className="relative py-20 lg:py-32 overflow-hidden bg-gradient-to-b from-slate-50 to-white">
+                <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] opacity-30"></div>
+                <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 via-transparent to-blue-500/5"></div>
 
                 <div className="container mx-auto px-4 relative z-10">
                     <div className="text-center max-w-4xl mx-auto mb-16">
-                        <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white tracking-tight">
-                            El punto de encuentro para <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-500">Profesionales</span> y <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-500">Clientes</span>
+                        <h1 className="text-4xl md:text-6xl font-bold mb-6 text-slate-900 tracking-tight">
+                            El punto de encuentro para <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-emerald-600">Profesionales</span> y <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-600">Clientes</span>
                         </h1>
-                        <p className="text-xl text-slate-300 mb-8 max-w-2xl mx-auto">
+                        <p className="text-xl text-slate-600 mb-8 max-w-2xl mx-auto">
                             Fixia conecta a expertos calificados con personas que buscan soluciones de calidad. Únete a la comunidad que está transformando los servicios en Chubut.
                         </p>
                     </div>
 
                     <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
                         {/* Card for Professionals */}
-                        <div className="group relative bg-slate-900/50 backdrop-blur-sm border border-slate-800 rounded-3xl p-8 hover:border-green-500/50 transition-all duration-300 hover:shadow-[0_0_30px_rgba(34,197,94,0.1)]">
+                        <div className="group relative bg-white border border-slate-200 rounded-3xl p-8 hover:border-green-500/50 transition-all duration-300 hover:shadow-xl shadow-lg">
                             <div className="absolute inset-0 bg-gradient-to-b from-green-500/5 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
                             <div className="relative z-10">
-                                <div className="h-14 w-14 bg-green-500/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                                    <TrendingUp className="h-7 w-7 text-green-400" />
+                                <div className="h-14 w-14 bg-green-100 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                                    <TrendingUp className="h-7 w-7 text-green-600" />
                                 </div>
-                                <h2 className="text-2xl font-bold text-white mb-4">Soy Profesional</h2>
-                                <ul className="space-y-3 mb-8 text-slate-300">
+                                <h2 className="text-2xl font-bold text-slate-900 mb-4">Soy Profesional</h2>
+                                <ul className="space-y-3 mb-8 text-slate-600">
                                     <li className="flex items-center gap-2">
-                                        <CheckCircle className="h-5 w-5 text-green-500" />
+                                        <CheckCircle className="h-5 w-5 text-green-600" />
                                         <span>Consigue más clientes sin esfuerzo</span>
                                     </li>
                                     <li className="flex items-center gap-2">
-                                        <CheckCircle className="h-5 w-5 text-green-500" />
+                                        <CheckCircle className="h-5 w-5 text-green-600" />
                                         <span>Gestiona tu agenda y pagos</span>
                                     </li>
                                     <li className="flex items-center gap-2">
-                                        <CheckCircle className="h-5 w-5 text-green-500" />
+                                        <CheckCircle className="h-5 w-5 text-green-600" />
                                         <span>Construye tu reputación online</span>
                                     </li>
                                 </ul>
                                 <Link href="/register?role=professional" className="block">
-                                    <Button className="w-full bg-green-600 hover:bg-green-700 text-white h-12 text-lg shadow-lg shadow-green-900/20">
+                                    <Button className="w-full bg-green-600 hover:bg-green-700 text-white h-12 text-lg shadow-lg shadow-green-600/20">
                                         Registrarme como Profesional
                                         <ArrowRight className="ml-2 h-4 w-4" />
                                     </Button>
@@ -55,29 +55,29 @@ export default function BecomeProPage() {
                         </div>
 
                         {/* Card for Clients */}
-                        <div className="group relative bg-slate-900/50 backdrop-blur-sm border border-slate-800 rounded-3xl p-8 hover:border-blue-500/50 transition-all duration-300 hover:shadow-[0_0_30px_rgba(59,130,246,0.1)]">
+                        <div className="group relative bg-white border border-slate-200 rounded-3xl p-8 hover:border-blue-500/50 transition-all duration-300 hover:shadow-xl shadow-lg">
                             <div className="absolute inset-0 bg-gradient-to-b from-blue-500/5 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
                             <div className="relative z-10">
-                                <div className="h-14 w-14 bg-blue-500/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                                    <Search className="h-7 w-7 text-blue-400" />
+                                <div className="h-14 w-14 bg-blue-100 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                                    <Search className="h-7 w-7 text-blue-600" />
                                 </div>
-                                <h2 className="text-2xl font-bold text-white mb-4">Busco un Servicio</h2>
-                                <ul className="space-y-3 mb-8 text-slate-300">
+                                <h2 className="text-2xl font-bold text-slate-900 mb-4">Busco un Servicio</h2>
+                                <ul className="space-y-3 mb-8 text-slate-600">
                                     <li className="flex items-center gap-2">
-                                        <CheckCircle className="h-5 w-5 text-blue-500" />
+                                        <CheckCircle className="h-5 w-5 text-blue-600" />
                                         <span>Profesionales verificados</span>
                                     </li>
                                     <li className="flex items-center gap-2">
-                                        <CheckCircle className="h-5 w-5 text-blue-500" />
+                                        <CheckCircle className="h-5 w-5 text-blue-600" />
                                         <span>Pagos seguros y garantía</span>
                                     </li>
                                     <li className="flex items-center gap-2">
-                                        <CheckCircle className="h-5 w-5 text-blue-500" />
+                                        <CheckCircle className="h-5 w-5 text-blue-600" />
                                         <span>Atención al cliente dedicada</span>
                                     </li>
                                 </ul>
                                 <Link href="/register?role=client" className="block">
-                                    <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white h-12 text-lg shadow-lg shadow-blue-900/20">
+                                    <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white h-12 text-lg shadow-lg shadow-blue-600/20">
                                         Contratar Profesionales
                                         <ArrowRight className="ml-2 h-4 w-4" />
                                     </Button>
@@ -251,18 +251,18 @@ export default function BecomeProPage() {
             </section>
 
             {/* Final CTA */}
-            <section className="py-24 bg-slate-900 text-white text-center relative overflow-hidden">
-                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-slate-800 via-slate-900 to-black"></div>
+            <section className="py-24 bg-gradient-to-b from-slate-50 to-slate-100 text-center relative overflow-hidden">
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-50 via-slate-50 to-green-50 opacity-50"></div>
                 <div className="container mx-auto px-4 relative z-10">
-                    <h2 className="text-3xl md:text-5xl font-bold mb-8">¿Listo para empezar?</h2>
+                    <h2 className="text-3xl md:text-5xl font-bold mb-8 text-slate-900">¿Listo para empezar?</h2>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <Link href="/register?role=professional">
-                            <Button size="lg" className="w-full sm:w-auto text-lg px-8 py-6 bg-green-600 hover:bg-green-700">
+                            <Button size="lg" className="w-full sm:w-auto text-lg px-8 py-6 bg-green-600 hover:bg-green-700 text-white shadow-lg">
                                 Soy Profesional
                             </Button>
                         </Link>
                         <Link href="/register?role=client">
-                            <Button size="lg" variant="outline" className="w-full sm:w-auto text-lg px-8 py-6 border-slate-600 hover:bg-slate-800 text-white hover:text-white">
+                            <Button size="lg" variant="outline" className="w-full sm:w-auto text-lg px-8 py-6 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white shadow-lg">
                                 Soy Cliente
                             </Button>
                         </Link>
