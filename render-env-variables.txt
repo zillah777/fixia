@@ -1,0 +1,38 @@
+# ============================================
+# VARIABLES DE ENTORNO PARA RENDER
+# Copiar y pegar en Render Dashboard
+# ============================================
+
+# 🔴 CRÍTICAS - Agregar PRIMERO
+DATABASE_URL=postgresql://fixia_user:0IBxhy2a706SWuJtgpyHcBQPyY5o9X1H@dpg-d4kg88u3jp1c738qjtv0-a/fixia_ev5z
+
+JWT_REFRESH_SECRET=9b8b8b8f9884f1e1b5895d0d89ffffe098fd8c4d942f71f8f896689ffbeb403af456af7aff54952b45de3a44fa17ea57bf369af7a4219027df92c804ad04f1ed
+
+SESSION_SECRET=db749605b03838bf22948d3d5b54ab7340316c7c9bd8af0c82bf8bdc5dc1c4d6eb3c0f357763906c194e3b01481b9764eabebdd81aa914df1e94b4e54234a665
+
+# 🟡 IMPORTANTE - Para pagos con MercadoPago
+MERCADOPAGO_ACCESS_TOKEN=APP_USR-956733169080479-070920-866ae729476004c75f35987fd053b08c-169925973
+
+MERCADOPAGO_APP_ID=956733169080479
+
+MERCADOPAGO_PUBLIC_KEY=APP_USR-10b91f57-8c47-404e-ad02-4438a4ecd697
+
+MERCADOPAGO_WEBHOOK_SECRET=f90de58e8c4bb951d37e12fc49c9027ec0c584d23a6c7a2e749c8766ce895eb4
+
+# 🟢 OPCIONALES - Pero recomendadas
+ALLOWED_ORIGINS=http://localhost:3000,http://localhost:5173,https://fixiaweb.vercel.app,https://fixia.app,https://www.fixia.app,https://fixia.com.ar,https://www.fixia.com.ar
+
+API_URL=https://fixia-api.onrender.com
+
+APP_URL=https://fixia.app
+
+PORT=10000
+
+# ============================================
+# INSTRUCCIONES:
+# 1. Ve a: https://dashboard.render.com/web/srv-d4kvofv5r7bs73clpih0
+# 2. Click en "Environment" en el menú lateral
+# 3. Click en "Add Environment Variable"
+# 4. Copia cada KEY=VALUE de arriba
+# 5. Guarda y espera el redeploy automático
+# ============================================

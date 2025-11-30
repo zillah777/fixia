@@ -25,10 +25,11 @@ export const sendVerificationEmail = async (email: string, token: string) => {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
   const confirmLink = `${appUrl}/api/verify?token=${token}`;
   const resend = getResend();
+  const emailFrom = process.env.EMAIL_FROM || 'Fixia <onboarding@resend.dev>';
 
   try {
     const data = await resend.emails.send({
-      from: 'Fixia <onboarding@resend.dev>',
+      from: emailFrom,
       to: [email],
       subject: 'Verifica tu cuenta - Fixia',
       html: `
@@ -52,10 +53,11 @@ export const sendVerificationEmail = async (email: string, token: string) => {
 export const sendWelcomeEmail = async (email: string, name: string) => {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
   const resend = getResend();
+  const emailFrom = process.env.EMAIL_FROM || 'Fixia <onboarding@resend.dev>';
 
   try {
     const data = await resend.emails.send({
-      from: 'Fixia <onboarding@resend.dev>',
+      from: emailFrom,
       to: [email],
       subject: '¡Bienvenido a Fixia!',
       html: `
