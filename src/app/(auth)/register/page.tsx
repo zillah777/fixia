@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, Suspense } from "react"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -41,7 +41,7 @@ const formSchema = z.object({
     }),
 })
 
-export default function RegisterPage() {
+function RegisterForm() {
     const router = useRouter()
     const searchParams = useSearchParams()
     const defaultRole = searchParams.get("role") === "professional" ? "PROFESSIONAL" : "CLIENT"
@@ -200,7 +200,7 @@ export default function RegisterPage() {
 
                             <Button type="submit" className="w-full" disabled={isLoading}>
                                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                Registrarse
+                                {isLoading ? "Registrando..." : "Registrarse"}
                             </Button>
                         </form>
                     </Form>
@@ -215,5 +215,17 @@ export default function RegisterPage() {
                 </CardFooter>
             </Card>
         </div>
+    )
+}
+
+export default function RegisterPage() {
+    return (
+        <Suspense fallback={
+            <div className="flex min-h-screen items-center justify-center bg-muted/50 p-4">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            </div>
+        }>
+            <RegisterForm />
+        </Suspense>
     )
 }
