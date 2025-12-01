@@ -81,7 +81,10 @@ export async function middleware(request: NextRequest) {
     // STEP 3: Handle auth routes (redirect authenticated users)
     // =========================================================================
     if (isAuthRoute && session) {
-        // User is already logged in, redirect to dashboard
+        // User is already logged in
+        if (session.user.role === 'ADMIN') {
+            return NextResponse.redirect(new URL('/admin', request.url))
+        }
         return NextResponse.redirect(new URL('/dashboard', request.url))
     }
 

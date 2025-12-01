@@ -3,7 +3,7 @@
 import * as React from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { Menu, Bell, User, LogIn, Search, LayoutDashboard, Settings, LogOut } from "lucide-react"
+import { Menu, Bell, User, LogIn, Search, LayoutDashboard, Settings, LogOut, Shield, Briefcase, List, Heart } from "lucide-react"
 import { useAuth } from "@/providers/auth-provider"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -64,11 +64,13 @@ export function Navbar() {
                                     <Link href="/professionals" className="text-lg font-semibold">
                                         Profesionales
                                     </Link>
-                                    <Link href="/become-a-pro" className="w-full">
-                                        <Button className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold shadow-lg shadow-green-500/30">
-                                            Únete a Fixia
-                                        </Button>
-                                    </Link>
+                                    {(!user || user.role === 'CLIENT') && (
+                                        <Link href="/become-a-pro" className="w-full">
+                                            <Button className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold shadow-lg shadow-green-500/30">
+                                                Únete a Fixia
+                                            </Button>
+                                        </Link>
+                                    )}
                                     <Link href="/pricing" className="text-lg font-semibold">
                                         Planes
                                     </Link>
@@ -96,11 +98,13 @@ export function Navbar() {
                             <Link href="/professionals" className="transition-colors hover:text-foreground/80 text-foreground/60">
                                 Profesionales
                             </Link>
-                            <Link href="/become-a-pro">
-                                <Button size="sm" className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold shadow-lg shadow-green-500/30 hover:shadow-xl hover:shadow-green-500/40 transition-all">
-                                    Únete a Fixia
-                                </Button>
-                            </Link>
+                            {(!user || user.role === 'CLIENT') && (
+                                <Link href="/become-a-pro">
+                                    <Button size="sm" className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold shadow-lg shadow-green-500/30 hover:shadow-xl hover:shadow-green-500/40 transition-all">
+                                        Únete a Fixia
+                                    </Button>
+                                </Link>
+                            )}
                             <Link href="/pricing" className="transition-colors hover:text-foreground/80 text-foreground/60">
                                 Planes
                             </Link>
@@ -148,6 +152,49 @@ export function Navbar() {
                                             Dashboard
                                         </Link>
                                     </DropdownMenuItem>
+
+                                    {user.role === 'ADMIN' && (
+                                        <DropdownMenuItem asChild>
+                                            <Link href="/admin" className="cursor-pointer">
+                                                <Shield className="mr-2 h-4 w-4" />
+                                                Panel Admin
+                                            </Link>
+                                        </DropdownMenuItem>
+                                    )}
+
+                                    {user.role === 'PROFESSIONAL' && (
+                                        <>
+                                            <DropdownMenuItem asChild>
+                                                <Link href="/dashboard/services" className="cursor-pointer">
+                                                    <Briefcase className="mr-2 h-4 w-4" />
+                                                    Mis Servicios
+                                                </Link>
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem asChild>
+                                                <Link href="/dashboard/leads" className="cursor-pointer">
+                                                    <Search className="mr-2 h-4 w-4" />
+                                                    Oportunidades
+                                                </Link>
+                                            </DropdownMenuItem>
+                                        </>
+                                    )}
+
+                                    {user.role === 'CLIENT' && (
+                                        <>
+                                            <DropdownMenuItem asChild>
+                                                <Link href="/dashboard/requests" className="cursor-pointer">
+                                                    <List className="mr-2 h-4 w-4" />
+                                                    Mis Solicitudes
+                                                </Link>
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem asChild>
+                                                <Link href="/dashboard/favorites" className="cursor-pointer">
+                                                    <Heart className="mr-2 h-4 w-4" />
+                                                    Favoritos
+                                                </Link>
+                                            </DropdownMenuItem>
+                                        </>
+                                    )}
                                     <DropdownMenuItem asChild>
                                         <Link href="/dashboard/profile" className="cursor-pointer">
                                             <User className="mr-2 h-4 w-4" />

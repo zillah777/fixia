@@ -1,5 +1,6 @@
 "use client"
 
+import * as React from "react"
 import { motion } from "framer-motion"
 import { Bell, Search, TrendingUp, Users, DollarSign, ShoppingBag, ArrowUpRight, Calendar } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -25,6 +26,23 @@ const item = {
 
 export default function DashboardPage() {
     const { user } = useAuth()
+    const [stats, setStats] = React.useState({
+        completedRequests: 0,
+        activeRequests: 0,
+        leads: 0,
+        rating: 0
+    })
+
+    React.useEffect(() => {
+        fetch('/api/dashboard/stats')
+            .then(res => res.json())
+            .then(data => {
+                if (!data.error) {
+                    setStats(data)
+                }
+            })
+            .catch(err => console.error(err))
+    }, [])
 
     return (
         <div className="min-h-screen bg-background p-8 font-sans">
@@ -78,59 +96,100 @@ export default function DashboardPage() {
                     </Card>
                 </motion.div>
 
-                {/* Stats Widget - Sales */}
-                <motion.div variants={item} className="md:col-span-5">
-                    <Card className="h-full border-none shadow-sm hover:shadow-md transition-shadow">
+                {/* Stats Widgets */}
+                <motion.div variants={item} className="md:col-span-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {/* Common Card: Completed Requests/Jobs */}
+                    <Card className="border-none shadow-sm hover:shadow-md transition-shadow">
                         <CardHeader className="flex flex-row items-center justify-between pb-2">
-                            <CardTitle className="text-sm font-medium text-muted-foreground">Ingresos Totales</CardTitle>
-                            <DollarSign className="h-4 w-4 text-muted-foreground" />
+                            <CardTitle className="text-sm font-medium text-muted-foreground">
+                                {user?.role === 'PROFESSIONAL' ? 'Trabajos Completados' : 'Solicitudes Completadas'}
+                            </CardTitle>
+                            <ShoppingBag className="h-4 w-4 text-muted-foreground" />
                         </CardHeader>
                         <CardContent>
-                            <div className="text-4xl font-bold">$45,231.89</div>
+                            <div className="text-2xl font-bold">{stats.completedRequests}</div>
                             <p className="text-xs text-muted-foreground mt-1">
-                                <span className="text-green-500 font-medium flex items-center inline-flex">
-                                    +20.1% <ArrowUpRight className="h-3 w-3 ml-1" />
-                                </span>{" "}
-                                respecto al mes pasado
+                                Total histórico
                             </p>
-                            <div className="h-[80px] mt-4 flex items-end gap-2">
-                                {[40, 25, 60, 35, 50, 70, 85].map((h, i) => (
-                                    <div key={i} className="flex-1 bg-primary/10 rounded-t-lg hover:bg-primary/20 transition-colors relative group">
-                                        <div
-                                            className="absolute bottom-0 w-full bg-primary rounded-t-lg transition-all duration-500"
-                                            style={{ height: `${h}%` }}
-                                        />
-                                    </div>
-                                ))}
-                            </div>
                         </CardContent>
                     </Card>
-                </motion.div>
 
-                {/* Quick Actions / Mini Stats */}
-                <motion.div variants={item} className="md:col-span-3 flex flex-col gap-6">
-                    <Card className="flex-1 border-none shadow-sm hover:shadow-md transition-shadow bg-black text-white">
-                        <CardContent className="p-6 flex flex-col justify-between h-full">
-                            <div className="p-3 bg-white/10 rounded-2xl w-fit">
-                                <Users className="h-6 w-6 text-white" />
-                            </div>
-                            <div>
-                                <div className="text-3xl font-bold">1,203</div>
-                                <div className="text-sm text-white/60">Nuevos Clientes</div>
-                            </div>
-                        </CardContent>
-                    </Card>
-                    <Card className="flex-1 border-none shadow-sm hover:shadow-md transition-shadow">
-                        <CardContent className="p-6 flex flex-col justify-between h-full">
-                            <div className="p-3 bg-orange-100 rounded-2xl w-fit text-orange-600">
-                                <ShoppingBag className="h-6 w-6" />
-                            </div>
-                            <div>
-                                <div className="text-3xl font-bold">89</div>
-                                <div className="text-sm text-muted-foreground">Pedidos Activos</div>
-                            </div>
-                        </CardContent>
-                    </Card>
+                    {/* Professional Specific Cards */}
+                    {user?.role === 'PROFESSIONAL' && (
+                        <>
+                            <Card className="border-none shadow-sm hover:shadow-md transition-shadow">
+                                <CardHeader className="flex flex-row items-center justify-between pb-2">
+                                    <CardTitle className="text-sm font-medium text-muted-foreground">Oportunidades Activas</CardTitle>
+                                    <Users className="h-4 w-4 text-muted-foreground" />
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="text-2xl font-bold">{stats.leads}</div>
+                                    <p className="text-xs text-muted-foreground mt-1">
+                                        Leads y trabajos en curso
+                                    </p>
+                                </CardContent>
+                            </Card>
+
+                            <Card className="border-none shadow-sm hover:shadow-md transition-shadow">
+                                <CardHeader className="flex flex-row items-center justify-between pb-2">
+                                    <CardTitle className="text-sm font-medium text-muted-foreground">Calificación</CardTitle>
+                                    <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="text-2xl font-bold">{Number(stats.rating).toFixed(1)}</div>
+                                    <p className="text-xs text-muted-foreground mt-1">
+                                        Promedio de reseñas
+                                    </p>
+                                </CardContent>
+                            </Card>
+                        </>
+                    )}
+
+                    {/* Client Specific Cards */}
+                    {user?.role === 'CLIENT' && (
+                        <>
+                            <Card className="border-none shadow-sm hover:shadow-md transition-shadow">
+                                <CardHeader className="flex flex-row items-center justify-between pb-2">
+                                    <CardTitle className="text-sm font-medium text-muted-foreground">Solicitudes Activas</CardTitle>
+                                    <ShoppingBag className="h-4 w-4 text-muted-foreground" />
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="text-2xl font-bold">{stats.activeRequests}</div>
+                                    <p className="text-xs text-muted-foreground mt-1">
+                                        En búsqueda o proceso
+                                    </p>
+                                </CardContent>
+                            </Card>
+                            {/* Placeholder for 3rd card layout balance if needed, or just leave 2 cols */}
+                            <Card className="border-none shadow-sm hover:shadow-md transition-shadow opacity-0 pointer-events-none md:block hidden">
+                                <CardContent></CardContent>
+                            </Card>
+                        </>
+                    )}
+
+                    {/* Admin Specific Cards */}
+                    {user?.role === 'ADMIN' && (
+                        <>
+                            <Card className="border-none shadow-sm hover:shadow-md transition-shadow">
+                                <CardHeader className="flex flex-row items-center justify-between pb-2">
+                                    <CardTitle className="text-sm font-medium text-muted-foreground">Usuarios Totales</CardTitle>
+                                    <Users className="h-4 w-4 text-muted-foreground" />
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="text-2xl font-bold">{stats.leads}</div>
+                                </CardContent>
+                            </Card>
+                            <Card className="border-none shadow-sm hover:shadow-md transition-shadow">
+                                <CardHeader className="flex flex-row items-center justify-between pb-2">
+                                    <CardTitle className="text-sm font-medium text-muted-foreground">Solicitudes Totales</CardTitle>
+                                    <ShoppingBag className="h-4 w-4 text-muted-foreground" />
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="text-2xl font-bold">{stats.activeRequests}</div>
+                                </CardContent>
+                            </Card>
+                        </>
+                    )}
                 </motion.div>
 
                 {/* Large Chart Area */}
