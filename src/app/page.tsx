@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { motion, useScroll, useTransform, useSpring, useMotionValue, useMotionTemplate } from "framer-motion"
@@ -43,31 +43,52 @@ function TiltCard({ children, className, onClick }: { children: React.ReactNode,
     );
 }
 
-const categories = [
-    { id: "plomeria", name: "Plomería", icon: "💧", count: "120+", color: "from-blue-500/20 to-cyan-500/20" },
-    { id: "electricidad", name: "Electricidad", icon: "⚡", count: "85+", color: "from-yellow-500/20 to-orange-500/20" },
-    { id: "limpieza", name: "Limpieza", icon: "✨", count: "200+", color: "from-green-500/20 to-emerald-500/20" },
-    { id: "jardineria", name: "Jardinería", icon: "🌿", count: "60+", color: "from-green-600/20 to-lime-500/20" },
-];
-
-const testimonials = [
-    { id: "1", name: "Ana García", role: "Cliente Verificado", text: "¡Increíble servicio! Encontré un plomero en 5 minutos.", avatar: "/avatars/01.png", rating: 5 },
-    { id: "2", name: "Carlos Ruiz", role: "Cliente Verificado", text: "La mejor app para solucionar problemas del hogar.", avatar: "/avatars/02.png", rating: 5 },
-    { id: "3", name: "Sofia Lopez", role: "Cliente Verificado", text: "Profesionales muy amables y trabajo impecable.", avatar: "/avatars/03.png", rating: 5 },
-    { id: "4", name: "Miguel Diaz", role: "Cliente Verificado", text: "Me salvó el fin de semana. Recomendadísimo.", avatar: "/avatars/04.png", rating: 5 },
-];
-
-const stats = [
-    { value: "10k+", label: "Trabajos Realizados" },
-    { value: "4.9/5", label: "Calificación Promedio" },
-    { value: "2k+", label: "Profesionales Activos" },
-    { value: "98%", label: "Clientes Felices" },
-];
-
 export default function Home() {
     const router = useRouter();
     const { scrollYProgress } = useScroll();
     const y = useTransform(scrollYProgress, [0, 1], [0, -50]);
+
+    const [stats, setStats] = useState([
+        { value: "0", label: "Trabajos Realizados" },
+        { value: "0.0", label: "Calificación Promedio" },
+        { value: "0", label: "Profesionales Activos" },
+        { value: "0%", label: "Clientes Felices" },
+    ])
+    const [categories, setCategories] = useState<any[]>([])
+    const [testimonials, setTestimonials] = useState<any[]>([])
+
+    useEffect(() => {
+        // Fetch Stats
+        fetch("/api/public/stats")
+            .then(res => res.json())
+            .then(data => {
+                if (!data.error) {
+                    setStats([
+                        { value: data.jobs, label: "Trabajos Realizados" },
+                        { value: data.rating, label: "Calificación Promedio" },
+                        { value: data.pros, label: "Profesionales Activos" },
+                        { value: data.happiness, label: "Clientes Felices" },
+                    ])
+                }
+            })
+            .catch(err => console.error("Failed to fetch stats", err))
+
+        // Fetch Categories
+        fetch("/api/public/categories")
+            .then(res => res.json())
+            .then(data => {
+                if (Array.isArray(data)) setCategories(data)
+            })
+            .catch(err => console.error("Failed to fetch categories", err))
+
+        // Fetch Testimonials
+        fetch("/api/public/testimonials")
+            .then(res => res.json())
+            .then(data => {
+                if (Array.isArray(data)) setTestimonials(data)
+            })
+            .catch(err => console.error("Failed to fetch testimonials", err))
+    }, [])
 
     return (
         <div className="flex min-h-screen flex-col overflow-hidden bg-background">
@@ -86,125 +107,6 @@ export default function Home() {
                         <Badge variant="outline" className="px-4 py-2 rounded-full backdrop-blur-sm animate-pulse border-primary/20 bg-primary/5 text-primary">
                             ✨ La forma más inteligente de contratar
                         </Badge>
-
-                        {/* OPCIÓN 1: Aurora Gradient + Glassmorphism (COMENTADA) */}
-                        {/* <motion.h1
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, ease: "easeOut" }}
-                            className="text-6xl sm:text-7xl lg:text-8xl font-bold tracking-tight"
-                        >
-                            <span className="block text-foreground mb-4">
-                                Tu vida, más simple.
-                            </span>
-                            <motion.span
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.3, duration: 0.8 }}
-                                className="relative inline-block group"
-                            >
-                                <motion.span
-                                    initial={{ opacity: 0, scale: 0.9 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    transition={{ delay: 0.5, duration: 0.8 }}
-                                    className="absolute -inset-4 rounded-3xl bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10 backdrop-blur-xl border border-white/20"
-                                    style={{
-                                        background: 'linear-gradient(135deg, rgba(96, 165, 250, 0.15) 0%, rgba(168, 139, 250, 0.15) 50%, rgba(236, 72, 153, 0.15) 100%)',
-                                    }}
-                                />
-                                <span
-                                    className="relative z-10 text-transparent bg-clip-text px-4"
-                                    style={{
-                                        backgroundImage: 'linear-gradient(135deg, #60a5fa 0%, #a78bfa 50%, #ec4899 100%)',
-                                        backgroundSize: '200% 200%',
-                                        animation: 'gradient 4s ease infinite',
-                                    }}
-                                >
-                                    Fixia.
-                                </span>
-                                <motion.span
-                                    className="absolute inset-0 blur-2xl opacity-30"
-                                    style={{
-                                        background: 'linear-gradient(135deg, #60a5fa 0%, #a78bfa 50%, #ec4899 100%)',
-                                    }}
-                                    animate={{
-                                        opacity: [0.2, 0.4, 0.2],
-                                    }}
-                                    transition={{
-                                        duration: 3,
-                                        repeat: Infinity,
-                                        ease: "easeInOut",
-                                    }}
-                                />
-                            </motion.span>
-                        </motion.h1> */}
-
-                        {/* OPCIÓN 2: Neon Glow + Double Underline (COMENTADA) */}
-                        {/* <motion.h1
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, ease: "easeOut" }}
-                            className="text-6xl sm:text-7xl lg:text-8xl font-bold tracking-tight"
-                        >
-                            <span className="block text-foreground mb-4">
-                                Tu vida, más simple.
-                            </span>
-                            <motion.span
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.3, duration: 0.8 }}
-                                className="relative inline-block"
-                            >
-                                <span
-                                    className="relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600"
-                                    style={{
-                                        textShadow: '0 0 40px rgba(168, 139, 250, 0.5), 0 0 80px rgba(168, 139, 250, 0.3)',
-                                    }}
-                                >
-                                    Fixia.
-                                </span>
-                                <motion.span
-                                    initial={{ scaleX: 0 }}
-                                    animate={{ scaleX: 1 }}
-                                    transition={{ delay: 0.8, duration: 0.6, ease: "easeOut" }}
-                                    className="absolute -bottom-4 left-0 right-0 h-1 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 origin-left"
-                                />
-                                <motion.span
-                                    initial={{ scaleX: 0 }}
-                                    animate={{ scaleX: 1 }}
-                                    transition={{ delay: 0.9, duration: 0.6, ease: "easeOut" }}
-                                    className="absolute -bottom-6 left-0 right-0 h-1 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 origin-left opacity-50"
-                                />
-                            </motion.span>
-                        </motion.h1> */}
-
-                        {/* OPCIÓN 3: Minimal Highlight Background (COMENTADA) */}
-                        {/* <motion.h1
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, ease: "easeOut" }}
-                            className="text-6xl sm:text-7xl lg:text-8xl font-bold tracking-tight"
-                        >
-                            <span className="block text-foreground mb-4">
-                                Tu vida, más simple.
-                            </span>
-                            <motion.span
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.3, duration: 0.8 }}
-                                className="relative inline-block"
-                            >
-                                <span className="relative z-10 px-4 text-foreground font-black">
-                                    Fixia.
-                                </span>
-                                <motion.span
-                                    initial={{ scaleX: 0, opacity: 0 }}
-                                    animate={{ scaleX: 1, opacity: 1 }}
-                                    transition={{ delay: 0.6, duration: 0.8, ease: "easeOut" }}
-                                    className="absolute inset-0 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 origin-left -skew-x-12 -z-10"
-                                />
-                            </motion.span>
-                        </motion.h1> */}
 
                         {/* OPCIÓN 4: Outline Text + Shadow Depth (ACTIVA) */}
                         <motion.h1
@@ -287,7 +189,7 @@ export default function Home() {
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
-                        {categories.map((category, index) => (
+                        {categories.length > 0 ? categories.map((category, index) => (
                             <motion.div
                                 key={category.id}
                                 initial={{ opacity: 0, y: 20 }}
@@ -322,7 +224,9 @@ export default function Home() {
                                     </div>
                                 </TiltCard>
                             </motion.div>
-                        ))}
+                        )) : (
+                            <div className="col-span-4 text-center text-muted-foreground">Cargando categorías...</div>
+                        )}
                     </div>
                 </div>
             </section>
@@ -341,7 +245,11 @@ export default function Home() {
                         <h2 className="text-3xl font-bold tracking-tight sm:text-4xl mb-4">Lo que dicen nuestros clientes</h2>
                         <p className="text-muted-foreground max-w-2xl mx-auto text-lg">Miles de usuarios han encontrado el profesional perfecto a través de Fixia</p>
                     </motion.div>
-                    <TestimonialsCarousel testimonials={testimonials} />
+                    {testimonials.length > 0 ? (
+                        <TestimonialsCarousel testimonials={testimonials} />
+                    ) : (
+                        <div className="text-center text-muted-foreground">Aún no hay reseñas destacadas.</div>
+                    )}
                 </div>
             </section>
 

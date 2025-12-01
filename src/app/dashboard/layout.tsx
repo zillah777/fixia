@@ -10,15 +10,18 @@ import {
     Settings,
     LogOut,
     Menu,
-    Home
+    Home,
+    Search
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { cn } from "@/lib/utils"
+import { useAuth } from "@/providers/auth-provider"
 
 const sidebarItems = [
     { icon: LayoutDashboard, label: "Dashboard", href: "/dashboard" },
     { icon: Briefcase, label: "Mis Solicitudes", href: "/dashboard/requests" },
+    { icon: Search, label: "Explorar Trabajos", href: "/dashboard/marketplace" }, // New Item
     { icon: Calendar, label: "Reservas", href: "/dashboard/bookings" },
     { icon: User, label: "Perfil", href: "/dashboard/profile" },
     { icon: Settings, label: "Configuración", href: "/dashboard/settings" },
@@ -30,6 +33,7 @@ export default function DashboardLayout({
     children: React.ReactNode
 }) {
     const pathname = usePathname()
+    const { user, logout } = useAuth()
 
     return (
         <div className="flex min-h-screen bg-background">
@@ -45,6 +49,21 @@ export default function DashboardLayout({
                     <SheetContent side="left" className="w-72 p-0 border-r-0 bg-background/95 backdrop-blur-xl">
                         <div className="p-8">
                             <h2 className="font-bold text-2xl tracking-tight">Fixia</h2>
+                            {user && (
+                                <div className="mt-4 flex items-center gap-3">
+                                    <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center overflow-hidden">
+                                        <img
+                                            src={`https://ui-avatars.com/api/?name=${user.name}&background=random`}
+                                            alt={user.name || "User"}
+                                            className="h-full w-full object-cover"
+                                        />
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <span className="font-medium text-sm">{user.name}</span>
+                                        <span className="text-xs text-muted-foreground truncate max-w-[150px]">{user.email}</span>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                         <nav className="flex flex-col px-4 gap-2">
                             {sidebarItems.map((item) => (
@@ -69,7 +88,11 @@ export default function DashboardLayout({
                                     Volver al Inicio
                                 </Button>
                             </Link>
-                            <Button variant="ghost" className="w-full justify-start gap-4 px-4 rounded-2xl h-12 text-red-500 hover:text-red-600 hover:bg-red-50">
+                            <Button
+                                variant="ghost"
+                                className="w-full justify-start gap-4 px-4 rounded-2xl h-12 text-red-500 hover:text-red-600 hover:bg-red-50"
+                                onClick={() => logout()}
+                            >
                                 <LogOut className="h-5 w-5" />
                                 Cerrar Sesión
                             </Button>
@@ -83,11 +106,30 @@ export default function DashboardLayout({
                 <div className="flex flex-col h-full bg-white rounded-[2rem] shadow-xl shadow-black/5 border border-border/50 overflow-hidden">
                     <div className="p-8 pb-4">
                         <Link href="/" className="flex items-center gap-2 mb-8">
-                            <div className="h-8 w-8 rounded-full bg-black flex items-center justify-center">
-                                <span className="text-white font-bold text-sm">F</span>
+                            <div className="relative h-8 w-auto aspect-[3/1]">
+                                <img
+                                    src="/logo.png"
+                                    alt="Fixia Logo"
+                                    className="h-8 w-auto object-contain"
+                                />
                             </div>
-                            <span className="font-bold text-xl tracking-tight">Fixia</span>
                         </Link>
+
+                        {user && (
+                            <div className="mb-6 flex items-center gap-3 p-3 rounded-xl bg-gray-50 border border-border/50">
+                                <div className="h-10 w-10 rounded-full bg-white border border-border flex items-center justify-center overflow-hidden shrink-0">
+                                    <img
+                                        src={`https://ui-avatars.com/api/?name=${user.name}&background=random`}
+                                        alt={user.name || "User"}
+                                        className="h-full w-full object-cover"
+                                    />
+                                </div>
+                                <div className="flex flex-col min-w-0">
+                                    <span className="font-semibold text-sm truncate">{user.name}</span>
+                                    <span className="text-xs text-muted-foreground truncate">{user.role === 'PROFESSIONAL' ? 'Profesional' : 'Cliente'}</span>
+                                </div>
+                            </div>
+                        )}
 
                         <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-4 px-2">
                             Menu Principal
@@ -113,7 +155,11 @@ export default function DashboardLayout({
                     </nav>
 
                     <div className="p-4 mt-auto border-t border-border/50 bg-gray-50/50">
-                        <Button variant="ghost" className="w-full justify-start gap-3 text-red-500 hover:text-red-600 hover:bg-red-50 rounded-xl h-11">
+                        <Button
+                            variant="ghost"
+                            className="w-full justify-start gap-3 text-red-500 hover:text-red-600 hover:bg-red-50 rounded-xl h-11"
+                            onClick={() => logout()}
+                        >
                             <LogOut className="h-4 w-4" />
                             Cerrar Sesión
                         </Button>

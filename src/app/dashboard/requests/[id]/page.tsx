@@ -1,184 +1,307 @@
 "use client"
 
 import { useState } from "react"
+import Link from "next/link"
+import { ArrowLeft, MapPin, Calendar, Clock, Share2, MoreVertical } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { MapPin, Calendar, DollarSign, CheckCircle2, MessageSquare, Star } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { ProProposalCard } from "@/components/proposals/pro-proposal-card"
+import { MatchCelebration } from "@/components/proposals/match-celebration"
+import { ReviewForm } from "@/components/reviews/review-form"
 import { toast } from "sonner"
-import { useRouter } from "next/navigation"
 
-// Mock data for a specific request
-const requestData = {
-    id: "1",
-    title: "Instalación de Ventilador de Techo",
-    status: "OPEN", // OPEN, MATCHED, COMPLETED
-    category: "Electricidad",
-    location: "Palermo, CABA",
-    date: "Para mañana",
-    budget: 15000,
-    description: "Necesito instalar un ventilador de techo en una habitación. El techo es de losa. Ya tengo el ventilador.",
-    images: [],
-    proposals: [
-        {
-            id: "p1",
-            provider: {
-                name: "Juan Pérez",
-                rating: 4.8,
-                reviews: 124,
-                image: "/placeholder-avatar.jpg",
-                verified: true
-            },
-            price: 18000,
-            message: "Hola! Soy electricista matriculado. Puedo realizar el trabajo mañana por la tarde. El precio incluye materiales de fijación.",
-            createdAt: "Hace 2 horas"
-        },
-        {
-            id: "p2",
-            provider: {
-                name: "Carlos Gomez",
-                rating: 4.5,
-                reviews: 45,
-                image: "/placeholder-avatar-2.jpg",
-                verified: false
-            },
-            price: 15000,
-            message: "Buenas, tengo disponibilidad inmediata. Saludos.",
-            createdAt: "Hace 5 horas"
+import { useParams } from "next/navigation"
+
+export default function RequestDetailPage() {
+    const params = useParams()
+    const [request, setRequest] = useState<any>(null)
+    const [isLoading, setIsLoading] = useState(true)
+    const [isCelebrationOpen, setIsCelebrationOpen] = useState(false)
+    const [selectedPro, setSelectedPro] = useState<any>(null)
+    const [isReviewOpen, setIsReviewOpen] = useState(false)
+    const [status, setStatus] = useState("OPEN")
+
+    // Fetch Request Data
+    useState(() => {
+        const fetchRequest = async () => {
+            try {
+                const res = await fetch(`/api/requests/${params.id}`)
+                if (res.ok) {
+                    const data = await res.json()
+                    setRequest(data)
+                    setStatus(data.status)
+                } else {
+                    toast.error("No se pudo cargar la solicitud")
+                }
+            } catch (error) {
+                console.error("Error fetching request:", error)
+            } finally {
+                setIsLoading(false)
+            }
         }
-    ]
-}
+        fetchRequest()
+    })
 
-export default function RequestDetailPage({ params }: { params: Promise<{ id: string }> }) {
-    const router = useRouter()
-    const [isAccepting, setIsAccepting] = useState<string | null>(null)
-
-    const handleAcceptProposal = async (proposalId: string) => {
-        setIsAccepting(proposalId)
+    const handleAcceptProposal = async (proposal: any) => {
         try {
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 1500))
-
-            toast.success("¡Propuesta aceptada! Se ha creado un match.")
-            router.push("/dashboard/matches")
-        } catch (error) {
-            toast.error("Error al aceptar propuesta", {
-                description: "No se pudo procesar la acción. Intenta nuevamente."
+            const res = await fetch("/api/matches", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    requestId: request.id,
+                    providerId: proposal.provider.id, // Ensure we have this from the map
+                    proposalId: proposal.id
+                })
             })
-        } finally {
-            setIsAccepting(null)
+
+            if (!res.ok) throw new Error("Failed to accept proposal")
+
+            setSelectedPro(proposal)
+            setIsCelebrationOpen(true)
+            setStatus("MATCHED")
+            toast.success("¡Propuesta aceptada!")
+
+            // Refresh request data to get the new match
+            const updatedReq = await fetch(`/api/requests/${params.id}`).then(r => r.json())
+            setRequest(updatedReq)
+
+        } catch (error) {
+            console.error("Error accepting proposal:", error)
+            toast.error("Error al aceptar la propuesta")
         }
     }
 
+    const handleCompleteJob = () => {
+        setStatus("COMPLETED")
+        setIsReviewOpen(true)
+        toast.success("¡Trabajo marcado como completado!")
+    }
+
+    const handleReviewSubmit = async (rating: number, comment: string) => {
+        if (!request.match) {
+            toast.error("No hay un trabajo activo para calificar")
+            return
+        }
+
+        try {
+            const res = await fetch("/api/reviews", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    matchId: request.match.id,
+                    targetId: request.match.providerId,
+                    score: rating,
+                    comment
+                })
+            })
+
+            if (!res.ok) throw new Error("Failed to submit review")
+
+            toast.success("¡Gracias por tu calificación!")
+            setIsReviewOpen(false)
+        } catch (error) {
+            console.error("Error submitting review:", error)
+            toast.error("Error al enviar la calificación")
+        }
+    }
+
+    if (isLoading) {
+        return <div className="flex justify-center items-center min-h-screen">Cargando...</div>
+    }
+
+    if (!request) {
+        return <div className="flex justify-center items-center min-h-screen">Solicitud no encontrada</div>
+    }
+
+    // Map proposals to UI format
+    const formattedProposals = request.proposals?.map((p: any) => ({
+        id: p.id,
+        provider: p.provider, // Keep the provider object for logic
+        proName: p.provider.name || "Profesional",
+        proAvatar: `https://ui-avatars.com/api/?name=${p.provider.name}&background=random`,
+        rating: p.provider.profile?.ratingAvg || 0,
+        reviewsCount: 0, // Need to fetch this or include in query
+        price: Number(p.price),
+        message: p.message,
+        badges: (p.provider.profile?.badges || []) as any,
+        isElite: (p.provider.profile?.trustScore || 0) > 80,
+        timeEstimate: "A coordinar",
+        isVerified: p.provider.profile?.badges?.includes("VERIFIED")
+    })) || []
+
     return (
-        <div className="space-y-6">
+        <div className="space-y-8 pb-20">
+            {/* Review Form Dialog */}
+            <ReviewForm
+                isOpen={isReviewOpen}
+                onClose={() => setIsReviewOpen(false)}
+                proName={request?.match?.provider?.name || selectedPro?.proName || "Profesional"}
+                onSubmit={handleReviewSubmit}
+            />
+
+            {/* Header / Nav */}
             <div className="flex items-center justify-between">
-                <h2 className="text-3xl font-bold tracking-tight">Detalle de Solicitud</h2>
-                <Badge variant={requestData.status === "OPEN" ? "default" : "secondary"}>
-                    {requestData.status === "OPEN" ? "Abierta" : "Cerrada"}
-                </Badge>
+                <Link href="/dashboard/requests">
+                    <Button variant="ghost" className="pl-0 hover:pl-2 transition-all">
+                        <ArrowLeft className="mr-2 h-4 w-4" />
+                        Volver
+                    </Button>
+                </Link>
+                <div className="flex gap-2">
+                    <Button variant="outline" size="icon" className="rounded-full">
+                        <Share2 className="h-4 w-4" />
+                    </Button>
+                    <Button variant="outline" size="icon" className="rounded-full">
+                        <MoreVertical className="h-4 w-4" />
+                    </Button>
+                </div>
             </div>
 
-            <div className="grid gap-6 md:grid-cols-3">
-                {/* Request Info */}
-                <div className="md:col-span-2 space-y-6">
-                    <Card>
-                        <CardHeader>
-                            <div className="flex justify-between items-start">
-                                <div>
-                                    <CardTitle className="text-xl">{requestData.title}</CardTitle>
-                                    <CardDescription className="mt-1">{requestData.category}</CardDescription>
-                                </div>
-                                <div className="text-right">
-                                    <div className="text-2xl font-bold">${requestData.budget.toLocaleString()}</div>
-                                    <div className="text-xs text-muted-foreground">Presupuesto estimado</div>
-                                </div>
-                            </div>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            <p className="text-muted-foreground">{requestData.description}</p>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                {/* Main Content */}
+                <div className="lg:col-span-2 space-y-6">
+                    {/* Title & Status */}
+                    <div>
+                        <div className="flex items-center gap-3 mb-2">
+                            <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-200 border-none">
+                                {request.category || "General"}
+                            </Badge>
+                            <Badge variant="outline" className={
+                                status === 'OPEN' ? 'text-green-600 border-green-200 bg-green-50' :
+                                    status === 'COMPLETED' ? 'text-gray-600 border-gray-200 bg-gray-50' : ''
+                            }>
+                                {status === 'OPEN' ? 'Abierto a Propuestas' :
+                                    status === 'COMPLETED' ? 'Completado' : status}
+                            </Badge>
+                        </div>
+                        <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-gray-900">
+                            {request.title}
+                        </h1>
+                    </div>
 
-                            <div className="grid grid-cols-2 gap-4 pt-4 border-t">
-                                <div className="flex items-center gap-2">
-                                    <MapPin className="h-4 w-4 text-primary" />
-                                    <span>{requestData.location}</span>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <Calendar className="h-4 w-4 text-primary" />
-                                    <span>{requestData.date}</span>
-                                </div>
+                    {/* Image Gallery */}
+                    {/* Using mock images if none exist, or parsing if they do */}
+                    <div className="grid grid-cols-2 gap-4">
+                        {[
+                            "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80&w=800",
+                            "https://images.unsplash.com/photo-1632759999001-5771b0595956?auto=format&fit=crop&q=80&w=800"
+                        ].map((img, i) => (
+                            <div key={i} className="aspect-video rounded-2xl overflow-hidden bg-gray-100 relative group">
+                                <img
+                                    src={img}
+                                    alt={`Foto ${i + 1} `}
+                                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                />
                             </div>
+                        ))}
+                    </div>
+
+                    {/* Description */}
+                    <Card className="border-none shadow-sm">
+                        <CardHeader>
+                            <CardTitle>Descripción del Problema</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <p className="text-gray-600 leading-relaxed">
+                                {request.description}
+                            </p>
                         </CardContent>
                     </Card>
 
-                    <h3 className="text-xl font-semibold">Propuestas Recibidas ({requestData.proposals.length})</h3>
+                    {/* Proposals Section */}
+                    <div className="pt-8">
+                        <div className="flex items-center justify-between mb-6">
+                            <h2 className="text-2xl font-bold">Propuestas ({formattedProposals.length})</h2>
+                            <span className="text-sm text-muted-foreground">Ordenado por: Recomendado</span>
+                        </div>
 
-                    <div className="space-y-4">
-                        {requestData.proposals.map((proposal) => (
-                            <Card key={proposal.id} className="overflow-hidden">
-                                <CardContent className="p-6">
-                                    <div className="flex flex-col md:flex-row gap-6">
-                                        {/* Provider Info */}
-                                        <div className="flex items-start gap-4 min-w-[200px]">
-                                            <Avatar className="h-12 w-12">
-                                                <AvatarImage src={proposal.provider.image} />
-                                                <AvatarFallback>{proposal.provider.name.substring(0, 2)}</AvatarFallback>
-                                            </Avatar>
-                                            <div>
-                                                <div className="font-semibold flex items-center gap-1">
-                                                    {proposal.provider.name}
-                                                    {proposal.provider.verified && <CheckCircle2 className="h-3 w-3 text-blue-500" />}
-                                                </div>
-                                                <div className="flex items-center gap-1 text-sm text-yellow-500">
-                                                    <Star className="h-3 w-3 fill-current" />
-                                                    <span>{proposal.provider.rating}</span>
-                                                    <span className="text-muted-foreground">({proposal.provider.reviews})</span>
-                                                </div>
-                                                <div className="text-xs text-muted-foreground mt-1">{proposal.createdAt}</div>
-                                            </div>
-                                        </div>
-
-                                        {/* Proposal Details */}
-                                        <div className="flex-1 space-y-3">
-                                            <div className="flex justify-between items-center">
-                                                <div className="text-lg font-bold">${proposal.price.toLocaleString()}</div>
-                                            </div>
-                                            <p className="text-sm text-muted-foreground bg-muted p-3 rounded-md">
-                                                "{proposal.message}"
-                                            </p>
-                                        </div>
-
-                                        {/* Actions */}
-                                        <div className="flex flex-col justify-center gap-2 min-w-[120px]">
-                                            <Button
-                                                onClick={() => handleAcceptProposal(proposal.id)}
-                                                disabled={!!isAccepting}
-                                            >
-                                                {isAccepting === proposal.id ? "Procesando..." : "Aceptar"}
-                                            </Button>
-                                            <Button variant="outline" size="sm">
-                                                <MessageSquare className="h-4 w-4 mr-2" />
-                                                Chat
-                                            </Button>
-                                        </div>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        ))}
+                        <div className="space-y-6">
+                            {formattedProposals.length > 0 ? (
+                                formattedProposals.map((proposal: any) => (
+                                    <ProProposalCard
+                                        key={proposal.id}
+                                        data={proposal}
+                                        onAccept={() => handleAcceptProposal(proposal)}
+                                        onViewProfile={() => console.log("View Profile", proposal.id)}
+                                    />
+                                ))
+                            ) : (
+                                <div className="text-center py-10 text-gray-500 bg-gray-50 rounded-xl">
+                                    No hay propuestas todavía.
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
 
-                {/* Sidebar / Tips */}
+                {/* Sidebar Info */}
                 <div className="space-y-6">
-                    <Card className="bg-blue-50 dark:bg-blue-950/20 border-blue-100 dark:border-blue-900">
-                        <CardHeader>
-                            <CardTitle className="text-blue-700 dark:text-blue-400 text-lg">Consejos de Seguridad</CardTitle>
-                        </CardHeader>
-                        <CardContent className="text-sm space-y-2 text-blue-900 dark:text-blue-200">
-                            <p>• No compartas tu número de teléfono hasta aceptar una propuesta.</p>
-                            <p>• Revisa las calificaciones y reseñas del profesional.</p>
-                            <p>• Realiza todos los pagos a través de la plataforma para estar protegido.</p>
+                    <Card className="border-none shadow-lg bg-black text-white overflow-hidden relative">
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-3xl -mr-16 -mt-16" />
+                        <CardContent className="p-6 space-y-6 relative z-10">
+                            <div>
+                                <p className="text-white/60 text-sm font-medium uppercase tracking-wider mb-1">Presupuesto Estimado</p>
+                                <div className="text-3xl font-bold">
+                                    ${Number(request.budget || 0).toLocaleString()}
+                                </div>
+                            </div>
+
+                            <div className="space-y-4 pt-4 border-t border-white/10">
+                                <div className="flex items-start gap-3">
+                                    <MapPin className="h-5 w-5 text-white/80 mt-0.5" />
+                                    <div>
+                                        <p className="font-medium">Ubicación</p>
+                                        <p className="text-sm text-white/70">{request.location}</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-start gap-3">
+                                    <Calendar className="h-5 w-5 text-white/80 mt-0.5" />
+                                    <div>
+                                        <p className="font-medium">Fecha de Creación</p>
+                                        <p className="text-sm text-white/70">
+                                            {new Date(request.createdAt).toLocaleDateString()}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="flex items-start gap-3">
+                                    <Clock className="h-5 w-5 text-white/80 mt-0.5" />
+                                    <div>
+                                        <p className="font-medium">Estado</p>
+                                        <Badge variant="secondary" className="mt-1 bg-white/20 text-white hover:bg-white/30 border-none">
+                                            {status}
+                                        </Badge>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {status === 'OPEN' ? (
+                                <Button className="w-full bg-white text-black hover:bg-white/90 font-bold">
+                                    Editar Solicitud
+                                </Button>
+                            ) : (
+                                <Button
+                                    className="w-full bg-green-500 hover:bg-green-600 text-white font-bold"
+                                    onClick={handleCompleteJob}
+                                    disabled={status === 'COMPLETED'}
+                                >
+                                    {status === 'COMPLETED' ? 'Trabajo Completado' : 'Marcar como Completado'}
+                                </Button>
+                            )}
+                        </CardContent>
+                    </Card>
+
+                    <Card className="border-none shadow-sm bg-blue-50/50 border-blue-100">
+                        <CardContent className="p-4 flex gap-3">
+                            <div className="p-2 bg-blue-100 rounded-lg text-blue-600 h-fit">
+                                <Share2 className="h-5 w-5" />
+                            </div>
+                            <div>
+                                <h4 className="font-bold text-sm text-blue-900">Consejo Pro</h4>
+                                <p className="text-xs text-blue-700/80 mt-1">
+                                    Agregar más fotos del problema ayuda a los profesionales a darte un presupuesto más exacto.
+                                </p>
+                            </div>
                         </CardContent>
                     </Card>
                 </div>
@@ -186,3 +309,4 @@ export default function RequestDetailPage({ params }: { params: Promise<{ id: st
         </div>
     )
 }
+

@@ -1,93 +1,100 @@
 "use client"
 
 import { useState } from "react"
-import { Star } from "lucide-react"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
+import { Label } from "@/components/ui/label"
+import { Star } from "lucide-react"
 import { toast } from "sonner"
+import { cn } from "@/lib/utils"
 
 interface ReviewFormProps {
-    matchId: string
-    authorId: string
-    targetId: string
-    onSuccess?: () => void
+    isOpen: boolean
+    onClose: () => void
+    proName: string
+    onSubmit: (rating: number, comment: string) => void
 }
 
-export function ReviewForm({ matchId, authorId, targetId, onSuccess }: ReviewFormProps) {
-    const [score, setScore] = useState(0)
+export function ReviewForm({ isOpen, onClose, proName, onSubmit }: ReviewFormProps) {
+    const [rating, setRating] = useState(0)
+    const [hoverRating, setHoverRating] = useState(0)
     const [comment, setComment] = useState("")
-    const [isSubmitting, setIsSubmitting] = useState(false)
-    const [hoveredScore, setHoveredScore] = useState(0)
+    const [isLoading, setIsLoading] = useState(false)
 
     const handleSubmit = async () => {
-        if (score === 0) {
-            toast.error("Por favor selecciona una calificación")
-            return
-        }
-
-        setIsSubmitting(true)
-        try {
-            const response = await fetch("/api/reviews", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    matchId,
-                    authorId,
-                    targetId,
-                    score,
-                    comment
-                }),
-            })
-
-            if (!response.ok) throw new Error("Error al enviar reseña")
-
-            toast.success("¡Gracias por tu opinión!")
-            if (onSuccess) onSuccess()
-        } catch (error) {
-            toast.error("No se pudo enviar la reseña")
-        } finally {
-            setIsSubmitting(false)
-        }
+        setIsLoading(true)
+        // Simulate API call
+        await new Promise(resolve => setTimeout(resolve, 1500))
+        setIsLoading(false)
+        onSubmit(rating, comment)
+        toast.success("¡Gracias por tu calificación!")
+        onClose()
     }
 
     return (
-        <div className="space-y-4 p-4 border rounded-lg bg-card">
-            <h3 className="font-semibold text-lg">Calificar Servicio</h3>
+        <Dialog open={isOpen} onOpenChange={onClose}>
+            <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                    <DialogTitle className="text-center text-2xl">Calificar Trabajo</DialogTitle>
+                    <DialogDescription className="text-center">
+                        ¿Cómo fue tu experiencia con <span className="font-bold text-foreground">{proName}</span>?
+                    </DialogDescription>
+                </DialogHeader>
 
-            <div className="flex gap-1">
-                {[1, 2, 3, 4, 5].map((star) => (
-                    <button
-                        key={star}
-                        type="button"
-                        className="focus:outline-none transition-transform hover:scale-110"
-                        onMouseEnter={() => setHoveredScore(star)}
-                        onMouseLeave={() => setHoveredScore(0)}
-                        onClick={() => setScore(star)}
-                    >
-                        <Star
-                            className={`h-8 w-8 ${star <= (hoveredScore || score)
-                                    ? "fill-yellow-400 text-yellow-400"
-                                    : "text-muted-foreground"
-                                }`}
+                <div className="space-y-6 py-6">
+                    <div className="flex justify-center gap-2">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                            <button
+                                key={star}
+                                type="button"
+                                className="focus:outline-none transition-transform hover:scale-110"
+                                onMouseEnter={() => setHoverRating(star)}
+                                onMouseLeave={() => setHoverRating(0)}
+                                onClick={() => setRating(star)}
+                            >
+                                <Star
+                                    className={cn(
+                                        "h-10 w-10 transition-colors duration-200",
+                                        (hoverRating || rating) >= star
+                                            ? "fill-yellow-400 text-yellow-400"
+                                            : "fill-gray-100 text-gray-200"
+                                    )}
+                                />
+                            </button>
+                        ))}
+                    </div>
+                    <div className="text-center text-sm font-medium text-muted-foreground h-4">
+                        {rating === 1 && "Malo"}
+                        {rating === 2 && "Regular"}
+                        {rating === 3 && "Bueno"}
+                        {rating === 4 && "Muy Bueno"}
+                        {rating === 5 && "¡Excelente!"}
+                    </div>
+
+                    <div className="space-y-2">
+                        <Label htmlFor="comment">Comentario (Opcional)</Label>
+                        <Textarea
+                            id="comment"
+                            placeholder="Cuéntanos más detalles..."
+                            value={comment}
+                            onChange={(e) => setComment(e.target.value)}
+                            className="min-h-[100px] resize-none"
                         />
-                    </button>
-                ))}
-            </div>
+                    </div>
+                </div>
 
-            <Textarea
-                placeholder="Cuéntanos tu experiencia..."
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-                className="min-h-[100px]"
-            />
-
-            <Button
-                onClick={handleSubmit}
-                disabled={isSubmitting}
-                className="w-full"
-            >
-                {isSubmitting ? "Enviando..." : "Enviar Calificación"}
-            </Button>
-        </div>
+                <DialogFooter>
+                    <Button variant="ghost" onClick={onClose}>Omitir</Button>
+                    <Button
+                        onClick={handleSubmit}
+                        disabled={isLoading || rating === 0}
+                        className="bg-black text-white hover:bg-gray-800 w-full sm:w-auto"
+                    >
+                        {isLoading ? "Enviando..." : "Enviar Calificación"}
+                    </Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
     )
 }

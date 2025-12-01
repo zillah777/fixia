@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
+import { useAuth } from "@/providers/auth-provider"
 
 const container = {
     hidden: { opacity: 0 },
@@ -23,12 +24,14 @@ const item = {
 }
 
 export default function DashboardPage() {
+    const { user } = useAuth()
+
     return (
         <div className="min-h-screen bg-background p-8 font-sans">
             {/* Header */}
             <header className="flex items-center justify-between mb-8">
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight">Hola Marcelo, ¡Bienvenido!</h1>
+                    <h1 className="text-3xl font-bold tracking-tight">Hola {user?.name?.split(' ')[0] || 'Usuario'}, ¡Bienvenido!</h1>
                     <p className="text-muted-foreground mt-1">Aquí tienes un resumen de tu actividad hoy.</p>
                 </div>
                 <div className="flex items-center gap-4">

@@ -3,7 +3,8 @@
 import * as React from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { Menu, Bell, User, LogIn, Search } from "lucide-react"
+import { Menu, Bell, User, LogIn, Search, LayoutDashboard, Settings, LogOut } from "lucide-react"
+import { useAuth } from "@/providers/auth-provider"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
@@ -22,7 +23,7 @@ import { NotificationCenter } from "@/components/notifications/notification-cent
 
 export function Navbar() {
     const [isScrolled, setIsScrolled] = React.useState(false)
-    const [notificationCount] = React.useState(3) // Reemplazar con dato dinámico
+    const { user, logout } = useAuth()
 
     React.useEffect(() => {
         const handleScroll = () => {
@@ -118,44 +119,70 @@ export function Navbar() {
 
                     </div>
 
-                    <div className="flex items-center gap-2 sm:gap-4">
-                        {/* Mobile-only CTA Button */}
-                        <Link href="/become-a-pro" className="md:hidden">
-                            <Button size="sm" variant="default" className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold text-xs px-3">
-                                Únete
-                            </Button>
-                        </Link>
-
-                        <Link href="/login" className="hidden md:block text-sm font-medium transition-colors hover:text-foreground/80 text-foreground/60">
-                            Iniciar Sesión
-                        </Link>
-
-                        <ThemeToggle />
-
-
-                        {/* Show user menu and notifications only when logged in */}
-                        {/* TODO: Implement session check to show/hide authenticated elements */}
-                        {/* <NotificationCenter />
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="icon" className="rounded-full">
-                                    <Avatar className="h-8 w-8">
-                                        <AvatarImage src="/avatars/01.png" alt="@user" />
-                                        <AvatarFallback>CN</AvatarFallback>
-                                    </Avatar>
+                    {/* User Menu */}
+                    {user ? (
+                        <>
+                            <NotificationCenter />
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button variant="ghost" size="icon" className="rounded-full relative h-9 w-9 border border-muted-foreground/20">
+                                        <Avatar className="h-8 w-8">
+                                            <AvatarImage src={`https://ui-avatars.com/api/?name=${user.name}&background=random`} alt={user.name || "User"} />
+                                            <AvatarFallback>{user.name?.charAt(0) || "U"}</AvatarFallback>
+                                        </Avatar>
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end" className="w-56">
+                                    <DropdownMenuLabel className="font-normal">
+                                        <div className="flex flex-col space-y-1">
+                                            <p className="text-sm font-medium leading-none">{user.name}</p>
+                                            <p className="text-xs leading-none text-muted-foreground">
+                                                {user.email}
+                                            </p>
+                                        </div>
+                                    </DropdownMenuLabel>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem asChild>
+                                        <Link href="/dashboard" className="cursor-pointer">
+                                            <LayoutDashboard className="mr-2 h-4 w-4" />
+                                            Dashboard
+                                        </Link>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem asChild>
+                                        <Link href="/dashboard/profile" className="cursor-pointer">
+                                            <User className="mr-2 h-4 w-4" />
+                                            Mi Perfil
+                                        </Link>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem asChild>
+                                        <Link href="/dashboard/settings" className="cursor-pointer">
+                                            <Settings className="mr-2 h-4 w-4" />
+                                            Configuración
+                                        </Link>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem
+                                        className="text-red-600 focus:text-red-600 cursor-pointer"
+                                        onClick={() => logout()}
+                                    >
+                                        <LogOut className="mr-2 h-4 w-4" />
+                                        Cerrar Sesión
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        </>
+                    ) : (
+                        <div className="flex items-center gap-2">
+                            <Link href="/login" className="hidden md:block text-sm font-medium transition-colors hover:text-foreground/80 text-foreground/60">
+                                Iniciar Sesión
+                            </Link>
+                            <Link href="/register">
+                                <Button size="sm" className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold shadow-lg shadow-green-500/30">
+                                    Únete a Fixia
                                 </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                                <DropdownMenuLabel>Mi Cuenta</DropdownMenuLabel>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem>Perfil</DropdownMenuItem>
-                                <DropdownMenuItem>Mis Reservas</DropdownMenuItem>
-                                <DropdownMenuItem>Configuración</DropdownMenuItem>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem className="text-red-600">Cerrar Sesión</DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu> */}
-                    </div>
+                            </Link>
+                        </div>
+                    )}
                 </div>
             </header>
         </>
