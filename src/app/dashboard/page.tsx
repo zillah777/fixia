@@ -24,14 +24,33 @@ const item = {
     show: { opacity: 1, y: 0 }
 }
 
+import { AnimatePresence } from "framer-motion"
+
+const TRENDING_IMAGES = [
+    "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2070&auto=format&fit=crop", // Aurora
+    "https://images.unsplash.com/photo-1579546929518-9e396f3cc809?q=80&w=2070&auto=format&fit=crop", // Gradient
+    "https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=2070&auto=format&fit=crop", // Abstract Liquid
+    "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2064&auto=format&fit=crop"  // Abstract Oil
+]
+
 export default function DashboardPage() {
     const { user } = useAuth()
     const [stats, setStats] = React.useState({
         completedRequests: 0,
         activeRequests: 0,
         leads: 0,
-        rating: 0
+        rating: 0,
+        recentActivity: [] as any[],
+        trendingCategory: "General"
     })
+    const [currentImageIndex, setCurrentImageIndex] = React.useState(0)
+
+    React.useEffect(() => {
+        const timer = setInterval(() => {
+            setCurrentImageIndex((prev) => (prev + 1) % TRENDING_IMAGES.length)
+        }, 5000)
+        return () => clearInterval(timer)
+    }, [])
 
     React.useEffect(() => {
         fetch('/api/dashboard/stats')
@@ -80,15 +99,32 @@ export default function DashboardPage() {
                 {/* Visual Hero Widget - Spans 4 columns */}
                 <motion.div variants={item} className="md:col-span-4 row-span-2">
                     <Card className="h-full border-none shadow-xl overflow-hidden relative group">
-                        <div className="absolute inset-0 bg-aurora opacity-90 transition-opacity group-hover:opacity-100" />
-                        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center mix-blend-overlay opacity-50" />
+                        <div className="absolute inset-0 bg-black/20 z-10" /> {/* Overlay for text readability */}
 
-                        <CardContent className="relative h-full flex flex-col justify-end p-8 text-white">
+                        <AnimatePresence mode="popLayout">
+                            <motion.div
+                                key={currentImageIndex}
+                                initial={{ opacity: 0, scale: 1.1 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0 }}
+                                transition={{ duration: 1.5, ease: "easeOut" }}
+                                className="absolute inset-0"
+                            >
+                                <div
+                                    className="absolute inset-0 bg-cover bg-center mix-blend-overlay opacity-60"
+                                    style={{ backgroundImage: `url('${TRENDING_IMAGES[currentImageIndex]}')` }}
+                                />
+                            </motion.div>
+                        </AnimatePresence>
+
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-20" />
+
+                        <CardContent className="relative h-full flex flex-col justify-end p-8 text-white z-30">
                             <Badge className="w-fit mb-4 bg-white/20 hover:bg-white/30 text-white border-none backdrop-blur-md">
                                 <TrendingUp className="w-3 h-3 mr-2" /> Tendencia
                             </Badge>
-                            <h2 className="text-3xl font-bold mb-2">Servicios de Verano</h2>
-                            <p className="text-white/80 mb-6">La demanda de instalación de A/C ha subido un 45% esta semana.</p>
+                            <h2 className="text-3xl font-bold mb-2">Servicios de {stats.trendingCategory}</h2>
+                            <p className="text-white/80 mb-6">La demanda de {stats.trendingCategory} ha subido esta semana.</p>
                             <Button className="w-full bg-white text-black hover:bg-white/90 border-none shadow-lg">
                                 Ver Oportunidades
                             </Button>
@@ -220,21 +256,29 @@ export default function DashboardPage() {
                         </CardHeader>
                         <CardContent>
                             <div className="space-y-6">
-                                {[1, 2, 3].map((_, i) => (
-                                    <div key={i} className="flex items-center gap-4">
-                                        <Avatar className="h-10 w-10 bg-muted">
-                                            <AvatarImage src={`/avatars/0${i + 1}.png`} />
-                                            <AvatarFallback>U{i}</AvatarFallback>
-                                        </Avatar>
-                                        <div className="flex-1">
-                                            <p className="text-sm font-medium">Nueva solicitud de servicio</p>
-                                            <p className="text-xs text-muted-foreground">Hace 2 horas • Plomería</p>
+                                {stats.recentActivity.length > 0 ? (
+                                    stats.recentActivity.map((activity, i) => (
+                                        <div key={i} className="flex items-center gap-4">
+                                            <Avatar className="h-10 w-10 bg-muted">
+                                                <AvatarImage src={`https://ui-avatars.com/api/?name=${activity.title}&background=random`} />
+                                                <AvatarFallback>ACT</AvatarFallback>
+                                            </Avatar>
+                                            <div className="flex-1">
+                                                <p className="text-sm font-medium line-clamp-1">{activity.title}</p>
+                                                <p className="text-xs text-muted-foreground line-clamp-1">
+                                                    {activity.description} • {new Date(activity.date).toLocaleDateString()}
+                                                </p>
+                                            </div>
+                                            <Badge variant="outline" className="text-[10px]">
+                                                {activity.status}
+                                            </Badge>
                                         </div>
-                                        <Button variant="ghost" size="icon" className="rounded-full">
-                                            <ArrowUpRight className="h-4 w-4" />
-                                        </Button>
+                                    ))
+                                ) : (
+                                    <div className="text-center py-8 text-muted-foreground text-sm">
+                                        No hay actividad reciente.
                                     </div>
-                                ))}
+                                )}
                             </div>
                         </CardContent>
                     </Card>

@@ -2,6 +2,45 @@ import { NextResponse } from "next/server"
 import prisma from "@/lib/prisma"
 import { getSession } from "@/lib/auth"
 
+export async function GET(request: Request) {
+    try {
+        const session = await getSession()
+        if (!session) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+        }
+
+        const userId = session.user.id
+        const role = session.user.role
+
+        let matches: any[] = []
+
+        if (role === 'CLIENT') {
+            matches = await prisma.match.findMany({
+                where: { clientId: userId },
+                include: {
+                    provider: { select: { name: true, email: true, phone: true } }, // Add profile image if available
+                    request: { select: { title: true, location: true } }
+                },
+                orderBy: { createdAt: 'desc' }
+            })
+        } else if (role === 'PROFESSIONAL') {
+            matches = await prisma.match.findMany({
+                where: { providerId: userId },
+                include: {
+                    client: { select: { name: true, email: true, phone: true } },
+                    request: { select: { title: true, location: true } }
+                },
+                orderBy: { createdAt: 'desc' }
+            })
+        }
+
+        return NextResponse.json(matches)
+    } catch (error) {
+        console.error("Error fetching matches:", error)
+        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })
+    }
+}
+
 export async function POST(request: Request) {
     try {
         const session = await getSession()

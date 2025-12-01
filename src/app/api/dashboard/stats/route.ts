@@ -69,7 +69,114 @@ export async function GET() {
             stats.leads = totalUsers; // Reusing field for total users
         }
 
-        return NextResponse.json(stats);
+        // Fetch Recent Activity
+        let recentActivity: any[] = [];
+
+        if (role === "CLIENT") {
+            const [requests, matches] = await Promise.all([
+                prisma.request.findMany({
+                    where: { clientId: userId },
+                    orderBy: { createdAt: 'desc' },
+                    take: 3,
+                    select: { id: true, title: true, status: true, createdAt: true }
+                }),
+                prisma.match.findMany({
+                    where: { clientId: userId },
+                    orderBy: { createdAt: 'desc' },
+                    take: 3,
+                    include: { provider: { select: { name: true } }, request: { select: { title: true } } }
+                })
+            ]);
+
+            // Combine and sort
+            recentActivity = [
+                ...requests.map(r => ({
+                    id: r.id,
+                    type: 'REQUEST',
+                    title: r.title,
+                    description: `Estado: ${r.status}`,
+                    date: r.createdAt,
+                    status: r.status
+                })),
+                ...matches.map(m => ({
+                    id: m.id,
+                    type: 'MATCH',
+                    title: `Match con ${m.provider.name}`,
+                    description: `Para: ${m.request.title}`,
+                    date: m.createdAt,
+                    status: m.isCompleted ? 'COMPLETED' : 'ACTIVE'
+                }))
+            ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).slice(0, 5);
+
+        } else if (role === "PROFESSIONAL") {
+            const matches = await prisma.match.findMany({
+                where: { providerId: userId },
+                orderBy: { createdAt: 'desc' },
+                take: 5,
+                include: { client: { select: { name: true } }, request: { select: { title: true } } }
+            });
+
+            recentActivity = matches.map(m => ({
+                id: m.id,
+                type: 'JOB',
+                title: `Trabajo para ${m.client.name}`,
+                description: m.request.title,
+                date: m.createdAt,
+                status: m.isCompleted ? 'COMPLETED' : 'ACTIVE'
+            }));
+        } else if (role === "ADMIN") {
+            const [newUsers, newRequests] = await Promise.all([
+                prisma.user.findMany({
+                    orderBy: { createdAt: 'desc' },
+                    take: 3,
+                    select: { id: true, name: true, role: true, createdAt: true }
+                }),
+                prisma.request.findMany({
+                    orderBy: { createdAt: 'desc' },
+                    take: 3,
+                    select: { id: true, title: true, status: true, createdAt: true }
+                })
+            ]);
+
+            recentActivity = [
+                ...newUsers.map(u => ({
+                    id: u.id,
+                    type: 'USER',
+                    title: `Nuevo Usuario: ${u.name}`,
+                    description: `Rol: ${u.role}`,
+                    date: u.createdAt,
+                    status: 'NEW'
+                })),
+                ...newRequests.map(r => ({
+                    id: r.id,
+                    type: 'REQUEST',
+                    title: `Nueva Solicitud: ${r.title}`,
+                    description: `Estado: ${r.status}`,
+                    date: r.createdAt,
+                    status: r.status
+                }))
+            ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).slice(0, 5);
+
+        }
+
+        // Calculate Trending Category (Global)
+        const trendingGroup = await prisma.request.groupBy({
+            by: ['categoryId'],
+            _count: {
+                categoryId: true
+            },
+            orderBy: {
+                _count: {
+                    categoryId: 'desc'
+                }
+            },
+            take: 1
+        });
+
+        const trendingCategory = trendingGroup.length > 0 ? trendingGroup[0].categoryId : "General";
+        // In a real app, you'd fetch the category name if it's an ID. Assuming string for now or mapped.
+
+        return NextResponse.json({ ...stats, recentActivity, trendingCategory });
     } catch (error) {
         console.error("Error fetching dashboard stats:", error);
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });

@@ -51,6 +51,11 @@ export default function SettingsPage() {
         fetchProfile()
     })
 
+    const [passwords, setPasswords] = useState({
+        current: "",
+        new: ""
+    })
+
     const handleSave = async () => {
         setIsLoading(true)
         try {
@@ -76,6 +81,37 @@ export default function SettingsPage() {
             toast.success("Perfil actualizado correctamente")
         } catch (error) {
             toast.error("Error al guardar cambios")
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
+    const handlePasswordUpdate = async () => {
+        if (!passwords.current || !passwords.new) {
+            toast.error("Completa todos los campos")
+            return
+        }
+
+        setIsLoading(true)
+        try {
+            const res = await fetch("/api/auth/update-password", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    currentPassword: passwords.current,
+                    newPassword: passwords.new
+                })
+            })
+
+            if (!res.ok) {
+                const data = await res.json()
+                throw new Error(data.error || "Failed to update password")
+            }
+
+            toast.success("Contraseña actualizada")
+            setPasswords({ current: "", new: "" })
+        } catch (error: any) {
+            toast.error(error.message)
         } finally {
             setIsLoading(false)
         }
@@ -227,14 +263,24 @@ export default function SettingsPage() {
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="current-password">Contraseña Actual</Label>
-                                <Input id="current-password" type="password" />
+                                <Input
+                                    id="current-password"
+                                    type="password"
+                                    value={passwords.current}
+                                    onChange={(e) => setPasswords({ ...passwords, current: e.target.value })}
+                                />
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="new-password">Nueva Contraseña</Label>
-                                <Input id="new-password" type="password" />
+                                <Input
+                                    id="new-password"
+                                    type="password"
+                                    value={passwords.new}
+                                    onChange={(e) => setPasswords({ ...passwords, new: e.target.value })}
+                                />
                             </div>
                             <div className="flex justify-end">
-                                <Button onClick={handleSave}>Actualizar Contraseña</Button>
+                                <Button onClick={handlePasswordUpdate} disabled={isLoading}>Actualizar Contraseña</Button>
                             </div>
                         </CardContent>
                     </Card>

@@ -6,45 +6,47 @@ import Link from "next/link"
 import { RichRequestCard, RequestData } from "@/components/requests/rich-request-card"
 import { useRouter } from "next/navigation"
 
-// Mock Data
-const MOCK_REQUESTS: RequestData[] = [
-    {
-        id: "1",
-        title: "Reparación de Aire Acondicionado Split",
-        category: "Climatización",
-        status: "OPEN",
-        budget: { min: 25000, max: 35000, currency: "ARS" },
-        location: "Belgrano, CABA",
-        date: "Mañana por la tarde",
-        urgency: "HIGH",
-        proposalsCount: 5
-    },
-    {
-        id: "2",
-        title: "Instalación de Luminarias LED en Cocina",
-        category: "Electricidad",
-        status: "COMPLETED",
-        budget: { min: 15000, max: 20000, currency: "ARS" },
-        location: "Palermo, CABA",
-        date: "Hace 3 días",
-        urgency: "LOW",
-        proposalsCount: 3
-    },
-    {
-        id: "3",
-        title: "Pintura de Habitación 4x4",
-        category: "Pintura",
-        status: "IN_PROGRESS",
-        budget: { min: 80000, max: 120000, currency: "ARS" },
-        location: "Nuñez, CABA",
-        date: "Próximo Lunes",
-        urgency: "MEDIUM",
-        proposalsCount: 8
-    }
-]
+
+
+import { useState, useEffect } from "react"
 
 export default function RequestsPage() {
     const router = useRouter()
+    const [requests, setRequests] = useState<RequestData[]>([])
+    const [isLoading, setIsLoading] = useState(true)
+
+    useEffect(() => {
+        const fetchRequests = async () => {
+            try {
+                const res = await fetch("/api/requests")
+                if (res.ok) {
+                    const data = await res.json()
+                    // Transform data to match RequestData interface
+                    const formattedRequests = data.map((r: any) => ({
+                        id: r.id,
+                        title: r.title,
+                        category: r.category?.name || "General", // Assuming category relation or simple string
+                        status: r.status,
+                        budget: {
+                            min: r.budgetMin || 0,
+                            max: r.budgetMax || 0,
+                            currency: "ARS"
+                        },
+                        location: r.location,
+                        date: r.datePreference || "Sin fecha",
+                        urgency: r.urgency,
+                        proposalsCount: r._count?.proposals || 0
+                    }))
+                    setRequests(formattedRequests)
+                }
+            } catch (error) {
+                console.error("Error fetching requests:", error)
+            } finally {
+                setIsLoading(false)
+            }
+        }
+        fetchRequests()
+    }, [])
 
     return (
         <div className="space-y-6 pb-20 md:pb-0">
@@ -62,17 +64,25 @@ export default function RequestsPage() {
                 </Link>
             </div>
 
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                {MOCK_REQUESTS.map((request) => (
-                    <RichRequestCard
-                        key={request.id}
-                        data={request}
-                        onClick={() => router.push(`/dashboard/requests/${request.id}`)}
-                    />
-                ))}
-            </div>
+            {isLoading ? (
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                    {[1, 2, 3].map((i) => (
+                        <div key={i} className="h-[200px] bg-gray-100 rounded-xl animate-pulse" />
+                    ))}
+                </div>
+            ) : (
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                    {requests.map((request) => (
+                        <RichRequestCard
+                            key={request.id}
+                            data={request}
+                            onClick={() => router.push(`/dashboard/requests/${request.id}`)}
+                        />
+                    ))}
+                </div>
+            )}
 
-            {MOCK_REQUESTS.length === 0 && (
+            {!isLoading && requests.length === 0 && (
                 <div className="text-center py-20">
                     <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 mb-4">
                         <Plus className="h-8 w-8 text-gray-400" />

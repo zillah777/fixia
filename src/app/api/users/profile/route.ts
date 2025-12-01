@@ -18,7 +18,28 @@ export async function GET(request: Request) {
             return NextResponse.json({ error: "User not found" }, { status: 404 })
         }
 
-        return NextResponse.json(user)
+        // Fetch stats
+        const [projectsCount, reviewsCount, favoritesCount] = await Promise.all([
+            prisma.request.count({ where: { clientId: user.id } }), // Total requests for client
+            prisma.review.count({ where: { targetId: user.id } }),
+            prisma.favorite.count({ where: { userId: user.id } })
+        ])
+
+        // If professional, add jobs count to projects
+        let totalProjects = projectsCount
+        if (user.role === 'PROFESSIONAL') {
+            const jobsCount = await prisma.match.count({ where: { providerId: user.id, isCompleted: true } })
+            totalProjects += jobsCount
+        }
+
+        return NextResponse.json({
+            ...user,
+            stats: {
+                projects: totalProjects,
+                reviews: reviewsCount,
+                favorites: favoritesCount
+            }
+        })
     } catch (error) {
         console.error("Error fetching profile:", error)
         return NextResponse.json(

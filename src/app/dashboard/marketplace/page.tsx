@@ -1,63 +1,45 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { MarketplaceRequestCard, MarketplaceRequestData } from "@/components/marketplace/marketplace-request-card"
 import { ProposalDialog } from "@/components/marketplace/proposal-dialog"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Search, Filter, MapPin } from "lucide-react"
 
-// Mock Data
-const MOCK_REQUESTS: MarketplaceRequestData[] = [
-    {
-        id: "1",
-        title: "Instalación de Aire Acondicionado Split 3000f",
-        category: "Climatización",
-        budget: { min: 40000, max: 55000 },
-        location: "Belgrano, CABA",
-        date: "Lo antes posible",
-        urgency: "HIGH",
-        proposalsCount: 2,
-        distance: "2.5 km"
-    },
-    {
-        id: "2",
-        title: "Cambio de cableado eléctrico en cocina",
-        category: "Electricidad",
-        budget: { min: 30000, max: 45000 },
-        location: "Palermo, CABA",
-        date: "Esta semana",
-        urgency: "MEDIUM",
-        proposalsCount: 5,
-        distance: "1.2 km"
-    },
-    {
-        id: "3",
-        title: "Pintura completa departamento 2 ambientes",
-        category: "Pintura",
-        budget: { min: 150000, max: 200000 },
-        location: "Recoleta, CABA",
-        date: "Próximo mes",
-        urgency: "LOW",
-        proposalsCount: 8,
-        distance: "3.8 km"
-    },
-    {
-        id: "4",
-        title: "Reparación de pérdida de agua en baño",
-        category: "Plomería",
-        budget: { min: 20000, max: 35000 },
-        location: "Colegiales, CABA",
-        date: "Urgente",
-        urgency: "HIGH",
-        proposalsCount: 1,
-        distance: "0.8 km"
-    }
-]
-
 export default function MarketplacePage() {
     const [selectedRequest, setSelectedRequest] = useState<MarketplaceRequestData | null>(null)
     const [isDialogOpen, setIsDialogOpen] = useState(false)
+    const [requests, setRequests] = useState<MarketplaceRequestData[]>([])
+    const [isLoading, setIsLoading] = useState(true)
+
+    useEffect(() => {
+        const fetchRequests = async () => {
+            try {
+                const res = await fetch("/api/requests?mode=marketplace")
+                if (res.ok) {
+                    const data = await res.json()
+                    const formattedRequests = data.map((r: any) => ({
+                        id: r.id,
+                        title: r.title,
+                        category: r.category?.name || "General",
+                        budget: { min: Number(r.budget) * 0.8, max: Number(r.budget) }, // Estimating range from single budget
+                        location: r.location,
+                        date: r.datePreference || "Sin fecha",
+                        urgency: r.urgency,
+                        proposalsCount: r._count?.proposals || 0,
+                        distance: "Unknown" // Need geolocation for this
+                    }))
+                    setRequests(formattedRequests)
+                }
+            } catch (error) {
+                console.error("Error fetching marketplace requests:", error)
+            } finally {
+                setIsLoading(false)
+            }
+        }
+        fetchRequests()
+    }, [])
 
     const handleApply = (request: MarketplaceRequestData) => {
         setSelectedRequest(request)
@@ -86,13 +68,28 @@ export default function MarketplacePage() {
             </div>
 
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {MOCK_REQUESTS.map((request) => (
-                    <MarketplaceRequestCard
-                        key={request.id}
-                        data={request}
-                        onApply={() => handleApply(request)}
-                    />
-                ))}
+                {isLoading ? (
+                    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                        {[1, 2, 3].map((i) => (
+                            <div key={i} className="h-[250px] bg-gray-100 rounded-xl animate-pulse" />
+                        ))}
+                    </div>
+                ) : (
+                    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                        {requests.map((request) => (
+                            <MarketplaceRequestCard
+                                key={request.id}
+                                data={request}
+                                onApply={() => handleApply(request)}
+                            />
+                        ))}
+                        {!isLoading && requests.length === 0 && (
+                            <div className="col-span-full text-center py-20 text-muted-foreground">
+                                No hay solicitudes disponibles en este momento.
+                            </div>
+                        )}
+                    </div>
+                )}
             </div>
 
             {selectedRequest && (

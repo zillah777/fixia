@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
-import { MapPin, Star, Shield, Award, CheckCircle2, AlertCircle, Edit } from "lucide-react"
+import { MapPin, Star, Shield, Award, CheckCircle2, AlertCircle, Edit, Link as LinkIcon } from "lucide-react"
 import { useAuth } from "@/providers/auth-provider"
 import { useEffect, useState } from "react"
 import Link from "next/link"
@@ -101,13 +101,17 @@ export default function ProfilePage() {
                                         {!profile?.dni && (
                                             <li className="flex items-center text-xs text-red-500">
                                                 <AlertCircle className="mr-2 h-3 w-3" />
-                                                Verificar Identidad
+                                                <Link href="/dashboard/settings?tab=verification" className="hover:underline">
+                                                    Verificar Identidad
+                                                </Link>
                                             </li>
                                         )}
                                         {!profile?.profile?.socialLinks && (
                                             <li className="flex items-center text-xs text-yellow-600">
                                                 <AlertCircle className="mr-2 h-3 w-3" />
-                                                Agregar Redes Sociales
+                                                <Link href="/dashboard/settings?tab=profile" className="hover:underline">
+                                                    Agregar Redes Sociales
+                                                </Link>
                                             </li>
                                         )}
                                     </ul>
@@ -162,19 +166,19 @@ export default function ProfilePage() {
                     <div className="grid grid-cols-3 gap-4">
                         <Card>
                             <CardContent className="pt-6 text-center">
-                                <div className="text-2xl font-bold">0</div>
+                                <div className="text-2xl font-bold">{profile?.stats?.projects || 0}</div>
                                 <div className="text-xs text-muted-foreground mt-1">Proyectos</div>
                             </CardContent>
                         </Card>
                         <Card>
                             <CardContent className="pt-6 text-center">
-                                <div className="text-2xl font-bold">{profile?.profile?.ratingAvg || 0}</div>
+                                <div className="text-2xl font-bold">{profile?.stats?.reviews || 0}</div>
                                 <div className="text-xs text-muted-foreground mt-1">Reseñas</div>
                             </CardContent>
                         </Card>
                         <Card>
                             <CardContent className="pt-6 text-center">
-                                <div className="text-2xl font-bold">0</div>
+                                <div className="text-2xl font-bold">{profile?.stats?.favorites || 0}</div>
                                 <div className="text-xs text-muted-foreground mt-1">Favoritos</div>
                             </CardContent>
                         </Card>

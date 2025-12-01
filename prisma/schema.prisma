@@ -130,6 +130,7 @@ model Request {
   location    String        // Human readable address
   locationLat Float?
   locationLng Float?
+
   budget      Decimal?      @db.Decimal(10, 2)
   tags        String[]      // Request tags
   status      RequestStatus @default(OPEN)
