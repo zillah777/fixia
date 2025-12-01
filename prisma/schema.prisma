@@ -93,6 +93,8 @@ model Profile {
   locationLng     Float?
   ratingAvg       Float    @default(0)
   badges          String[] // ["VERIFIED", "PREMIUM", "NEW"]
+  socialLinks     String?  // JSON string: { instagram: "", linkedin: "", website: "" }
+  trustScore      Int      @default(0) // 0-100
   
   // New Professional Fields
   certification   String?  // Certification name/details
