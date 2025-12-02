@@ -26,7 +26,12 @@ export async function GET(request: Request) {
                     _count: { select: { proposals: true } }
                 }
             });
-            return NextResponse.json(requests);
+            const formattedRequests = requests.map(req => ({
+                ...req,
+                images: JSON.parse(req.images || "[]"),
+                tags: JSON.parse(req.tags || "[]")
+            }));
+            return NextResponse.json(formattedRequests);
         } else {
             // Default: Fetch my requests (as client)
             const requests = await prisma.request.findMany({
@@ -34,7 +39,12 @@ export async function GET(request: Request) {
                 orderBy: { createdAt: "desc" },
                 include: { _count: { select: { proposals: true } } }
             });
-            return NextResponse.json(requests);
+            const formattedRequests = requests.map(req => ({
+                ...req,
+                images: JSON.parse(req.images || "[]"),
+                tags: JSON.parse(req.tags || "[]")
+            }));
+            return NextResponse.json(formattedRequests);
         }
     } catch (error) {
         console.error("Error fetching requests:", error);
@@ -64,11 +74,17 @@ export async function POST(request: Request) {
                 location: data.location,
                 budget: data.budget ? parseFloat(data.budget) : null,
                 status: "OPEN",
-                clientId: session.user.id
+                clientId: session.user.id,
+                images: data.images ? JSON.stringify(data.images) : "[]",
+                tags: data.tags ? JSON.stringify(data.tags) : "[]"
             }
         });
 
-        return NextResponse.json(newRequest);
+        return NextResponse.json({
+            ...newRequest,
+            images: JSON.parse(newRequest.images),
+            tags: JSON.parse(newRequest.tags)
+        });
     } catch (error) {
         console.error("Error creating request:", error);
         return NextResponse.json({ error: "Error creating request" }, { status: 500 });

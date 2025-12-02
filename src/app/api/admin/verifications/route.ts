@@ -77,12 +77,12 @@ export async function PATCH(request: Request) {
                 })
 
                 if (userProfile) {
-                    const currentBadges = userProfile.badges || []
+                    const currentBadges = JSON.parse(userProfile.badges || "[]")
                     if (!currentBadges.includes("VERIFIED")) {
                         await tx.profile.update({
                             where: { userId: verificationRequest.userId },
                             data: {
-                                badges: [...currentBadges, "VERIFIED"],
+                                badges: JSON.stringify([...currentBadges, "VERIFIED"]),
                                 trustScore: { increment: 20 } // Bonus for verification
                             }
                         })

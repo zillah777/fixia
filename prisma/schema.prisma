@@ -10,32 +10,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Enums
-enum Role {
-  CLIENT
-  PROFESSIONAL
-  ADMIN
-}
 
-enum UserStatus {
-  ACTIVE
-  BLOCKED
-  SUSPENDED_PAYMENT
-}
-
-enum RequestStatus {
-  OPEN
-  MATCHED
-  COMPLETED
-  CANCELLED
-}
-
-enum MatchStatus {
-  PENDING // Offer sent
-  ACCEPTED // Match active
-  COMPLETED // Job done
-  CANCELLED
-}
 
 // Models
 
@@ -48,8 +23,8 @@ model User {
   birthdate      DateTime?  // Date of birth
   password       String
   verificationToken String?
-  role           Role       @default(CLIENT)
-  status         UserStatus @default(ACTIVE)
+  role           String       @default("CLIENT")
+  status         String       @default("ACTIVE")
   subscriptionId       String? // For MercadoPago subscription ID
   subscriptionStatus   String? // active, pending, cancelled
   subscriptionPlan     String? // professional_monthly
@@ -87,12 +62,12 @@ model VerificationRequest {
 model Profile {
   id              String   @id @default(uuid())
   userId          String   @unique
-  bio             String?  @db.Text
-  portfolioImages String[] // Array of Cloudinary URLs
+  bio             String?
+  portfolioImages String @default("[]") // Array of Cloudinary URLs
   locationLat     Float?
   locationLng     Float?
   ratingAvg       Float    @default(0)
-  badges          String[] // ["VERIFIED", "PREMIUM", "NEW"]
+  badges          String @default("[]") // ["VERIFIED", "PREMIUM", "NEW"]
   socialLinks     String?  // JSON string: { instagram: "", linkedin: "", website: "" }
   trustScore      Int      @default(0) // 0-100
   
@@ -100,7 +75,7 @@ model Profile {
   certification   String?  // Certification name/details
   licenseNumber   String?  // Professional license number
   experience      String?  // Years of experience or description
-  tags            String[] // Expertise tags (max 5)
+  tags            String @default("[]") // Expertise tags (max 5)
 
   user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
@@ -109,11 +84,11 @@ model Service {
   id          String   @id @default(uuid())
   providerId  String
   title       String
-  description String   @db.Text
+  description String
   categoryId  String   // Can be an Enum or a separate Category model if needed, keeping simple as String for now or ID
-  price       Decimal  @db.Decimal(10, 2)
-  images      String[] // Cloudinary URLs
-  tags        String[] // Service tags
+  price       Decimal
+  images      String @default("[]") // Cloudinary URLs
+  tags        String @default("[]") // Service tags
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -125,15 +100,16 @@ model Request {
   id          String        @id @default(uuid())
   clientId    String
   title       String
-  description String        @db.Text
+  description String
   categoryId  String
   location    String        // Human readable address
   locationLat Float?
   locationLng Float?
 
-  budget      Decimal?      @db.Decimal(10, 2)
-  tags        String[]      // Request tags
-  status      RequestStatus @default(OPEN)
+  budget      Decimal?
+  images      String      @default("[]") // Cloudinary URLs
+  tags        String      @default("[]") // Request tags
+  status      String @default("OPEN")
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
 
@@ -146,8 +122,8 @@ model Proposal {
   id          String   @id @default(uuid())
   requestId   String
   providerId  String
-  price       Decimal  @db.Decimal(10, 2)
-  message     String?  @db.Text
+  price       Decimal
+  message     String?
   status      String   @default("PENDING") // PENDING, REJECTED, ACCEPTED
   createdAt   DateTime @default(now())
 
@@ -177,7 +153,7 @@ model Review {
   authorId  String
   targetId  String
   score     Int      // 1-5
-  comment   String?  @db.Text
+  comment   String?
   createdAt DateTime @default(now())
 
   match     Match    @relation(fields: [matchId], references: [id])
