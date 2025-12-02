@@ -1,3 +1,6 @@
+import { NextResponse } from "next/server";
+import { getSession } from "@/lib/auth";
+import { preference } from "@/lib/mercadopago";
 import { SUBSCRIPTION_PLANS } from "@/lib/constants";
 
 export async function POST(request: Request) {

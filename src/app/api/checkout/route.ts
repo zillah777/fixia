@@ -1,5 +1,5 @@
 import { NextResponse, NextRequest } from 'next/server';
-import { createPreference } from '@/lib/mercadopago';
+import { preference } from '@/lib/mercadopago';
 import { getSession } from '@/lib/auth';
 import { z } from 'zod';
 import prisma from '@/lib/prisma';
@@ -86,21 +86,43 @@ export async function POST(req: NextRequest) {
         // ======================================================================
         // STEP 4: BUSINESS LOGIC - Create payment preference
         // ======================================================================
-        const preference = await createPreference(
-            'Suscripción Profesional Fixia',
-            3900
-        );
+        const result = await preference.create({
+            body: {
+                items: [
+                    {
+                        id: 'professional_plan',
+                        title: 'Suscripción Profesional Fixia',
+                        quantity: 1,
+                        unit_price: 3900,
+                        currency_id: 'ARS',
+                    }
+                ],
+                payer: {
+                    email: user.email || "unknown@email.com",
+                },
+                back_urls: {
+                    success: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard?payment=success`,
+                    failure: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/subscription?payment=failure`,
+                    pending: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/subscription?payment=pending`,
+                },
+                auto_return: "approved",
+                metadata: {
+                    user_id: userId,
+                    plan: plan
+                }
+            }
+        });
 
         // SECURITY: Log transaction attempt
         console.info('[CHECKOUT_SUCCESS] Payment preference created', {
             userId,
             plan,
-            preferenceId: preference.id,
+            preferenceId: result.id,
         });
 
         return NextResponse.json({
-            url: preference.init_point,
-            preferenceId: preference.id,
+            url: result.init_point,
+            preferenceId: result.id,
         });
 
     } catch (error) {

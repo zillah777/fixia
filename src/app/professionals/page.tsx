@@ -10,6 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Star, MapPin, Search, Filter } from "lucide-react"
+import { Professional } from "@/types/professional"
 
 function ProfessionalsList() {
     const searchParams = useSearchParams()
@@ -18,7 +19,7 @@ function ProfessionalsList() {
     const [search, setSearch] = useState("")
     const [categoryFilter, setCategoryFilter] = useState(categoryParam || "all")
     const [locationFilter, setLocationFilter] = useState("")
-    const [professionals, setProfessionals] = useState<any[]>([])
+    const [professionals, setProfessionals] = useState<Professional[]>([])
     const [loading, setLoading] = useState(true)
 
     // Fetch professionals on mount and when filters change
@@ -33,7 +34,7 @@ function ProfessionalsList() {
 
                 const res = await fetch(`/api/professionals?${params.toString()}`)
                 if (res.ok) {
-                    const data = await res.json()
+                    const data: Professional[] = await res.json()
                     setProfessionals(data)
                 }
             } catch (error) {

@@ -1,32 +1,18 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { usePathname } from "next/navigation"
 import {
-    LayoutDashboard,
-    Briefcase,
-    Calendar,
-    User,
-    Settings,
-    LogOut,
     Menu,
     Home,
-    Search,
-    CreditCard
+    LogOut
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/providers/auth-provider"
-
-const sidebarItems = [
-    { icon: LayoutDashboard, label: "Dashboard", href: "/dashboard" },
-    { icon: Briefcase, label: "Mis Solicitudes", href: "/dashboard/requests" },
-    { icon: Search, label: "Explorar Trabajos", href: "/dashboard/marketplace" },
-    { icon: Calendar, label: "Reservas", href: "/dashboard/bookings" },
-    { icon: User, label: "Perfil", href: "/dashboard/profile" },
-    { icon: Settings, label: "Configuración", href: "/dashboard/settings" },
-]
+import { sidebarItems, professionalItems } from "@/config/navigation"
 
 export default function DashboardLayout({
     children,
@@ -52,11 +38,13 @@ export default function DashboardLayout({
                             <h2 className="font-bold text-2xl tracking-tight">Fixia</h2>
                             {user && (
                                 <div className="mt-4 flex items-center gap-3">
-                                    <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center overflow-hidden">
-                                        <img
+                                    <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center overflow-hidden relative">
+                                        <Image
                                             src={`https://ui-avatars.com/api/?name=${user.name}&background=random`}
                                             alt={user.name || "User"}
-                                            className="h-full w-full object-cover"
+                                            fill
+                                            className="object-cover"
+                                            unoptimized // External URL
                                         />
                                     </div>
                                     <div className="flex flex-col">
@@ -82,20 +70,21 @@ export default function DashboardLayout({
                                     {item.label}
                                 </Link>
                             ))}
-                            {user?.role === "PROFESSIONAL" && (
+                            {user?.role === "PROFESSIONAL" && professionalItems.map((item) => (
                                 <Link
-                                    href="/dashboard/subscription"
+                                    key={item.href}
+                                    href={item.href}
                                     className={cn(
                                         "flex items-center gap-4 px-4 py-3 rounded-2xl text-sm font-medium transition-all duration-200",
-                                        pathname === "/dashboard/subscription"
+                                        pathname === item.href
                                             ? "bg-black text-white shadow-lg shadow-black/20 scale-[1.02]"
                                             : "text-muted-foreground hover:bg-muted hover:text-foreground"
                                     )}
                                 >
-                                    <CreditCard className="h-5 w-5" />
-                                    Suscripción
+                                    <item.icon className="h-5 w-5" />
+                                    {item.label}
                                 </Link>
-                            )}
+                            ))}
                             <div className="my-4 border-t border-border/50" />
                             <Link href="/">
                                 <Button variant="ghost" className="w-full justify-start gap-4 px-4 rounded-2xl h-12 text-muted-foreground hover:text-foreground">
@@ -109,7 +98,7 @@ export default function DashboardLayout({
                                 onClick={() => logout()}
                             >
                                 <LogOut className="h-5 w-5" />
-                                Cerrar Sesión
+                                <span className="ml-2">Cerrar Sesión</span>
                             </Button>
                         </nav>
                     </SheetContent>
@@ -122,21 +111,25 @@ export default function DashboardLayout({
                     <div className="p-8 pb-4">
                         <Link href="/" className="flex items-center gap-2 mb-8">
                             <div className="relative h-8 w-auto aspect-[3/1]">
-                                <img
+                                <Image
                                     src="/logo.png"
                                     alt="Fixia Logo"
-                                    className="h-8 w-auto object-contain"
+                                    fill
+                                    className="object-contain"
+                                    priority
                                 />
                             </div>
                         </Link>
 
                         {user && (
                             <div className="mb-6 flex items-center gap-3 p-3 rounded-xl bg-gray-50 border border-border/50">
-                                <div className="h-10 w-10 rounded-full bg-white border border-border flex items-center justify-center overflow-hidden shrink-0">
-                                    <img
+                                <div className="h-10 w-10 rounded-full bg-white border border-border flex items-center justify-center overflow-hidden shrink-0 relative">
+                                    <Image
                                         src={`https://ui-avatars.com/api/?name=${user.name}&background=random`}
                                         alt={user.name || "User"}
-                                        className="h-full w-full object-cover"
+                                        fill
+                                        className="object-cover"
+                                        unoptimized
                                     />
                                 </div>
                                 <div className="flex flex-col min-w-0">
@@ -167,20 +160,21 @@ export default function DashboardLayout({
                                 {item.label}
                             </Link>
                         ))}
-                        {user?.role === "PROFESSIONAL" && (
+                        {user?.role === "PROFESSIONAL" && professionalItems.map((item) => (
                             <Link
-                                href="/dashboard/subscription"
+                                key={item.href}
+                                href={item.href}
                                 className={cn(
                                     "flex items-center gap-3 px-4 py-3.5 rounded-2xl text-sm font-medium transition-all duration-200 group",
-                                    pathname === "/dashboard/subscription"
+                                    pathname === item.href
                                         ? "bg-black text-white shadow-lg shadow-black/25 translate-x-1"
                                         : "text-muted-foreground hover:bg-gray-100 hover:text-foreground hover:translate-x-1"
                                 )}
                             >
-                                <CreditCard className={cn("h-5 w-5 transition-transform group-hover:scale-110", pathname === "/dashboard/subscription" ? "text-white" : "text-muted-foreground group-hover:text-foreground")} />
-                                Suscripción
+                                <item.icon className={cn("h-5 w-5 transition-transform group-hover:scale-110", pathname === item.href ? "text-white" : "text-muted-foreground group-hover:text-foreground")} />
+                                {item.label}
                             </Link>
-                        )}
+                        ))}
                     </nav>
 
                     <div className="p-4 mt-auto border-t border-border/50 bg-gray-50/50">

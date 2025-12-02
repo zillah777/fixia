@@ -1,21 +1,21 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Badge } from "@/components/ui/badge"
-import { Send, Phone, Video, MoreVertical, CheckCircle2, Lock, Star, Loader2 } from "lucide-react"
+import { Send, Phone, CheckCircle2, Star, Loader2 } from "lucide-react"
 import { ReviewDialog } from "@/components/reviews/review-dialog"
 import { cn } from "@/lib/utils"
 import { toast } from "sonner"
+import { Match, Message, User } from "@/types/match"
 
 export default function MatchesPage() {
-    const [matches, setMatches] = useState<any[]>([])
-    const [selectedMatch, setSelectedMatch] = useState<any>(null)
-    const [messages, setMessages] = useState<any[]>([])
+    const [matches, setMatches] = useState<Match[]>([])
+    const [selectedMatch, setSelectedMatch] = useState<Match | null>(null)
+    const [messages, setMessages] = useState<Message[]>([])
     const [newMessage, setNewMessage] = useState("")
     const [loading, setLoading] = useState(true)
 
@@ -27,7 +27,7 @@ export default function MatchesPage() {
         try {
             const res = await fetch("/api/matches")
             if (res.ok) {
-                const data = await res.json()
+                const data: Match[] = await res.json()
                 setMatches(data)
                 if (data.length > 0) {
                     handleSelectMatch(data[0])
@@ -41,10 +41,10 @@ export default function MatchesPage() {
         }
     }
 
-    const handleSelectMatch = (match: any) => {
+    const handleSelectMatch = (match: Match) => {
         setSelectedMatch(match)
-        // Simulate chat history based on proposal
         // In a real app, we would fetch messages from /api/messages?matchId=...
+        // For now, we simulate the proposal message as the first message
         const proposalMsg = match.request.proposals?.[0]?.message || "Hola, estoy interesado en tu solicitud."
 
         setMessages([
@@ -57,20 +57,27 @@ export default function MatchesPage() {
         ])
     }
 
-    const handleSendMessage = (e: React.FormEvent) => {
+    const handleSendMessage = async (e: React.FormEvent) => {
         e.preventDefault()
         if (!newMessage.trim()) return
 
-        const msg = {
-            id: messages.length + 1,
+        const tempMsg: Message = {
+            id: Date.now(),
             senderId: "me",
             text: newMessage,
             timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         }
 
-        setMessages([...messages, msg])
+        setMessages((prev) => [...prev, tempMsg])
         setNewMessage("")
-        // Here we would POST to /api/messages
+
+        try {
+            // Placeholder for API call
+            // await fetch('/api/messages', { method: 'POST', body: JSON.stringify({ text: newMessage, matchId: selectedMatch?.id }) })
+        } catch (error) {
+            toast.error("Error al enviar mensaje")
+            // Optionally revert optimistic update here
+        }
     }
 
     const handleWhatsAppClick = () => {
@@ -83,8 +90,9 @@ export default function MatchesPage() {
         }
     }
 
-    const getOtherUser = (match: any) => {
-        return match.provider || match.client || { name: "Usuario", image: "" }
+    const getOtherUser = (match: Match): User => {
+        // Fallback to a default user object if neither exists, though ideally one should
+        return match.provider || match.client || { id: "unknown", name: "Usuario", image: "" }
     }
 
     if (loading) {
