@@ -25,6 +25,7 @@ const item = {
 }
 
 import { AnimatePresence } from "framer-motion"
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 const TRENDING_IMAGES = [
     "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2070&auto=format&fit=crop", // Aurora
@@ -83,8 +84,8 @@ export default function DashboardPage() {
                         <Bell className="h-5 w-5 text-muted-foreground" />
                     </Button>
                     <Avatar className="h-10 w-10 border-2 border-white shadow-sm">
-                        <AvatarImage src="/avatars/01.png" />
-                        <AvatarFallback>CN</AvatarFallback>
+                        <AvatarImage src={user?.image || `https://ui-avatars.com/api/?name=${user?.name || 'User'}&background=random`} />
+                        <AvatarFallback>{user?.name?.substring(0, 2) || "CN"}</AvatarFallback>
                     </Avatar>
                 </div>
             </header>
@@ -241,8 +242,43 @@ export default function DashboardPage() {
                             </div>
                         </CardHeader>
                         <CardContent>
-                            <div className="h-[200px] w-full bg-muted/20 rounded-xl flex items-center justify-center text-muted-foreground">
-                                Gráfico de Área (Placeholder)
+                            <div className="h-[200px] w-full">
+                                {stats.recentActivity.length > 0 ? (
+                                    <ResponsiveContainer width="100%" height="100%">
+                                        <AreaChart
+                                            data={(() => {
+                                                const last7Days = [...Array(7)].map((_, i) => {
+                                                    const d = new Date();
+                                                    d.setDate(d.getDate() - i);
+                                                    return d.toISOString().split('T')[0];
+                                                }).reverse();
+
+                                                return last7Days.map(date => ({
+                                                    name: new Date(date).toLocaleDateString('es-AR', { weekday: 'short' }),
+                                                    activity: stats.recentActivity.filter(a => a.date.startsWith(date)).length
+                                                }));
+                                            })()}
+                                        >
+                                            <defs>
+                                                <linearGradient id="colorActivity" x1="0" y1="0" x2="0" y2="1">
+                                                    <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
+                                                    <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
+                                                </linearGradient>
+                                            </defs>
+                                            <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                                            <XAxis dataKey="name" tick={{ fontSize: 12 }} axisLine={false} tickLine={false} />
+                                            <YAxis hide />
+                                            <Tooltip
+                                                contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                                            />
+                                            <Area type="monotone" dataKey="activity" stroke="#8884d8" fillOpacity={1} fill="url(#colorActivity)" />
+                                        </AreaChart>
+                                    </ResponsiveContainer>
+                                ) : (
+                                    <div className="h-full flex items-center justify-center text-muted-foreground text-sm">
+                                        No hay suficientes datos para mostrar el gráfico.
+                                    </div>
+                                )}
                             </div>
                         </CardContent>
                     </Card>

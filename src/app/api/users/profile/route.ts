@@ -57,23 +57,32 @@ export async function PATCH(request: Request) {
         }
 
         const body = await request.json()
-        const { name, bio, socialLinks } = body
+        const { name, phone, bio, socialLinks, certification, licenseNumber, experience, tags, location } = body
 
         // Update User and Profile
         const updatedUser = await prisma.user.update({
             where: { id: session.payload.id as string },
             data: {
                 name,
+                phone,
                 profile: {
                     upsert: {
                         create: {
                             bio,
                             socialLinks: JSON.stringify(socialLinks),
+                            certification,
+                            licenseNumber,
+                            experience,
+                            tags,
                             trustScore: 0 // Default for new profiles
                         },
                         update: {
                             bio,
-                            socialLinks: JSON.stringify(socialLinks)
+                            socialLinks: JSON.stringify(socialLinks),
+                            certification,
+                            licenseNumber,
+                            experience,
+                            tags
                         }
                     }
                 }

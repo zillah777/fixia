@@ -181,21 +181,23 @@ export default function RequestDetailPage() {
                     </div>
 
                     {/* Image Gallery */}
-                    {/* Using mock images if none exist, or parsing if they do */}
-                    <div className="grid grid-cols-2 gap-4">
-                        {[
-                            "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80&w=800",
-                            "https://images.unsplash.com/photo-1632759999001-5771b0595956?auto=format&fit=crop&q=80&w=800"
-                        ].map((img, i) => (
-                            <div key={i} className="aspect-video rounded-2xl overflow-hidden bg-gray-100 relative group">
-                                <img
-                                    src={img}
-                                    alt={`Foto ${i + 1} `}
-                                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                                />
-                            </div>
-                        ))}
-                    </div>
+                    {request.images && request.images.length > 0 ? (
+                        <div className={`grid gap-4 ${request.images.length > 1 ? 'grid-cols-2' : 'grid-cols-1'}`}>
+                            {request.images.map((img: string, i: number) => (
+                                <div key={i} className="aspect-video rounded-2xl overflow-hidden bg-gray-100 relative group">
+                                    <img
+                                        src={img}
+                                        alt={`Foto ${i + 1} `}
+                                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="bg-muted/20 rounded-2xl p-8 text-center text-muted-foreground">
+                            No hay imágenes adjuntas a esta solicitud.
+                        </div>
+                    )}
 
                     {/* Description */}
                     <Card className="border-none shadow-sm">

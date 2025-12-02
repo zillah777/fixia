@@ -18,8 +18,17 @@ export async function GET(request: Request) {
             matches = await prisma.match.findMany({
                 where: { clientId: userId },
                 include: {
-                    provider: { select: { name: true, email: true, phone: true } }, // Add profile image if available
-                    request: { select: { title: true, location: true } }
+                    provider: { select: { name: true, email: true, phone: true } },
+                    request: {
+                        select: {
+                            title: true,
+                            location: true,
+                            proposals: {
+                                where: { status: "ACCEPTED" },
+                                select: { message: true, price: true }
+                            }
+                        }
+                    }
                 },
                 orderBy: { createdAt: 'desc' }
             })
@@ -28,7 +37,16 @@ export async function GET(request: Request) {
                 where: { providerId: userId },
                 include: {
                     client: { select: { name: true, email: true, phone: true } },
-                    request: { select: { title: true, location: true } }
+                    request: {
+                        select: {
+                            title: true,
+                            location: true,
+                            proposals: {
+                                where: { providerId: userId }, // For pro, get their own proposal
+                                select: { message: true, price: true }
+                            }
+                        }
+                    }
                 },
                 orderBy: { createdAt: 'desc' }
             })

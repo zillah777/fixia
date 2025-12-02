@@ -9,6 +9,8 @@ interface User {
     email: string;
     name: string | null;
     role: string;
+    image?: string | null;
+    phone?: string | null;
     createdAt: string;
 }
 

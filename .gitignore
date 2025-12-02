@@ -4,10 +4,15 @@ node_modules/
 .pnp.js
 
 # Environment variables (NEVER commit secrets)
+# Environment variables (NEVER commit secrets)
 .env
 .env.local
 .env.*.local
 *.pem
+
+# Database
+*.db
+*.db-journal
 
 # Build outputs
 /.next/

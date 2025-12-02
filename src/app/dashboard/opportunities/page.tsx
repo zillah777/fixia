@@ -1,53 +1,52 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { MapPin, Calendar, DollarSign, Search, Filter } from "lucide-react"
+import { MapPin, Calendar, DollarSign, Search, Filter, Loader2 } from "lucide-react"
 import { ProposalDialog } from "@/components/proposals/proposal-dialog"
-
-// Mock data
-const opportunities = [
-    {
-        id: 1,
-        title: "Instalación de Ventilador de Techo",
-        category: "Electricidad",
-        location: "Palermo, CABA",
-        date: "Para mañana",
-        budget: 15000,
-        description: "Necesito instalar un ventilador de techo en una habitación. El techo es de losa. Ya tengo el ventilador.",
-        tags: ["Electricidad", "Instalación"],
-        isNew: true,
-    },
-    {
-        id: 2,
-        title: "Reparación de Pérdida en Baño",
-        category: "Plomería",
-        location: "Belgrano, CABA",
-        date: "Urgente",
-        budget: 25000,
-        description: "Hay una gotera constante en la bacha del baño principal. Necesito reparación urgente.",
-        tags: ["Plomería", "Urgencia"],
-        isNew: true,
-    },
-    {
-        id: 3,
-        title: "Pintura de Departamento 2 Ambientes",
-        category: "Pintura",
-        location: "Caballito, CABA",
-        date: "Próxima semana",
-        budget: 120000,
-        description: "Busco pintor para departamento de 45m2. Paredes y cielorrasos. Pintura blanca.",
-        tags: ["Pintura", "Interior"],
-        isNew: false,
-    },
-]
+import { toast } from "sonner"
 
 export default function OpportunitiesPage() {
     const [filter, setFilter] = useState("")
+    const [categoryFilter, setCategoryFilter] = useState("all")
+    const [opportunities, setOpportunities] = useState<any[]>([])
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        fetchOpportunities()
+    }, [])
+
+    const fetchOpportunities = async () => {
+        try {
+            const res = await fetch("/api/requests?mode=marketplace")
+            if (res.ok) {
+                const data = await res.json()
+                setOpportunities(data)
+            } else {
+                toast.error("Error al cargar oportunidades")
+            }
+        } catch (error) {
+            console.error("Failed to fetch opportunities", error)
+            toast.error("Error de conexión")
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    const filteredOpportunities = opportunities.filter(opp => {
+        const matchesSearch =
+            opp.title.toLowerCase().includes(filter.toLowerCase()) ||
+            opp.description?.toLowerCase().includes(filter.toLowerCase()) ||
+            opp.location.toLowerCase().includes(filter.toLowerCase())
+
+        const matchesCategory = categoryFilter === "all" || opp.categoryId.toLowerCase() === categoryFilter.toLowerCase()
+
+        return matchesSearch && matchesCategory
+    })
 
     return (
         <div className="space-y-6">
@@ -65,7 +64,7 @@ export default function OpportunitiesPage() {
             </div>
 
             {/* Search Bar */}
-            <div className="flex gap-4">
+            <div className="flex gap-4 flex-col md:flex-row">
                 <div className="relative flex-1">
                     <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                     <Input
@@ -75,8 +74,8 @@ export default function OpportunitiesPage() {
                         onChange={(e) => setFilter(e.target.value)}
                     />
                 </div>
-                <Select defaultValue="all">
-                    <SelectTrigger className="w-[180px]">
+                <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                    <SelectTrigger className="w-full md:w-[180px]">
                         <SelectValue placeholder="Categoría" />
                     </SelectTrigger>
                     <SelectContent>
@@ -84,54 +83,71 @@ export default function OpportunitiesPage() {
                         <SelectItem value="electricidad">Electricidad</SelectItem>
                         <SelectItem value="plomeria">Plomería</SelectItem>
                         <SelectItem value="gasista">Gasista</SelectItem>
+                        <SelectItem value="pintura">Pintura</SelectItem>
+                        <SelectItem value="carpinteria">Carpintería</SelectItem>
                     </SelectContent>
                 </Select>
             </div>
 
             {/* Feed */}
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {opportunities.map((opp) => (
-                    <Card key={opp.id} className="flex flex-col hover:shadow-md transition-shadow">
-                        <CardHeader className="pb-3">
-                            <div className="flex justify-between items-start mb-2">
-                                <Badge variant={opp.isNew ? "default" : "secondary"}>
-                                    {opp.category}
-                                </Badge>
-                                {opp.isNew && <span className="text-xs font-bold text-primary animate-pulse">NUEVO</span>}
-                            </div>
-                            <CardTitle className="text-lg leading-tight">{opp.title}</CardTitle>
-                        </CardHeader>
-                        <CardContent className="flex-1 space-y-4 text-sm">
-                            <p className="text-muted-foreground line-clamp-3">
-                                {opp.description}
-                            </p>
+            {loading ? (
+                <div className="flex justify-center py-12">
+                    <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                </div>
+            ) : (
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                    {filteredOpportunities.length > 0 ? (
+                        filteredOpportunities.map((opp) => (
+                            <Card key={opp.id} className="flex flex-col hover:shadow-md transition-shadow">
+                                <CardHeader className="pb-3">
+                                    <div className="flex justify-between items-start mb-2">
+                                        <Badge variant="secondary">
+                                            {opp.categoryId}
+                                        </Badge>
+                                        {/* Logic for "New" could be based on createdAt date */}
+                                        {new Date(opp.createdAt) > new Date(Date.now() - 24 * 60 * 60 * 1000) && (
+                                            <span className="text-xs font-bold text-primary animate-pulse">NUEVO</span>
+                                        )}
+                                    </div>
+                                    <CardTitle className="text-lg leading-tight">{opp.title}</CardTitle>
+                                </CardHeader>
+                                <CardContent className="flex-1 space-y-4 text-sm">
+                                    <p className="text-muted-foreground line-clamp-3">
+                                        {opp.description}
+                                    </p>
 
-                            <div className="grid grid-cols-2 gap-2 text-muted-foreground">
-                                <div className="flex items-center gap-2">
-                                    <MapPin className="h-4 w-4 text-primary" />
-                                    <span className="truncate">{opp.location}</span>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <Calendar className="h-4 w-4 text-primary" />
-                                    <span>{opp.date}</span>
-                                </div>
-                                <div className="flex items-center gap-2 col-span-2">
-                                    <DollarSign className="h-4 w-4 text-green-600" />
-                                    <span className="font-semibold text-foreground">
-                                        Presupuesto: ${opp.budget.toLocaleString()}
-                                    </span>
-                                </div>
-                            </div>
-                        </CardContent>
-                        <CardFooter className="pt-2">
-                            <ProposalDialog
-                                requestId={opp.id.toString()}
-                                requestTitle={opp.title}
-                            />
-                        </CardFooter>
-                    </Card>
-                ))}
-            </div>
+                                    <div className="grid grid-cols-2 gap-2 text-muted-foreground">
+                                        <div className="flex items-center gap-2">
+                                            <MapPin className="h-4 w-4 text-primary" />
+                                            <span className="truncate">{opp.location}</span>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <Calendar className="h-4 w-4 text-primary" />
+                                            <span>{new Date(opp.createdAt).toLocaleDateString()}</span>
+                                        </div>
+                                        <div className="flex items-center gap-2 col-span-2">
+                                            <DollarSign className="h-4 w-4 text-green-600" />
+                                            <span className="font-semibold text-foreground">
+                                                Presupuesto: {opp.budget ? `$${Number(opp.budget).toLocaleString()}` : "A convenir"}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </CardContent>
+                                <CardFooter className="pt-2">
+                                    <ProposalDialog
+                                        requestId={opp.id}
+                                        requestTitle={opp.title}
+                                    />
+                                </CardFooter>
+                            </Card>
+                        ))
+                    ) : (
+                        <div className="col-span-full text-center py-12 text-muted-foreground">
+                            No se encontraron oportunidades disponibles.
+                        </div>
+                    )}
+                </div>
+            )}
         </div>
     )
 }

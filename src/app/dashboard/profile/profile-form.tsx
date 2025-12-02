@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -8,56 +8,96 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
-import { CheckCircle2, MapPin, Upload } from "lucide-react"
+import { CheckCircle2, MapPin, Upload, Loader2 } from "lucide-react"
 import { toast } from "sonner"
 import { TagInput } from "@/components/ui/tag-input"
-
-// Mock user data (extended)
-const userData = {
-    name: "Juan Pérez",
-    email: "juan.perez@example.com",
-    role: "PROFESSIONAL",
-    image: "/placeholder-user.jpg",
-    bio: "Electricista matriculado con más de 10 años de experiencia en instalaciones residenciales y comerciales.",
-    location: "Palermo, CABA",
-    phone: "+54 9 11 1234 5678",
-    certification: "Matrícula Nacional #12345",
-    licenseNumber: "MN-12345",
-    experience: "10 años",
-    tags: ["Electricidad", "Instalaciones", "Reparaciones", "Industrial", "Hogar"],
-    subscription: {
-        plan: "PROFESSIONAL",
-        status: "ACTIVE",
-        nextBilling: "15/12/2024"
-    }
-}
 
 interface ProfileFormProps {
     user: {
         name: string | null | undefined;
         email: string;
         role: string;
-        // Add other fields as they become available in the backend
     }
 }
 
 export function ProfileForm({ user }: ProfileFormProps) {
     const [isEditing, setIsEditing] = useState(false)
-    // Merge passed user data with mock data for missing fields (temporary)
-    const [formData, setFormData] = useState({
-        ...userData,
-        name: user.name || userData.name,
-        email: user.email || userData.email,
-        role: user.role || userData.role,
+    const [loading, setLoading] = useState(true)
+    const [formData, setFormData] = useState<any>({
+        name: user.name || "",
+        email: user.email || "",
+        role: user.role || "CLIENT",
+        image: "", // We need to fetch this or use a placeholder
+        bio: "",
+        location: "",
+        phone: "",
+        certification: "",
+        licenseNumber: "",
+        experience: "",
+        tags: [],
+        subscription: {
+            plan: "FREE",
+            status: "INACTIVE",
+            nextBilling: "-"
+        }
     })
+
+    useEffect(() => {
+        fetchProfile()
+    }, [])
+
+    const fetchProfile = async () => {
+        try {
+            const res = await fetch("/api/users/profile")
+            if (res.ok) {
+                const data = await res.json()
+                const profile = data.profile || {}
+
+                setFormData({
+                    name: data.name || "",
+                    email: data.email || "",
+                    role: data.role || "CLIENT",
+                    image: profile.portfolioImages?.[0] || "", // Using first portfolio image as avatar for now if no dedicated avatar field
+                    bio: profile.bio || "",
+                    location: "", // Location is not in profile schema yet, using empty
+                    phone: data.phone || "",
+                    certification: profile.certification || "",
+                    licenseNumber: profile.licenseNumber || "",
+                    experience: profile.experience || "",
+                    tags: profile.tags || [],
+                    subscription: {
+                        plan: data.subscriptionPlan || "FREE",
+                        status: data.subscriptionStatus || "INACTIVE",
+                        nextBilling: data.subscriptionEndsAt ? new Date(data.subscriptionEndsAt).toLocaleDateString() : "-"
+                    }
+                })
+            }
+        } catch (error) {
+            console.error("Failed to fetch profile", error)
+            toast.error("Error al cargar perfil")
+        } finally {
+            setLoading(false)
+        }
+    }
 
     const handleSave = async () => {
         try {
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 1000))
+            const res = await fetch("/api/users/profile", {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    name: formData.name,
+                    phone: formData.phone,
+                    bio: formData.bio,
+                    certification: formData.certification,
+                    licenseNumber: formData.licenseNumber,
+                    experience: formData.experience,
+                    tags: formData.tags,
+                    // location: formData.location // Not supported by backend yet
+                })
+            })
 
-            // Mock random error for demonstration (remove in prod)
-            // if (Math.random() > 0.8) throw new Error("Error de conexión");
+            if (!res.ok) throw new Error("Failed to update")
 
             toast.success("Perfil actualizado correctamente")
             setIsEditing(false)
@@ -66,6 +106,10 @@ export function ProfileForm({ user }: ProfileFormProps) {
                 description: "No se pudieron guardar los cambios. Intenta nuevamente."
             })
         }
+    }
+
+    if (loading) {
+        return <div className="flex justify-center p-12"><Loader2 className="h-8 w-8 animate-spin" /></div>
     }
 
     return (
@@ -111,7 +155,9 @@ export function ProfileForm({ user }: ProfileFormProps) {
                             </div>
                             <div className="flex justify-between text-sm">
                                 <span className="text-muted-foreground">Estado:</span>
-                                <span className="text-green-600 font-medium">{formData.subscription.status}</span>
+                                <span className={formData.subscription.status === "ACTIVE" ? "text-green-600 font-medium" : "text-muted-foreground"}>
+                                    {formData.subscription.status}
+                                </span>
                             </div>
                             <div className="flex justify-between text-sm">
                                 <span className="text-muted-foreground">Próximo Cobro:</span>
@@ -168,7 +214,8 @@ export function ProfileForm({ user }: ProfileFormProps) {
                                         id="location"
                                         className="pl-9"
                                         value={formData.location}
-                                        disabled={!isEditing}
+                                        disabled={!isEditing} // Disabled for now as backend doesn't support it
+                                        placeholder="No disponible"
                                         onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                                     />
                                 </div>
