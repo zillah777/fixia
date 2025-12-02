@@ -1,6 +1,4 @@
-import { NextResponse } from "next/server";
-import { preference } from "@/lib/mercadopago";
-import { getSession } from "@/lib/auth";
+import { SUBSCRIPTION_PLANS } from "@/lib/constants";
 
 export async function POST(request: Request) {
     try {
@@ -9,15 +7,17 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
+        const plan = SUBSCRIPTION_PLANS.PROFESSIONAL;
+
         const result = await preference.create({
             body: {
                 items: [
                     {
-                        id: "professional_plan",
-                        title: "Suscripción Profesional Fixia",
+                        id: plan.id,
+                        title: plan.title,
                         quantity: 1,
-                        unit_price: 5000,
-                        currency_id: "ARS",
+                        unit_price: plan.price,
+                        currency_id: plan.currency,
                     },
                 ],
                 payer: {
