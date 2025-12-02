@@ -11,7 +11,8 @@ import {
     LogOut,
     Menu,
     Home,
-    Search
+    Search,
+    CreditCard
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
@@ -21,7 +22,7 @@ import { useAuth } from "@/providers/auth-provider"
 const sidebarItems = [
     { icon: LayoutDashboard, label: "Dashboard", href: "/dashboard" },
     { icon: Briefcase, label: "Mis Solicitudes", href: "/dashboard/requests" },
-    { icon: Search, label: "Explorar Trabajos", href: "/dashboard/marketplace" }, // New Item
+    { icon: Search, label: "Explorar Trabajos", href: "/dashboard/marketplace" },
     { icon: Calendar, label: "Reservas", href: "/dashboard/bookings" },
     { icon: User, label: "Perfil", href: "/dashboard/profile" },
     { icon: Settings, label: "Configuración", href: "/dashboard/settings" },
@@ -81,6 +82,20 @@ export default function DashboardLayout({
                                     {item.label}
                                 </Link>
                             ))}
+                            {user?.role === "PROFESSIONAL" && (
+                                <Link
+                                    href="/dashboard/subscription"
+                                    className={cn(
+                                        "flex items-center gap-4 px-4 py-3 rounded-2xl text-sm font-medium transition-all duration-200",
+                                        pathname === "/dashboard/subscription"
+                                            ? "bg-black text-white shadow-lg shadow-black/20 scale-[1.02]"
+                                            : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                                    )}
+                                >
+                                    <CreditCard className="h-5 w-5" />
+                                    Suscripción
+                                </Link>
+                            )}
                             <div className="my-4 border-t border-border/50" />
                             <Link href="/">
                                 <Button variant="ghost" className="w-full justify-start gap-4 px-4 rounded-2xl h-12 text-muted-foreground hover:text-foreground">
@@ -152,6 +167,20 @@ export default function DashboardLayout({
                                 {item.label}
                             </Link>
                         ))}
+                        {user?.role === "PROFESSIONAL" && (
+                            <Link
+                                href="/dashboard/subscription"
+                                className={cn(
+                                    "flex items-center gap-3 px-4 py-3.5 rounded-2xl text-sm font-medium transition-all duration-200 group",
+                                    pathname === "/dashboard/subscription"
+                                        ? "bg-black text-white shadow-lg shadow-black/25 translate-x-1"
+                                        : "text-muted-foreground hover:bg-gray-100 hover:text-foreground hover:translate-x-1"
+                                )}
+                            >
+                                <CreditCard className={cn("h-5 w-5 transition-transform group-hover:scale-110", pathname === "/dashboard/subscription" ? "text-white" : "text-muted-foreground group-hover:text-foreground")} />
+                                Suscripción
+                            </Link>
+                        )}
                     </nav>
 
                     <div className="p-4 mt-auto border-t border-border/50 bg-gray-50/50">

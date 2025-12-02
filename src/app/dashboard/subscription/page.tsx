@@ -1,69 +1,75 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { Check, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Check, Loader2, ShieldCheck } from "lucide-react"
-import { toast } from "sonner"
+import { useToast } from "@/hooks/use-toast"
 
 export default function SubscriptionPage() {
-    const [isLoading, setIsLoading] = useState(false)
+    const [loading, setLoading] = useState(false)
+    const router = useRouter()
+    const { toast } = useToast()
 
     const handleSubscribe = async () => {
-        setIsLoading(true)
         try {
-            const response = await fetch("/api/checkout", {
+            setLoading(true)
+            const response = await fetch("/api/payments/preference", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ plan: "professional" }),
             })
 
+            const data = await response.json()
+
             if (!response.ok) {
-                throw new Error("Error al iniciar el pago")
+                throw new Error(data.error || "Error al crear la suscripción")
             }
 
-            const data = await response.json()
-            window.location.href = data.url
+            if (data.init_point) {
+                window.location.href = data.init_point
+            }
         } catch (error) {
             console.error(error)
-            toast.error("Hubo un error al procesar tu solicitud. Intenta nuevamente.")
+            toast({
+                title: "Error",
+                description: "No se pudo iniciar el proceso de pago. Intenta nuevamente.",
+                variant: "destructive"
+            })
         } finally {
-            setIsLoading(false)
+            setLoading(false)
         }
     }
 
     return (
         <div className="container max-w-4xl py-10">
-            <div className="text-center mb-10">
-                <h1 className="text-3xl font-bold tracking-tight mb-2">Suscripción Profesional</h1>
+            <div className="mb-10 text-center">
+                <h1 className="text-3xl font-bold tracking-tight mb-2">Planes Profesionales</h1>
                 <p className="text-muted-foreground">
-                    Activa tu cuenta profesional para recibir solicitudes ilimitadas y contactar clientes.
+                    Potencia tu carrera con herramientas exclusivas para profesionales.
                 </p>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-8 items-start">
-                {/* Free Plan (Client) */}
-                <Card className="border-muted">
+            <div className="grid gap-8 md:grid-cols-2 lg:gap-12 items-start justify-center">
+                {/* Free Plan */}
+                <Card className="relative overflow-hidden opacity-80 hover:opacity-100 transition-opacity">
                     <CardHeader>
-                        <CardTitle>Cliente</CardTitle>
-                        <CardDescription>Para quienes buscan servicios</CardDescription>
+                        <CardTitle>Básico</CardTitle>
+                        <CardDescription>Para empezar en la plataforma</CardDescription>
                     </CardHeader>
                     <CardContent>
                         <div className="text-3xl font-bold mb-6">Gratis</div>
-                        <ul className="space-y-2 text-sm">
+                        <ul className="space-y-3 text-sm">
                             <li className="flex items-center gap-2">
-                                <Check className="h-4 w-4 text-green-500" />
-                                Publicar solicitudes ilimitadas
+                                <Check className="h-4 w-4 text-primary" />
+                                <span>Perfil público básico</span>
                             </li>
                             <li className="flex items-center gap-2">
-                                <Check className="h-4 w-4 text-green-500" />
-                                Ver perfiles de profesionales
+                                <Check className="h-4 w-4 text-primary" />
+                                <span>Recibir solicitudes de clientes</span>
                             </li>
                             <li className="flex items-center gap-2">
-                                <Check className="h-4 w-4 text-green-500" />
-                                Sistema de reseñas y calificaciones
+                                <Check className="h-4 w-4 text-primary" />
+                                <span>Hasta 3 propuestas mensuales</span>
                             </li>
                         </ul>
                     </CardContent>
@@ -75,53 +81,44 @@ export default function SubscriptionPage() {
                 </Card>
 
                 {/* Pro Plan */}
-                <Card className="border-primary shadow-lg relative overflow-hidden">
+                <Card className="relative overflow-hidden border-primary shadow-lg scale-105">
                     <div className="absolute top-0 right-0 bg-primary text-primary-foreground text-xs font-bold px-3 py-1 rounded-bl-lg">
                         RECOMENDADO
                     </div>
                     <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                            Profesional
-                            <ShieldCheck className="h-5 w-5 text-primary" />
-                        </CardTitle>
-                        <CardDescription>Para quienes ofrecen servicios</CardDescription>
+                        <CardTitle>Profesional</CardTitle>
+                        <CardDescription>Para quienes buscan crecer seriamente</CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <div className="flex items-baseline gap-1 mb-6">
-                            <span className="text-4xl font-bold">$3.900</span>
-                            <span className="text-muted-foreground">/mes</span>
+                        <div className="text-3xl font-bold mb-6">
+                            $5.000 <span className="text-sm font-normal text-muted-foreground">/mes</span>
                         </div>
-                        <ul className="space-y-2 text-sm">
+                        <ul className="space-y-3 text-sm">
                             <li className="flex items-center gap-2">
                                 <Check className="h-4 w-4 text-primary" />
-                                <strong>0% Comisión</strong> por trabajo realizado
+                                <span>Perfil destacado con insignia <span className="font-bold text-yellow-500">VERIFICADO</span></span>
                             </li>
                             <li className="flex items-center gap-2">
                                 <Check className="h-4 w-4 text-primary" />
-                                Acceso ilimitado a oportunidades
+                                <span>Propuestas ilimitadas</span>
                             </li>
                             <li className="flex items-center gap-2">
                                 <Check className="h-4 w-4 text-primary" />
-                                Perfil destacado en búsquedas
+                                <span>Prioridad en resultados de búsqueda</span>
                             </li>
                             <li className="flex items-center gap-2">
                                 <Check className="h-4 w-4 text-primary" />
-                                Insignia de Profesional Verificado
-                            </li>
-                            <li className="flex items-center gap-2">
-                                <Check className="h-4 w-4 text-primary" />
-                                Soporte prioritario por WhatsApp
+                                <span>Soporte prioritario</span>
                             </li>
                         </ul>
                     </CardContent>
                     <CardFooter>
                         <Button
-                            className="w-full"
-                            size="lg"
+                            className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-md hover:shadow-lg transition-all duration-300"
                             onClick={handleSubscribe}
-                            disabled={isLoading}
+                            disabled={loading}
                         >
-                            {isLoading ? (
+                            {loading ? (
                                 <>
                                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                                     Procesando...
@@ -132,13 +129,6 @@ export default function SubscriptionPage() {
                         </Button>
                     </CardFooter>
                 </Card>
-            </div>
-
-            <div className="mt-10 text-center text-sm text-muted-foreground">
-                <p>
-                    El pago se procesa de forma segura a través de MercadoPago.
-                    Puedes cancelar tu suscripción en cualquier momento desde tu configuración.
-                </p>
             </div>
         </div>
     )
