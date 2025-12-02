@@ -11,6 +11,7 @@ import { AuthProvider } from "@/providers/auth-provider";
 import GoogleAnalytics from "@/components/google-analytics";
 
 export const metadata: Metadata = {
+    metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://fixia.app"),
     title: {
         default: "Fixia - Servicios Bajo Demanda",
         template: "%s | Fixia"
