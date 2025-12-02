@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useAuth } from "@/providers/auth-provider"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -28,7 +28,7 @@ export default function SettingsPage() {
     })
 
     // Fetch initial data
-    useState(() => {
+    useEffect(() => {
         const fetchProfile = async () => {
             try {
                 const res = await fetch("/api/users/profile")
@@ -49,7 +49,7 @@ export default function SettingsPage() {
             }
         }
         fetchProfile()
-    })
+    }, [])
 
     const [passwords, setPasswords] = useState({
         current: "",
