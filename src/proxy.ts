@@ -12,7 +12,7 @@ import { decrypt, SessionPayload } from '@/lib/auth'
  * - Redirect unauthenticated users
  * - Log security events
  */
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
     const pathname = request.nextUrl.pathname
 
     // =========================================================================
