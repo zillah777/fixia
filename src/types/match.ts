@@ -27,6 +27,8 @@ export interface Match {
     isCompleted: boolean
     client?: User
     provider?: User
+    clientId: string
+    providerId: string
     request: Request
 }
 
@@ -34,5 +36,5 @@ export interface Message {
     id: number | string
     senderId: string
     text: string
-    timestamp: string
+    createdAt: string
 }

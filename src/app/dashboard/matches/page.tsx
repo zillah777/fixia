@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Card, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
@@ -11,13 +11,38 @@ import { ReviewDialog } from "@/components/reviews/review-dialog"
 import { cn } from "@/lib/utils"
 import { toast } from "sonner"
 import { Match, Message, User } from "@/types/match"
+import { useAuth } from "@/providers/auth-provider"
 
 export default function MatchesPage() {
+    const { user: currentUser } = useAuth()
     const [matches, setMatches] = useState<Match[]>([])
     const [selectedMatch, setSelectedMatch] = useState<Match | null>(null)
     const [messages, setMessages] = useState<Message[]>([])
     const [newMessage, setNewMessage] = useState("")
     const [loading, setLoading] = useState(true)
+    const [sending, setSending] = useState(false)
+    const scrollRef = useRef<HTMLDivElement>(null)
+
+    // Poll for messages every 5 seconds
+    useEffect(() => {
+        let interval: NodeJS.Timeout
+
+        if (selectedMatch) {
+            fetchMessages(selectedMatch.id)
+            interval = setInterval(() => {
+                fetchMessages(selectedMatch.id, true) // silent fetch
+            }, 5000)
+        }
+
+        return () => clearInterval(interval)
+    }, [selectedMatch])
+
+    // Scroll to bottom on new messages
+    useEffect(() => {
+        if (scrollRef.current) {
+            scrollRef.current.scrollIntoView({ behavior: "smooth" })
+        }
+    }, [messages])
 
     useEffect(() => {
         fetchMatches()
@@ -29,7 +54,8 @@ export default function MatchesPage() {
             if (res.ok) {
                 const data: Match[] = await res.json()
                 setMatches(data)
-                if (data.length > 0) {
+                // If no match selected, select the first one
+                if (data.length > 0 && !selectedMatch) {
                     handleSelectMatch(data[0])
                 }
             }
@@ -41,42 +67,53 @@ export default function MatchesPage() {
         }
     }
 
+    const fetchMessages = async (matchId: string, silent = false) => {
+        try {
+            const res = await fetch(`/api/messages?matchId=${matchId}`)
+            if (res.ok) {
+                const data: Message[] = await res.json()
+                setMessages(data)
+            }
+        } catch (error) {
+            if (!silent) console.error("Failed to fetch messages", error)
+        }
+    }
+
     const handleSelectMatch = (match: Match) => {
         setSelectedMatch(match)
-        // In a real app, we would fetch messages from /api/messages?matchId=...
-        // For now, we simulate the proposal message as the first message
-        const proposalMsg = match.request.proposals?.[0]?.message || "Hola, estoy interesado en tu solicitud."
-
-        setMessages([
-            {
-                id: 1,
-                senderId: "other",
-                text: proposalMsg,
-                timestamp: new Date(match.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-            }
-        ])
+        setMessages([]) // Clear previous messages while loading
+        fetchMessages(match.id)
     }
 
     const handleSendMessage = async (e: React.FormEvent) => {
         e.preventDefault()
-        if (!newMessage.trim()) return
+        if (!newMessage.trim() || !selectedMatch || sending) return
 
-        const tempMsg: Message = {
-            id: Date.now(),
-            senderId: "me",
-            text: newMessage,
-            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        }
-
-        setMessages((prev) => [...prev, tempMsg])
+        const tempText = newMessage
         setNewMessage("")
+        setSending(true)
 
         try {
-            // Placeholder for API call
-            // await fetch('/api/messages', { method: 'POST', body: JSON.stringify({ text: newMessage, matchId: selectedMatch?.id }) })
+            const res = await fetch('/api/messages', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    matchId: selectedMatch.id,
+                    text: tempText
+                })
+            })
+
+            if (res.ok) {
+                const savedMessage = await res.json()
+                setMessages((prev) => [...prev, savedMessage])
+            } else {
+                throw new Error("Failed to send")
+            }
         } catch (error) {
             toast.error("Error al enviar mensaje")
-            // Optionally revert optimistic update here
+            setNewMessage(tempText) // Restore text on error
+        } finally {
+            setSending(false)
         }
     }
 
@@ -91,8 +128,8 @@ export default function MatchesPage() {
     }
 
     const getOtherUser = (match: Match): User => {
-        // Fallback to a default user object if neither exists, though ideally one should
-        return match.provider || match.client || { id: "unknown", name: "Usuario", image: "" }
+        if (!currentUser) return { id: "unknown", name: "Usuario", image: "" }
+        return match.providerId === currentUser.id ? match.client! : match.provider!
     }
 
     if (loading) {
@@ -199,25 +236,29 @@ export default function MatchesPage() {
                                 </div>
                             </div>
 
-                            {messages.map((msg) => (
-                                <div
-                                    key={msg.id}
-                                    className={cn(
-                                        "flex w-max max-w-[75%] flex-col gap-1 rounded-lg px-3 py-2 text-sm",
-                                        msg.senderId === "me"
-                                            ? "ml-auto bg-primary text-primary-foreground"
-                                            : "bg-muted"
-                                    )}
-                                >
-                                    {msg.text}
-                                    <span className={cn(
-                                        "text-[10px]",
-                                        msg.senderId === "me" ? "text-primary-foreground/70" : "text-muted-foreground"
-                                    )}>
-                                        {msg.timestamp}
-                                    </span>
-                                </div>
-                            ))}
+                            {messages.map((msg) => {
+                                const isMe = msg.senderId === currentUser?.id
+                                return (
+                                    <div
+                                        key={msg.id}
+                                        className={cn(
+                                            "flex w-max max-w-[75%] flex-col gap-1 rounded-lg px-3 py-2 text-sm",
+                                            isMe
+                                                ? "ml-auto bg-primary text-primary-foreground"
+                                                : "bg-muted"
+                                        )}
+                                    >
+                                        {msg.text}
+                                        <span className={cn(
+                                            "text-[10px]",
+                                            isMe ? "text-primary-foreground/70" : "text-muted-foreground"
+                                        )}>
+                                            {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                        </span>
+                                    </div>
+                                )
+                            })}
+                            <div ref={scrollRef} />
                         </div>
                     </ScrollArea>
 
@@ -229,9 +270,10 @@ export default function MatchesPage() {
                                 value={newMessage}
                                 onChange={(e) => setNewMessage(e.target.value)}
                                 className="flex-1"
+                                disabled={sending}
                             />
-                            <Button type="submit" size="icon">
-                                <Send className="h-4 w-4" />
+                            <Button type="submit" size="icon" disabled={sending}>
+                                {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
                                 <span className="sr-only">Enviar</span>
                             </Button>
                         </form>

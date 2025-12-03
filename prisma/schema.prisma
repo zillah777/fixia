@@ -44,6 +44,7 @@ model User {
   favorites         Favorite[]
   proposals         Proposal[]     @relation("ProviderProposals")
   verificationRequest VerificationRequest?
+  messagesSent      Message[]      @relation("MessageSender")
 }
 
 model VerificationRequest {
@@ -145,6 +146,19 @@ model Match {
   provider           User      @relation("ProviderMatches", fields: [providerId], references: [id])
   client             User      @relation("ClientMatches", fields: [clientId], references: [id])
   reviews            Review[]
+  messages           Message[]
+}
+
+model Message {
+  id        String   @id @default(uuid())
+  matchId   String
+  senderId  String
+  text      String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  match     Match    @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  sender    User     @relation("MessageSender", fields: [senderId], references: [id])
 }
 
 model Review {
