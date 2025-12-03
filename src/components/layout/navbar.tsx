@@ -98,13 +98,7 @@ export function Navbar() {
                             <Link href="/professionals" className="transition-colors hover:text-foreground/80 text-foreground/60">
                                 Profesionales
                             </Link>
-                            {(!user || user.role === 'CLIENT') && (
-                                <Link href="/become-a-pro">
-                                    <Button size="sm" className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold shadow-lg shadow-green-500/30 hover:shadow-xl hover:shadow-green-500/40 transition-all">
-                                        Únete a Fixia
-                                    </Button>
-                                </Link>
-                            )}
+                            {/* Removed duplicate 'Únete a Fixia' button */}
                             <Link href="/pricing" className="transition-colors hover:text-foreground/80 text-foreground/60">
                                 Planes
                             </Link>
