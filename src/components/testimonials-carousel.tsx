@@ -64,18 +64,17 @@ export function TestimonialsCarousel({ testimonials }: TestimonialsCarouselProps
                                     {[...Array(5)].map((_, i) => (
                                         <Star
                                             key={i}
-                                            className={`h-4 w-4 ${
-                                                i < Math.floor(testimonial.rating)
+                                            className={`h-4 w-4 ${i < Math.floor(testimonial.rating)
                                                     ? "fill-amber-400 text-amber-400"
                                                     : "text-gray-300 dark:text-gray-600"
-                                            }`}
+                                                }`}
                                         />
                                     ))}
                                 </div>
 
                                 {/* Quote */}
                                 <p className="text-base md:text-lg text-foreground mb-6 flex-1 leading-relaxed">
-                                    "{testimonial.text}"
+                                    &quot;{testimonial.text}&quot;
                                 </p>
 
                                 {/* Author */}

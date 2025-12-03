@@ -59,7 +59,7 @@ export function VerificationRequestForm() {
             <CardHeader>
                 <CardTitle>Verificación de Identidad</CardTitle>
                 <CardDescription>
-                    Sube una foto de tu DNI (frente y dorso) para obtener la insignia de "Verificado".
+                    Sube una foto de tu DNI (frente y dorso) para obtener la insignia de &quot;Verificado&quot;.
                 </CardDescription>
             </CardHeader>
             <CardContent>

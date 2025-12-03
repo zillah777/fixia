@@ -100,7 +100,7 @@ export function ProProposalCard({ data, onAccept, onViewProfile }: ProProposalCa
 
                     <div className="mt-4 p-3 bg-gray-50 rounded-xl text-sm text-gray-600 italic relative">
                         <MessageCircle className="h-4 w-4 absolute -top-2 -left-2 text-gray-300 bg-white rounded-full" />
-                        "{data.message}"
+                        &quot;{data.message}&quot;
                     </div>
                 </CardContent>
 
