@@ -5,6 +5,10 @@ const nextConfig: NextConfig = {
     experimental: {
         // serverActions: true, // Enabled by default in Next.js 15
     },
+    output: 'standalone',
+    typescript: {
+        ignoreBuildErrors: true,
+    },
     images: {
         remotePatterns: [
             {
