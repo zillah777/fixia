@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  app:
+    container_name: fixia-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@db:5432/fixia?schema=public
+      - NEXT_PUBLIC_APP_URL=http://localhost:3000
+      - JWT_SECRET=your_super_secret_jwt_key_at_least_32_characters_long_for_production
+      - NEXTAUTH_SECRET=your_nextauth_secret_key_at_least_32_characters_long
+      - NEXTAUTH_URL=http://localhost:3000
+    depends_on:
+      - db
+    networks:
+      - fixia-network
+
+  db:
+    container_name: fixia-db
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=fixia
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - fixia-network
+
+networks:
+  fixia-network:
+    driver: bridge
+
+volumes:
+  postgres_data:

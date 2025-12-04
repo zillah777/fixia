@@ -1,0 +1,9 @@
+tunnel: de526dc8-2746-4c45-82f5-5567dba9a4ec
+credentials-file: C:\Users\Marcelo\.cloudflared\de526dc8-2746-4c45-82f5-5567dba9a4ec.json
+
+ingress:
+  - hostname: fixia.app
+    service: http://localhost:3000
+    originRequest:
+      noTLSVerify: true
+  - service: http_status:404
