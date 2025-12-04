@@ -23,6 +23,7 @@ import { NotificationCenter } from "@/components/notifications/notification-cent
 
 export function Navbar() {
     const [isScrolled, setIsScrolled] = React.useState(false)
+    const [isSheetOpen, setIsSheetOpen] = React.useState(false)
     const { user, logout } = useAuth()
 
     React.useEffect(() => {
@@ -33,6 +34,8 @@ export function Navbar() {
         return () => window.removeEventListener("scroll", handleScroll)
     }, [])
 
+    const closeSheet = () => setIsSheetOpen(false)
+
     return (
         <>
             <header
@@ -41,7 +44,7 @@ export function Navbar() {
             >
                 <div className="container flex h-16 items-center justify-between">
                     <div className="flex items-center gap-6 flex-1">
-                        <Sheet>
+                        <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
                             <SheetTrigger asChild>
                                 <Button variant="ghost" size="icon" className="md:hidden">
                                     <Menu className="h-5 w-5" />
@@ -58,23 +61,23 @@ export function Navbar() {
                                             className="pl-9 h-11"
                                         />
                                     </div>
-                                    <Link href="/services" className="text-lg font-semibold">
+                                    <Link href="/services" className="text-lg font-semibold" onClick={closeSheet}>
                                         Servicios
                                     </Link>
-                                    <Link href="/professionals" className="text-lg font-semibold">
+                                    <Link href="/professionals" className="text-lg font-semibold" onClick={closeSheet}>
                                         Profesionales
                                     </Link>
                                     {(!user || user.role === 'CLIENT') && (
-                                        <Link href="/become-a-pro" className="w-full">
+                                        <Link href="/become-a-pro" className="w-full" onClick={closeSheet}>
                                             <Button className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold shadow-lg shadow-green-500/30">
                                                 Únete a Fixia
                                             </Button>
                                         </Link>
                                     )}
-                                    <Link href="/pricing" className="text-lg font-semibold">
+                                    <Link href="/pricing" className="text-lg font-semibold" onClick={closeSheet}>
                                         Planes
                                     </Link>
-                                    <Link href="/login" className="text-lg font-semibold">
+                                    <Link href="/login" className="text-lg font-semibold" onClick={closeSheet}>
                                         Iniciar Sesión
                                     </Link>
                                 </nav>
