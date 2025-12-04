@@ -7,6 +7,7 @@ import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { TickerLED } from "@/components/ticker-led";
 import { AuthProvider } from "@/providers/auth-provider";
+import { CookieBanner } from "@/components/cookie-banner";
 
 import GoogleAnalytics from "@/components/google-analytics";
 
@@ -75,6 +76,7 @@ export default function RootLayout({
                             <Footer />
                             <Toaster position="top-center" richColors />
                         </TooltipProvider>
+                        <CookieBanner />
                     </AuthProvider>
                 </ThemeProvider>
             </body>

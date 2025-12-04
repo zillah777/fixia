@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import prisma from "@/lib/prisma"
 import { getSession } from "@/lib/auth"
+import { sendMatchNotification } from "@/lib/mail"
 
 export async function GET(request: Request) {
     try {
@@ -112,6 +113,36 @@ export async function POST(request: Request) {
                 actionUrl: `/dashboard/requests/${requestId}`
             }
         })
+
+        // 6. Send Email Notifications (non-blocking)
+        const provider = await prisma.user.findUnique({
+            where: { id: providerId },
+            select: { name: true, email: true }
+        })
+        const client = await prisma.user.findUnique({
+            where: { id: session.payload.id as string },
+            select: { name: true, email: true }
+        })
+
+        if (provider && client && provider.email && client.email) {
+            // Notify provider
+            sendMatchNotification(
+                provider.email,
+                client.name,
+                provider.name,
+                req.title,
+                match.id
+            ).catch(e => console.error("Failed to send match email to provider:", e))
+
+            // Notify client
+            sendMatchNotification(
+                client.email,
+                client.name,
+                provider.name,
+                req.title,
+                match.id
+            ).catch(e => console.error("Failed to send match email to client:", e))
+        }
 
         return NextResponse.json(match)
     } catch (error) {

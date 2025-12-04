@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
 import { z } from 'zod';
-import { sendVerificationEmail, sendWelcomeEmail } from '@/lib/mail';
+import { sendVerificationEmail, sendRegistrationConfirmation } from '@/lib/mail';
 import { randomUUID } from 'crypto';
 
 const registerSchema = z.object({
@@ -62,7 +62,7 @@ export async function POST(req: Request) {
         });
 
         // Send emails (non-blocking)
-        sendWelcomeEmail(email, name).catch(e => console.error("Welcome email failed", e));
+        sendRegistrationConfirmation(email, name, role).catch(e => console.error("Registration confirmation email failed", e));
         sendVerificationEmail(email, verificationToken).catch(e => console.error("Verification email failed", e));
 
         return NextResponse.json({

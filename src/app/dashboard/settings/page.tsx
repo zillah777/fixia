@@ -11,9 +11,21 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Switch } from "@/components/ui/switch"
 import { Separator } from "@/components/ui/separator"
-import { Camera, Save, Facebook, Instagram, Twitter } from "lucide-react"
+import { Camera, Save, Facebook, Instagram, Twitter, Trash2 } from "lucide-react"
 import { toast } from "sonner"
 import { VerificationRequestForm } from "@/components/trust/verification-request-form"
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+import { useRouter } from "next/navigation"
 
 export default function SettingsPage() {
     const { user } = useAuth()
@@ -55,6 +67,29 @@ export default function SettingsPage() {
         current: "",
         new: ""
     })
+
+    const router = useRouter()
+
+    const handleDeleteAccount = async () => {
+        setIsLoading(true)
+        try {
+            const res = await fetch("/api/user/delete", {
+                method: "DELETE"
+            })
+
+            if (!res.ok) throw new Error("Failed to delete account")
+
+            toast.success("Cuenta eliminada exitosamente")
+            // Redirect to home after a short delay
+            setTimeout(() => {
+                router.push("/")
+            }, 1500)
+        } catch (error) {
+            toast.error("Error al eliminar la cuenta")
+        } finally {
+            setIsLoading(false)
+        }
+    }
 
     const handleSave = async () => {
         setIsLoading(true)
@@ -293,7 +328,48 @@ export default function SettingsPage() {
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <Button variant="destructive">Eliminar Cuenta</Button>
+                            <div className="space-y-4">
+                                <div>
+                                    <h4 className="font-medium mb-2">Eliminar Cuenta</h4>
+                                    <p className="text-sm text-muted-foreground mb-4">
+                                        Una vez que elimines tu cuenta, no hay vuelta atrás. Por favor, ten cuidado.
+                                        Se eliminarán todos tus datos, incluyendo perfil, solicitudes, propuestas y mensajes.
+                                    </p>
+                                    <AlertDialog>
+                                        <AlertDialogTrigger asChild>
+                                            <Button variant="destructive" disabled={isLoading}>
+                                                <Trash2 className="mr-2 h-4 w-4" />
+                                                Eliminar mi cuenta
+                                            </Button>
+                                        </AlertDialogTrigger>
+                                        <AlertDialogContent>
+                                            <AlertDialogHeader>
+                                                <AlertDialogTitle>¿Estás absolutamente seguro?</AlertDialogTitle>
+                                                <AlertDialogDescription>
+                                                    Esta acción no se puede deshacer. Esto eliminará permanentemente tu cuenta
+                                                    y removerá todos tus datos de nuestros servidores, incluyendo:
+                                                    <ul className="list-disc pl-6 mt-2 space-y-1">
+                                                        <li>Tu perfil y configuración</li>
+                                                        <li>Todas tus solicitudes de servicio</li>
+                                                        <li>Propuestas enviadas o recibidas</li>
+                                                        <li>Historial de mensajes</li>
+                                                        <li>Portafolio y reseñas</li>
+                                                    </ul>
+                                                </AlertDialogDescription>
+                                            </AlertDialogHeader>
+                                            <AlertDialogFooter>
+                                                <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                                                <AlertDialogAction
+                                                    onClick={handleDeleteAccount}
+                                                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                                >
+                                                    Sí, eliminar mi cuenta
+                                                </AlertDialogAction>
+                                            </AlertDialogFooter>
+                                        </AlertDialogContent>
+                                    </AlertDialog>
+                                </div>
+                            </div>
                         </CardContent>
                     </Card>
                 </TabsContent>
