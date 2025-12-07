@@ -16,18 +16,21 @@ cloudinary.config({
  */
 export async function generateSignedUploadToken(
     folder: string,
+    tags?: string,
     expiresIn: number = 3600 // 1 hour in seconds
 ): Promise<{
     signature: string;
     timestamp: number;
     public_id?: string;
     folder: string;
+    tags?: string;
 }> {
     const timestamp = Math.floor(Date.now() / 1000);
 
     // SECURITY: Create signature with restricted parameters
     const paramsToSign = {
         folder,
+        tags,
         timestamp,
         upload_preset: undefined, // Use server-side signing instead of preset
     };
@@ -44,6 +47,7 @@ export async function generateSignedUploadToken(
         signature,
         timestamp,
         folder,
+        tags,
     };
 }
 

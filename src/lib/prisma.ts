@@ -2,10 +2,10 @@ import { PrismaClient } from '@prisma/client'
 
 const prismaClientSingleton = () => {
     // Fix for localhost resolution on Windows/Node 18+
-    const url = process.env.DATABASE_URL
-    if (url && url.includes('localhost')) {
-        process.env.DATABASE_URL = url.replace('localhost', '127.0.0.1')
-    }
+    // const url = process.env.DATABASE_URL
+    // if (url && url.includes('localhost')) {
+    //     process.env.DATABASE_URL = url.replace('localhost', '127.0.0.1')
+    // }
     return new PrismaClient()
 }
 

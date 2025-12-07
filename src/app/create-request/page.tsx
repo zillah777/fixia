@@ -12,40 +12,103 @@ import { ArrowLeft, Camera, MapPin } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
+import { CATEGORIES } from "@/config/categories"
+import { CategorySelector } from "@/components/shared/category-selector"
 
 export default function CreateRequestPage() {
     const router = useRouter()
-    const [category, setCategory] = useState<string>("default")
+    const [category, setCategory] = useState<string>("")
+    const [openCategory, setOpenCategory] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const [budgetRange, setBudgetRange] = useState<[number, number]>([0, 0])
+    const [urgency, setUrgency] = useState<string>("MEDIUM")
+
+    // Image Upload State
+    const [images, setImages] = useState<string[]>([])
+    const [isUploading, setIsUploading] = useState(false)
+
+    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0]
+        if (!file) return
+
+        if (images.length >= 3) {
+            toast.error("Máximo 3 imágenes permitidas")
+            return
+        }
+
+        setIsUploading(true)
+        const toastId = toast.loading("Subiendo imagen...")
+
+        try {
+            // 1. Get token
+            const tokenRes = await fetch("/api/upload/cloudinary", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ uploadType: "request_image" }),
+                credentials: "include"
+            })
+
+            if (!tokenRes.ok) throw new Error("Error obteniendo token")
+            const { signature, timestamp, folder, apiKey, uploadUrl } = await tokenRes.json()
+
+            // 2. Upload to Cloudinary
+            const formData = new FormData()
+            formData.append("file", file)
+            formData.append("api_key", apiKey)
+            formData.append("timestamp", timestamp.toString())
+            formData.append("signature", signature)
+            formData.append("folder", folder)
+
+            const uploadRes = await fetch(uploadUrl, {
+                method: "POST",
+                body: formData
+            })
+
+            if (!uploadRes.ok) throw new Error("Error subiendo imagen")
+            const data = await uploadRes.json()
+
+            setImages(prev => [...prev, data.secure_url])
+            toast.success("Imagen agregada", { id: toastId })
+        } catch (error) {
+            console.error(error)
+            toast.error("Error al subir imagen", { id: toastId })
+        } finally {
+            setIsUploading(false)
+        }
+    }
+
+    const removeImage = (index: number) => {
+        setImages(prev => prev.filter((_, i) => i !== index))
+    }
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
+
+        if (!category) {
+            toast.error("Selecciona una categoría")
+            return
+        }
+
         setIsLoading(true)
 
         try {
             const formData = new FormData(e.target as HTMLFormElement)
-            const title = formData.get("title") as string // Assuming input has name="title" - need to add name attributes
-            const description = formData.get("description") as string
-            const location = formData.get("location") as string
-            // urgency is in Select, need to control it or use hidden input. 
-            // Actually, simpler to use controlled state for everything or just get values by ID if not using form action.
-            // Let's use getElementById for simplicity in this existing structure or add name props.
 
-            // Better approach: Add name attributes to inputs in the JSX below.
+            // Build the payload manually to ensure all fields are correct
+            const payload = {
+                title: (document.getElementById("title") as HTMLInputElement).value,
+                description: (document.getElementById("description") as HTMLTextAreaElement).value,
+                categoryId: category,
+                location: (document.getElementById("location") as HTMLInputElement).value,
+                budget: budgetRange[1].toString(), // Send max budget
+                urgency: urgency,
+                images: images // Send the array of image URLs
+            }
 
             const res = await fetch("/api/requests", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    title: (document.getElementById("title") as HTMLInputElement).value,
-                    description: (document.getElementById("description") as HTMLTextAreaElement).value,
-                    categoryId: category,
-                    location: (document.getElementById("location") as HTMLInputElement).value,
-                    budget: budgetRange[1].toString(), // Sending max budget
-                    urgency: (document.getElementById("urgency-trigger")?.textContent || "MEDIUM").includes("Alta") ? "HIGH" : (document.getElementById("urgency-trigger")?.textContent || "MEDIUM").includes("Baja") ? "LOW" : "MEDIUM", // Hacky, better to use state.
-                    // Let's fix urgency state.
-                })
+                body: JSON.stringify(payload)
             })
 
             if (!res.ok) throw new Error("Error creating request")
@@ -83,29 +146,23 @@ export default function CreateRequestPage() {
                         <CardContent className="p-6 space-y-4">
                             <div className="space-y-2">
                                 <Label htmlFor="category">Categoría del Servicio</Label>
-                                <Select onValueChange={setCategory} required>
-                                    <SelectTrigger id="category" className="h-12">
-                                        <SelectValue placeholder="Selecciona una categoría" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="Plomería">Plomería</SelectItem>
-                                        <SelectItem value="Electricidad">Electricidad</SelectItem>
-                                        <SelectItem value="Gasista">Gasista</SelectItem>
-                                        <SelectItem value="Pintura">Pintura</SelectItem>
-                                        <SelectItem value="Climatización">Climatización</SelectItem>
-                                    </SelectContent>
-                                </Select>
+                                <CategorySelector
+                                    value={category}
+                                    onChange={setCategory}
+                                    placeholder="Buscar categoría..."
+                                />
                             </div>
 
                             <div className="space-y-2">
                                 <Label htmlFor="title">Título Breve</Label>
-                                <Input id="title" placeholder="Ej: Reparación de canilla que gotea" className="h-12" required />
+                                <Input id="title" name="title" placeholder="Ej: Reparación de canilla que gotea" className="h-12" required />
                             </div>
 
                             <div className="space-y-2">
                                 <Label htmlFor="description">Descripción Detallada</Label>
                                 <Textarea
                                     id="description"
+                                    name="description"
                                     placeholder="Describe el problema con el mayor detalle posible..."
                                     className="min-h-[120px] resize-none"
                                     required
@@ -115,7 +172,7 @@ export default function CreateRequestPage() {
                     </Card>
 
                     {/* Step 2: Budget (Smart Suggestion) */}
-                    {category !== "default" && (
+                    {category && (
                         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
                             <SmartBudgetSuggestion category={category} onBudgetChange={setBudgetRange} />
                         </div>
@@ -125,14 +182,42 @@ export default function CreateRequestPage() {
                     <Card className="border-none shadow-md">
                         <CardContent className="p-6 space-y-6">
                             <div className="space-y-2">
-                                <Label>Fotos del Problema (Opcional)</Label>
+                                <Label>Fotos del Problema (Opcional - Máx 3)</Label>
                                 <div className="grid grid-cols-3 gap-4">
-                                    <button type="button" className="aspect-square rounded-xl border-2 border-dashed border-gray-200 flex flex-col items-center justify-center text-gray-400 hover:border-gray-400 hover:text-gray-600 transition-colors bg-gray-50">
-                                        <Camera className="h-6 w-6 mb-2" />
-                                        <span className="text-xs font-medium">Agregar</span>
-                                    </button>
-                                    <div className="aspect-square rounded-xl bg-gray-100" />
-                                    <div className="aspect-square rounded-xl bg-gray-100" />
+                                    {/* Upload Button */}
+                                    {images.length < 3 && (
+                                        <div
+                                            className="aspect-square rounded-xl border-2 border-dashed border-gray-200 flex flex-col items-center justify-center text-gray-400 hover:border-gray-400 hover:text-gray-600 transition-colors bg-gray-50 cursor-pointer relative overflow-hidden"
+                                            onClick={() => !isUploading && document.getElementById('req-image-upload')?.click()}
+                                        >
+                                            <Camera className="h-6 w-6 mb-2" />
+                                            <span className="text-xs font-medium">{isUploading ? '...' : 'Agregar'}</span>
+                                            <input
+                                                type="file"
+                                                id="req-image-upload"
+                                                className="hidden"
+                                                accept="image/*"
+                                                onChange={handleImageUpload}
+                                                disabled={isUploading}
+                                            />
+                                        </div>
+                                    )}
+
+                                    {/* Image Previews */}
+                                    {images.map((url, idx) => (
+                                        <div key={idx} className="aspect-square rounded-xl bg-gray-100 relative group overflow-hidden">
+                                            <img src={url} alt={`Preview ${idx}`} className="w-full h-full object-cover" />
+                                            <button
+                                                type="button"
+                                                onClick={() => removeImage(idx)}
+                                                className="absolute top-1 right-1 bg-black/50 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                                            >
+                                                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                            </button>
+                                        </div>
+                                    ))}
+
+                                    {/* Placeholders to keep grid structure if needed, or just let grid handle it */}
                                 </div>
                             </div>
 
@@ -140,13 +225,13 @@ export default function CreateRequestPage() {
                                 <Label htmlFor="location">Ubicación</Label>
                                 <div className="relative">
                                     <MapPin className="absolute left-3 top-3.5 h-5 w-5 text-muted-foreground" />
-                                    <Input id="location" placeholder="Dirección o Barrio" className="pl-10 h-12" required />
+                                    <Input id="location" name="location" placeholder="Dirección o Barrio" className="pl-10 h-12" required />
                                 </div>
                             </div>
 
                             <div className="space-y-2">
                                 <Label htmlFor="urgency">Urgencia</Label>
-                                <Select defaultValue="MEDIUM">
+                                <Select value={urgency} onValueChange={setUrgency}>
                                     <SelectTrigger id="urgency" className="h-12">
                                         <SelectValue />
                                     </SelectTrigger>

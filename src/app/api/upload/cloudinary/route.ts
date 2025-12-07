@@ -12,7 +12,8 @@ const uploadLimiter = rateLimit({
 
 // SECURITY: Validation schema for upload requests
 const uploadSchema = z.object({
-    uploadType: z.enum(['verification', 'portfolio', 'profile']),
+    uploadType: z.enum(['verification', 'portfolio', 'profile', 'request_image']),
+    tags: z.string().optional(),
 });
 
 /**
@@ -60,7 +61,7 @@ export async function POST(req: NextRequest) {
         // STEP 3: INPUT VALIDATION
         // ======================================================================
         const body = await req.json();
-        const { uploadType } = uploadSchema.parse(body);
+        const { uploadType, tags } = uploadSchema.parse(body);
 
         // ======================================================================
         // STEP 4: GENERATE SIGNED TOKEN
@@ -68,21 +69,23 @@ export async function POST(req: NextRequest) {
         // SECURITY: Folder path includes userId to prevent collisions
         const folder = `fixia/${uploadType}/${userId}`;
 
-        const token = await generateSignedUploadToken(folder, 3600); // 1 hour expiry
+        const token = await generateSignedUploadToken(folder, tags, 3600); // 1 hour expiry
 
         console.info('[UPLOAD_TOKEN_GENERATED]', {
             userId,
             uploadType,
             folder,
+            tags,
         });
 
         return NextResponse.json({
             signature: token.signature,
             timestamp: token.timestamp,
             folder: token.folder,
+            tags: token.tags, // Return the signed tags
             cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
             apiKey: process.env.CLOUDINARY_API_KEY, // Public API key
-            uploadUrl: 'https://api.cloudinary.com/v1_1/upload',
+            uploadUrl: `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/upload`,
             message: 'Token válido por 1 hora',
         });
 
@@ -133,7 +136,7 @@ export async function PUT(req: NextRequest) {
         // ======================================================================
         const body = await req.json();
         const { uploadType, publicId, secureUrl, fileSize } = z.object({
-            uploadType: z.enum(['verification', 'portfolio', 'profile']),
+            uploadType: z.enum(['verification', 'portfolio', 'profile', 'request_image']),
             publicId: z.string(),
             secureUrl: z.string().url(),
             fileSize: z.number().max(5 * 1024 * 1024), // Max 5MB

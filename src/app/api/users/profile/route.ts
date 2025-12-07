@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import prisma from "@/lib/prisma"
-import { getSession } from "@/lib/auth"
+import { getSession, encrypt, setSessionCookie } from "@/lib/auth"
 
 export async function GET(request: Request) {
     try {
@@ -10,8 +10,25 @@ export async function GET(request: Request) {
         }
 
         const user = await prisma.user.findUnique({
-            where: { id: session.payload.id as string },
-            include: { profile: true }
+            where: { id: session.user.id as string },
+            include: {
+                profile: true,
+                verificationRequest: true,
+                reviewsReceived: {
+                    include: {
+                        author: {
+                            select: {
+                                name: true,
+                                avatar: true,
+                                role: true
+                            }
+                        }
+                    },
+                    orderBy: {
+                        createdAt: 'desc'
+                    }
+                }
+            }
         })
 
         if (!user) {
@@ -57,13 +74,14 @@ export async function PATCH(request: Request) {
         }
 
         const body = await request.json()
-        const { name, phone, bio, socialLinks, certification, licenseNumber, experience, tags, location } = body
+        const { name, phone, bio, socialLinks, certification, licenseNumber, experience, tags, location, portfolioImages } = body
 
         // Update User and Profile
         const updatedUser = await prisma.user.update({
-            where: { id: session.payload.id as string },
+            where: { id: session.user.id as string },
             data: {
                 name,
+                avatar: body.avatar, // Allow updating avatar
                 phone,
                 profile: {
                     upsert: {
@@ -82,7 +100,9 @@ export async function PATCH(request: Request) {
                             certification,
                             licenseNumber,
                             experience,
-                            tags
+                            tags,
+                            notificationSettings: body.notificationSettings ? JSON.stringify(body.notificationSettings) : undefined, // Check if provided
+                            portfolioImages: portfolioImages ? JSON.stringify(portfolioImages) : undefined // Update portfolio images
                         }
                     }
                 }
@@ -92,7 +112,21 @@ export async function PATCH(request: Request) {
             }
         })
 
-        return NextResponse.json(updatedUser)
+        const newSession = {
+            user: {
+                id: updatedUser.id,
+                email: updatedUser.email,
+                name: updatedUser.name,
+                avatar: updatedUser.avatar,
+                role: updatedUser.role,
+            },
+        }
+
+        const token = await encrypt(newSession)
+        const response = NextResponse.json(updatedUser)
+        await setSessionCookie(token, response)
+
+        return response
     } catch (error) {
         console.error("Error updating profile:", error)
         return NextResponse.json(

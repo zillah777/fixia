@@ -10,6 +10,7 @@ import { motion } from "framer-motion"
 export interface RequestData {
     id: string
     title: string
+    description: string
     category: string
     status: "OPEN" | "IN_PROGRESS" | "COMPLETED"
     budget: {
@@ -19,7 +20,7 @@ export interface RequestData {
     }
     location: string
     date: string
-    urgency: "LOW" | "MEDIUM" | "HIGH"
+    urgency?: "LOW" | "MEDIUM" | "HIGH"
     proposalsCount: number
     imageUrl?: string
 }
@@ -42,6 +43,12 @@ const statusColors = {
 }
 
 export function RichRequestCard({ data, onClick }: RichRequestCardProps) {
+    const formatBudget = (min: number, max: number) => {
+        if (!min || (min === 0 && max === 0)) return "A convenir"
+        if (min === max) return `$${min.toLocaleString()}`
+        return `$${min.toLocaleString()} - $${max.toLocaleString()}`
+    }
+
     return (
         <motion.div
             whileHover={{ y: -4 }}
@@ -61,14 +68,20 @@ export function RichRequestCard({ data, onClick }: RichRequestCardProps) {
                             <Badge variant="outline" className="rounded-full text-xs font-normal bg-gray-50/50 backdrop-blur-sm border-gray-200">
                                 {data.category}
                             </Badge>
-                            <h3 className="text-lg font-bold leading-tight group-hover:text-primary transition-colors line-clamp-2">
+                            <h3 className="text-lg font-bold leading-tight group-hover:text-primary transition-colors line-clamp-1 mb-1">
                                 {data.title}
                             </h3>
+                            <p className="text-sm text-muted-foreground line-clamp-2">
+                                {data.description}
+                            </p>
                         </div>
                         <div className="text-right shrink-0 ml-2">
                             <div className="flex flex-col items-end">
-                                <span className="text-lg font-bold text-green-600 tracking-tight">
-                                    ${data.budget.min.toLocaleString()}
+                                <span className={cn(
+                                    "font-bold text-green-600 tracking-tight whitespace-nowrap",
+                                    data.budget.min === 0 ? "text-sm text-muted-foreground" : "text-lg"
+                                )}>
+                                    {formatBudget(data.budget.min, data.budget.max)}
                                 </span>
                                 <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-medium">
                                     Presupuesto
@@ -87,12 +100,14 @@ export function RichRequestCard({ data, onClick }: RichRequestCardProps) {
                             <Calendar className="h-3.5 w-3.5 text-gray-400" />
                             <span className="truncate">{data.date}</span>
                         </div>
-                        <div className="flex items-center gap-2 col-span-2">
-                            <Badge className={cn("text-[10px] px-2 py-0.5 border h-5", urgencyColors[data.urgency])}>
-                                {data.urgency === 'HIGH' && <Clock className="h-3 w-3 mr-1" />}
-                                Urgencia {data.urgency === 'HIGH' ? 'Alta' : data.urgency === 'MEDIUM' ? 'Media' : 'Baja'}
-                            </Badge>
-                        </div>
+                        {data.urgency && (
+                            <div className="flex items-center gap-2 col-span-2">
+                                <Badge className={cn("text-[10px] px-2 py-0.5 border h-5", urgencyColors[data.urgency])}>
+                                    {data.urgency === 'HIGH' && <Clock className="h-3 w-3 mr-1" />}
+                                    Urgencia {data.urgency === 'HIGH' ? 'Alta' : data.urgency === 'MEDIUM' ? 'Media' : 'Baja'}
+                                </Badge>
+                            </div>
+                        )}
                     </div>
 
                     {/* Footer / Actions */}

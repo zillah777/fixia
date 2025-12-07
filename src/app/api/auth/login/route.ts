@@ -34,8 +34,8 @@ export async function POST(req: NextRequest) {
         // STEP 1: RATE LIMITING - Prevent brute force attacks
         // ======================================================================
         const ip = req.headers.get('x-forwarded-for') ||
-                   req.headers.get('x-real-ip') ||
-                   'unknown';
+            req.headers.get('x-real-ip') ||
+            'unknown';
 
         try {
             await loginLimiter.check(5, ip);
@@ -67,6 +67,7 @@ export async function POST(req: NextRequest) {
                 password: true,
                 role: true,
                 status: true,
+                avatar: true,
             },
         });
 
@@ -80,6 +81,15 @@ export async function POST(req: NextRequest) {
         }
 
         // SECURITY: Check if account is active
+        if (user.status === 'PENDING') {
+            return new NextResponse(
+                JSON.stringify({
+                    error: 'Por favor verifica tu correo electrónico antes de iniciar sesión.',
+                }),
+                { status: 403, headers: { 'Content-Type': 'application/json' } }
+            );
+        }
+
         if (user.status !== 'ACTIVE') {
             console.warn(`[LOGIN_AUTH] User account inactive: ${user.id}`);
             return new NextResponse(
@@ -109,6 +119,7 @@ export async function POST(req: NextRequest) {
                 id: user.id,
                 email: user.email,
                 name: user.name,
+                avatar: user.avatar,
                 role: user.role,
             },
         };
@@ -124,6 +135,7 @@ export async function POST(req: NextRequest) {
                 id: user.id,
                 name: user.name,
                 email: user.email,
+                avatar: user.avatar,
                 role: user.role,
             },
         });

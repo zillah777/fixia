@@ -19,6 +19,7 @@ model User {
   id             String     @id @default(uuid())
   email          String     @unique
   name           String?
+  avatar         String?    // Profile picture URL
   phone          String?    @unique
   dni            String?    @unique // DNI/ID Number
   birthdate      DateTime?  // Date of birth
@@ -53,6 +54,7 @@ model VerificationRequest {
   userId    String   @unique
   idFront   String   // URL
   idBack    String   // URL
+  certificationUrl String? // URL for Professional Certification
   status    String   @default("PENDING") // PENDING, APPROVED, REJECTED
   adminNote String?
   createdAt DateTime @default(now())
@@ -78,6 +80,7 @@ model Profile {
   licenseNumber   String?  // Professional license number
   experience      String?  // Years of experience or description
   tags            String @default("[]") // Expertise tags (max 5)
+  notificationSettings String @default("{}") // JSON: { newMessages: true, proposals: true, marketing: false }
 
   user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

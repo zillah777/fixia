@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation"
 
 
 import { useState, useEffect } from "react"
+import { CATEGORIES } from "@/config/categories"
 
 export default function RequestsPage() {
     const router = useRouter()
@@ -25,16 +26,17 @@ export default function RequestsPage() {
                     const formattedRequests = data.map((r: any) => ({
                         id: r.id,
                         title: r.title,
-                        category: r.category?.name || "General", // Assuming category relation or simple string
+                        description: r.description,
+                        category: CATEGORIES.find(c => c.id === r.categoryId)?.label || r.category?.name || "General",
                         status: r.status,
                         budget: {
-                            min: r.budgetMin || 0,
-                            max: r.budgetMax || 0,
+                            min: Number(r.budget) || 0,
+                            max: Number(r.budget) || 0,
                             currency: "ARS"
                         },
                         location: r.location,
-                        date: r.datePreference || "Sin fecha",
-                        urgency: r.urgency,
+                        date: new Date(r.createdAt).toLocaleDateString(),
+                        // urgency: r.urgency, // Removed as it's not in DB
                         proposalsCount: r._count?.proposals || 0
                     }))
                     setRequests(formattedRequests)

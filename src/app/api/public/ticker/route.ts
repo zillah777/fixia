@@ -14,6 +14,9 @@ const CATEGORY_CONFIG: Record<string, { icon: string, color: string }> = {
 
 export async function GET() {
     try {
+        // Ensure connection is alive
+        await prisma.$connect()
+
         // Group open requests by category
         const requests = await prisma.request.groupBy({
             by: ['categoryId'],
@@ -41,7 +44,11 @@ export async function GET() {
         // but better to show nothing or generic message than mock data)
         return NextResponse.json(tickerItems)
     } catch (error) {
-        console.error("Error fetching ticker stats:", error)
-        return NextResponse.json({ error: "Error fetching ticker stats" }, { status: 500 })
+        console.error("[TICKER_ERROR] Detailed error:", error)
+        if (error instanceof Error) {
+            console.error("[TICKER_ERROR] Stack:", error.stack)
+            console.error("[TICKER_ERROR] Message:", error.message)
+        }
+        return NextResponse.json({ error: "Error fetching ticker stats", details: String(error) }, { status: 500 })
     }
 }

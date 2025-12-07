@@ -2,7 +2,7 @@ export const SUBSCRIPTION_PLANS = {
     PROFESSIONAL: {
         id: "professional_plan",
         title: "Suscripción Profesional Fixia",
-        price: 5000,
+        price: 3900,
         currency: "ARS",
         frequency: "monthly",
         features: [

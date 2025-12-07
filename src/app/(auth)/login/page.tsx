@@ -9,7 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { toast } from "sonner"
-import { Loader2 } from "lucide-react"
+import { Loader2, Eye, EyeOff } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { useAuth } from "@/providers/auth-provider"
 
 const formSchema = z.object({
     email: z.string().email({
@@ -34,7 +35,9 @@ const formSchema = z.object({
 
 export default function LoginPage() {
     const router = useRouter()
+    const { refreshUser } = useAuth()
     const [isLoading, setIsLoading] = useState(false)
+    const [showPassword, setShowPassword] = useState(false)
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -57,6 +60,9 @@ export default function LoginPage() {
                 const errorText = await response.text();
                 throw new Error(errorText || "Error al iniciar sesión");
             }
+
+            // Force update of user context before redirecting
+            await refreshUser();
 
             toast.success("¡Bienvenido de nuevo!");
             router.push("/dashboard");
@@ -81,6 +87,7 @@ export default function LoginPage() {
                             width={120}
                             height={40}
                             className="object-contain"
+                            style={{ width: "auto", height: "auto" }}
                             priority
                         />
                     </div>
@@ -118,7 +125,29 @@ export default function LoginPage() {
                                         <FormItem>
                                             <FormLabel>Contraseña</FormLabel>
                                             <FormControl>
-                                                <Input type="password" placeholder="••••••" {...field} />
+                                                <div className="relative">
+                                                    <Input
+                                                        type={showPassword ? "text" : "password"}
+                                                        placeholder="••••••"
+                                                        {...field}
+                                                    />
+                                                    <Button
+                                                        type="button"
+                                                        variant="ghost"
+                                                        size="sm"
+                                                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                                                        onClick={() => setShowPassword(!showPassword)}
+                                                    >
+                                                        {showPassword ? (
+                                                            <EyeOff className="h-4 w-4 text-muted-foreground" />
+                                                        ) : (
+                                                            <Eye className="h-4 w-4 text-muted-foreground" />
+                                                        )}
+                                                        <span className="sr-only">
+                                                            {showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                                                        </span>
+                                                    </Button>
+                                                </div>
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>

@@ -14,6 +14,8 @@ import { Separator } from "@/components/ui/separator"
 import { Camera, Save, Facebook, Instagram, Twitter, Trash2 } from "lucide-react"
 import { toast } from "sonner"
 import { VerificationRequestForm } from "@/components/trust/verification-request-form"
+import { ProfessionalProfileForm } from "@/components/settings/professional-profile-form"
+import { ServicesManager } from "@/components/settings/services-manager"
 import {
     AlertDialog,
     AlertDialogAction,
@@ -28,8 +30,9 @@ import {
 import { useRouter } from "next/navigation"
 
 export default function SettingsPage() {
-    const { user } = useAuth()
+    const { user, refreshUser } = useAuth()
     const [isLoading, setIsLoading] = useState(false)
+    const [isUploading, setIsUploading] = useState(false)
     const [formData, setFormData] = useState({
         name: "",
         bio: "",
@@ -38,6 +41,72 @@ export default function SettingsPage() {
         twitter: "",
         tiktok: ""
     })
+
+    const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0]
+        if (!file) return
+
+        if (file.size > 2 * 1024 * 1024) {
+            toast.error("La imagen no puede superar los 2MB")
+            return
+        }
+
+        setIsUploading(true)
+        const toastId = toast.loading("Subiendo imagen...")
+
+        try {
+            // 1. Get signed token
+            const tokenRes = await fetch("/api/upload/cloudinary", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ uploadType: "profile" }),
+                credentials: "include"
+            })
+
+            if (!tokenRes.ok) throw new Error("Error obteniendo token de subida")
+            const { signature, timestamp, folder, cloudName, apiKey, uploadUrl } = await tokenRes.json()
+
+            // 2. Upload to Cloudinary
+            const formData = new FormData()
+            formData.append("file", file)
+            formData.append("api_key", apiKey)
+            formData.append("timestamp", timestamp.toString())
+            formData.append("signature", signature)
+            formData.append("folder", folder)
+
+            const uploadRes = await fetch(uploadUrl, {
+                method: "POST",
+                body: formData
+            })
+
+            if (!uploadRes.ok) throw new Error("Error subiendo imagen a Cloudinary")
+            const uploadData = await uploadRes.json()
+
+            // 3. Update Profile with new Avatar URL
+            const updateRes = await fetch("/api/users/profile", {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    avatar: uploadData.secure_url
+                }),
+                credentials: "include"
+            })
+
+            if (!updateRes.ok) throw new Error("Error actualizando perfil")
+
+            // 4. Refresh user session
+            await refreshUser()
+
+            toast.success("Foto de perfil actualizada", { id: toastId })
+        } catch (error) {
+            console.error("Upload error:", error)
+            toast.error("Error al actualizar la foto de perfil", { id: toastId })
+        } finally {
+            setIsUploading(false)
+        }
+    }
+
+    const [proData, setProData] = useState<any>(null)
 
     // Fetch initial data
     useEffect(() => {
@@ -55,6 +124,25 @@ export default function SettingsPage() {
                         twitter: socialLinks.twitter || "",
                         tiktok: socialLinks.tiktok || ""
                     })
+
+                    if (data.role === 'PROFESSIONAL' && data.profile) {
+                        setProData({
+                            certification: data.profile.certification,
+                            licenseNumber: data.profile.licenseNumber,
+                            experience: data.profile.experience,
+                            tags: data.profile.tags,
+                            portfolioImages: data.profile.portfolioImages
+                        })
+                    }
+
+                    if (data.profile?.notificationSettings) {
+                        try {
+                            const prefs = JSON.parse(data.profile.notificationSettings)
+                            setNotificationPreferences(prev => ({ ...prev, ...prefs }))
+                        } catch (e) {
+                            console.error("Error parsing notification settings", e)
+                        }
+                    }
                 }
             } catch (error) {
                 console.error("Failed to fetch profile", error)
@@ -108,7 +196,8 @@ export default function SettingsPage() {
                     name: formData.name,
                     bio: formData.bio,
                     socialLinks
-                })
+                }),
+                credentials: "include"
             })
 
             if (!res.ok) throw new Error("Failed to update")
@@ -152,6 +241,34 @@ export default function SettingsPage() {
         }
     }
 
+    const [notificationPreferences, setNotificationPreferences] = useState({
+        newMessages: true,
+        proposals: true,
+        marketing: false
+    })
+
+    const handleNotificationChange = async (key: string, value: boolean) => {
+        const newPreferences = { ...notificationPreferences, [key]: value }
+        setNotificationPreferences(newPreferences)
+
+        try {
+            const res = await fetch("/api/users/profile", {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    notificationSettings: newPreferences
+                }),
+                credentials: "include"
+            })
+            if (!res.ok) throw new Error("Failed to update preferences")
+            toast.success("Preferencias actualizadas")
+        } catch (error) {
+            toast.error("Error al guardar preferencias")
+            // Revert on error
+            setNotificationPreferences({ ...notificationPreferences })
+        }
+    }
+
     return (
         <div className="space-y-6">
             <div>
@@ -165,6 +282,7 @@ export default function SettingsPage() {
             <Tabs defaultValue="profile" className="space-y-4">
                 <TabsList>
                     <TabsTrigger value="profile">Perfil Público</TabsTrigger>
+                    {user?.role === 'PROFESSIONAL' && <TabsTrigger value="professional">Profesional</TabsTrigger>}
                     <TabsTrigger value="account">Cuenta</TabsTrigger>
                     <TabsTrigger value="notifications">Notificaciones</TabsTrigger>
                     <TabsTrigger value="verification">Verificación</TabsTrigger>
@@ -184,18 +302,31 @@ export default function SettingsPage() {
                         </CardHeader>
                         <CardContent className="space-y-6">
                             <div className="flex items-center gap-6">
-                                <div className="relative">
-                                    <Avatar className="h-24 w-24">
-                                        <AvatarImage src={`https://ui-avatars.com/api/?name=${user?.name}&background=random`} />
+                                <div className="relative group cursor-pointer" onClick={() => document.getElementById('avatar-upload')?.click()}>
+                                    <Avatar className="h-24 w-24 transition-opacity group-hover:opacity-80">
+                                        <AvatarImage src={user?.avatar || `https://ui-avatars.com/api/?name=${user?.name}&background=random`} />
                                         <AvatarFallback>{user?.name?.charAt(0)}</AvatarFallback>
                                     </Avatar>
-                                    <Button size="icon" variant="secondary" className="absolute bottom-0 right-0 rounded-full h-8 w-8 shadow-md">
+                                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/20 rounded-full">
+                                        <Camera className="h-8 w-8 text-white" />
+                                    </div>
+                                    <Button size="icon" variant="secondary" className="absolute bottom-0 right-0 rounded-full h-8 w-8 shadow-md pointer-events-none">
                                         <Camera className="h-4 w-4" />
                                     </Button>
+                                    <input
+                                        type="file"
+                                        id="avatar-upload"
+                                        className="hidden"
+                                        accept="image/*"
+                                        onChange={handleAvatarUpload}
+                                        disabled={isUploading}
+                                    />
                                 </div>
                                 <div className="space-y-1">
                                     <h4 className="text-sm font-medium">Foto de Perfil</h4>
                                     <p className="text-xs text-muted-foreground">
+                                        Haz clic en la imagen para cambiarla.
+                                        <br />
                                         JPG, GIF o PNG. Máximo 2MB.
                                     </p>
                                 </div>
@@ -209,7 +340,11 @@ export default function SettingsPage() {
                                         value={formData.name}
                                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                         placeholder="Tu nombre"
+                                        disabled // Prevent name change
                                     />
+                                    <p className="text-[10px] text-muted-foreground">
+                                        El nombre no se puede cambiar por seguridad.
+                                    </p>
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="username">Nombre de Usuario</Label>
@@ -345,16 +480,18 @@ export default function SettingsPage() {
                                         <AlertDialogContent>
                                             <AlertDialogHeader>
                                                 <AlertDialogTitle>¿Estás absolutamente seguro?</AlertDialogTitle>
-                                                <AlertDialogDescription>
-                                                    Esta acción no se puede deshacer. Esto eliminará permanentemente tu cuenta
-                                                    y removerá todos tus datos de nuestros servidores, incluyendo:
-                                                    <ul className="list-disc pl-6 mt-2 space-y-1">
-                                                        <li>Tu perfil y configuración</li>
-                                                        <li>Todas tus solicitudes de servicio</li>
-                                                        <li>Propuestas enviadas o recibidas</li>
-                                                        <li>Historial de mensajes</li>
-                                                        <li>Portafolio y reseñas</li>
-                                                    </ul>
+                                                <AlertDialogDescription asChild>
+                                                    <div>
+                                                        Esta acción no se puede deshacer. Esto eliminará permanentemente tu cuenta
+                                                        y removerá todos tus datos de nuestros servidores, incluyendo:
+                                                        <ul className="list-disc pl-6 mt-2 space-y-1">
+                                                            <li>Tu perfil y configuración</li>
+                                                            <li>Todas tus solicitudes de servicio</li>
+                                                            <li>Propuestas enviadas o recibidas</li>
+                                                            <li>Historial de mensajes</li>
+                                                            <li>Portafolio y reseñas</li>
+                                                        </ul>
+                                                    </div>
                                                 </AlertDialogDescription>
                                             </AlertDialogHeader>
                                             <AlertDialogFooter>
@@ -374,6 +511,33 @@ export default function SettingsPage() {
                     </Card>
                 </TabsContent>
 
+                {user?.role === 'PROFESSIONAL' && (
+                    <TabsContent value="professional">
+                        <ProfessionalProfileForm
+                            initialData={proData}
+                            onSave={async (data) => {
+                                try {
+                                    const res = await fetch("/api/users/profile", {
+                                        method: "PATCH",
+                                        headers: { "Content-Type": "application/json" },
+                                        body: JSON.stringify(data),
+                                        credentials: "include"
+                                    })
+                                    if (!res.ok) throw new Error("Update failed")
+                                    toast.success("Perfil profesional actualizado")
+                                    refreshUser()
+                                } catch (e) {
+                                    toast.error("Error al guardar")
+                                }
+                            }}
+                        />
+                        <div className="py-4">
+                            <Separator />
+                        </div>
+                        <ServicesManager />
+                    </TabsContent>
+                )}
+
                 <TabsContent value="notifications" className="space-y-4">
                     <Card>
                         <CardHeader>
@@ -388,21 +552,33 @@ export default function SettingsPage() {
                                     <span>Mensajes Nuevos</span>
                                     <span className="font-normal text-xs text-muted-foreground">Recibe alertas cuando te envíen un mensaje.</span>
                                 </Label>
-                                <Switch id="new-messages" defaultChecked />
+                                <Switch
+                                    id="new-messages"
+                                    checked={notificationPreferences.newMessages}
+                                    onCheckedChange={(checked) => handleNotificationChange("newMessages", checked)}
+                                />
                             </div>
                             <div className="flex items-center justify-between space-x-2">
                                 <Label htmlFor="proposals" className="flex flex-col space-y-1">
                                     <span>Nuevas Propuestas</span>
                                     <span className="font-normal text-xs text-muted-foreground">Alertas sobre nuevas ofertas en tus solicitudes.</span>
                                 </Label>
-                                <Switch id="proposals" defaultChecked />
+                                <Switch
+                                    id="proposals"
+                                    checked={notificationPreferences.proposals}
+                                    onCheckedChange={(checked) => handleNotificationChange("proposals", checked)}
+                                />
                             </div>
                             <div className="flex items-center justify-between space-x-2">
                                 <Label htmlFor="marketing" className="flex flex-col space-y-1">
                                     <span>Correos de Marketing</span>
                                     <span className="font-normal text-xs text-muted-foreground">Recibe noticias y promociones de Fixia.</span>
                                 </Label>
-                                <Switch id="marketing" />
+                                <Switch
+                                    id="marketing"
+                                    checked={notificationPreferences.marketing}
+                                    onCheckedChange={(checked) => handleNotificationChange("marketing", checked)}
+                                />
                             </div>
                         </CardContent>
                     </Card>

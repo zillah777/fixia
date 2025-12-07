@@ -42,6 +42,7 @@ RUN adduser --system --uid 1001 nextjs
 RUN apk add --no-cache openssl
 
 COPY --from=builder /app/public ./public
+COPY --from=builder /app/prisma ./prisma
 
 # Set the correct permission for prerender cache
 RUN mkdir .next

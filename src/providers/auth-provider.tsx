@@ -9,9 +9,12 @@ interface User {
     email: string;
     name: string | null;
     role: string;
+    avatar?: string | null;
     image?: string | null;
     phone?: string | null;
     createdAt: string;
+    subscriptionStatus?: string | null;
+    subscriptionEndsAt?: Date | string | null;
 }
 
 interface AuthContextType {

@@ -30,6 +30,7 @@ export interface Match {
     clientId: string
     providerId: string
     request: Request
+    reviews?: { authorId: string; rating: number; comment: string }[]
 }
 
 export interface Message {

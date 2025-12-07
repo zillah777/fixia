@@ -1,76 +1,140 @@
-import { redirect } from "next/navigation"
-import { getSession } from "@/lib/auth"
-import Link from "next/link"
-import { LayoutDashboard, Users, ShieldCheck, LogOut } from "lucide-react"
-import { Button } from "@/components/ui/button"
+"use client"
 
-export default async function AdminLayout({
+import { useState } from "react"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+import { cn } from "@/lib/utils"
+import {
+    LayoutDashboard,
+    Users,
+    ShieldCheck,
+    Settings,
+    LogOut,
+    Menu,
+    X,
+    FileCheck
+} from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { useAuth } from "@/providers/auth-provider"
+
+export default function AdminLayout({
     children,
 }: {
     children: React.ReactNode
 }) {
-    const session = await getSession()
+    const pathname = usePathname()
+    const { logout } = useAuth()
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
-    // 1. Security Guard: Check if user is logged in and is ADMIN
-    if (!session || session.payload.role !== "ADMIN") {
-        redirect("/dashboard") // Redirect non-admins to normal dashboard
-    }
+    const navItems = [
+        {
+            title: "Dashboard",
+            href: "/admin/dashboard",
+            icon: LayoutDashboard,
+        },
+        {
+            title: "Verificaciones",
+            href: "/admin/verifications",
+            icon: ShieldCheck,
+        },
+        // Placeholder for future admin features
+        {
+            title: "Usuarios",
+            href: "/admin/users",
+            icon: Users,
+        },
+        {
+            title: "Configuración",
+            href: "/admin/settings",
+            icon: Settings,
+        },
+    ]
 
     return (
         <div className="flex min-h-screen bg-gray-100 dark:bg-gray-900">
-            {/* Admin Sidebar */}
-            <aside className="w-64 bg-black text-white hidden md:flex flex-col fixed h-full z-50">
-                <div className="p-6 border-b border-white/10">
-                    <h1 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                        Fixia Admin
-                    </h1>
-                    <p className="text-xs text-gray-400 mt-1">Backoffice Panel</p>
+            {/* Sidebar (Desktop) */}
+            <aside className="hidden w-64 flex-col border-r bg-black text-white md:flex">
+                <div className="flex h-16 items-center border-b border-gray-800 px-6">
+                    <Link href="/admin/dashboard" className="flex items-center gap-2 font-bold text-lg">
+                        <ShieldCheck className="h-6 w-6 text-red-500" />
+                        <span>FIXIA <span className="text-red-500">ADMIN</span></span>
+                    </Link>
                 </div>
-
-                <nav className="flex-1 p-4 space-y-2">
-                    <Link href="/admin">
-                        <Button variant="ghost" className="w-full justify-start text-white hover:bg-white/10 hover:text-white">
-                            <LayoutDashboard className="mr-2 h-4 w-4" />
-                            Dashboard
-                        </Button>
-                    </Link>
-                    <Link href="/admin/users">
-                        <Button variant="ghost" className="w-full justify-start text-white hover:bg-white/10 hover:text-white">
-                            <Users className="mr-2 h-4 w-4" />
-                            Usuarios
-                        </Button>
-                    </Link>
-                    <Link href="/admin/verifications">
-                        <Button variant="ghost" className="w-full justify-start text-white hover:bg-white/10 hover:text-white">
-                            <ShieldCheck className="mr-2 h-4 w-4" />
-                            Verificaciones
-                        </Button>
-                    </Link>
+                <nav className="flex-1 space-y-1 p-4">
+                    {navItems.map((item) => (
+                        <Link
+                            key={item.href}
+                            href={item.href}
+                            className={cn(
+                                "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-gray-800",
+                                pathname === item.href ? "bg-red-600 text-white hover:bg-red-700" : "text-gray-400"
+                            )}
+                        >
+                            <item.icon className="h-4 w-4" />
+                            {item.title}
+                        </Link>
+                    ))}
                 </nav>
-
-                <div className="p-4 border-t border-white/10">
-                    <div className="flex items-center gap-3 mb-4 px-2">
-                        <div className="h-8 w-8 rounded-full bg-blue-600 flex items-center justify-center font-bold">
-                            A
-                        </div>
-                        <div>
-                            <p className="text-sm font-medium">{session.payload.name}</p>
-                            <p className="text-xs text-gray-400">Administrador</p>
-                        </div>
-                    </div>
-                    <Link href="/dashboard">
-                        <Button variant="outline" className="w-full border-white/20 text-white hover:bg-white/10 hover:text-white bg-transparent">
-                            <LogOut className="mr-2 h-4 w-4" />
-                            Volver a App
-                        </Button>
-                    </Link>
+                <div className="border-t border-gray-800 p-4">
+                    <Button
+                        variant="ghost"
+                        className="w-full justify-start gap-3 text-red-400 hover:bg-red-950/30 hover:text-red-300"
+                        onClick={() => logout()}
+                    >
+                        <LogOut className="h-4 w-4" />
+                        Cerrar Sesión
+                    </Button>
                 </div>
             </aside>
 
             {/* Main Content */}
-            <main className="flex-1 md:ml-64 p-8">
-                {children}
-            </main>
+            <div className="flex flex-1 flex-col">
+                <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-white px-6 shadow-sm dark:bg-gray-950 md:hidden">
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        className="md:hidden"
+                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                    >
+                        {isMobileMenuOpen ? <X /> : <Menu />}
+                    </Button>
+                    <span className="font-bold">Admin Panel</span>
+                </header>
+
+                {/* Mobile Menu Overlay */}
+                {isMobileMenuOpen && (
+                    <div className="fixed inset-0 z-50 bg-black/80 md:hidden">
+                        <div className="fixed inset-y-0 left-0 w-64 bg-black text-white p-4">
+                            <div className="flex justify-between items-center mb-8">
+                                <span className="font-bold text-xl text-red-500">ADMIN FIXIA</span>
+                                <Button variant="ghost" size="icon" onClick={() => setIsMobileMenuOpen(false)}>
+                                    <X className="h-6 w-6" />
+                                </Button>
+                            </div>
+                            <nav className="space-y-2">
+                                {navItems.map((item) => (
+                                    <Link
+                                        key={item.href}
+                                        href={item.href}
+                                        onClick={() => setIsMobileMenuOpen(false)}
+                                        className={cn(
+                                            "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-gray-800",
+                                            pathname === item.href ? "bg-red-600" : "text-gray-400"
+                                        )}
+                                    >
+                                        <item.icon className="h-4 w-4" />
+                                        {item.title}
+                                    </Link>
+                                ))}
+                            </nav>
+                        </div>
+                    </div>
+                )}
+
+                <main className="flex-1 overflow-y-auto p-6">
+                    {children}
+                </main>
+            </div>
         </div>
     )
 }

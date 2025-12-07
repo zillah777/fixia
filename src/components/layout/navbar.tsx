@@ -7,7 +7,14 @@ import { Menu, Bell, User, LogIn, Search, LayoutDashboard, Settings, LogOut, Shi
 import { useAuth } from "@/providers/auth-provider"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import {
+    Sheet,
+    SheetContent,
+    SheetTrigger,
+    SheetHeader,
+    SheetTitle,
+    SheetDescription
+} from "@/components/ui/sheet"
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -52,6 +59,10 @@ export function Navbar() {
                                 </Button>
                             </SheetTrigger>
                             <SheetContent side="left" className="w-[300px] sm:w-[400px]">
+                                <SheetHeader className="sr-only">
+                                    <SheetTitle>Menú de Navegación</SheetTitle>
+                                    <SheetDescription>Menú principal para navegar por la aplicación Fixia</SheetDescription>
+                                </SheetHeader>
                                 <nav className="flex flex-col gap-4 mt-8">
                                     {/* Mobile Search */}
                                     <div className="relative mb-2">
@@ -66,6 +77,12 @@ export function Navbar() {
                                     </Link>
                                     <Link href="/professionals" className="text-lg font-semibold" onClick={closeSheet}>
                                         Profesionales
+                                    </Link>
+                                    <Link href="/offers" className="text-lg font-semibold" onClick={closeSheet}>
+                                        Ofertas
+                                    </Link>
+                                    <Link href="/opportunities" className="text-lg font-semibold" onClick={closeSheet}>
+                                        Oportunidades
                                     </Link>
                                     {(!user || user.role === 'CLIENT') && (
                                         <Link href="/become-a-pro" className="w-full" onClick={closeSheet}>
@@ -91,6 +108,7 @@ export function Navbar() {
                                 width={48}
                                 height={48}
                                 className="h-12 w-12 object-contain"
+                                priority
                             />
                         </Link>
 
@@ -128,7 +146,11 @@ export function Navbar() {
                                 <DropdownMenuTrigger asChild>
                                     <Button variant="ghost" size="icon" className="rounded-full relative h-9 w-9 border border-muted-foreground/20">
                                         <Avatar className="h-8 w-8">
-                                            <AvatarImage src={`https://ui-avatars.com/api/?name=${user.name}&background=random`} alt={user.name || "User"} />
+                                            <AvatarImage
+                                                src={user.avatar || user.image || `https://ui-avatars.com/api/?name=${user.name}&background=random`}
+                                                alt={user.name || "User"}
+                                                className="object-cover"
+                                            />
                                             <AvatarFallback>{user.name?.charAt(0) || "U"}</AvatarFallback>
                                         </Avatar>
                                     </Button>

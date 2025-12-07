@@ -146,6 +146,28 @@ function ProfessionalProfile() {
                         </CardContent>
                     </Card>
 
+                    {/* Portfolio */}
+                    {pro.portfolio && pro.portfolio.length > 0 && (
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Portafolio de Trabajos</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                    {pro.portfolio.map((img: string, i: number) => (
+                                        <div key={i} className="relative aspect-square rounded-md overflow-hidden bg-muted">
+                                            <img
+                                                src={img}
+                                                alt={`Trabajo ${i + 1} de ${pro.name}`}
+                                                className="object-cover w-full h-full hover:scale-105 transition-transform duration-300"
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+                            </CardContent>
+                        </Card>
+                    )}
+
                     {/* Reviews */}
                     <Card>
                         <CardHeader>

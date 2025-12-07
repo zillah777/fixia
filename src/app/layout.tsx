@@ -3,8 +3,6 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "sonner";
-import { Navbar } from "@/components/layout/navbar";
-import { Footer } from "@/components/layout/footer";
 import { TickerLED } from "@/components/ticker-led";
 import { AuthProvider } from "@/providers/auth-provider";
 import { CookieBanner } from "@/components/cookie-banner";
@@ -69,11 +67,7 @@ export default function RootLayout({
                     <AuthProvider>
                         <TooltipProvider>
                             <TickerLED />
-                            <Navbar />
-                            <main className="flex-1">
-                                {children}
-                            </main>
-                            <Footer />
+                            {children}
                             <Toaster position="top-center" richColors />
                         </TooltipProvider>
                         <CookieBanner />

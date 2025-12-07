@@ -28,7 +28,7 @@ export const sendVerificationEmail = async (email: string, token: string) => {
 
   try {
     const data = await resend.emails.send({
-      from: 'Fixia <onboarding@resend.dev>',
+      from: 'Fixia <onboarding@fixia.app>',
       to: [email],
       subject: 'Verifica tu cuenta - Fixia',
       html: `
@@ -42,6 +42,7 @@ export const sendVerificationEmail = async (email: string, token: string) => {
         </div>
       `,
     });
+    console.log('[EMAIL_DEBUG] Verification email sent:', data);
     return { success: true, data };
   } catch (error) {
     console.error('Error sending verification email:', error);
@@ -55,7 +56,7 @@ export const sendWelcomeEmail = async (email: string, name: string) => {
 
   try {
     const data = await resend.emails.send({
-      from: 'Fixia <onboarding@resend.dev>',
+      from: 'Fixia <onboarding@fixia.app>',
       to: [email],
       subject: '¡Bienvenido a Fixia!',
       html: `
@@ -83,7 +84,7 @@ export const sendPasswordResetEmail = async (email: string, token: string) => {
 
   try {
     const data = await resend.emails.send({
-      from: 'Fixia <onboarding@resend.dev>',
+      from: 'Fixia <onboarding@fixia.app>',
       to: [email],
       subject: 'Recupera tu contraseña - Fixia',
       html: `
@@ -116,7 +117,7 @@ export const sendRegistrationConfirmation = async (email: string, name: string, 
 
   try {
     const data = await resend.emails.send({
-      from: 'Fixia <onboarding@resend.dev>',
+      from: 'Fixia <onboarding@fixia.app>',
       to: [email],
       subject: `¡Registro Exitoso en Fixia! - ${role === 'CLIENT' ? 'Cliente' : 'Profesional'}`,
       html: `
@@ -166,7 +167,7 @@ export const sendMatchNotification = async (
 
   try {
     const data = await resend.emails.send({
-      from: 'Fixia <notifications@resend.dev>',
+      from: 'Fixia <notifications@fixia.app>',
       to: [email],
       subject: `¡Nuevo Match! - ${serviceName}`,
       html: `
@@ -212,7 +213,7 @@ export const sendAppointmentReminder = async (
 
   try {
     const data = await resend.emails.send({
-      from: 'Fixia <notifications@resend.dev>',
+      from: 'Fixia <notifications@fixia.app>',
       to: [email],
       subject: `Recordatorio: ${serviceName} - Mañana`,
       html: `

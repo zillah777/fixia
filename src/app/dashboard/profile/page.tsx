@@ -55,10 +55,18 @@ export default function ProfilePage() {
             <div className="flex items-center gap-6">
                 <div className="relative">
                     <Avatar className="h-24 w-24 border-4 border-white shadow-lg">
-                        <AvatarImage src={`https://ui-avatars.com/api/?name=${user?.name}&background=random`} />
-                        <AvatarFallback>{user?.name?.charAt(0)}</AvatarFallback>
+                        <AvatarImage src={user?.avatar || undefined} alt={user?.name || "User"} className="object-cover" />
+                        <AvatarFallback className="text-2xl font-bold bg-muted text-gray-500">
+                            {user?.name?.substring(0, 2).toUpperCase() || "US"}
+                        </AvatarFallback>
                     </Avatar>
-                    <div className="absolute bottom-0 right-0 bg-green-500 h-6 w-6 rounded-full border-4 border-white" />
+                    <div className="absolute bottom-0 right-0 bg-white rounded-full p-1 border-4 border-transparent shadow-sm">
+                        {(profile?.verificationRequest?.status === 'APPROVED' || user?.role === 'PROFESSIONAL') ? (
+                            <CheckCircle2 className="h-6 w-6 text-blue-500 fill-white" />
+                        ) : (
+                            <div className="bg-green-500 h-4 w-4 rounded-full border-2 border-white" />
+                        )}
+                    </div>
                 </div>
                 <div>
                     <h1 className="text-2xl font-bold">{user?.name}</h1>
@@ -135,15 +143,28 @@ export default function ProfilePage() {
                                     <p className="text-xs text-muted-foreground">Tu correo está confirmado</p>
                                 </div>
                             </div>
-                            <div className="flex items-center gap-3 opacity-50">
-                                <div className="bg-gray-100 p-2 rounded-full">
-                                    <Shield className="h-4 w-4 text-gray-600" />
+                            {/* Dynamic Verification Badge */}
+                            {(profile?.verificationRequest?.status === 'APPROVED' || user?.role === 'PROFESSIONAL' && profile?.profile?.badges?.includes('VERIFIED')) ? (
+                                <div className="flex items-center gap-3">
+                                    <div className="bg-blue-100 p-2 rounded-full">
+                                        <Shield className="h-4 w-4 text-blue-600" />
+                                    </div>
+                                    <div>
+                                        <p className="text-sm font-medium text-blue-700">Identidad Verificada</p>
+                                        <p className="text-xs text-muted-foreground">Tu identidad ha sido validada</p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <p className="text-sm font-medium">Identidad No Verificada</p>
-                                    <p className="text-xs text-muted-foreground">Sube tu DNI para verificar</p>
+                            ) : (
+                                <div className="flex items-center gap-3 opacity-50">
+                                    <div className="bg-gray-100 p-2 rounded-full">
+                                        <Shield className="h-4 w-4 text-gray-600" />
+                                    </div>
+                                    <div>
+                                        <p className="text-sm font-medium">Identidad No Verificada</p>
+                                        <Link href="/dashboard/verification" className="text-xs text-muted-foreground hover:underline">Sube tu DNI para verificar</Link>
+                                    </div>
                                 </div>
-                            </div>
+                            )}
                         </CardContent>
                     </Card>
                 </div>
@@ -183,6 +204,54 @@ export default function ProfilePage() {
                             </CardContent>
                         </Card>
                     </div>
+
+                    {/* Reviews Section */}
+                    <Card>
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                                <Star className="h-5 w-5 text-yellow-500 fill-yellow-500" />
+                                Reseñas ({profile?.reviewsReceived?.length || 0})
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="space-y-6">
+                                {profile?.reviewsReceived?.length > 0 ? (
+                                    profile.reviewsReceived.map((review: any) => (
+                                        <div key={review.id} className="flex gap-4 p-4 rounded-xl bg-gray-50/50">
+                                            <Avatar className="h-10 w-10 border border-white shadow-sm">
+                                                <AvatarImage src={`https://ui-avatars.com/api/?name=${review.author.name}&background=random`} />
+                                                <AvatarFallback>{review.author.name?.[0]}</AvatarFallback>
+                                            </Avatar>
+                                            <div className="flex-1 space-y-1">
+                                                <div className="flex items-center justify-between">
+                                                    <p className="font-semibold text-sm">{review.author.name}</p>
+                                                    <span className="text-xs text-muted-foreground">
+                                                        {new Date(review.createdAt).toLocaleDateString()}
+                                                    </span>
+                                                </div>
+                                                <div className="flex text-yellow-500">
+                                                    {[...Array(5)].map((_, i) => (
+                                                        <Star
+                                                            key={i}
+                                                            className={`h-3 w-3 ${i < review.score ? "fill-current" : "text-gray-300 fill-gray-300"}`}
+                                                        />
+                                                    ))}
+                                                </div>
+                                                <p className="text-sm text-gray-600 mt-1">
+                                                    {review.comment || "Sin comentario."}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <div className="text-center py-8 text-muted-foreground">
+                                        <Star className="h-8 w-8 text-gray-200 mx-auto mb-2" />
+                                        <p>Aún no has recibido reseñas.</p>
+                                    </div>
+                                )}
+                            </div>
+                        </CardContent>
+                    </Card>
                 </div>
             </div>
         </div>

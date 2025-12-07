@@ -70,9 +70,57 @@ export async function GET(
             }))
         }
 
+        // Check if current user is a provider involved in the request
+        if (session.user.role === "PROFESSIONAL") {
+            const myProposal = formattedRequest.proposals.find(p => p.providerId === session.user.id);
+            if (myProposal) {
+                return NextResponse.json({ ...formattedRequest, myProposal });
+            }
+        }
+
         return NextResponse.json(formattedRequest)
     } catch (error) {
         console.error("Error fetching request:", error)
+        return NextResponse.json(
+            { error: "Internal Server Error" },
+            { status: 500 }
+        )
+    }
+}
+
+export async function DELETE(
+    request: Request,
+    { params }: { params: Promise<{ id: string }> }
+) {
+    try {
+        const session = await getSession()
+        if (!session) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+        }
+
+        const { id: requestId } = await params
+
+        // Verify ownership
+        const requestToDelete = await prisma.request.findUnique({
+            where: { id: requestId },
+            select: { clientId: true }
+        })
+
+        if (!requestToDelete) {
+            return NextResponse.json({ error: "Request not found" }, { status: 404 })
+        }
+
+        if (requestToDelete.clientId !== session.user.id && session.user.role !== 'ADMIN') {
+            return NextResponse.json({ error: "Forbidden" }, { status: 403 })
+        }
+
+        await prisma.request.delete({
+            where: { id: requestId }
+        })
+
+        return NextResponse.json({ success: true })
+    } catch (error) {
+        console.error("Error deleting request:", error)
         return NextResponse.json(
             { error: "Internal Server Error" },
             { status: 500 }

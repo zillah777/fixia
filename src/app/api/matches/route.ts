@@ -20,6 +20,7 @@ export async function GET(request: Request) {
                 where: { clientId: userId },
                 include: {
                     provider: { select: { name: true, email: true, phone: true } },
+                    reviews: true, // Include reviews to check for unrated
                     request: {
                         select: {
                             title: true,
@@ -38,6 +39,7 @@ export async function GET(request: Request) {
                 where: { providerId: userId },
                 include: {
                     client: { select: { name: true, email: true, phone: true } },
+                    reviews: true,
                     request: {
                         select: {
                             title: true,
@@ -79,7 +81,7 @@ export async function POST(request: Request) {
             where: { id: requestId }
         })
 
-        if (!req || req.clientId !== session.payload.id) {
+        if (!req || req.clientId !== session.user.id) {
             return NextResponse.json({ error: "Unauthorized or Request not found" }, { status: 403 })
         }
 
@@ -88,7 +90,7 @@ export async function POST(request: Request) {
             data: {
                 requestId,
                 providerId,
-                clientId: session.payload.id as string
+                clientId: session.user.id as string
             }
         })
 
@@ -120,7 +122,7 @@ export async function POST(request: Request) {
             select: { name: true, email: true }
         })
         const client = await prisma.user.findUnique({
-            where: { id: session.payload.id as string },
+            where: { id: session.user.id as string },
             select: { name: true, email: true }
         })
 
@@ -128,8 +130,8 @@ export async function POST(request: Request) {
             // Notify provider
             sendMatchNotification(
                 provider.email,
-                client.name,
-                provider.name,
+                client.name || "Cliente",
+                provider.name || "Profesional",
                 req.title,
                 match.id
             ).catch(e => console.error("Failed to send match email to provider:", e))
@@ -137,8 +139,8 @@ export async function POST(request: Request) {
             // Notify client
             sendMatchNotification(
                 client.email,
-                client.name,
-                provider.name,
+                client.name || "Cliente",
+                provider.name || "Profesional",
                 req.title,
                 match.id
             ).catch(e => console.error("Failed to send match email to client:", e))

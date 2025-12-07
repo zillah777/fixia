@@ -10,7 +10,7 @@ export async function GET(request: Request) {
         }
 
         const services = await prisma.service.findMany({
-            where: { providerId: session.payload.id as string },
+            where: { providerId: session.user.id as string },
             orderBy: { createdAt: "desc" }
         })
 
@@ -43,7 +43,7 @@ export async function POST(request: Request) {
 
         const newService = await prisma.service.create({
             data: {
-                providerId: session.payload.id as string,
+                providerId: session.user.id as string,
                 title,
                 categoryId,
                 price: parseFloat(price),

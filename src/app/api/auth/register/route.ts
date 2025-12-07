@@ -58,6 +58,7 @@ export async function POST(req: Request) {
                 dni,
                 birthdate,
                 verificationToken,
+                status: "PENDING",
             },
         });
 

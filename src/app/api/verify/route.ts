@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { redirect } from 'next/navigation';
+import prisma from '@/lib/prisma';
 
 export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
@@ -9,15 +10,27 @@ export async function GET(req: Request) {
         return new NextResponse("Missing token", { status: 400 });
     }
 
-    // In a real app:
-    // 1. Verify token (JWT or DB lookup)
-    // 2. Find user by token
-    // 3. Update user status to ACTIVE or VERIFIED
-    // 4. Invalidate token
+    try {
+        const user = await prisma.user.findFirst({
+            where: { verificationToken: token }
+        });
 
-    // For now, we simulate success and redirect to dashboard
-    console.log(`Verifying account with token: ${token}`);
+        if (!user) {
+            return new NextResponse("Invalid token", { status: 400 });
+        }
 
-    // Redirect to a success page or dashboard with a query param
-    return redirect('/dashboard?verified=true');
+        await prisma.user.update({
+            where: { id: user.id },
+            data: {
+                status: "ACTIVE",
+                verificationToken: null
+            }
+        });
+
+    } catch (error) {
+        console.error("Verification error:", error);
+        return new NextResponse("Error verifying account", { status: 500 });
+    }
+
+    redirect('/dashboard?verified=true');
 }

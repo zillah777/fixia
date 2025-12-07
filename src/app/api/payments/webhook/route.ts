@@ -14,6 +14,24 @@ export async function POST(request: Request) {
 
             if (paymentData.status === "approved") {
                 const userId = paymentData.metadata.user_id;
+
+                if (userId) {
+                    const subscriptionEndDate = new Date();
+                    subscriptionEndDate.setDate(subscriptionEndDate.getDate() + 30); // 30 days subscription
+
+                    await prisma.user.update({
+                        where: { id: userId },
+                        data: {
+                            subscriptionStatus: "active",
+                            subscriptionPlan: "professional_monthly",
+                            subscriptionEndsAt: subscriptionEndDate,
+                            status: "ACTIVE", // Ensure account is active
+                            subscriptionId: paymentData.id?.toString()
+                        }
+                    });
+
+                    console.log(`Subscription activated for user ${userId}`);
+                }
             }
         }
 

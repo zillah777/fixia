@@ -150,10 +150,19 @@ export function NotificationCenter() {
                                             {!notification.isRead && (
                                                 <span className="h-2 w-2 rounded-full bg-blue-600 shrink-0" />
                                             )}
-                                            <span className="font-medium text-sm text-gray-900 line-clamp-1">
+                                            <span className={cn("font-medium text-sm line-clamp-1",
+                                                notification.type === 'MATCH' && "text-pink-600",
+                                                (notification.type === 'PROPOSAL' || notification.type === 'NEW_PROPOSAL') && "text-purple-600",
+                                                notification.type === 'SYSTEM' && "text-gray-600",
+                                                notification.type === 'VERIFICATION' && "text-green-600",
+                                                notification.type === 'SUBSCRIPTION' && "text-amber-600",
+                                            )}>
                                                 {notification.type === 'MATCH' ? '¡Nuevo Match!' :
-                                                    notification.type === 'SYSTEM' ? 'Sistema' :
-                                                        notification.type}
+                                                    (notification.type === 'PROPOSAL' || notification.type === 'NEW_PROPOSAL') ? 'Nueva Propuesta' :
+                                                        notification.type === 'VERIFICATION' ? 'Verificación' :
+                                                            notification.type === 'SUBSCRIPTION' ? 'Suscripción' :
+                                                                notification.type === 'SYSTEM' ? 'Sistema' :
+                                                                    notification.type}
                                             </span>
                                         </div>
                                         <span className="text-[10px] text-muted-foreground whitespace-nowrap">

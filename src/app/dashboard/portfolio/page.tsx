@@ -169,24 +169,16 @@ export default function PortfolioPage() {
             </div>
 
             {/* Drag & Drop Zone */}
-            <Card
-                className={cn(
-                    "border-2 border-dashed transition-colors",
-                    isDragging ? "border-primary bg-primary/5" : "border-muted-foreground/25"
-                )}
-                onDragOver={handleDragOver}
-                onDragLeave={handleDragLeave}
-                onDrop={handleDrop}
-            >
+            <Card className="border-2 border-dashed border-muted-foreground/25">
                 <CardContent className="flex flex-col items-center justify-center py-10 text-center">
                     <div className="rounded-full bg-muted p-4 mb-4">
                         <Upload className="h-8 w-8 text-muted-foreground" />
                     </div>
                     <h3 className="text-lg font-semibold">Sube imágenes a tu Galería General</h3>
                     <p className="text-sm text-muted-foreground max-w-xs mt-2">
-                        Arrastra y suelta tus archivos aquí, o haz clic para seleccionar.
+                        Funcionalidad de subida en desarrollo.
                     </p>
-                    <Button variant="outline" className="mt-6">
+                    <Button variant="outline" className="mt-6" disabled>
                         Seleccionar Archivos
                     </Button>
                 </CardContent>

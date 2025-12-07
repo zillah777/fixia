@@ -11,7 +11,7 @@ export async function GET() {
 
         const notifications = await prisma.notification.findMany({
             where: {
-                userId: session.id
+                userId: session.user.id
             },
             orderBy: {
                 createdAt: 'desc'
@@ -42,7 +42,7 @@ export async function POST(request: Request) {
 
         const notification = await prisma.notification.create({
             data: {
-                userId: session.id,
+                userId: session.user.id,
                 type,
                 message,
                 actionUrl

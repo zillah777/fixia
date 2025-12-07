@@ -1,18 +1,27 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import {
     Menu,
     Home,
     LogOut
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import {
+    Sheet,
+    SheetContent,
+    SheetTrigger,
+    SheetHeader,
+    SheetTitle,
+    SheetDescription
+} from "@/components/ui/sheet"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/providers/auth-provider"
 import { sidebarItems, professionalItems } from "@/config/navigation"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 export default function DashboardLayout({
     children,
@@ -20,33 +29,82 @@ export default function DashboardLayout({
     children: React.ReactNode
 }) {
     const pathname = usePathname()
-    const { user, logout } = useAuth()
+    const router = useRouter()
+    const { user, logout, isLoading } = useAuth()
+    const [isOpen, setIsOpen] = useState(false)
+
+    useEffect(() => {
+        if (!isLoading && !user) {
+            router.replace("/login")
+            return
+        }
+
+        // Professional Subscription Enforcement
+        if (!isLoading && user?.role === "PROFESSIONAL") {
+            const isSubscriptionPage = pathname.includes("/dashboard/subscription")
+
+            const isActive = user.subscriptionStatus === "active"
+            const isCancelledButHasTime = (
+                (user.subscriptionStatus === "cancelled" || user.subscriptionStatus === "pending_cancellation") &&
+                user.subscriptionEndsAt &&
+                new Date(user.subscriptionEndsAt) > new Date()
+            )
+
+            const hasAccess = isActive || isCancelledButHasTime
+
+            if (!isSubscriptionPage && !hasAccess) {
+                // Redirect to subscription page if no valid subscription
+                router.replace("/dashboard/subscription")
+            }
+        }
+    }, [user, isLoading, router, pathname])
+
+    if (isLoading) {
+        return <div className="min-h-screen bg-background"></div>
+    }
 
     return (
         <div className="flex min-h-screen bg-background">
             {/* Mobile Header */}
             <div className="md:hidden fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-4 bg-background/80 backdrop-blur-md border-b">
-                <span className="font-bold text-lg">Fixia</span>
-                <Sheet>
+                <div className="relative h-8 w-24">
+                    <Image
+                        src="/logo.png"
+                        alt="Fixia Logo"
+                        fill
+                        className="object-contain"
+                        sizes="96px"
+                    />
+                </div>
+                <Sheet open={isOpen} onOpenChange={setIsOpen}>
                     <SheetTrigger asChild>
                         <Button variant="ghost" size="icon" className="rounded-full">
                             <Menu className="h-5 w-5" />
                         </Button>
                     </SheetTrigger>
                     <SheetContent side="left" className="w-72 p-0 border-r-0 bg-background/95 backdrop-blur-xl">
+                        <SheetHeader className="sr-only">
+                            <SheetTitle>Menú Dashboard</SheetTitle>
+                            <SheetDescription>Navegación principal del panel de control</SheetDescription>
+                        </SheetHeader>
                         <div className="p-8">
-                            <h2 className="font-bold text-2xl tracking-tight">Fixia</h2>
+                            <div className="relative h-8 w-32 mb-6">
+                                <Image
+                                    src="/logo.png"
+                                    alt="Fixia Logo"
+                                    fill
+                                    className="object-contain"
+                                    sizes="128px"
+                                />
+                            </div>
                             {user && (
                                 <div className="mt-4 flex items-center gap-3">
-                                    <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center overflow-hidden relative">
-                                        <Image
-                                            src={`https://ui-avatars.com/api/?name=${user.name}&background=random`}
-                                            alt={user.name || "User"}
-                                            fill
-                                            className="object-cover"
-                                            unoptimized // External URL
-                                        />
-                                    </div>
+                                    <Avatar className="h-10 w-10 border border-border">
+                                        <AvatarImage src={user.avatar || undefined} alt={user.name || "User"} className="object-cover" />
+                                        <AvatarFallback className="bg-muted text-gray-500 font-medium">
+                                            {user.name?.substring(0, 2).toUpperCase() || "US"}
+                                        </AvatarFallback>
+                                    </Avatar>
                                     <div className="flex flex-col">
                                         <span className="font-medium text-sm">{user.name}</span>
                                         <span className="text-xs text-muted-foreground truncate max-w-[150px]">{user.email}</span>
@@ -59,6 +117,7 @@ export default function DashboardLayout({
                                 <Link
                                     key={item.href}
                                     href={item.href}
+                                    onClick={() => setIsOpen(false)}
                                     className={cn(
                                         "flex items-center gap-4 px-4 py-3 rounded-2xl text-sm font-medium transition-all duration-200",
                                         pathname === item.href
@@ -74,6 +133,7 @@ export default function DashboardLayout({
                                 <Link
                                     key={item.href}
                                     href={item.href}
+                                    onClick={() => setIsOpen(false)}
                                     className={cn(
                                         "flex items-center gap-4 px-4 py-3 rounded-2xl text-sm font-medium transition-all duration-200",
                                         pathname === item.href
@@ -86,7 +146,7 @@ export default function DashboardLayout({
                                 </Link>
                             ))}
                             <div className="my-4 border-t border-border/50" />
-                            <Link href="/">
+                            <Link href="/" onClick={() => setIsOpen(false)}>
                                 <Button variant="ghost" className="w-full justify-start gap-4 px-4 rounded-2xl h-12 text-muted-foreground hover:text-foreground">
                                     <Home className="h-5 w-5" />
                                     Volver al Inicio
@@ -116,22 +176,21 @@ export default function DashboardLayout({
                                     alt="Fixia Logo"
                                     fill
                                     className="object-contain"
-                                    priority
+                                    sizes="96px"
                                 />
                             </div>
                         </Link>
 
+
+
                         {user && (
                             <div className="mb-6 flex items-center gap-3 p-3 rounded-xl bg-gray-50 border border-border/50">
-                                <div className="h-10 w-10 rounded-full bg-white border border-border flex items-center justify-center overflow-hidden shrink-0 relative">
-                                    <Image
-                                        src={`https://ui-avatars.com/api/?name=${user.name}&background=random`}
-                                        alt={user.name || "User"}
-                                        fill
-                                        className="object-cover"
-                                        unoptimized
-                                    />
-                                </div>
+                                <Avatar className="h-10 w-10 border border-border">
+                                    <AvatarImage src={user.avatar || undefined} alt={user.name || "User"} className="object-cover" />
+                                    <AvatarFallback className="bg-white text-gray-500 font-medium">
+                                        {user.name?.substring(0, 2).toUpperCase() || "US"}
+                                    </AvatarFallback>
+                                </Avatar>
                                 <div className="flex flex-col min-w-0">
                                     <span className="font-semibold text-sm truncate">{user.name}</span>
                                     <span className="text-xs text-muted-foreground truncate">{user.role === 'PROFESSIONAL' ? 'Profesional' : 'Cliente'}</span>

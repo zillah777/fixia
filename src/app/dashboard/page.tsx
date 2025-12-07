@@ -4,8 +4,10 @@ import * as React from "react"
 import { motion } from "framer-motion"
 import { Bell, Search, TrendingUp, Users, DollarSign, ShoppingBag, ArrowUpRight, Calendar } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import Link from "next/link"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { NotificationCenter } from "@/components/notifications/notification-center"
 import { Badge } from "@/components/ui/badge"
 import { useAuth } from "@/providers/auth-provider"
 
@@ -34,8 +36,22 @@ const TRENDING_IMAGES = [
     "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2064&auto=format&fit=crop"  // Abstract Oil
 ]
 
+import { useSearchParams } from "next/navigation"
+import { toast } from "sonner"
+
 export default function DashboardPage() {
     const { user } = useAuth()
+    const searchParams = useSearchParams()
+
+    React.useEffect(() => {
+        if (searchParams.get('verified') === 'true') {
+            toast.success("¡Tu cuenta ha sido verificada exitosamente!", {
+                duration: 5000,
+                description: "Ahora tienes acceso completo a todas las funciones."
+            })
+        }
+    }, [searchParams])
+
     const [stats, setStats] = React.useState({
         completedRequests: 0,
         activeRequests: 0,
@@ -64,6 +80,24 @@ export default function DashboardPage() {
             .catch(err => console.error(err))
     }, [])
 
+    const chartData = React.useMemo(() => {
+        if ((stats as any).weeklyStats) {
+            return (stats as any).weeklyStats;
+        }
+
+        // Fallback for other roles (Client/Admin) if not yet implemented
+        const last7Days = [...Array(7)].map((_, i) => {
+            const d = new Date();
+            d.setDate(d.getDate() - i);
+            return d.toISOString().split('T')[0];
+        }).reverse();
+
+        return last7Days.map(date => ({
+            name: new Date(date).toLocaleDateString('es-AR', { weekday: 'short' }),
+            activity: stats.recentActivity.filter(a => a.date.startsWith(date)).length
+        }));
+    }, [stats.recentActivity, (stats as any).weeklyStats]);
+
     return (
         <div className="min-h-screen bg-background p-8 font-sans">
             {/* Header */}
@@ -80,13 +114,7 @@ export default function DashboardPage() {
                             placeholder="Buscar..."
                         />
                     </div>
-                    <Button variant="ghost" size="icon" className="rounded-full bg-white shadow-sm">
-                        <Bell className="h-5 w-5 text-muted-foreground" />
-                    </Button>
-                    <Avatar className="h-10 w-10 border-2 border-white shadow-sm">
-                        <AvatarImage src={user?.image || `https://ui-avatars.com/api/?name=${user?.name || 'User'}&background=random`} />
-                        <AvatarFallback>{user?.name?.substring(0, 2) || "CN"}</AvatarFallback>
-                    </Avatar>
+                    <NotificationCenter />
                 </div>
             </header>
 
@@ -126,9 +154,11 @@ export default function DashboardPage() {
                             </Badge>
                             <h2 className="text-3xl font-bold mb-2">Servicios de {stats.trendingCategory}</h2>
                             <p className="text-white/80 mb-6">La demanda de {stats.trendingCategory} ha subido esta semana.</p>
-                            <Button className="w-full bg-white text-black hover:bg-white/90 border-none shadow-lg">
-                                Ver Oportunidades
-                            </Button>
+                            <Link href="/dashboard/opportunities">
+                                <Button className="w-full bg-white text-black hover:bg-white/90 border-none shadow-lg">
+                                    Ver Oportunidades
+                                </Button>
+                            </Link>
                         </CardContent>
                     </Card>
                 </motion.div>
@@ -156,13 +186,13 @@ export default function DashboardPage() {
                         <>
                             <Card className="border-none shadow-sm hover:shadow-md transition-shadow">
                                 <CardHeader className="flex flex-row items-center justify-between pb-2">
-                                    <CardTitle className="text-sm font-medium text-muted-foreground">Oportunidades Activas</CardTitle>
-                                    <Users className="h-4 w-4 text-muted-foreground" />
+                                    <CardTitle className="text-sm font-medium text-muted-foreground">Servicios Publicados</CardTitle>
+                                    <ShoppingBag className="h-4 w-4 text-muted-foreground" />
                                 </CardHeader>
                                 <CardContent>
-                                    <div className="text-2xl font-bold">{stats.leads}</div>
+                                    <div className="text-2xl font-bold">{(stats as any).servicesCount || 0}</div>
                                     <p className="text-xs text-muted-foreground mt-1">
-                                        Leads y trabajos en curso
+                                        Active en el mercado
                                     </p>
                                 </CardContent>
                             </Card>
@@ -242,22 +272,11 @@ export default function DashboardPage() {
                             </div>
                         </CardHeader>
                         <CardContent>
-                            <div className="h-[200px] w-full">
+                            <div className="h-[200px] w-full min-h-[200px]" style={{ minHeight: '200px' }}>
                                 {stats.recentActivity.length > 0 ? (
-                                    <ResponsiveContainer width="100%" height="100%">
+                                    <ResponsiveContainer width="100%" height={200}>
                                         <AreaChart
-                                            data={(() => {
-                                                const last7Days = [...Array(7)].map((_, i) => {
-                                                    const d = new Date();
-                                                    d.setDate(d.getDate() - i);
-                                                    return d.toISOString().split('T')[0];
-                                                }).reverse();
-
-                                                return last7Days.map(date => ({
-                                                    name: new Date(date).toLocaleDateString('es-AR', { weekday: 'short' }),
-                                                    activity: stats.recentActivity.filter(a => a.date.startsWith(date)).length
-                                                }));
-                                            })()}
+                                            data={chartData}
                                         >
                                             <defs>
                                                 <linearGradient id="colorActivity" x1="0" y1="0" x2="0" y2="1">
@@ -299,13 +318,13 @@ export default function DashboardPage() {
                                                 <AvatarImage src={`https://ui-avatars.com/api/?name=${activity.title}&background=random`} />
                                                 <AvatarFallback>ACT</AvatarFallback>
                                             </Avatar>
-                                            <div className="flex-1">
-                                                <p className="text-sm font-medium line-clamp-1">{activity.title}</p>
-                                                <p className="text-xs text-muted-foreground line-clamp-1">
+                                            <div className="flex-1 min-w-0">
+                                                <p className="text-sm font-medium truncate">{activity.title}</p>
+                                                <p className="text-xs text-muted-foreground truncate">
                                                     {activity.description} • {new Date(activity.date).toLocaleDateString()}
                                                 </p>
                                             </div>
-                                            <Badge variant="outline" className="text-[10px]">
+                                            <Badge variant="outline" className="text-[10px] shrink-0">
                                                 {activity.status}
                                             </Badge>
                                         </div>

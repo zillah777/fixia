@@ -6,15 +6,18 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Send, Phone, CheckCircle2, Star, Loader2 } from "lucide-react"
+import { Send, Phone, CheckCircle2, Star, Loader2, AlertTriangle } from "lucide-react"
 import { ReviewDialog } from "@/components/reviews/review-dialog"
 import { cn } from "@/lib/utils"
 import { toast } from "sonner"
 import { Match, Message, User } from "@/types/match"
 import { useAuth } from "@/providers/auth-provider"
+import { useParams, useRouter } from "next/navigation"
 
 export default function MatchesPage() {
     const { user: currentUser } = useAuth()
+    const params = useParams()
+    const router = useRouter()
     const [matches, setMatches] = useState<Match[]>([])
     const [selectedMatch, setSelectedMatch] = useState<Match | null>(null)
     const [messages, setMessages] = useState<Message[]>([])
@@ -45,7 +48,10 @@ export default function MatchesPage() {
     }, [messages])
 
     useEffect(() => {
-        fetchMatches()
+        const load = async () => {
+            await fetchMatches()
+        }
+        load()
     }, [])
 
     const fetchMatches = async () => {
@@ -54,9 +60,24 @@ export default function MatchesPage() {
             if (res.ok) {
                 const data: Match[] = await res.json()
                 setMatches(data)
-                // If no match selected, select the first one
+
+                // Deep link handling via URL params
+                if (params?.id) {
+                    const target = data.find(m => m.id === params.id)
+                    if (target) {
+                        // Don't set directly, use handleSelectMatch to fetch messages
+                        setSelectedMatch(target)
+                        setMessages([])
+                        fetchMessages(target.id)
+                        return
+                    }
+                }
+
                 if (data.length > 0 && !selectedMatch) {
-                    handleSelectMatch(data[0])
+                    // Don't auto-select if on mobile maybe?
+                    if (window.innerWidth > 768) {
+                        handleSelectMatch(data[0])
+                    }
                 }
             }
         } catch (error) {
@@ -83,6 +104,9 @@ export default function MatchesPage() {
         setSelectedMatch(match)
         setMessages([]) // Clear previous messages while loading
         fetchMessages(match.id)
+
+        // Update URL to match ID for better refreshing support (optional)
+        // router.push(`/dashboard/matches/${match.id}`, { scroll: false })
     }
 
     const handleSendMessage = async (e: React.FormEvent) => {
@@ -136,6 +160,11 @@ export default function MatchesPage() {
         return <div className="flex justify-center p-12"><Loader2 className="h-8 w-8 animate-spin" /></div>
     }
 
+    // Check for unrated matches
+    const unratedMatchesCount = matches.filter(m =>
+        m.isCompleted && !m.reviews?.some((r: any) => r.authorId === currentUser?.id)
+    ).length
+
     if (matches.length === 0) {
         return (
             <div className="text-center p-12 border rounded-lg bg-muted/10">
@@ -154,7 +183,18 @@ export default function MatchesPage() {
                 <CardHeader className="border-b px-4 py-3">
                     <CardTitle className="text-lg">Mensajes</CardTitle>
                 </CardHeader>
-                <ScrollArea className="flex-1">
+                {unratedMatchesCount >= 2 && (
+                    <div className="bg-red-50 p-3 border-b border-red-100 flex items-start gap-2 animate-in slide-in-from-top-2">
+                        <AlertTriangle className="h-4 w-4 text-red-600 mt-0.5 shrink-0" />
+                        <div>
+                            <p className="text-xs font-bold text-red-700">Acción Requerida</p>
+                            <p className="text-[10px] text-red-600 leading-tight">
+                                Tienes {unratedMatchesCount} trabajos sin calificar. No podrás contratar ni aceptar nuevos trabajos hasta calificarlos.
+                            </p>
+                        </div>
+                    </div>
+                )}
+                <ScrollArea className="flex-1 h-[calc(100vh-15rem)] md:h-auto">
                     <div className="flex flex-col gap-1 p-2">
                         {matches.map((match) => {
                             const user = getOtherUser(match)
@@ -167,13 +207,13 @@ export default function MatchesPage() {
                                         selectedMatch?.id === match.id && "bg-accent"
                                     )}
                                 >
-                                    <div className="relative">
+                                    <div className="relative shrink-0">
                                         <Avatar>
                                             <AvatarImage src={user.image} />
                                             <AvatarFallback>{user.name?.substring(0, 2) || "U"}</AvatarFallback>
                                         </Avatar>
                                     </div>
-                                    <div className="flex-1 overflow-hidden">
+                                    <div className="flex-1 overflow-hidden min-w-0">
                                         <div className="flex items-center justify-between">
                                             <span className="font-semibold truncate">{user.name}</span>
                                             <span className="text-xs text-muted-foreground whitespace-nowrap ml-2">

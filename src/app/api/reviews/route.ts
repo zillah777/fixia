@@ -20,7 +20,7 @@ export async function POST(request: Request) {
         const review = await prisma.review.create({
             data: {
                 matchId,
-                authorId: session.payload.id as string,
+                authorId: session.user.id as string,
                 targetId,
                 score,
                 comment
