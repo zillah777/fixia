@@ -22,7 +22,7 @@ const getResend = () => {
 };
 
 export const sendVerificationEmail = async (email: string, token: string) => {
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || (process.env.NODE_ENV === 'production' ? 'https://fixia.app' : 'http://localhost:3000');
   const confirmLink = `${appUrl}/api/verify?token=${token}`;
   const resend = getResend();
 
@@ -51,7 +51,7 @@ export const sendVerificationEmail = async (email: string, token: string) => {
 };
 
 export const sendWelcomeEmail = async (email: string, name: string) => {
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || (process.env.NODE_ENV === 'production' ? 'https://fixia.app' : 'http://localhost:3000');
   const resend = getResend();
 
   try {
@@ -78,7 +78,7 @@ export const sendWelcomeEmail = async (email: string, name: string) => {
 };
 
 export const sendPasswordResetEmail = async (email: string, token: string) => {
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || (process.env.NODE_ENV === 'production' ? 'https://fixia.app' : 'http://localhost:3000');
   const resetLink = `${appUrl}/reset-password?token=${token}`;
   const resend = getResend();
 
@@ -107,7 +107,7 @@ export const sendPasswordResetEmail = async (email: string, token: string) => {
 };
 
 export const sendRegistrationConfirmation = async (email: string, name: string, role: 'CLIENT' | 'PROFESSIONAL') => {
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || (process.env.NODE_ENV === 'production' ? 'https://fixia.app' : 'http://localhost:3000');
   const resend = getResend();
 
   const roleText = role === 'CLIENT' ? 'cliente' : 'profesional';
@@ -161,7 +161,7 @@ export const sendMatchNotification = async (
   serviceName: string,
   matchId: string
 ) => {
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || (process.env.NODE_ENV === 'production' ? 'https://fixia.app' : 'http://localhost:3000');
   const matchLink = `${appUrl}/dashboard/matches`;
   const resend = getResend();
 
@@ -198,7 +198,7 @@ export const sendAppointmentReminder = async (
   appointmentDate: Date,
   professionalName: string
 ) => {
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || (process.env.NODE_ENV === 'production' ? 'https://fixia.app' : 'http://localhost:3000');
   const dashboardLink = `${appUrl}/dashboard/requests`;
   const resend = getResend();
 
