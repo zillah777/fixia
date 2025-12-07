@@ -76,7 +76,7 @@ export default function LoginPage() {
     }
 
     return (
-        <div className="flex min-h-screen items-start justify-center bg-muted/50 p-4 pt-32">
+        <div className="flex min-h-screen items-center justify-center md:items-start md:pt-32 bg-muted/50 p-4">
             <div className="w-full max-w-md space-y-8">
                 {/* Logo */}
                 <Link href="/" className="flex items-center justify-center gap-2">
@@ -112,7 +112,14 @@ export default function LoginPage() {
                                         <FormItem>
                                             <FormLabel>Email</FormLabel>
                                             <FormControl>
-                                                <Input placeholder="nombre@ejemplo.com" {...field} />
+                                                <Input
+                                                    placeholder="nombre@ejemplo.com"
+                                                    type="email"
+                                                    autoCapitalize="none"
+                                                    autoComplete="email"
+                                                    autoCorrect="off"
+                                                    {...field}
+                                                />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -129,6 +136,9 @@ export default function LoginPage() {
                                                     <Input
                                                         type={showPassword ? "text" : "password"}
                                                         placeholder="••••••"
+                                                        autoCapitalize="none"
+                                                        autoComplete="current-password"
+                                                        autoCorrect="off"
                                                         {...field}
                                                     />
                                                     <Button
