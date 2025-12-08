@@ -5,6 +5,8 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+import { TrustBadge } from "@/components/ui/trust-badges"
+import { RatingBadge } from "@/components/ui/rating-badge"
 
 interface ServiceCardProps {
     title: string
@@ -16,6 +18,9 @@ interface ServiceCardProps {
     image: string
     category: string
     location: string
+    isVerified?: boolean
+    isFast?: boolean
+    isPremium?: boolean
 }
 
 function StarRating({ rating, reviewsCount }: { rating: number; reviewsCount: number }) {
@@ -61,6 +66,9 @@ export function ServiceCard({
     image,
     category,
     location,
+    isVerified = true,
+    isFast = false,
+    isPremium = false,
 }: ServiceCardProps) {
     return (
         <Card className="overflow-hidden group hover:shadow-warm transition-all duration-300 border-border/50 flex flex-col h-full bg-white dark:bg-card">
@@ -103,6 +111,7 @@ export function ServiceCard({
 
             {/* Provider Info */}
             <CardContent className="p-4 pt-0 space-y-3">
+                {/* Provider Name + Badges */}
                 <div className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2 min-w-0">
                         <Avatar className="h-7 w-7 border border-border/50 flex-shrink-0">
@@ -113,8 +122,20 @@ export function ServiceCard({
                             {providerName}
                         </span>
                     </div>
-                    <StarRating rating={rating} reviewsCount={reviewsCount} />
+                    {isVerified && (
+                        <TrustBadge variant="verified" size="sm" />
+                    )}
                 </div>
+
+                {/* Trust + Fast Badges Row */}
+                {isFast && (
+                    <div className="flex gap-1.5">
+                        <TrustBadge variant="fast" size="sm" />
+                    </div>
+                )}
+
+                {/* Rating + Reviews */}
+                <RatingBadge rating={rating} count={reviewsCount} showCount size="sm" />
             </CardContent>
 
             {/* Footer with Price & CTA */}
