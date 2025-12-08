@@ -19,7 +19,7 @@ export async function GET(request: Request) {
             matches = await prisma.match.findMany({
                 where: { clientId: userId },
                 include: {
-                    provider: { select: { name: true, email: true, phone: true } },
+                    provider: { select: { id: true, name: true, email: true, phone: true, avatar: true } },
                     reviews: true, // Include reviews to check for unrated
                     request: {
                         select: {
@@ -38,7 +38,7 @@ export async function GET(request: Request) {
             matches = await prisma.match.findMany({
                 where: { providerId: userId },
                 include: {
-                    client: { select: { name: true, email: true, phone: true } },
+                    client: { select: { id: true, name: true, email: true, phone: true, avatar: true } },
                     reviews: true,
                     request: {
                         select: {

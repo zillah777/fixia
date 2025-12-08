@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { ArrowLeft, MapPin, Calendar, Clock, Share2, MoreVertical, Trash2, Check, X, AlertTriangle } from "lucide-react"
+import { ArrowLeft, MapPin, Calendar, Clock, Share2, MoreVertical, Trash2, Check, X, AlertTriangle, MessageCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
     DropdownMenu,
@@ -111,14 +111,146 @@ export default function RequestDetailPage() {
         }
     }
 
-    // ... (Existing handlers: handleAcceptProposal for Client, handleCompleteJob, etc)
     const handleAcceptProposal = async (proposal: any) => {
-        // ... existing implementation for Client accepting Pro's proposal
+        try {
+            const res = await fetch(`/api/proposals/${proposal.id}/accept`, {
+                method: "PATCH",
+            })
+
+            if (!res.ok) {
+                const error = await res.json()
+                throw new Error(error.error || "Error al aceptar propuesta")
+            }
+
+            const data = await res.json()
+
+            // Update local state
+            setStatus("IN_PROGRESS")
+            setSelectedPro(proposal)
+            setIsCelebrationOpen(true)
+
+            toast.success("¡Propuesta aceptada!", {
+                description: "Se ha creado el match con el profesional"
+            })
+
+            // Refresh request data to get match info
+            const refreshRes = await fetch(`/api/requests/${params.id}`)
+            if (refreshRes.ok) {
+                const refreshedData = await refreshRes.json()
+                setRequest(refreshedData)
+            }
+
+        } catch (error: any) {
+            console.error(error)
+            toast.error(error.message || "Error al aceptar la propuesta")
+        }
     }
-    const handleCompleteJob = async () => { /* ... existing ... */ }
-    const handleReviewSubmit = async (rating: number, comment: string) => { /* ... existing ... */ }
-    const handleShare = async () => { /* ... existing ... */ }
-    const handleDelete = async () => { /* ... existing ... */ }
+
+    const handleRejectProposal = async (proposalId: string) => {
+        try {
+            const res = await fetch(`/api/proposals/${proposalId}/reject`, {
+                method: "POST",
+            })
+
+            if (!res.ok) {
+                throw new Error("Error al rechazar propuesta")
+            }
+
+            toast.success("Propuesta rechazada")
+
+            // Refresh to update proposals list
+            const refreshRes = await fetch(`/api/requests/${params.id}`)
+            if (refreshRes.ok) {
+                const refreshedData = await refreshRes.json()
+                setRequest(refreshedData)
+            }
+
+        } catch (error) {
+            console.error(error)
+            toast.error("Error al rechazar la propuesta")
+        }
+    }
+
+    const handleCompleteJob = async () => {
+        try {
+            const res = await fetch(`/api/matches/${request.match?.id}/complete`, {
+                method: "POST",
+            })
+
+            if (!res.ok) {
+                throw new Error("Error al completar trabajo")
+            }
+
+            setStatus("COMPLETED")
+            setIsReviewOpen(true)
+            toast.success("Trabajo marcado como completado")
+
+        } catch (error) {
+            console.error(error)
+            toast.error("Error al completar el trabajo")
+        }
+    }
+
+    const handleReviewSubmit = async (rating: number, comment: string) => {
+        try {
+            const res = await fetch("/api/reviews", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    targetId: request.match?.providerId,
+                    matchId: request.match?.id,
+                    score: rating,
+                    comment
+                })
+            })
+
+            if (!res.ok) {
+                throw new Error("Error al enviar reseña")
+            }
+
+            toast.success("¡Gracias por tu reseña!")
+            setIsReviewOpen(false)
+
+        } catch (error) {
+            console.error(error)
+            toast.error("Error al enviar la reseña")
+        }
+    }
+
+    const handleShare = async () => {
+        try {
+            await navigator.share({
+                title: request.title,
+                text: `Mira esta solicitud en Fixia: ${request.title}`,
+                url: window.location.href
+            })
+        } catch (error) {
+            // Fallback: copy to clipboard
+            navigator.clipboard.writeText(window.location.href)
+            toast.success("Enlace copiado al portapapeles")
+        }
+    }
+
+    const handleDelete = async () => {
+        if (!confirm("¿Estás seguro de eliminar esta solicitud?")) return
+
+        try {
+            const res = await fetch(`/api/requests/${params.id}`, {
+                method: "DELETE",
+            })
+
+            if (!res.ok) {
+                throw new Error("Error al eliminar")
+            }
+
+            toast.success("Solicitud eliminada")
+            router.push("/dashboard/requests")
+
+        } catch (error) {
+            console.error(error)
+            toast.error("Error al eliminar la solicitud")
+        }
+    }
 
 
     if (isLoading) {
@@ -145,12 +277,23 @@ export default function RequestDetailPage() {
 
     return (
         <div className="space-y-8 pb-20">
-            {/* Review Form - Existing */}
             <ReviewForm
                 isOpen={isReviewOpen}
                 onClose={() => setIsReviewOpen(false)}
                 proName={request?.match?.provider?.name || selectedPro?.proName || "Profesional"}
                 onSubmit={handleReviewSubmit}
+            />
+
+            {/* Match Celebration Modal */}
+            <MatchCelebration
+                isOpen={isCelebrationOpen}
+                onClose={() => {
+                    setIsCelebrationOpen(false)
+                    router.push(`/dashboard/matches/${request.match?.id}`)
+                }}
+                proName={selectedPro?.proName || request?.match?.provider?.name || "Profesional"}
+                proAvatar={selectedPro?.proAvatar || `https://ui-avatars.com/api/?name=${request?.match?.provider?.name}&background=random`}
+                proPhone={request?.match?.provider?.phone || ""}
             />
 
             {/* Header / Nav */}
@@ -233,14 +376,38 @@ export default function RequestDetailPage() {
                         </CardContent>
                     </Card>
 
-                    {/* Proposals Section: Hide if I am invited Pro? Or show only mine? */}
+                    {/* Proposals Section */}
                     {!isInvitedPro && (
                         <div className="pt-8">
-                            {/* ... existing proposals list code ... */}
                             <div className="flex items-center justify-between mb-6">
                                 <h2 className="text-2xl font-bold">Propuestas ({formattedProposals.length})</h2>
                             </div>
-                            {/* ... map proposals ... */}
+
+                            {formattedProposals.length === 0 ? (
+                                <Card className="border-none shadow-sm">
+                                    <CardContent className="p-12 text-center">
+                                        <div className="text-muted-foreground">
+                                            <MessageCircle className="h-12 w-12 mx-auto mb-4 opacity-20" />
+                                            <p className="text-lg font-medium">Aún no hay propuestas</p>
+                                            <p className="text-sm mt-2">Los profesionales interesados enviarán sus presupuestos pronto.</p>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            ) : (
+                                <div className="space-y-4">
+                                    {formattedProposals.map((proposal: any) => (
+                                        <ProProposalCard
+                                            key={proposal.id}
+                                            data={{
+                                                ...proposal,
+                                                isElite: proposal.badges?.includes("ELITE") || false,
+                                            }}
+                                            onAccept={() => handleAcceptProposal(proposal)}
+                                            onViewProfile={() => router.push(`/professionals/${proposal.provider.id}`)}
+                                        />
+                                    ))}
+                                </div>
+                            )}
                         </div>
                     )}
                 </div>

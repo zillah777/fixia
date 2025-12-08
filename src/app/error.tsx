@@ -18,8 +18,8 @@ export default function Error({
 
     return (
         <div className="flex min-h-[50vh] flex-col items-center justify-center p-4 text-center">
-            <div className="rounded-full bg-red-100 p-3 dark:bg-red-900/20 mb-4">
-                <AlertTriangle className="h-10 w-10 text-red-600 dark:text-red-400" />
+            <div className="rounded-full bg-destructive/10 p-3 dark:bg-red-900/20 mb-4">
+                <AlertTriangle className="h-10 w-10 text-destructive dark:text-red-400" />
             </div>
             <h2 className="text-2xl font-bold tracking-tight mb-2">¡Ups! Algo falló</h2>
             <p className="text-muted-foreground mb-6 max-w-sm">

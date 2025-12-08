@@ -31,14 +31,14 @@ interface RichRequestCardProps {
 }
 
 const urgencyColors = {
-    LOW: "bg-blue-100 text-blue-700 border-blue-200",
+    LOW: "bg-secondary/10 text-secondary border-secondary/20",
     MEDIUM: "bg-yellow-100 text-yellow-700 border-yellow-200",
-    HIGH: "bg-red-100 text-red-700 border-red-200 animate-pulse",
+    HIGH: "bg-destructive/10 text-destructive border-destructive/20 animate-pulse",
 }
 
 const statusColors = {
-    OPEN: "bg-green-500",
-    IN_PROGRESS: "bg-blue-500",
+    OPEN: "bg-accent",
+    IN_PROGRESS: "bg-secondary",
     COMPLETED: "bg-gray-500",
 }
 
@@ -78,7 +78,7 @@ export function RichRequestCard({ data, onClick }: RichRequestCardProps) {
                         <div className="text-right shrink-0 ml-2">
                             <div className="flex flex-col items-end">
                                 <span className={cn(
-                                    "font-bold text-green-600 tracking-tight whitespace-nowrap",
+                                    "font-bold text-accent tracking-tight whitespace-nowrap",
                                     data.budget.min === 0 ? "text-sm text-muted-foreground" : "text-lg"
                                 )}>
                                     {formatBudget(data.budget.min, data.budget.max)}

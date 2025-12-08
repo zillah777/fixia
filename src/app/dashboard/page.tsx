@@ -132,18 +132,20 @@ export default function DashboardPage() {
                     <Card className="h-full border-none shadow-md hover:shadow-warm transition-all overflow-hidden relative group bg-gradient-to-br from-primary/5 to-accent/5 dark:from-primary/10 dark:to-accent/10">
                         <div className="absolute inset-0 bg-black/20 z-10" /> {/* Overlay for text readability */}
 
-                        <AnimatePresence mode="popLayout">
+                        <AnimatePresence>
                             <motion.div
                                 key={currentImageIndex}
-                                initial={{ opacity: 0, scale: 1.1 }}
-                                animate={{ opacity: 1, scale: 1 }}
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
                                 exit={{ opacity: 0 }}
-                                transition={{ duration: 1.5, ease: "easeOut" }}
-                                className="absolute inset-0"
+                                transition={{ duration: 1.2, ease: "easeInOut" }}
+                                className="absolute inset-0 bg-background/50"
                             >
                                 <div
-                                    className="absolute inset-0 bg-cover bg-center mix-blend-overlay opacity-60"
-                                    style={{ backgroundImage: `url('${TRENDING_IMAGES[currentImageIndex]}')` }}
+                                    className="absolute inset-0 bg-cover bg-center"
+                                    style={{
+                                        backgroundImage: `url('${TRENDING_IMAGES[currentImageIndex]}')`,
+                                    }}
                                 />
                             </motion.div>
                         </AnimatePresence>

@@ -42,12 +42,12 @@ export function MarketplaceRequestCard({ data, onApply }: MarketplaceRequestCard
                                     {data.category}
                                 </Badge>
                                 {data.urgency === 'HIGH' && (
-                                    <Badge className="rounded-full text-[10px] bg-red-100 text-red-700 border-none px-2">
+                                    <Badge className="rounded-full text-[10px] bg-destructive/10 text-destructive border-none px-2">
                                         Urgente
                                     </Badge>
                                 )}
                             </div>
-                            <h3 className="text-lg font-bold leading-tight group-hover:text-blue-600 transition-colors line-clamp-2">
+                            <h3 className="text-lg font-bold leading-tight group-hover:text-secondary transition-colors line-clamp-2">
                                 {data.title}
                             </h3>
                         </div>

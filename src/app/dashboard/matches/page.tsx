@@ -6,13 +6,14 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Send, Phone, CheckCircle2, Star, Loader2, AlertTriangle } from "lucide-react"
+import { Send, Phone, CheckCircle2, Star, Loader2, AlertTriangle, ArrowLeft, MessageCircle } from "lucide-react"
 import { ReviewDialog } from "@/components/reviews/review-dialog"
 import { cn } from "@/lib/utils"
 import { toast } from "sonner"
 import { Match, Message, User } from "@/types/match"
 import { useAuth } from "@/providers/auth-provider"
 import { useParams, useRouter } from "next/navigation"
+import Link from "next/link"
 
 export default function MatchesPage() {
     const { user: currentUser } = useAuth()
@@ -24,6 +25,7 @@ export default function MatchesPage() {
     const [newMessage, setNewMessage] = useState("")
     const [loading, setLoading] = useState(true)
     const [sending, setSending] = useState(false)
+    const [showChatOnMobile, setShowChatOnMobile] = useState(false)
     const scrollRef = useRef<HTMLDivElement>(null)
 
     // Poll for messages every 5 seconds
@@ -104,6 +106,7 @@ export default function MatchesPage() {
         setSelectedMatch(match)
         setMessages([]) // Clear previous messages while loading
         fetchMessages(match.id)
+        setShowChatOnMobile(true) // Show chat on mobile
 
         // Update URL to match ID for better refreshing support (optional)
         // router.push(`/dashboard/matches/${match.id}`, { scroll: false })
@@ -165,36 +168,58 @@ export default function MatchesPage() {
         m.isCompleted && !m.reviews?.some((r: any) => r.authorId === currentUser?.id)
     ).length
 
+    // Check if both users have reviewed each other
+    const haveMutualReviews = (match: Match): boolean => {
+        if (!match.reviews || match.reviews.length < 2) return false
+        const clientReviewed = match.reviews.some((r: any) => r.authorId === match.clientId)
+        const providerReviewed = match.reviews.some((r: any) => r.authorId === match.providerId)
+        return clientReviewed && providerReviewed
+    }
+
     if (matches.length === 0) {
         return (
-            <div className="text-center p-12 border rounded-lg bg-muted/10">
-                <h3 className="text-lg font-semibold">No tienes conversaciones activas</h3>
-                <p className="text-muted-foreground">Cuando aceptes una propuesta o te contraten, aparecerá aquí.</p>
+            <div className="flex flex-col items-center justify-center p-12 border rounded-lg bg-muted/10 max-w-md mx-auto text-center">
+                <MessageCircle className="h-16 w-16 text-muted-foreground mb-4" />
+                <h3 className="text-xl font-semibold mb-2">No tienes conversaciones</h3>
+                <p className="text-muted-foreground mb-6">
+                    {currentUser?.role === 'PROFESSIONAL'
+                        ? "Envía propuestas a solicitudes activas para iniciar conversaciones con clientes."
+                        : "Crea una solicitud para recibir propuestas de profesionales y comenzar a chatear."}
+                </p>
+                <Button asChild>
+                    <Link href={currentUser?.role === 'PROFESSIONAL' ? "/dashboard/opportunities" : "/dashboard/requests/create"}>
+                        {currentUser?.role === 'PROFESSIONAL' ? "Ver Oportunidades" : "Crear Solicitud"}
+                    </Link>
+                </Button>
             </div>
         )
     }
 
     const otherUser = selectedMatch ? getOtherUser(selectedMatch) : null
+    const canViewProfile = selectedMatch ? haveMutualReviews(selectedMatch) : false
 
     return (
-        <div className="flex h-[calc(100vh-8rem)] gap-4 flex-col md:flex-row">
-            {/* Matches List */}
-            <Card className="w-full md:w-1/3 flex flex-col">
+        <div className="flex h-[calc(100vh-10rem)] md:h-[calc(100vh-8rem)] gap-2 md:gap-4 flex-col md:flex-row">
+            {/* Matches List - Hide on mobile when chat is open */}
+            <Card className={cn(
+                "w-full md:w-1/3 flex flex-col",
+                showChatOnMobile && "hidden md:flex"
+            )}>
                 <CardHeader className="border-b px-4 py-3">
                     <CardTitle className="text-lg">Mensajes</CardTitle>
                 </CardHeader>
                 {unratedMatchesCount >= 2 && (
-                    <div className="bg-red-50 p-3 border-b border-red-100 flex items-start gap-2 animate-in slide-in-from-top-2">
-                        <AlertTriangle className="h-4 w-4 text-red-600 mt-0.5 shrink-0" />
+                    <div className="bg-destructive/5 p-3 border-b border-red-100 flex items-start gap-2 animate-in slide-in-from-top-2">
+                        <AlertTriangle className="h-4 w-4 text-destructive mt-0.5 shrink-0" />
                         <div>
-                            <p className="text-xs font-bold text-red-700">Acción Requerida</p>
-                            <p className="text-[10px] text-red-600 leading-tight">
+                            <p className="text-xs font-bold text-destructive">Acción Requerida</p>
+                            <p className="text-[10px] text-destructive leading-tight">
                                 Tienes {unratedMatchesCount} trabajos sin calificar. No podrás contratar ni aceptar nuevos trabajos hasta calificarlos.
                             </p>
                         </div>
                     </div>
                 )}
-                <ScrollArea className="flex-1 h-[calc(100vh-15rem)] md:h-auto">
+                <ScrollArea className="flex-1 overflow-y-auto">
                     <div className="flex flex-col gap-1 p-2">
                         {matches.map((match) => {
                             const user = getOtherUser(match)
@@ -203,24 +228,24 @@ export default function MatchesPage() {
                                     key={match.id}
                                     onClick={() => handleSelectMatch(match)}
                                     className={cn(
-                                        "flex items-start gap-3 rounded-lg p-3 text-left transition-colors hover:bg-accent",
+                                        "flex items-start gap-3 rounded-lg p-4 text-left transition-colors hover:bg-accent active:bg-accent/80 touch-manipulation",
                                         selectedMatch?.id === match.id && "bg-accent"
                                     )}
                                 >
                                     <div className="relative shrink-0">
-                                        <Avatar>
-                                            <AvatarImage src={user.image} />
+                                        <Avatar className="h-12 w-12">
+                                            <AvatarImage src={user.image || user.avatar || `https://ui-avatars.com/api/?name=${user.name}&background=random`} />
                                             <AvatarFallback>{user.name?.substring(0, 2) || "U"}</AvatarFallback>
                                         </Avatar>
                                     </div>
                                     <div className="flex-1 overflow-hidden min-w-0">
                                         <div className="flex items-center justify-between">
-                                            <span className="font-semibold truncate">{user.name}</span>
+                                            <span className="font-semibold truncate text-base">{user.name}</span>
                                             <span className="text-xs text-muted-foreground whitespace-nowrap ml-2">
                                                 {new Date(match.createdAt).toLocaleDateString()}
                                             </span>
                                         </div>
-                                        <div className="text-xs text-muted-foreground truncate font-medium text-primary">
+                                        <div className="text-sm text-muted-foreground truncate font-medium text-primary mt-1">
                                             {match.request.title}
                                         </div>
                                     </div>
@@ -231,33 +256,63 @@ export default function MatchesPage() {
                 </ScrollArea>
             </Card>
 
-            {/* Chat Area */}
+            {/* Chat Area - Show on mobile when selected */}
             {selectedMatch && otherUser ? (
-                <Card className="flex-1 flex flex-col overflow-hidden">
+                <Card className={cn(
+                    "flex-1 flex flex-col overflow-hidden",
+                    !showChatOnMobile && "hidden md:flex"
+                )}>
                     {/* Chat Header */}
                     <div className="flex items-center justify-between border-b px-4 py-3">
                         <div className="flex items-center gap-3">
-                            <Avatar>
-                                <AvatarImage src={otherUser.image} />
-                                <AvatarFallback>{otherUser.name?.substring(0, 2) || "U"}</AvatarFallback>
-                            </Avatar>
-                            <div>
-                                <div className="font-semibold">{otherUser.name}</div>
-                                <div className="text-xs text-muted-foreground">
-                                    {selectedMatch.isCompleted ? "Trabajo Completado" : "En Progreso"}
+                            {/* Back button for mobile */}
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="md:hidden"
+                                onClick={() => setShowChatOnMobile(false)}
+                            >
+                                <ArrowLeft className="h-5 w-5" />
+                            </Button>
+                            {canViewProfile ? (
+                                <Link href={`/dashboard/profile/${otherUser.id}`} className="flex items-center gap-3 hover:opacity-80 transition-opacity" title="Ver perfil">
+                                    <Avatar className="h-10 w-10">
+                                        <AvatarImage src={otherUser.image || otherUser.avatar || `https://ui-avatars.com/api/?name=${otherUser.name}&background=random`} />
+                                        <AvatarFallback>{otherUser.name?.substring(0, 2) || "U"}</AvatarFallback>
+                                    </Avatar>
+                                    <div>
+                                        <div className="font-semibold text-base hover:underline">{otherUser.name}</div>
+                                        <div className="text-xs text-muted-foreground">
+                                            {selectedMatch.isCompleted ? "Trabajo Completado" : "En Progreso"}
+                                        </div>
+                                    </div>
+                                </Link>
+                            ) : (
+                                <div className="flex items-center gap-3">
+                                    <Avatar className="h-10 w-10">
+                                        <AvatarImage src={otherUser.image || otherUser.avatar || `https://ui-avatars.com/api/?name=${otherUser.name}&background=random`} />
+                                        <AvatarFallback>{otherUser.name?.substring(0, 2) || "U"}</AvatarFallback>
+                                    </Avatar>
+                                    <div>
+                                        <div className="font-semibold text-base">{otherUser.name}</div>
+                                        <div className="text-xs text-muted-foreground">
+                                            {selectedMatch.isCompleted ? "Trabajo Completado" : "En Progreso"}
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
+                            )}
                         </div>
                         <div className="flex items-center gap-2">
-                            <Button variant="outline" size="icon" onClick={handleWhatsAppClick} title="Contactar por WhatsApp">
-                                <Phone className="h-4 w-4 text-green-600" />
+                            <Button variant="outline" size="icon" onClick={handleWhatsAppClick} title="Contactar por WhatsApp" className="touch-manipulation">
+                                <Phone className="h-4 w-4 text-accent" />
                             </Button>
                             {/* Review Dialog only if completed or allowed */}
                             <ReviewDialog
                                 matchId={selectedMatch.id}
                                 targetName={otherUser.name}
+                                targetId={otherUser.id}
                                 trigger={
-                                    <Button variant="ghost" size="icon" title="Calificar Usuario">
+                                    <Button variant="ghost" size="icon" title="Calificar Usuario" className="touch-manipulation">
                                         <Star className="h-4 w-4" />
                                     </Button>
                                 }
@@ -266,13 +321,13 @@ export default function MatchesPage() {
                     </div>
 
                     {/* Messages */}
-                    <ScrollArea className="flex-1 p-4">
-                        <div className="space-y-4">
+                    <ScrollArea className="flex-1 p-2 md:p-4">
+                        <div className="space-y-2 md:space-y-4">
                             {/* System Message */}
                             <div className="flex justify-center">
-                                <div className="bg-muted/50 text-muted-foreground text-xs py-1 px-3 rounded-full flex items-center gap-2">
+                                <div className="bg-muted/50 text-muted-foreground text-xs py-1 px-2 md:px-3 rounded-full flex items-center gap-2">
                                     <CheckCircle2 className="h-3 w-3" />
-                                    Match confirmado. Puedes coordinar los detalles.
+                                    <span className="text-[11px] md:text-xs">Match confirmado. Puedes coordinar los detalles.</span>
                                 </div>
                             </div>
 
@@ -282,13 +337,13 @@ export default function MatchesPage() {
                                     <div
                                         key={msg.id}
                                         className={cn(
-                                            "flex w-max max-w-[75%] flex-col gap-1 rounded-lg px-3 py-2 text-sm",
+                                            "flex w-max max-w-[85%] md:max-w-[75%] flex-col gap-1 rounded-lg px-3 py-2 text-sm break-words",
                                             isMe
                                                 ? "ml-auto bg-primary text-primary-foreground"
                                                 : "bg-muted"
                                         )}
                                     >
-                                        {msg.text}
+                                        <span className="break-words">{msg.text}</span>
                                         <span className={cn(
                                             "text-[10px]",
                                             isMe ? "text-primary-foreground/70" : "text-muted-foreground"
@@ -303,16 +358,16 @@ export default function MatchesPage() {
                     </ScrollArea>
 
                     {/* Input Area */}
-                    <div className="p-4 border-t">
+                    <div className="p-3 md:p-4 border-t bg-background">
                         <form onSubmit={handleSendMessage} className="flex gap-2">
                             <Input
                                 placeholder="Escribe un mensaje..."
                                 value={newMessage}
                                 onChange={(e) => setNewMessage(e.target.value)}
-                                className="flex-1"
+                                className="flex-1 min-h-[44px]"
                                 disabled={sending}
                             />
-                            <Button type="submit" size="icon" disabled={sending}>
+                            <Button type="submit" size="icon" disabled={sending} className="min-h-[44px] min-w-[44px]">
                                 {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
                                 <span className="sr-only">Enviar</span>
                             </Button>

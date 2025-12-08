@@ -30,7 +30,7 @@ export default function HowItWorksPage() {
                             <Search className="h-24 w-24" />
                         </div>
                         <CardContent className="pt-6">
-                            <div className="h-12 w-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center mb-4">
+                            <div className="h-12 w-12 bg-secondary/10 text-secondary rounded-lg flex items-center justify-center mb-4">
                                 <span className="text-xl font-bold">1</span>
                             </div>
                             <h3 className="text-xl font-semibold mb-2">Publica tu Solicitud</h3>
@@ -45,7 +45,7 @@ export default function HowItWorksPage() {
                             <UserCheck className="h-24 w-24" />
                         </div>
                         <CardContent className="pt-6">
-                            <div className="h-12 w-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center mb-4">
+                            <div className="h-12 w-12 bg-secondary/10 text-secondary rounded-lg flex items-center justify-center mb-4">
                                 <span className="text-xl font-bold">2</span>
                             </div>
                             <h3 className="text-xl font-semibold mb-2">Recibe Propuestas</h3>
@@ -60,7 +60,7 @@ export default function HowItWorksPage() {
                             <MessageSquare className="h-24 w-24" />
                         </div>
                         <CardContent className="pt-6">
-                            <div className="h-12 w-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center mb-4">
+                            <div className="h-12 w-12 bg-secondary/10 text-secondary rounded-lg flex items-center justify-center mb-4">
                                 <span className="text-xl font-bold">3</span>
                             </div>
                             <h3 className="text-xl font-semibold mb-2">Haz Match y Chatea</h3>
@@ -75,7 +75,7 @@ export default function HowItWorksPage() {
                             <Star className="h-24 w-24" />
                         </div>
                         <CardContent className="pt-6">
-                            <div className="h-12 w-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center mb-4">
+                            <div className="h-12 w-12 bg-secondary/10 text-secondary rounded-lg flex items-center justify-center mb-4">
                                 <span className="text-xl font-bold">4</span>
                             </div>
                             <h3 className="text-xl font-semibold mb-2">Califica y Comenta</h3>
@@ -96,17 +96,17 @@ export default function HowItWorksPage() {
             {/* For Professionals */}
             <div>
                 <div className="flex items-center gap-4 mb-8">
-                    <div className="h-10 w-1 bg-green-600 rounded-full"></div>
+                    <div className="h-10 w-1 bg-accent rounded-full"></div>
                     <h2 className="text-3xl font-bold">Para Profesionales</h2>
                 </div>
 
                 <div className="grid md:grid-cols-4 gap-6">
-                    <Card className="relative overflow-hidden border-green-100 dark:border-green-900">
+                    <Card className="relative overflow-hidden border-accent/10 dark:border-green-900">
                         <div className="absolute top-0 right-0 p-4 opacity-10">
-                            <CheckCircle className="h-24 w-24 text-green-600" />
+                            <CheckCircle className="h-24 w-24 text-accent" />
                         </div>
                         <CardContent className="pt-6">
-                            <div className="h-12 w-12 bg-green-100 text-green-600 rounded-lg flex items-center justify-center mb-4">
+                            <div className="h-12 w-12 bg-accent/10 text-accent rounded-lg flex items-center justify-center mb-4">
                                 <span className="text-xl font-bold">1</span>
                             </div>
                             <h3 className="text-xl font-semibold mb-2">Crea tu Perfil</h3>
@@ -116,12 +116,12 @@ export default function HowItWorksPage() {
                         </CardContent>
                     </Card>
 
-                    <Card className="relative overflow-hidden border-green-100 dark:border-green-900">
+                    <Card className="relative overflow-hidden border-accent/10 dark:border-green-900">
                         <div className="absolute top-0 right-0 p-4 opacity-10">
-                            <Search className="h-24 w-24 text-green-600" />
+                            <Search className="h-24 w-24 text-accent" />
                         </div>
                         <CardContent className="pt-6">
-                            <div className="h-12 w-12 bg-green-100 text-green-600 rounded-lg flex items-center justify-center mb-4">
+                            <div className="h-12 w-12 bg-accent/10 text-accent rounded-lg flex items-center justify-center mb-4">
                                 <span className="text-xl font-bold">2</span>
                             </div>
                             <h3 className="text-xl font-semibold mb-2">Encuentra Oportunidades</h3>
@@ -131,12 +131,12 @@ export default function HowItWorksPage() {
                         </CardContent>
                     </Card>
 
-                    <Card className="relative overflow-hidden border-green-100 dark:border-green-900">
+                    <Card className="relative overflow-hidden border-accent/10 dark:border-green-900">
                         <div className="absolute top-0 right-0 p-4 opacity-10">
-                            <Send className="h-24 w-24 text-green-600" />
+                            <Send className="h-24 w-24 text-accent" />
                         </div>
                         <CardContent className="pt-6">
-                            <div className="h-12 w-12 bg-green-100 text-green-600 rounded-lg flex items-center justify-center mb-4">
+                            <div className="h-12 w-12 bg-accent/10 text-accent rounded-lg flex items-center justify-center mb-4">
                                 <span className="text-xl font-bold">3</span>
                             </div>
                             <h3 className="text-xl font-semibold mb-2">Envía Propuestas</h3>
@@ -146,12 +146,12 @@ export default function HowItWorksPage() {
                         </CardContent>
                     </Card>
 
-                    <Card className="relative overflow-hidden border-green-100 dark:border-green-900">
+                    <Card className="relative overflow-hidden border-accent/10 dark:border-green-900">
                         <div className="absolute top-0 right-0 p-4 opacity-10">
-                            <Star className="h-24 w-24 text-green-600" />
+                            <Star className="h-24 w-24 text-accent" />
                         </div>
                         <CardContent className="pt-6">
-                            <div className="h-12 w-12 bg-green-100 text-green-600 rounded-lg flex items-center justify-center mb-4">
+                            <div className="h-12 w-12 bg-accent/10 text-accent rounded-lg flex items-center justify-center mb-4">
                                 <span className="text-xl font-bold">4</span>
                             </div>
                             <h3 className="text-xl font-semibold mb-2">Gana Reputación</h3>
@@ -164,7 +164,7 @@ export default function HowItWorksPage() {
 
                 <div className="text-center mt-8">
                     <Link href="/become-a-pro">
-                        <Button size="lg" variant="default" className="bg-green-600 hover:bg-green-700">Comenzar como Profesional</Button>
+                        <Button size="lg" variant="default" className="bg-accent hover:bg-accent">Comenzar como Profesional</Button>
                     </Link>
                 </div>
             </div>

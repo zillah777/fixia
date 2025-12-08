@@ -83,7 +83,7 @@ export default function ServicesPage() {
                     {filteredCategories.map((category) => {
                         const Icon = category.icon
                         return (
-                            <Link href={`/professionals?category=${category.id}`} key={category.id}>
+                            <Link href={`/services/${category.id}`} key={category.id}>
                                 <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer group">
                                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                                         <CardTitle className="text-lg font-medium group-hover:text-primary transition-colors">

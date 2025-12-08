@@ -39,12 +39,15 @@ export async function GET(request: Request) {
             }
         }
 
+        console.log("[PROFESSIONALS_API] Fetching with filters:", { search, category, location })
+
         const professionals = await prisma.user.findMany({
             where: whereClause,
             select: {
                 id: true,
                 name: true,
                 email: true,
+                avatar: true,
                 role: true,
                 createdAt: true,
                 profile: {
@@ -69,12 +72,13 @@ export async function GET(request: Request) {
                 },
                 _count: {
                     select: {
-                        reviewsReceived: true,
                         matchesAsProvider: { where: { isCompleted: true } }
                     }
                 }
             }
         })
+
+        console.log("[PROFESSIONALS_API] Found", professionals.length, "professionals")
 
         // Transform data to match frontend expectations
         const formattedPros = professionals.map(pro => {
@@ -85,9 +89,9 @@ export async function GET(request: Request) {
                 role: tags[0] || "Profesional", // Fallback role
                 category: pro.services[0]?.categoryId || "General",
                 rating: pro.profile?.ratingAvg || 0,
-                reviews: pro._count.reviewsReceived,
+                reviews: pro._count.matchesAsProvider,
                 location: "Buenos Aires", // Placeholder until we have real address field
-                image: `https://ui-avatars.com/api/?name=${pro.name}&background=random`, // Fallback avatar
+                image: pro.avatar || `https://ui-avatars.com/api/?name=${pro.name}&background=random`,
                 price: pro.services[0]?.price ? `$${pro.services[0].price}` : "A convenir",
                 verified: true, // Logic for verification?
                 tags: tags,

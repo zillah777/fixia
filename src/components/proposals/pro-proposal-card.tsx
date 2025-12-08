@@ -58,7 +58,7 @@ export function ProProposalCard({ data, onAccept, onViewProfile }: ProProposalCa
                                 <AvatarFallback>{data.proName.charAt(0)}</AvatarFallback>
                             </Avatar>
                             {data.isVerified && (
-                                <div className="absolute -bottom-1 -right-1 bg-blue-500 text-white rounded-full p-0.5 border-2 border-white" title="Identidad Verificada">
+                                <div className="absolute -bottom-1 -right-1 bg-secondary text-white rounded-full p-0.5 border-2 border-white" title="Identidad Verificada">
                                     <ShieldCheck className="h-3 w-3" />
                                 </div>
                             )}
@@ -67,7 +67,7 @@ export function ProProposalCard({ data, onAccept, onViewProfile }: ProProposalCa
                         <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 mb-1">
                                 <h3 className="font-bold text-lg truncate">{data.proName}</h3>
-                                {data.isVerified && <CheckCircle2 className="h-4 w-4 text-blue-500" />}
+                                {data.isVerified && <CheckCircle2 className="h-4 w-4 text-secondary" />}
                             </div>
 
                             <div className="flex items-center gap-1 text-sm text-yellow-500 mb-2">
@@ -78,12 +78,12 @@ export function ProProposalCard({ data, onAccept, onViewProfile }: ProProposalCa
 
                             <div className="flex flex-wrap gap-2 mb-3">
                                 {data.badges.includes("TOP_RATED") && (
-                                    <Badge variant="secondary" className="text-[10px] bg-green-100 text-green-700 border-green-200">
+                                    <Badge variant="secondary" className="text-[10px] bg-accent/10 text-accent border-accent/20">
                                         Top Rated
                                     </Badge>
                                 )}
                                 {data.badges.includes("CERTIFIED") && (
-                                    <Badge variant="secondary" className="text-[10px] bg-blue-100 text-blue-700 border-blue-200">
+                                    <Badge variant="secondary" className="text-[10px] bg-secondary/10 text-secondary border-secondary/20">
                                         Certificado
                                     </Badge>
                                 )}

@@ -61,11 +61,20 @@ export default function LoginPage() {
                 throw new Error(errorText || "Error al iniciar sesión");
             }
 
+            // Get user data from response
+            const userData = await response.json();
+
             // Force update of user context before redirecting
             await refreshUser();
 
             toast.success("¡Bienvenido de nuevo!");
-            router.push("/dashboard");
+
+            // Redirect based on role
+            if (userData.user?.role === 'ADMIN') {
+                router.push("/admin/dashboard");
+            } else {
+                router.push("/dashboard");
+            }
             router.refresh();
         } catch (error) {
             console.error(error);
@@ -82,12 +91,12 @@ export default function LoginPage() {
                 <Link href="/" className="flex items-center justify-center gap-2">
                     <div className="relative h-12 w-auto aspect-[3/1]">
                         <Image
-                            src="/logo.png"
+                            src="/logo.svg"
                             alt="Fixia Logo"
-                            width={120}
-                            height={40}
-                            className="object-contain"
-                            style={{ width: "auto", height: "auto" }}
+                            width={180}
+                            height={60}
+                            className="object-contain w-32 sm:w-40 md:w-48"
+                            style={{ height: "auto" }}
                             priority
                         />
                     </div>

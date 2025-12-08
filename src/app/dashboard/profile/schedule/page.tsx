@@ -68,7 +68,7 @@ export default function SchedulePage() {
                 <p className="text-muted-foreground">Configura tus horarios de trabajo para recibir solicitudes.</p>
             </div>
 
-            <Card className="border-blue-200 bg-blue-50 dark:bg-blue-950/20 dark:border-blue-900">
+            <Card className="border-secondary/20 bg-secondary/5 dark:bg-blue-950/20 dark:border-blue-900">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <div className="space-y-1">
                         <CardTitle className="text-base font-medium">Modo Vacaciones</CardTitle>

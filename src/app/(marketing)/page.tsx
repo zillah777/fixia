@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { motion, useScroll, useTransform, useSpring, useMotionValue, useMotionTemplate } from "framer-motion"
 import { Search, MapPin, Star, Shield, Clock, ArrowRight, CheckCircle2, Quote, Sparkles } from "lucide-react"
@@ -11,7 +12,6 @@ import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card"
 import { TestimonialsCarousel } from "@/components/testimonials-carousel"
-import { MarketplaceShowcase } from "@/components/marketplace-showcase"
 
 // 3D Tilt Card Component
 function TiltCard({ children, className, onClick }: { children: React.ReactNode, className?: string, onClick?: () => void }) {
@@ -105,11 +105,10 @@ export default function Home() {
                         transition={{ duration: 0.8, ease: "easeOut" }}
                         className="mx-auto max-w-4xl space-y-8"
                     >
-                        <Badge variant="outline" className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-full backdrop-blur-sm animate-pulse border-accent/30 bg-accent/10 text-accent font-medium text-xs sm:text-sm">
+                        <Badge variant="outline" className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-full backdrop-blur-sm border-primary/30 bg-primary/10 text-primary font-medium text-xs sm:text-sm">
                             ✨ La forma más inteligente de contratar
                         </Badge>
 
-                        {/* OPCIÓN 4: Outline Text + Shadow Depth (ACTIVA) */}
                         <motion.h1
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -117,62 +116,65 @@ export default function Home() {
                             className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tight"
                         >
                             <span className="block text-foreground mb-2 sm:mb-3 font-medium">
-                                Tu hogar,
+                                Tu vida,
                             </span>
                             <span className="block text-foreground mb-3 sm:mb-4">
                                 en buenas manos.
                             </span>
-                            <motion.span
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.3, duration: 0.8 }}
-                                className="relative inline-block"
-                                style={{
-                                    WebkitTextStroke: '2px transparent',
-                                    WebkitTextFillColor: 'transparent',
-                                    backgroundImage: 'linear-gradient(135deg, #0d9488 0%, #10b981 50%, #d4a574 100%)',
-                                    WebkitBackgroundClip: 'text',
-                                    backgroundClip: 'text',
-                                    filter: 'drop-shadow(2px 2px 0px rgba(13, 148, 136, 0.3)) drop-shadow(4px 4px 0px rgba(16, 185, 129, 0.15))',
-                                }}
-                            >
-                                Fixia
-                            </motion.span>
+                            <Image
+                                src="/logo.svg"
+                                alt="Fixia Logo"
+                                width={400}
+                                height={130}
+                                className="inline-block h-48 sm:h-64 md:h-80 w-auto object-contain -mt-4 sm:-mt-6"
+                                priority
+                            />
                         </motion.h1>
 
                         <p className="mx-auto max-w-2xl text-xl text-muted-foreground leading-relaxed">
-                            Conectamos tus necesidades con los mejores profesionales de tu zona.
-                            Sin esperas, sin complicaciones, con garantía total.
+                            Conectamos tus necesidades con los mejores profesionales verificados.
+                            Desde reparaciones hasta proyectos especiales, con garantía total.
                         </p>
 
                         {/* Floating Search Bar - Fully Responsive */}
-                        <motion.div
-                            whileHover={{ scale: 1.02, boxShadow: "0 25px 50px -12px rgba(13, 148, 136, 0.2)" }}
+                        <motion.form
+                            onSubmit={(e) => {
+                                e.preventDefault()
+                                const formData = new FormData(e.currentTarget)
+                                const query = formData.get('search') as string
+                                if (query?.trim()) {
+                                    window.location.href = `/services?q=${encodeURIComponent(query.trim())}`
+                                } else {
+                                    window.location.href = '/services'
+                                }
+                            }}
+                            whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
-                            className="mx-auto w-full max-w-2xl p-1 sm:p-1.5 bg-white dark:bg-card rounded-2xl shadow-lg shadow-primary/10 dark:shadow-primary/20 border border-border/50 backdrop-blur-sm flex items-center gap-1 sm:gap-2 transition-all duration-300"
+                            className="mx-auto w-full max-w-2xl p-1 sm:p-1.5 bg-white dark:bg-card rounded-2xl shadow-lg border border-border/50 backdrop-blur-sm flex items-center gap-1 sm:gap-2 transition-all duration-300"
                         >
                             <div className="pl-3 sm:pl-4 text-muted-foreground flex-shrink-0">
                                 <motion.div
-                                    whileHover={{ scale: 1.1, color: "hsl(152 71% 40%)" }}
+                                    whileHover={{ scale: 1.1 }}
                                     transition={{ type: "spring", stiffness: 300 }}
                                 >
                                     <Search className="h-4 w-4 sm:h-5 sm:w-5" />
                                 </motion.div>
                             </div>
                             <Input
+                                name="search"
                                 className="border-none shadow-none bg-transparent h-10 sm:h-12 text-sm sm:text-base placeholder:text-muted-foreground/60 focus-visible:ring-0 flex-1"
-                                placeholder="¿Qué necesitas arreglar?"
+                                placeholder="¿Qué servicio necesitas?"
                             />
-                            <Button size="sm" className="rounded-xl px-3 sm:px-6 text-xs sm:text-sm bg-primary text-primary-foreground hover:bg-primary/90 shadow-md shadow-primary/20 hover:shadow-lg transition-all whitespace-nowrap font-semibold flex-shrink-0 h-9 sm:h-10">
+                            <Button type="submit" size="sm" className="rounded-xl px-3 sm:px-6 text-xs sm:text-sm bg-primary text-primary-foreground hover:bg-primary/90 shadow-md transition-all whitespace-nowrap font-semibold flex-shrink-0 h-9 sm:h-10">
                                 Buscar
                             </Button>
-                        </motion.div>
+                        </motion.form>
 
                         {/* Trust Badges */}
-                        <div className="flex flex-wrap justify-center gap-4 sm:gap-6 lg:gap-8 pt-6 sm:pt-8 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
+                        <div className="flex flex-wrap justify-center gap-4 sm:gap-6 lg:gap-8 pt-6 sm:pt-8 opacity-60 hover:opacity-100 transition-all duration-500">
                             {["Profesionales Verificados", "Garantía de Calidad", "100% Confiable"].map((text, i) => (
                                 <div key={i} className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-medium">
-                                    <CheckCircle2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-green-500 flex-shrink-0" />
+                                    <CheckCircle2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-accent flex-shrink-0" />
                                     <span className="whitespace-nowrap">{text}</span>
                                 </div>
                             ))}
@@ -203,11 +205,11 @@ export default function Home() {
                                 viewport={{ once: true }}
                             >
                                 <TiltCard
-                                    className="group relative h-48 sm:h-56 lg:h-64 rounded-2xl bg-gradient-to-br from-white to-muted/30 dark:from-card dark:to-muted/20 p-6 sm:p-7 shadow-md shadow-primary/5 dark:shadow-primary/10 border border-border/40 backdrop-blur-sm hover:shadow-warm hover:border-border/80 active:shadow-warm transition-all duration-300 cursor-pointer overflow-hidden"
+                                    className="group relative h-48 sm:h-56 lg:h-64 rounded-2xl bg-gradient-to-br from-white to-muted/30 dark:from-card dark:to-muted/20 p-6 sm:p-7 shadow-md border border-border/40 backdrop-blur-sm hover:border-primary/50 transition-all duration-300 cursor-pointer overflow-hidden"
                                     onClick={() => router.push(`/services/${category.id}`)}
                                 >
                                     {/* Subtle background accent */}
-                                    <div className={`absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-br ${category.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500 rounded-full blur-2xl`} />
+                                    <div className="absolute -top-10 -right-10 w-40 h-40 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-full blur-2xl" />
 
                                     <div className="relative z-10 flex flex-col h-full justify-between">
                                         <motion.div
@@ -235,13 +237,6 @@ export default function Home() {
                             <div className="col-span-4 text-center text-muted-foreground">Cargando categorías...</div>
                         )}
                     </div>
-                </div>
-            </section>
-
-            {/* Marketplace Showcase - Beautiful Elements */}
-            <section className="py-16 sm:py-20 lg:py-28 bg-gradient-to-b from-background via-accent/2 to-background relative overflow-hidden">
-                <div className="container px-4 relative z-10">
-                    <MarketplaceShowcase />
                 </div>
             </section>
 
@@ -308,7 +303,7 @@ export default function Home() {
                         viewport={{ once: true }}
                         className="bg-aurora p-[2px] rounded-3xl inline-block w-full max-w-4xl"
                     >
-                        <div className="bg-gradient-to-b from-white/80 to-muted/40 dark:from-card/80 dark:to-card/40 rounded-3xl p-8 sm:p-12 md:p-16 lg:p-20 shadow-lg shadow-primary/10 dark:shadow-primary/20 backdrop-blur-xl border border-border/40">
+                        <div className="bg-gradient-to-b from-white/80 to-muted/40 dark:from-card/80 dark:to-card/40 rounded-3xl p-8 sm:p-12 md:p-16 lg:p-20 shadow-lg backdrop-blur-xl border border-border/40">
                             <motion.div
                                 initial={{ opacity: 0, y: 10 }}
                                 whileInView={{ opacity: 1, y: 0 }}
@@ -316,7 +311,7 @@ export default function Home() {
                                 viewport={{ once: true }}
                             >
                                 <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 tracking-tight text-foreground leading-tight">
-                                    ¿Listo para transformar tu hogar?
+                                    Soluciones expertas para cualquier necesidad
                                 </h2>
                             </motion.div>
                             <motion.p
@@ -326,7 +321,7 @@ export default function Home() {
                                 viewport={{ once: true }}
                                 className="text-base sm:text-lg md:text-xl text-muted-foreground mb-8 sm:mb-10 max-w-2xl mx-auto leading-relaxed"
                             >
-                                Únete a miles de usuarios que ya disfrutan de un servicio de calidad, rápido y seguro.
+                                Conecta con profesionales calificados para llevar a cabo tus proyectos con total confianza y seguridad.
                             </motion.p>
                             <motion.div
                                 initial={{ opacity: 0, y: 10 }}
@@ -341,9 +336,11 @@ export default function Home() {
                                     transition={{ type: "spring", stiffness: 400 }}
                                     className="w-full xs:w-auto"
                                 >
-                                    <Button size="lg" className="w-full xs:w-auto h-12 sm:h-13 lg:h-14 px-6 sm:px-8 lg:px-10 rounded-xl sm:rounded-full text-sm sm:text-base lg:text-lg bg-primary text-primary-foreground shadow-md shadow-primary/20 hover:shadow-lg hover:shadow-primary/30 transition-all font-semibold">
-                                        Comenzar Ahora
-                                    </Button>
+                                    <Link href="/become-a-pro">
+                                        <Button size="lg" className="w-full xs:w-auto h-12 sm:h-13 lg:h-14 px-6 sm:px-8 lg:px-10 rounded-xl sm:rounded-full text-sm sm:text-base lg:text-lg bg-primary text-primary-foreground shadow-md hover:shadow-lg transition-all font-semibold">
+                                            Comenzar Ahora
+                                        </Button>
+                                    </Link>
                                 </motion.div>
                                 <motion.div
                                     whileHover={{ scale: 1.05 }}
@@ -351,15 +348,17 @@ export default function Home() {
                                     transition={{ type: "spring", stiffness: 400 }}
                                     className="w-full xs:w-auto"
                                 >
-                                    <Button size="lg" variant="outline" className="w-full xs:w-auto h-12 sm:h-13 lg:h-14 px-6 sm:px-8 lg:px-10 rounded-xl sm:rounded-full text-sm sm:text-base lg:text-lg border-2 hover:bg-muted/80 font-semibold transition-all">
-                                        Ver Servicios
-                                    </Button>
+                                    <Link href="/services">
+                                        <Button size="lg" variant="outline" className="w-full xs:w-auto h-12 sm:h-13 lg:h-14 px-6 sm:px-8 lg:px-10 rounded-xl sm:rounded-full text-sm sm:text-base lg:text-lg border-2 hover:bg-muted/80 font-semibold transition-all">
+                                            Ver Servicios
+                                        </Button>
+                                    </Link>
                                 </motion.div>
                             </motion.div>
                         </div>
                     </motion.div>
                 </div>
-            </section>
-        </div>
+            </section >
+        </div >
     )
 }

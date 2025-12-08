@@ -16,8 +16,8 @@ export function SubscriptionWall() {
             >
                 {/* Left Side: Value Prop */}
                 <div className="bg-black text-white p-8 md:p-12 flex flex-col justify-between relative overflow-hidden">
-                    <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/20 rounded-full blur-3xl -mr-16 -mt-16" />
-                    <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-500/20 rounded-full blur-3xl -ml-16 -mb-16" />
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-secondary/20 rounded-full blur-3xl -mr-16 -mt-16" />
+                    <div className="absolute bottom-0 left-0 w-64 h-64 bg-secondary/20 rounded-full blur-3xl -ml-16 -mb-16" />
 
                     <div className="relative z-10">
                         <div className="h-12 w-12 bg-white/10 rounded-xl flex items-center justify-center mb-6">
@@ -30,15 +30,15 @@ export function SubscriptionWall() {
 
                         <div className="space-y-4">
                             <div className="flex items-center gap-3">
-                                <CheckCircle2 className="h-5 w-5 text-green-400 shrink-0" />
+                                <CheckCircle2 className="h-5 w-5 text-accent shrink-0" />
                                 <span>Acceso ilimitado a solicitudes</span>
                             </div>
                             <div className="flex items-center gap-3">
-                                <CheckCircle2 className="h-5 w-5 text-green-400 shrink-0" />
+                                <CheckCircle2 className="h-5 w-5 text-accent shrink-0" />
                                 <span>Perfil destacado con insignia PRO</span>
                             </div>
                             <div className="flex items-center gap-3">
-                                <CheckCircle2 className="h-5 w-5 text-green-400 shrink-0" />
+                                <CheckCircle2 className="h-5 w-5 text-accent shrink-0" />
                                 <span>0% de comisión por trabajo</span>
                             </div>
                         </div>
@@ -67,7 +67,7 @@ export function SubscriptionWall() {
 
                     <div className="space-y-4">
                         <Link href="/dashboard/subscription/checkout">
-                            <Button className="w-full h-14 text-lg font-bold bg-[#009EE3] hover:bg-[#008ED6] text-white shadow-lg shadow-blue-500/20 rounded-xl transition-all hover:scale-[1.02]">
+                            <Button className="w-full h-14 text-lg font-bold bg-secondary hover:opacity-90 text-white shadow-lg rounded-xl transition-all hover:scale-[1.02]">
                                 <Zap className="mr-2 h-5 w-5 fill-current" />
                                 Suscribirme con MercadoPago
                             </Button>

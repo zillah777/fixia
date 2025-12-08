@@ -48,12 +48,12 @@ export function SmartBudgetSuggestion({ category, onBudgetChange }: SmartBudgetS
         <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-100 shadow-sm">
             <CardContent className="p-4">
                 <div className="flex items-start gap-3 mb-4">
-                    <div className="p-2 bg-blue-100 rounded-full text-blue-600">
+                    <div className="p-2 bg-secondary/10 rounded-full text-secondary">
                         <TrendingUp className="h-4 w-4" />
                     </div>
                     <div>
                         <h4 className="text-sm font-semibold text-blue-900">Sugerencia de Presupuesto</h4>
-                        <p className="text-xs text-blue-700/80">
+                        <p className="text-xs text-secondary/80">
                             Basado en trabajos similares de {category} en tu zona.
                         </p>
                     </div>
@@ -84,7 +84,7 @@ export function SmartBudgetSuggestion({ category, onBudgetChange }: SmartBudgetS
                         className="py-2"
                     />
 
-                    <div className="flex items-center gap-2 text-xs text-blue-600 bg-blue-100/50 p-2 rounded-md">
+                    <div className="flex items-center gap-2 text-xs text-secondary bg-secondary/10/50 p-2 rounded-md">
                         <Info className="h-3 w-3 shrink-0" />
                         <span>El 80% de los trabajos se cierran en este rango.</span>
                     </div>

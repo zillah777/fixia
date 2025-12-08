@@ -10,7 +10,7 @@ interface StatCard {
     change: number
     trend: "up" | "down"
     icon: React.ReactNode
-    color: "blue" | "green" | "purple" | "amber"
+    color: "blue" | "green" | "secondary" | "amber"
 }
 
 const statsCards: StatCard[] = [
@@ -36,7 +36,7 @@ const statsCards: StatCard[] = [
         change: 8.2,
         trend: "up",
         icon: <Users className="h-5 w-5" />,
-        color: "purple",
+        color: "secondary",
     },
     {
         title: "Tiempo Promedio",
@@ -49,9 +49,9 @@ const statsCards: StatCard[] = [
 ]
 
 const colorMap = {
-    blue: "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300",
-    green: "bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300",
-    purple: "bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300",
+    blue: "bg-secondary/5 dark:bg-blue-900/20 text-secondary dark:text-blue-300",
+    green: "bg-accent/5 dark:bg-green-900/20 text-accent dark:text-accent",
+    secondary: "bg-secondary/10 dark:bg-secondary/20 text-secondary dark:text-secondary",
     amber: "bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300",
 }
 
@@ -71,11 +71,10 @@ export function StatsCards() {
                                 {stat.icon}
                             </div>
                             <div
-                                className={`flex items-center gap-1 text-sm font-semibold ${
-                                    stat.trend === "up"
-                                        ? "text-green-600 dark:text-green-400"
-                                        : "text-red-600 dark:text-red-400"
-                                }`}
+                                className={`flex items-center gap-1 text-sm font-semibold ${stat.trend === "up"
+                                    ? "text-accent dark:text-accent"
+                                    : "text-destructive dark:text-red-400"
+                                    }`}
                             >
                                 {stat.change}%
                                 {stat.trend === "up" ? (

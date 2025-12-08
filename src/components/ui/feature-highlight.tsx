@@ -16,10 +16,10 @@ interface FeatureHighlightProps {
 }
 
 const badgeColorConfig = {
-  emerald: "bg-emerald-100 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800",
+  emerald: "bg-accent/10 dark:bg-accent/30 text-accent dark:text-accent border-accent/20 dark:border-accent/30",
   amber: "bg-amber-100 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800",
   orange: "bg-orange-100 dark:bg-orange-950/50 text-orange-700 dark:text-orange-300 border-orange-200 dark:border-orange-800",
-  teal: "bg-teal-100 dark:bg-teal-950/50 text-teal-700 dark:text-teal-300 border-teal-200 dark:border-teal-800",
+  teal: "bg-accent/10 dark:bg-accent/30 text-accent dark:text-accent border-accent/20 dark:border-accent/30",
 }
 
 export function FeatureHighlight({
@@ -41,7 +41,7 @@ export function FeatureHighlight({
         "relative p-6 rounded-2xl border transition-all duration-300",
         highlighted
           ? "bg-gradient-to-br from-accent/5 to-primary/5 dark:from-accent/10 dark:to-primary/10 border-accent/50 shadow-lg shadow-accent/10"
-          : "bg-white dark:bg-card border-border/50 hover:shadow-warm hover:border-border/80",
+          : "bg-white dark:bg-card border-border/50 hover:shadow-lg hover:border-border/80",
         className
       )}
     >

@@ -6,8 +6,8 @@ import Image from "next/image"
 import { usePathname, useRouter } from "next/navigation"
 import {
     Menu,
-    Home,
-    LogOut
+    LogOut,
+    Home
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -18,9 +18,23 @@ import {
     SheetTitle,
     SheetDescription
 } from "@/components/ui/sheet"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/providers/auth-provider"
-import { sidebarItems, professionalItems } from "@/config/navigation"
+import {
+    professionalSidebarItems,
+    clientSidebarItems,
+    professionalAvatarItems,
+    clientAvatarItems,
+    subscriptionItem
+} from "@/config/navigation"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 export default function DashboardLayout({
@@ -40,23 +54,7 @@ export default function DashboardLayout({
         }
 
         // Professional Subscription Enforcement
-        if (!isLoading && user?.role === "PROFESSIONAL") {
-            const isSubscriptionPage = pathname.includes("/dashboard/subscription")
 
-            const isActive = user.subscriptionStatus === "active"
-            const isCancelledButHasTime = (
-                (user.subscriptionStatus === "cancelled" || user.subscriptionStatus === "pending_cancellation") &&
-                user.subscriptionEndsAt &&
-                new Date(user.subscriptionEndsAt) > new Date()
-            )
-
-            const hasAccess = isActive || isCancelledButHasTime
-
-            if (!isSubscriptionPage && !hasAccess) {
-                // Redirect to subscription page if no valid subscription
-                router.replace("/dashboard/subscription")
-            }
-        }
     }, [user, isLoading, router, pathname])
 
     if (isLoading) {
@@ -67,13 +65,13 @@ export default function DashboardLayout({
         <div className="flex min-h-screen bg-background">
             {/* Mobile Header */}
             <div className="md:hidden fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-4 bg-background/80 backdrop-blur-md border-b">
-                <div className="relative h-8 w-24">
+                <div className="relative h-12 w-32">
                     <Image
-                        src="/logo.png"
+                        src="/logo.svg"
                         alt="Fixia Logo"
                         fill
                         className="object-contain"
-                        sizes="96px"
+                        sizes="128px"
                     />
                 </div>
                 <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -88,32 +86,53 @@ export default function DashboardLayout({
                             <SheetDescription>Navegación principal del panel de control</SheetDescription>
                         </SheetHeader>
                         <div className="p-8">
-                            <div className="relative h-8 w-32 mb-6">
+                            <div className="relative h-14 w-40 mb-6">
                                 <Image
-                                    src="/logo.png"
+                                    src="/logo.svg"
                                     alt="Fixia Logo"
                                     fill
                                     className="object-contain"
-                                    sizes="128px"
+                                    sizes="160px"
                                 />
                             </div>
                             {user && (
-                                <div className="mt-4 flex items-center gap-3">
-                                    <Avatar className="h-10 w-10 border border-border">
-                                        <AvatarImage src={user.avatar || undefined} alt={user.name || "User"} className="object-cover" />
-                                        <AvatarFallback className="bg-muted text-gray-500 font-medium">
-                                            {user.name?.substring(0, 2).toUpperCase() || "US"}
-                                        </AvatarFallback>
-                                    </Avatar>
-                                    <div className="flex flex-col">
-                                        <span className="font-medium text-sm">{user.name}</span>
-                                        <span className="text-xs text-muted-foreground truncate max-w-[150px]">{user.email}</span>
-                                    </div>
-                                </div>
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <div className="mt-4 flex items-center gap-3 cursor-pointer hover:bg-muted/50 p-2 rounded-lg transition-colors">
+                                            <Avatar className="h-10 w-10 border border-border">
+                                                <AvatarImage src={user.avatar || undefined} alt={user.name || "User"} className="object-cover" />
+                                                <AvatarFallback className="bg-muted text-gray-500 font-medium">
+                                                    {user.name?.substring(0, 2).toUpperCase() || "US"}
+                                                </AvatarFallback>
+                                            </Avatar>
+                                            <div className="flex flex-col">
+                                                <span className="font-medium text-sm">{user.name}</span>
+                                                <span className="text-xs text-muted-foreground truncate max-w-[150px]">{user.email}</span>
+                                            </div>
+                                        </div>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="start" className="w-56">
+                                        <DropdownMenuLabel>Mi Cuenta</DropdownMenuLabel>
+                                        <DropdownMenuSeparator />
+                                        {(user.role === "PROFESSIONAL" ? professionalAvatarItems : clientAvatarItems).map((item) => (
+                                            <DropdownMenuItem key={item.href} asChild>
+                                                <Link href={item.href} onClick={() => setIsOpen(false)} className="flex items-center gap-2 cursor-pointer">
+                                                    <item.icon className="h-4 w-4" />
+                                                    {item.label}
+                                                </Link>
+                                            </DropdownMenuItem>
+                                        ))}
+                                        <DropdownMenuSeparator />
+                                        <DropdownMenuItem onClick={() => logout()} className="text-destructive cursor-pointer">
+                                            <LogOut className="h-4 w-4 mr-2" />
+                                            Cerrar Sesión
+                                        </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
                             )}
                         </div>
                         <nav className="flex flex-col px-4 gap-2">
-                            {sidebarItems.map((item) => (
+                            {(user?.role === "PROFESSIONAL" ? professionalSidebarItems : clientSidebarItems).map((item) => (
                                 <Link
                                     key={item.href}
                                     href={item.href}
@@ -129,22 +148,23 @@ export default function DashboardLayout({
                                     {item.label}
                                 </Link>
                             ))}
-                            {user?.role === "PROFESSIONAL" && professionalItems.map((item) => (
-                                <Link
-                                    key={item.href}
-                                    href={item.href}
-                                    onClick={() => setIsOpen(false)}
-                                    className={cn(
-                                        "flex items-center gap-4 px-4 py-3 rounded-2xl text-sm font-medium transition-all duration-200",
-                                        pathname === item.href
-                                            ? "bg-black text-white shadow-lg shadow-black/20 scale-[1.02]"
-                                            : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                                    )}
-                                >
-                                    <item.icon className="h-5 w-5" />
-                                    {item.label}
-                                </Link>
-                            ))}
+                            {/* Conditional Subscription Item */}
+                            {((user?.role === "PROFESSIONAL" && user?.subscriptionStatus !== "active") ||
+                                (user?.role === "CLIENT")) && (
+                                    <Link
+                                        href={subscriptionItem.href}
+                                        onClick={() => setIsOpen(false)}
+                                        className={cn(
+                                            "flex items-center gap-4 px-4 py-3 rounded-2xl text-sm font-medium transition-all duration-200",
+                                            pathname === subscriptionItem.href
+                                                ? "bg-black text-white shadow-lg shadow-black/20 scale-[1.02]"
+                                                : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                                        )}
+                                    >
+                                        <subscriptionItem.icon className="h-5 w-5" />
+                                        {subscriptionItem.label}
+                                    </Link>
+                                )}
                             <div className="my-4 border-t border-border/50" />
                             <Link href="/" onClick={() => setIsOpen(false)}>
                                 <Button variant="ghost" className="w-full justify-start gap-4 px-4 rounded-2xl h-12 text-muted-foreground hover:text-foreground">
@@ -154,7 +174,7 @@ export default function DashboardLayout({
                             </Link>
                             <Button
                                 variant="ghost"
-                                className="w-full justify-start gap-4 px-4 rounded-2xl h-12 text-red-500 hover:text-red-600 hover:bg-red-50"
+                                className="w-full justify-start gap-4 px-4 rounded-2xl h-12 text-destructive hover:text-destructive hover:bg-destructive/5"
                                 onClick={() => logout()}
                             >
                                 <LogOut className="h-5 w-5" />
@@ -170,13 +190,13 @@ export default function DashboardLayout({
                 <div className="flex flex-col h-full bg-white rounded-[2rem] shadow-xl shadow-black/5 border border-border/50 overflow-hidden">
                     <div className="p-8 pb-4">
                         <Link href="/" className="flex items-center gap-2 mb-8">
-                            <div className="relative h-8 w-auto aspect-[3/1]">
+                            <div className="relative h-12 w-auto aspect-[3/1]">
                                 <Image
-                                    src="/logo.png"
+                                    src="/logo.svg"
                                     alt="Fixia Logo"
                                     fill
                                     className="object-contain"
-                                    sizes="96px"
+                                    sizes="128px"
                                 />
                             </div>
                         </Link>
@@ -184,18 +204,39 @@ export default function DashboardLayout({
 
 
                         {user && (
-                            <div className="mb-6 flex items-center gap-3 p-3 rounded-xl bg-gray-50 border border-border/50">
-                                <Avatar className="h-10 w-10 border border-border">
-                                    <AvatarImage src={user.avatar || undefined} alt={user.name || "User"} className="object-cover" />
-                                    <AvatarFallback className="bg-white text-gray-500 font-medium">
-                                        {user.name?.substring(0, 2).toUpperCase() || "US"}
-                                    </AvatarFallback>
-                                </Avatar>
-                                <div className="flex flex-col min-w-0">
-                                    <span className="font-semibold text-sm truncate">{user.name}</span>
-                                    <span className="text-xs text-muted-foreground truncate">{user.role === 'PROFESSIONAL' ? 'Profesional' : 'Cliente'}</span>
-                                </div>
-                            </div>
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <div className="mb-6 flex items-center gap-3 p-3 rounded-xl bg-gray-50 border border-border/50 cursor-pointer hover:bg-gray-100 transition-colors">
+                                        <Avatar className="h-10 w-10 border border-border">
+                                            <AvatarImage src={user.avatar || undefined} alt={user.name || "User"} className="object-cover" />
+                                            <AvatarFallback className="bg-white text-gray-500 font-medium">
+                                                {user.name?.substring(0, 2).toUpperCase() || "US"}
+                                            </AvatarFallback>
+                                        </Avatar>
+                                        <div className="flex flex-col min-w-0">
+                                            <span className="font-semibold text-sm truncate">{user.name}</span>
+                                            <span className="text-xs text-muted-foreground truncate">{user.role === 'PROFESSIONAL' ? 'Profesional' : 'Cliente'}</span>
+                                        </div>
+                                    </div>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="start" className="w-56">
+                                    <DropdownMenuLabel>Mi Cuenta</DropdownMenuLabel>
+                                    <DropdownMenuSeparator />
+                                    {(user.role === "PROFESSIONAL" ? professionalAvatarItems : clientAvatarItems).map((item) => (
+                                        <DropdownMenuItem key={item.href} asChild>
+                                            <Link href={item.href} className="flex items-center gap-2 cursor-pointer">
+                                                <item.icon className="h-4 w-4" />
+                                                {item.label}
+                                            </Link>
+                                        </DropdownMenuItem>
+                                    ))}
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem onClick={() => logout()} className="text-destructive cursor-pointer">
+                                        <LogOut className="h-4 w-4 mr-2" />
+                                        Cerrar Sesión
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
                         )}
 
                         <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-4 px-2">
@@ -204,7 +245,7 @@ export default function DashboardLayout({
                     </div>
 
                     <nav className="flex-1 px-4 space-y-2 overflow-y-auto">
-                        {sidebarItems.map((item) => (
+                        {(user?.role === "PROFESSIONAL" ? professionalSidebarItems : clientSidebarItems).map((item) => (
                             <Link
                                 key={item.href}
                                 href={item.href}
@@ -219,27 +260,28 @@ export default function DashboardLayout({
                                 {item.label}
                             </Link>
                         ))}
-                        {user?.role === "PROFESSIONAL" && professionalItems.map((item) => (
-                            <Link
-                                key={item.href}
-                                href={item.href}
-                                className={cn(
-                                    "flex items-center gap-3 px-4 py-3.5 rounded-2xl text-sm font-medium transition-all duration-200 group",
-                                    pathname === item.href
-                                        ? "bg-black text-white shadow-lg shadow-black/25 translate-x-1"
-                                        : "text-muted-foreground hover:bg-gray-100 hover:text-foreground hover:translate-x-1"
-                                )}
-                            >
-                                <item.icon className={cn("h-5 w-5 transition-transform group-hover:scale-110", pathname === item.href ? "text-white" : "text-muted-foreground group-hover:text-foreground")} />
-                                {item.label}
-                            </Link>
-                        ))}
+                        {/* Conditional Subscription Item */}
+                        {((user?.role === "PROFESSIONAL" && user?.subscriptionStatus !== "active") ||
+                            (user?.role === "CLIENT")) && (
+                                <Link
+                                    href={subscriptionItem.href}
+                                    className={cn(
+                                        "flex items-center gap-3 px-4 py-3.5 rounded-2xl text-sm font-medium transition-all duration-200 group",
+                                        pathname === subscriptionItem.href
+                                            ? "bg-black text-white shadow-lg shadow-black/25 translate-x-1"
+                                            : "text-muted-foreground hover:bg-gray-100 hover:text-foreground hover:translate-x-1"
+                                    )}
+                                >
+                                    <subscriptionItem.icon className={cn("h-5 w-5 transition-transform group-hover:scale-110", pathname === subscriptionItem.href ? "text-white" : "text-muted-foreground group-hover:text-foreground")} />
+                                    {subscriptionItem.label}
+                                </Link>
+                            )}
                     </nav>
 
                     <div className="p-4 mt-auto border-t border-border/50 bg-gray-50/50">
                         <Button
                             variant="ghost"
-                            className="w-full justify-start gap-3 text-red-500 hover:text-red-600 hover:bg-red-50 rounded-xl h-11"
+                            className="w-full justify-start gap-3 text-destructive hover:text-destructive hover:bg-destructive/5 rounded-xl h-11"
                             onClick={() => logout()}
                         >
                             <LogOut className="h-4 w-4" />

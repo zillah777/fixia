@@ -25,19 +25,19 @@ export default function PricingPage() {
                         <div className="text-4xl font-bold mb-6">Gratis</div>
                         <ul className="space-y-3">
                             <li className="flex items-center gap-2">
-                                <Check className="h-5 w-5 text-green-500" />
+                                <Check className="h-5 w-5 text-accent" />
                                 <span>Publicar solicitudes ilimitadas</span>
                             </li>
                             <li className="flex items-center gap-2">
-                                <Check className="h-5 w-5 text-green-500" />
+                                <Check className="h-5 w-5 text-accent" />
                                 <span>Ver perfiles de profesionales</span>
                             </li>
                             <li className="flex items-center gap-2">
-                                <Check className="h-5 w-5 text-green-500" />
+                                <Check className="h-5 w-5 text-accent" />
                                 <span>Chat directo con profesionales</span>
                             </li>
                             <li className="flex items-center gap-2">
-                                <Check className="h-5 w-5 text-green-500" />
+                                <Check className="h-5 w-5 text-accent" />
                                 <span>Sistema de reseñas y calificaciones</span>
                             </li>
                         </ul>

@@ -36,10 +36,11 @@ const formSchema = z.object({
 interface ReviewDialogProps {
     matchId: string
     targetName: string
+    targetId?: string
     trigger?: React.ReactNode
 }
 
-export function ReviewDialog({ matchId, targetName, trigger }: ReviewDialogProps) {
+export function ReviewDialog({ matchId, targetName, targetId, trigger }: ReviewDialogProps) {
     const [open, setOpen] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const [hoverRating, setHoverRating] = useState(0)
@@ -55,15 +56,49 @@ export function ReviewDialog({ matchId, targetName, trigger }: ReviewDialogProps
     async function onSubmit(values: z.infer<typeof formSchema>) {
         setIsLoading(true)
         try {
-            // Simulate API call
-            await new Promise((resolve) => setTimeout(resolve, 1500))
+            let reviewTargetId = targetId
 
-            console.log("Review submitted:", { matchId, ...values })
-            toast.success("Reseña enviada exitosamente")
+            // Only fetch match data if targetId not provided
+            if (!reviewTargetId) {
+                const matchRes = await fetch(`/api/matches/${matchId}`)
+                if (!matchRes.ok) {
+                    throw new Error("No se pudo obtener información del match")
+                }
+                const matchData = await matchRes.json()
+                reviewTargetId = matchData.providerId === matchData.currentUserId
+                    ? matchData.clientId
+                    : matchData.providerId
+            }
+
+            // Submit review
+            const res = await fetch("/api/reviews", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    matchId,
+                    targetId: reviewTargetId,
+                    score: values.rating,
+                    comment: values.comment,
+                }),
+            })
+
+            if (!res.ok) {
+                const error = await res.json()
+                throw new Error(error.error || "Error al enviar la reseña")
+            }
+
+            toast.success("¡Reseña enviada exitosamente!", {
+                description: "Gracias por compartir tu experiencia"
+            })
             setOpen(false)
             form.reset()
-        } catch (error) {
-            toast.error("Error al enviar la reseña")
+
+            // Refresh page to update UI
+            window.location.reload()
+
+        } catch (error: any) {
+            console.error(error)
+            toast.error(error.message || "Error al enviar la reseña")
         } finally {
             setIsLoading(false)
         }

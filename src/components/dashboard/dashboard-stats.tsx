@@ -23,13 +23,13 @@ const revenueData = [
 ]
 
 const categoryData = [
-    { name: "Plomería", value: 35, color: "#3b82f6" },
-    { name: "Electricidad", value: 25, color: "#f59e0b" },
-    { name: "Limpieza", value: 25, color: "#10b981" },
-    { name: "Otros", value: 15, color: "#8b5cf6" },
+    { name: "Plomería", value: 35, color: "#6a9bcc" },
+    { name: "Electricidad", value: 25, color: "#d97757" },
+    { name: "Limpieza", value: 25, color: "#788c5d" },
+    { name: "Otros", value: 15, color: "#b0aea5" },
 ]
 
-const COLORS = ["#3b82f6", "#f59e0b", "#10b981", "#8b5cf6"]
+const COLORS = ["#d97757", "#6a9bcc", "#788c5d", "#b0aea5"]
 
 export function DashboardStats() {
     return (
@@ -48,8 +48,8 @@ export function DashboardStats() {
                             <YAxis />
                             <Tooltip />
                             <Legend />
-                            <Bar dataKey="completed" fill="#10b981" name="Completados" />
-                            <Bar dataKey="pending" fill="#f59e0b" name="Pendientes" />
+                            <Bar dataKey="completed" fill="#788c5d" name="Completados" />
+                            <Bar dataKey="pending" fill="#d97757" name="Pendientes" />
                         </BarChart>
                     </ResponsiveContainer>
                 </CardContent>
@@ -66,12 +66,12 @@ export function DashboardStats() {
                         <AreaChart data={revenueData}>
                             <defs>
                                 <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
-                                    <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                                    <stop offset="5%" stopColor="#6a9bcc" stopOpacity={0.3} />
+                                    <stop offset="95%" stopColor="#6a9bcc" stopOpacity={0} />
                                 </linearGradient>
                                 <linearGradient id="colorExpenses" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor="#ef4444" stopOpacity={0.3} />
-                                    <stop offset="95%" stopColor="#ef4444" stopOpacity={0} />
+                                    <stop offset="5%" stopColor="#d97757" stopOpacity={0.3} />
+                                    <stop offset="95%" stopColor="#d97757" stopOpacity={0} />
                                 </linearGradient>
                             </defs>
                             <CartesianGrid strokeDasharray="3 3" />
@@ -82,7 +82,7 @@ export function DashboardStats() {
                             <Area
                                 type="monotone"
                                 dataKey="revenue"
-                                stroke="#3b82f6"
+                                stroke="#6a9bcc"
                                 fillOpacity={1}
                                 fill="url(#colorRevenue)"
                                 name="Ingresos"
@@ -90,7 +90,7 @@ export function DashboardStats() {
                             <Area
                                 type="monotone"
                                 dataKey="expenses"
-                                stroke="#ef4444"
+                                stroke="#d97757"
                                 fillOpacity={1}
                                 fill="url(#colorExpenses)"
                                 name="Gastos"
@@ -116,7 +116,7 @@ export function DashboardStats() {
                                 labelLine={false}
                                 label={({ name, percent = 0 }) => `${name} ${(typeof percent === 'number' ? percent * 100 : 0).toFixed(0)}%`}
                                 outerRadius={80}
-                                fill="#8884d8"
+                                fill="#6a9bcc"
                                 dataKey="value"
                             >
                                 {categoryData.map((entry, index) => (

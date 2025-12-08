@@ -124,7 +124,7 @@ export function ProposalDialog({ requestId, requestTitle, trigger }: ProposalDia
                                         <FormLabel className="text-sm font-medium">Mensaje</FormLabel>
                                         <span className={`text-xs ${
                                             messageLength > MAX_MESSAGE_LENGTH - 50
-                                                ? "text-red-500"
+                                                ? "text-destructive"
                                                 : messageLength > MAX_MESSAGE_LENGTH - 100
                                                 ? "text-amber-500"
                                                 : "text-muted-foreground"

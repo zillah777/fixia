@@ -2,6 +2,7 @@
 
 import { useState, Suspense } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { useRouter, useSearchParams } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -27,6 +28,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Calendar } from "@/components/ui/calendar"
+import { DatePickerSelect } from "@/components/ui/date-picker-select"
 import { cn } from "@/lib/utils"
 
 const formSchema = z.object({
@@ -114,8 +116,21 @@ function RegisterForm() {
     }
 
     return (
-        <div className="flex min-h-screen items-center justify-center bg-muted/50 p-4">
-            <Card className="w-full max-w-md my-8">
+        <div className="flex min-h-screen items-center justify-center flex-col bg-muted/50 p-4">
+            <Link href="/" className="flex items-center justify-center gap-2 mb-8">
+                <div className="relative h-12 sm:h-14 md:h-16 w-auto aspect-[3/1]">
+                    <Image
+                        src="/logo.svg"
+                        alt="Fixia Logo"
+                        width={180}
+                        height={60}
+                        className="object-contain"
+                        style={{ width: "auto", height: "auto" }}
+                        priority
+                    />
+                </div>
+            </Link>
+            <Card className="w-full max-w-md">
                 <CardHeader className="space-y-1">
                     <CardTitle className="text-2xl font-bold">Crear Cuenta</CardTitle>
                     <CardDescription>
@@ -178,7 +193,7 @@ function RegisterForm() {
                                 )}
                             />
 
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <FormField
                                     control={form.control}
                                     name="dni"
@@ -196,44 +211,45 @@ function RegisterForm() {
                                     control={form.control}
                                     name="birthdate"
                                     render={({ field }) => (
-                                        <FormItem className="flex flex-col">
-                                            <FormLabel className="mb-1.5 mt-0.5">Fecha de Nacimiento</FormLabel>
-                                            <Popover>
-                                                <PopoverTrigger asChild>
-                                                    <FormControl>
-                                                        <Button
-                                                            variant={"outline"}
-                                                            className={cn(
-                                                                "w-full pl-3 text-left font-normal",
-                                                                !field.value && "text-muted-foreground"
-                                                            )}
-                                                        >
-                                                            {field.value ? (
-                                                                format(field.value, "PPP", { locale: es })
-                                                            ) : (
-                                                                <span>Seleccionar</span>
-                                                            )}
-                                                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                                        </Button>
-                                                    </FormControl>
-                                                </PopoverTrigger>
-                                                <PopoverContent className="w-auto p-0" align="start">
-                                                    <Calendar
-                                                        mode="single"
-                                                        selected={field.value}
-                                                        onSelect={field.onChange}
-                                                        disabled={(date) =>
-                                                            date > new Date() || date < new Date("1900-01-01")
-                                                        }
-                                                        initialFocus
-                                                        captionLayout="dropdown-buttons"
-                                                        fromYear={1900}
-                                                        toYear={new Date().getFullYear()}
-                                                    />
-                                                </PopoverContent>
-                                            </Popover>
-                                            <FormMessage />
-                                        </FormItem>
+                                        <Popover>
+                                            <PopoverTrigger asChild>
+                                                <FormControl>
+                                                    <Button
+                                                        variant={"outline"}
+                                                        className={cn(
+                                                            "w-full pl-3 text-left font-normal",
+                                                            !field.value && "text-muted-foreground"
+                                                        )}
+                                                    >
+                                                        {field.value ? (
+                                                            format(field.value, "PPP", { locale: es })
+                                                        ) : (
+                                                            <span>Fecha de nacimiento</span>
+                                                        )}
+                                                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                    </Button>
+                                                </FormControl>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="w-auto p-0" align="start">
+                                                <Calendar
+                                                    mode="single"
+                                                    selected={field.value}
+                                                    onSelect={field.onChange}
+                                                    disabled={(date) =>
+                                                        date > new Date() || date < new Date("1900-01-01")
+                                                    }
+                                                    initialFocus
+                                                    captionLayout="dropdown-buttons"
+                                                    fromYear={1900}
+                                                    toYear={new Date().getFullYear()}
+                                                    classNames={{
+                                                        caption_dropdowns: "flex justify-center gap-1",
+                                                        dropdown_month: "flex [&>span]:hidden",
+                                                        dropdown_year: "flex [&>span]:hidden",
+                                                    }}
+                                                />
+                                            </PopoverContent>
+                                        </Popover>
                                     )}
                                 />
                             </div>

@@ -39,10 +39,10 @@ export default function CheckoutPage() {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
                 <Card className="w-full max-w-md border-none shadow-xl text-center overflow-hidden">
-                    <div className="bg-green-500 h-2 w-full" />
+                    <div className="bg-accent h-2 w-full" />
                     <CardContent className="pt-12 pb-12 px-8">
-                        <div className="mx-auto w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-6">
-                            <CheckCircle2 className="h-10 w-10 text-green-600" />
+                        <div className="mx-auto w-20 h-20 bg-accent/10 rounded-full flex items-center justify-center mb-6">
+                            <CheckCircle2 className="h-10 w-10 text-accent" />
                         </div>
                         <h2 className="text-2xl font-bold text-gray-900 mb-2">¡Pago Confirmado!</h2>
                         <p className="text-gray-500 mb-8">
@@ -86,7 +86,7 @@ export default function CheckoutPage() {
                         </div>
 
                         <div className="p-4 border border-gray-200 rounded-xl flex items-center gap-4 cursor-pointer hover:border-[#009EE3] transition-colors bg-white opacity-60">
-                            <div className="h-6 w-10 bg-red-600 rounded flex items-center justify-center text-[8px] text-white font-bold">MAST</div>
+                            <div className="h-6 w-10 bg-destructive rounded flex items-center justify-center text-[8px] text-white font-bold">MAST</div>
                             <div className="flex-1">
                                 <p className="text-sm font-medium">Mastercard **** 5678</p>
                             </div>

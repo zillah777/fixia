@@ -71,7 +71,7 @@ export function ServiceCard({
     isPremium = false,
 }: ServiceCardProps) {
     return (
-        <Card className="overflow-hidden group hover:shadow-warm transition-all duration-300 border-border/50 flex flex-col h-full bg-white dark:bg-card">
+        <Card className="overflow-hidden group hover:shadow-lg transition-all duration-300 border-border/50 flex flex-col h-full bg-white dark:bg-card">
             {/* Image Container */}
             <div className="relative aspect-video overflow-hidden bg-gradient-to-br from-muted to-muted/50">
                 <Image

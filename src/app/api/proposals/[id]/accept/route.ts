@@ -57,11 +57,18 @@ export async function PATCH(
                     clientId: user.id,
                     providerId: proposal.providerId,
                     isCompleted: false
-                    // whatsappRevealedAt can be set here or later. Logic implies it's revealed upon match.
                 }
             })
 
-            // 4. (Optional) Reject other proposals? Keeping them PENDING for now.
+            // 4. Notify the professional
+            await tx.notification.create({
+                data: {
+                    userId: proposal.providerId,
+                    type: "PROPOSAL_ACCEPTED",
+                    message: `¡Tu propuesta para "${proposal.request.title}" fue aceptada! Ya puedes coordinar con el cliente.`,
+                    actionUrl: `/dashboard/matches/${match.id}`
+                }
+            })
 
             return match
         })

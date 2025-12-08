@@ -49,7 +49,7 @@ export function Navbar() {
                 className={`sticky top-4 z-50 w-[95%] max-w-7xl mx-auto rounded-full border bg-background/70 backdrop-blur-xl supports-[backdrop-filter]:bg-background/40 transition-all duration-200 ${isScrolled ? "shadow-lg shadow-primary/5" : ""
                     }`}
             >
-                <div className="container flex h-16 items-center justify-between">
+                <div className="container flex h-20 md:h-24 items-center justify-between">
                     <div className="flex items-center gap-6 flex-1">
                         <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
                             <SheetTrigger asChild>
@@ -64,50 +64,95 @@ export function Navbar() {
                                     <SheetDescription>Menú principal para navegar por la aplicación Fixia</SheetDescription>
                                 </SheetHeader>
                                 <nav className="flex flex-col gap-4 mt-8">
-                                    {/* Mobile Search */}
-                                    <div className="relative mb-2">
-                                        <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                                        <Input
-                                            placeholder="Buscar servicios..."
-                                            className="pl-9 h-11"
-                                        />
-                                    </div>
+                                    {/* User Info or Login */}
+                                    {user ? (
+                                        <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg mb-2">
+                                            <Avatar className="h-10 w-10">
+                                                <AvatarImage
+                                                    src={user.avatar || user.image || `https://ui-avatars.com/api/?name=${user.name}&background=random`}
+                                                    alt={user.name || "User"}
+                                                />
+                                                <AvatarFallback>{user.name?.charAt(0) || "U"}</AvatarFallback>
+                                            </Avatar>
+                                            <div className="flex-1 min-w-0">
+                                                <p className="text-sm font-semibold truncate">{user.name}</p>
+                                                <p className="text-xs text-muted-foreground">
+                                                    {user.role === 'PROFESSIONAL' ? 'Profesional' : 'Cliente'}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <Link href="/login" className="text-lg font-semibold" onClick={closeSheet}>
+                                            Iniciar Sesión
+                                        </Link>
+                                    )}
+
+                                    {/* Services - Always visible */}
                                     <Link href="/services" className="text-lg font-semibold" onClick={closeSheet}>
                                         Servicios
                                     </Link>
+
+                                    {/* Professionals - Always visible */}
                                     <Link href="/professionals" className="text-lg font-semibold" onClick={closeSheet}>
                                         Profesionales
                                     </Link>
-                                    <Link href="/offers" className="text-lg font-semibold" onClick={closeSheet}>
-                                        Ofertas
-                                    </Link>
-                                    <Link href="/opportunities" className="text-lg font-semibold" onClick={closeSheet}>
-                                        Oportunidades
-                                    </Link>
+
+                                    {/* Opportunities - Only for PROFESSIONAL */}
+                                    {user?.role === 'PROFESSIONAL' && (
+                                        <Link href="/dashboard/opportunities" className="text-lg font-semibold" onClick={closeSheet}>
+                                            Oportunidades
+                                        </Link>
+                                    )}
+
+                                    {/* My Services - Only for PROFESSIONAL */}
+                                    {user?.role === 'PROFESSIONAL' && (
+                                        <Link href="/dashboard/services" className="text-lg font-semibold" onClick={closeSheet}>
+                                            Servicios Publicados
+                                        </Link>
+                                    )}
+
+                                    {/* Plans - Only for CLIENT or not logged in */}
+                                    {(!user || user.role === 'CLIENT') && (
+                                        <Link href="/pricing" className="text-lg font-semibold" onClick={closeSheet}>
+                                            Planes
+                                        </Link>
+                                    )}
+
+                                    {/* Join Fixia - Only if not logged in or is CLIENT */}
                                     {(!user || user.role === 'CLIENT') && (
                                         <Link href="/become-a-pro" className="w-full" onClick={closeSheet}>
-                                            <Button className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold shadow-lg shadow-green-500/30">
+                                            <Button className="w-full">
                                                 Únete a Fixia
                                             </Button>
                                         </Link>
                                     )}
-                                    <Link href="/pricing" className="text-lg font-semibold" onClick={closeSheet}>
-                                        Planes
-                                    </Link>
-                                    <Link href="/login" className="text-lg font-semibold" onClick={closeSheet}>
-                                        Iniciar Sesión
-                                    </Link>
+
+                                    {/* Logout - Only if logged in */}
+                                    {user && (
+                                        <>
+                                            <div className="border-t my-2" />
+                                            <button
+                                                onClick={() => {
+                                                    logout()
+                                                    closeSheet()
+                                                }}
+                                                className="text-lg font-semibold text-destructive text-left"
+                                            >
+                                                Cerrar Sesión
+                                            </button>
+                                        </>
+                                    )}
                                 </nav>
                             </SheetContent>
                         </Sheet>
 
                         <Link href="/" className="flex items-center gap-2 flex-shrink-0">
                             <Image
-                                src="/logo.png"
+                                src="/logo.svg"
                                 alt="Fixia Logo"
-                                width={48}
-                                height={48}
-                                className="h-12 w-12 object-contain"
+                                width={180}
+                                height={60}
+                                className="h-16 md:h-20 w-auto object-contain"
                                 priority
                             />
                         </Link>
@@ -127,13 +172,24 @@ export function Navbar() {
 
                         {/* Desktop Search Bar */}
                         <div className="hidden lg:flex items-center gap-2 mr-4">
-                            <div className="relative w-56">
-                                <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                            <form
+                                onSubmit={(e) => {
+                                    e.preventDefault()
+                                    const formData = new FormData(e.currentTarget)
+                                    const query = formData.get('search') as string
+                                    if (query?.trim()) {
+                                        window.location.href = `/services?q=${encodeURIComponent(query.trim())}`
+                                    }
+                                }}
+                                className="relative w-56"
+                            >
+                                <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground pointer-events-none" />
                                 <Input
+                                    name="search"
                                     placeholder="Buscar servicios..."
                                     className="pl-9 h-9 text-sm rounded-full bg-background/60"
                                 />
-                            </div>
+                            </form>
                         </div>
 
                     </div>
@@ -243,7 +299,7 @@ export function Navbar() {
                                 Iniciar Sesión
                             </Link>
                             <Link href="/register">
-                                <Button size="sm" className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold shadow-lg shadow-green-500/30">
+                                <Button size="sm" className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold shadow-lg shadow-primary/20">
                                     Únete a Fixia
                                 </Button>
                             </Link>

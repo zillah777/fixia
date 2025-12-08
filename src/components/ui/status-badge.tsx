@@ -24,9 +24,9 @@ const statusConfig = {
     icon: CheckCircle2,
     label: "Activo",
     color: "text-emerald-600 dark:text-emerald-400",
-    bgColor: "bg-emerald-50 dark:bg-emerald-950/30",
-    borderColor: "border-emerald-200 dark:border-emerald-800",
-    dotColor: "bg-emerald-500",
+    bgColor: "bg-accent/5 dark:bg-accent/20",
+    borderColor: "border-accent/20 dark:border-accent/30",
+    dotColor: "bg-accent/50",
   },
   pending: {
     icon: Clock,
@@ -47,10 +47,10 @@ const statusConfig = {
   error: {
     icon: XCircle,
     label: "Error",
-    color: "text-red-600 dark:text-red-400",
-    bgColor: "bg-red-50 dark:bg-red-950/30",
-    borderColor: "border-red-200 dark:border-red-800",
-    dotColor: "bg-red-500",
+    color: "text-destructive dark:text-red-400",
+    bgColor: "bg-destructive/5 dark:bg-red-950/30",
+    borderColor: "border-destructive/20 dark:border-red-800",
+    dotColor: "bg-destructive",
   },
   paused: {
     icon: Pause,

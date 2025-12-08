@@ -62,9 +62,9 @@ export default function ProfilePage() {
                     </Avatar>
                     <div className="absolute bottom-0 right-0 bg-white rounded-full p-1 border-4 border-transparent shadow-sm">
                         {(profile?.verificationRequest?.status === 'APPROVED' || user?.role === 'PROFESSIONAL') ? (
-                            <CheckCircle2 className="h-6 w-6 text-blue-500 fill-white" />
+                            <CheckCircle2 className="h-6 w-6 text-secondary fill-white" />
                         ) : (
-                            <div className="bg-green-500 h-4 w-4 rounded-full border-2 border-white" />
+                            <div className="bg-accent h-4 w-4 rounded-full border-2 border-white" />
                         )}
                     </div>
                 </div>
@@ -73,7 +73,11 @@ export default function ProfilePage() {
                     <p className="text-muted-foreground">Miembro desde {new Date(user?.createdAt || Date.now()).getFullYear()}</p>
                     <div className="flex items-center gap-2 mt-2">
                         <MapPin className="h-4 w-4 text-muted-foreground" />
-                        <span className="text-sm text-muted-foreground">Buenos Aires, Argentina</span>
+                        <span className="text-sm text-muted-foreground">
+                            {profile?.profile?.locationLat && profile?.profile?.locationLng
+                                ? (profile?.profile?.city || "Buenos Aires") + ", Argentina"
+                                : "Ubicación no especificada"}
+                        </span>
                     </div>
                 </div>
                 <div className="ml-auto">
@@ -107,7 +111,7 @@ export default function ProfilePage() {
                                     <p className="text-xs text-muted-foreground">Te falta agregar:</p>
                                     <ul className="space-y-1">
                                         {!profile?.dni && (
-                                            <li className="flex items-center text-xs text-red-500">
+                                            <li className="flex items-center text-xs text-destructive">
                                                 <AlertCircle className="mr-2 h-3 w-3" />
                                                 <Link href="/dashboard/settings?tab=verification" className="hover:underline">
                                                     Verificar Identidad
@@ -135,8 +139,8 @@ export default function ProfilePage() {
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div className="flex items-center gap-3">
-                                <div className="bg-green-100 p-2 rounded-full">
-                                    <CheckCircle2 className="h-4 w-4 text-green-600" />
+                                <div className="bg-accent/10 p-2 rounded-full">
+                                    <CheckCircle2 className="h-4 w-4 text-accent" />
                                 </div>
                                 <div>
                                     <p className="text-sm font-medium">Email Verificado</p>
@@ -146,11 +150,11 @@ export default function ProfilePage() {
                             {/* Dynamic Verification Badge */}
                             {(profile?.verificationRequest?.status === 'APPROVED' || user?.role === 'PROFESSIONAL' && profile?.profile?.badges?.includes('VERIFIED')) ? (
                                 <div className="flex items-center gap-3">
-                                    <div className="bg-blue-100 p-2 rounded-full">
-                                        <Shield className="h-4 w-4 text-blue-600" />
+                                    <div className="bg-secondary/10 p-2 rounded-full">
+                                        <Shield className="h-4 w-4 text-secondary" />
                                     </div>
                                     <div>
-                                        <p className="text-sm font-medium text-blue-700">Identidad Verificada</p>
+                                        <p className="text-sm font-medium text-secondary">Identidad Verificada</p>
                                         <p className="text-xs text-muted-foreground">Tu identidad ha sido validada</p>
                                     </div>
                                 </div>

@@ -134,7 +134,7 @@ export function ScheduleCalendar() {
                                         : isSelected(day)
                                         ? "bg-primary text-primary-foreground"
                                         : isToday(day)
-                                        ? "bg-blue-100 dark:bg-blue-900/50 text-primary border border-primary"
+                                        ? "bg-secondary/10 dark:bg-blue-900/50 text-primary border border-primary"
                                         : "hover:bg-muted text-foreground"
                                 }`}
                             >
@@ -199,8 +199,8 @@ export function ScheduleCalendar() {
                     </div>
 
                     {selectedTime && (
-                        <div className="mt-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
-                            <p className="text-sm text-green-800 dark:text-green-300">
+                        <div className="mt-6 p-4 bg-accent/5 dark:bg-green-900/20 border border-accent/20 dark:border-green-800 rounded-lg">
+                            <p className="text-sm text-accent dark:text-accent">
                                 ✓ Horario seleccionado: <strong>{selectedTime}</strong> del{" "}
                                 <strong>{selectedDate.toLocaleDateString("es-ES")}</strong>
                             </p>

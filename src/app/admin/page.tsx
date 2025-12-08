@@ -72,7 +72,7 @@ export default function AdminDashboard() {
             >
                 {/* Usuarios Totales */}
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0 }}>
-                    <Card className="border border-border/30 hover:shadow-warm transition-all bg-gradient-to-br from-white/50 to-muted/20 dark:from-card/50 dark:to-muted/10">
+                    <Card className="border border-border/30 hover:shadow-lg transition-all bg-gradient-to-br from-white/50 to-muted/20 dark:from-card/50 dark:to-muted/10">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                             <CardTitle className="text-sm font-medium">Usuarios Totales</CardTitle>
                             <Users className="h-4 w-4 text-accent" />
@@ -89,7 +89,7 @@ export default function AdminDashboard() {
 
                 {/* Solicitudes */}
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-                    <Card className="border border-border/30 hover:shadow-warm transition-all bg-gradient-to-br from-white/50 to-muted/20 dark:from-card/50 dark:to-muted/10">
+                    <Card className="border border-border/30 hover:shadow-lg transition-all bg-gradient-to-br from-white/50 to-muted/20 dark:from-card/50 dark:to-muted/10">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                             <CardTitle className="text-sm font-medium">Solicitudes</CardTitle>
                             <FileText className="h-4 w-4 text-accent" />
@@ -106,7 +106,7 @@ export default function AdminDashboard() {
 
                 {/* Verificaciones Pendientes */}
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-                    <Card className="border border-orange-200 dark:border-orange-800 hover:shadow-warm transition-all bg-gradient-to-br from-orange-50/50 to-orange-100/20 dark:from-orange-950/30 dark:to-orange-900/20">
+                    <Card className="border border-orange-200 dark:border-orange-800 hover:shadow-lg transition-all bg-gradient-to-br from-orange-50/50 to-orange-100/20 dark:from-orange-950/30 dark:to-orange-900/20">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                             <CardTitle className="text-sm font-medium">Verificaciones Pendientes</CardTitle>
                             <AlertTriangle className="h-4 w-4 text-orange-500" />
@@ -125,7 +125,7 @@ export default function AdminDashboard() {
 
                 {/* Ingresos Estimados */}
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
-                    <Card className="border border-emerald-200 dark:border-emerald-800 hover:shadow-warm transition-all bg-gradient-to-br from-emerald-50/50 to-emerald-100/20 dark:from-emerald-950/30 dark:to-emerald-900/20">
+                    <Card className="border border-accent/20 dark:border-accent/30 hover:shadow-lg transition-all bg-gradient-to-br from-emerald-50/50 to-emerald-100/20 dark:from-emerald-950/30 dark:to-emerald-900/20">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                             <CardTitle className="text-sm font-medium">Ingresos Estimados</CardTitle>
                             <DollarSign className="h-4 w-4 text-emerald-500" />
@@ -154,7 +154,7 @@ export default function AdminDashboard() {
                         </div>
                     </CardContent>
                 </Card>
-                <Card className="col-span-3 border border-border/30 hover:shadow-warm transition-all bg-gradient-to-br from-white/50 to-muted/20 dark:from-card/50 dark:to-muted/10">
+                <Card className="col-span-3 border border-border/30 hover:shadow-lg transition-all bg-gradient-to-br from-white/50 to-muted/20 dark:from-card/50 dark:to-muted/10">
                     <CardHeader>
                         <div className="flex items-center justify-between">
                             <CardTitle>Top Profesionales</CardTitle>

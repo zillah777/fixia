@@ -29,9 +29,9 @@ const tierConfig = {
   diamond: {
     icon: Crown,
     label: "Diamante",
-    color: "from-cyan-300 to-blue-400",
-    text: "text-blue-900",
-    border: "border-cyan-200",
+    color: "from-secondary to-primary",
+    text: "text-foreground",
+    border: "border-secondary/20",
   },
 }
 

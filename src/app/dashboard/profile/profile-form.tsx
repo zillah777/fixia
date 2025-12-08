@@ -17,17 +17,19 @@ interface ProfileFormProps {
         name: string | null | undefined;
         email: string;
         role: string;
+        avatar?: string | null;
     }
 }
 
 export function ProfileForm({ user }: ProfileFormProps) {
     const [isEditing, setIsEditing] = useState(false)
     const [loading, setLoading] = useState(true)
+    const [uploading, setUploading] = useState(false)
     const [formData, setFormData] = useState<any>({
         name: user.name || "",
         email: user.email || "",
         role: user.role || "CLIENT",
-        image: "", // We need to fetch this or use a placeholder
+        image: user.avatar || "",
         bio: "",
         location: "",
         phone: "",
@@ -57,9 +59,9 @@ export function ProfileForm({ user }: ProfileFormProps) {
                     name: data.name || "",
                     email: data.email || "",
                     role: data.role || "CLIENT",
-                    image: profile.portfolioImages?.[0] || "", // Using first portfolio image as avatar for now if no dedicated avatar field
+                    image: data.avatar || profile.portfolioImages?.[0] || "",
                     bio: profile.bio || "",
-                    location: "", // Location is not in profile schema yet, using empty
+                    location: "",
                     phone: data.phone || "",
                     certification: profile.certification || "",
                     licenseNumber: profile.licenseNumber || "",
@@ -77,6 +79,63 @@ export function ProfileForm({ user }: ProfileFormProps) {
             toast.error("Error al cargar perfil")
         } finally {
             setLoading(false)
+        }
+    }
+
+    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0]
+        if (!file) return
+
+        if (file.size > 5 * 1024 * 1024) {
+            toast.error("La imagen no debe superar los 5MB")
+            return
+        }
+
+        setUploading(true)
+        const toastId = toast.loading("Subiendo imagen...")
+
+        try {
+            const tokenRes = await fetch("/api/upload/cloudinary", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ uploadType: "profile" })
+            })
+
+            if (!tokenRes.ok) throw new Error("Error obteniendo permisos de subida")
+            const tokenData = await tokenRes.json()
+
+            const formDataVal = new FormData()
+            formDataVal.append("file", file)
+            formDataVal.append("api_key", tokenData.apiKey)
+            formDataVal.append("timestamp", tokenData.timestamp.toString())
+            formDataVal.append("signature", tokenData.signature)
+            formDataVal.append("folder", tokenData.folder)
+            if (tokenData.tags) formDataVal.append("tags", tokenData.tags)
+
+            const uploadRes = await fetch(tokenData.uploadUrl, {
+                method: "POST",
+                body: formDataVal
+            })
+
+            if (!uploadRes.ok) throw new Error("Error al subir imagen a la nube")
+            const uploadData = await uploadRes.json()
+
+            const updateRes = await fetch("/api/users/profile", {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ avatar: uploadData.secure_url })
+            })
+
+            if (!updateRes.ok) throw new Error("Error actualizando perfil")
+
+            toast.success("Avatar actualizado", { id: toastId })
+            window.location.reload()
+
+        } catch (error) {
+            console.error(error)
+            toast.error("Error al subir avatar, intenta nuevamente", { id: toastId })
+        } finally {
+            setUploading(false)
         }
     }
 
@@ -124,21 +183,32 @@ export function ProfileForm({ user }: ProfileFormProps) {
                 <div className="space-y-6">
                     <Card>
                         <CardContent className="pt-6 flex flex-col items-center text-center">
-                            <div className="relative mb-4">
-                                <Avatar className="h-24 w-24">
-                                    <AvatarImage src={formData.image} />
-                                    <AvatarFallback>{formData.name?.substring(0, 2)}</AvatarFallback>
+                            <div className="relative mb-4 group">
+                                <Avatar className="h-24 w-24 border-2 border-border group-hover:opacity-80 transition-opacity">
+                                    <AvatarImage src={formData.image} className="object-cover" />
+                                    <AvatarFallback className="text-2xl">{formData.name?.substring(0, 2).toUpperCase()}</AvatarFallback>
                                 </Avatar>
-                                <Button size="icon" variant="secondary" className="absolute bottom-0 right-0 h-8 w-8 rounded-full">
-                                    <Upload className="h-4 w-4" />
-                                </Button>
+                                <label
+                                    htmlFor="avatar-upload"
+                                    className={`absolute bottom-0 right-0 h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center cursor-pointer hover:bg-primary/90 transition-colors shadow-sm ${uploading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                >
+                                    {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+                                </label>
+                                <input
+                                    id="avatar-upload"
+                                    type="file"
+                                    accept="image/*"
+                                    className="hidden"
+                                    onChange={handleImageUpload}
+                                    disabled={uploading}
+                                />
                             </div>
-                            <h3 className="text-xl font-bold">{formData.name}</h3>
+                            <h3 className="text-xl font-bold mt-2">{formData.name}</h3>
                             <p className="text-sm text-muted-foreground">{formData.email}</p>
                             <div className="mt-2 flex gap-2 justify-center">
                                 <Badge variant="outline">{formData.role}</Badge>
                                 {formData.subscription.status === "ACTIVE" && (
-                                    <Badge className="bg-green-500 hover:bg-green-600">Verificado</Badge>
+                                    <Badge className="bg-accent hover:bg-accent">Verificado</Badge>
                                 )}
                             </div>
                         </CardContent>
@@ -155,7 +225,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
                             </div>
                             <div className="flex justify-between text-sm">
                                 <span className="text-muted-foreground">Estado:</span>
-                                <span className={formData.subscription.status === "ACTIVE" ? "text-green-600 font-medium" : "text-muted-foreground"}>
+                                <span className={formData.subscription.status === "ACTIVE" ? "text-accent font-medium" : "text-muted-foreground"}>
                                     {formData.subscription.status}
                                 </span>
                             </div>

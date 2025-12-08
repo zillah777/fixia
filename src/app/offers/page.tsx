@@ -124,7 +124,7 @@ export default function OffersPage() {
                                     checked={selectedBadges.includes("VERIFIED")}
                                     onCheckedChange={() => toggleBadge("VERIFIED")}
                                 >
-                                    <CheckCircle className="mr-2 h-3 w-3 text-blue-500" /> Verificado
+                                    <CheckCircle className="mr-2 h-3 w-3 text-secondary" /> Verificado
                                 </DropdownMenuCheckboxItem>
                                 <DropdownMenuCheckboxItem
                                     checked={selectedBadges.includes("PREMIUM")}

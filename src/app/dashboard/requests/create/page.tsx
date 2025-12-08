@@ -35,6 +35,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar"
 import { cn } from "@/lib/utils"
 import { TagInput } from "@/components/ui/tag-input"
+import { DatePickerSelect } from "@/components/ui/date-picker-select"
 
 const formSchema = z.object({
     title: z.string().min(5, {
@@ -219,37 +220,12 @@ export default function CreateRequestPage() {
                                     render={({ field }) => (
                                         <FormItem className="flex flex-col">
                                             <FormLabel>Fecha Preferida</FormLabel>
-                                            <Popover>
-                                                <PopoverTrigger asChild>
-                                                    <FormControl>
-                                                        <Button
-                                                            variant={"outline"}
-                                                            className={cn(
-                                                                "w-full pl-3 text-left font-normal",
-                                                                !field.value && "text-muted-foreground"
-                                                            )}
-                                                        >
-                                                            {field.value ? (
-                                                                format(field.value, "PPP", { locale: es })
-                                                            ) : (
-                                                                <span>Selecciona una fecha</span>
-                                                            )}
-                                                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                                        </Button>
-                                                    </FormControl>
-                                                </PopoverTrigger>
-                                                <PopoverContent className="w-auto p-0" align="start">
-                                                    <Calendar
-                                                        mode="single"
-                                                        selected={field.value}
-                                                        onSelect={field.onChange}
-                                                        disabled={(date) =>
-                                                            date < new Date() || date < new Date("1900-01-01")
-                                                        }
-                                                        initialFocus
-                                                    />
-                                                </PopoverContent>
-                                            </Popover>
+                                            <DatePickerSelect
+                                                value={field.value}
+                                                onChange={field.onChange}
+                                                minYear={new Date().getFullYear()}
+                                                maxYear={new Date().getFullYear() + 1}
+                                            />
                                             <FormMessage />
                                         </FormItem>
                                     )}

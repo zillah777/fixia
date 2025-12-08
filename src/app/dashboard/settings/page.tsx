@@ -15,7 +15,6 @@ import { Camera, Save, Facebook, Instagram, Twitter, Trash2 } from "lucide-react
 import { toast } from "sonner"
 import { VerificationRequestForm } from "@/components/trust/verification-request-form"
 import { ProfessionalProfileForm } from "@/components/settings/professional-profile-form"
-import { ServicesManager } from "@/components/settings/services-manager"
 import {
     AlertDialog,
     AlertDialogAction,
@@ -280,12 +279,12 @@ export default function SettingsPage() {
             <Separator />
 
             <Tabs defaultValue="profile" className="space-y-4">
-                <TabsList>
-                    <TabsTrigger value="profile">Perfil Público</TabsTrigger>
-                    {user?.role === 'PROFESSIONAL' && <TabsTrigger value="professional">Profesional</TabsTrigger>}
-                    <TabsTrigger value="account">Cuenta</TabsTrigger>
-                    <TabsTrigger value="notifications">Notificaciones</TabsTrigger>
-                    <TabsTrigger value="verification">Verificación</TabsTrigger>
+                <TabsList className="w-full justify-start overflow-x-auto flex-nowrap">
+                    <TabsTrigger value="profile" className="whitespace-nowrap">Perfil Público</TabsTrigger>
+                    {user?.role === 'PROFESSIONAL' && <TabsTrigger value="professional" className="whitespace-nowrap">Profesional</TabsTrigger>}
+                    <TabsTrigger value="account" className="whitespace-nowrap">Cuenta</TabsTrigger>
+                    <TabsTrigger value="notifications" className="whitespace-nowrap">Notificaciones</TabsTrigger>
+                    <TabsTrigger value="verification" className="whitespace-nowrap">Verificación</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="verification" className="space-y-4">
@@ -301,9 +300,9 @@ export default function SettingsPage() {
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-6">
-                            <div className="flex items-center gap-6">
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
                                 <div className="relative group cursor-pointer" onClick={() => document.getElementById('avatar-upload')?.click()}>
-                                    <Avatar className="h-24 w-24 transition-opacity group-hover:opacity-80">
+                                    <Avatar className="h-20 w-20 sm:h-24 sm:w-24 transition-opacity group-hover:opacity-80">
                                         <AvatarImage src={user?.avatar || `https://ui-avatars.com/api/?name=${user?.name}&background=random`} />
                                         <AvatarFallback>{user?.name?.charAt(0)}</AvatarFallback>
                                     </Avatar>
@@ -332,7 +331,7 @@ export default function SettingsPage() {
                                 </div>
                             </div>
 
-                            <div className="grid gap-4 md:grid-cols-2">
+                            <div className="grid gap-4 sm:grid-cols-2">
                                 <div className="space-y-2">
                                     <Label htmlFor="name">Nombre Completo</Label>
                                     <Input
@@ -368,7 +367,7 @@ export default function SettingsPage() {
 
                             <div className="space-y-4">
                                 <Label>Redes Sociales</Label>
-                                <div className="grid gap-4 md:grid-cols-2">
+                                <div className="grid gap-4 sm:grid-cols-2">
                                     <div className="flex items-center gap-2">
                                         <Instagram className="h-4 w-4 text-muted-foreground" />
                                         <Input
@@ -455,10 +454,10 @@ export default function SettingsPage() {
                         </CardContent>
                     </Card>
 
-                    <Card className="border-red-200 bg-red-50 dark:bg-red-900/10">
+                    <Card className="border-destructive/20 bg-destructive/5 dark:bg-red-900/10">
                         <CardHeader>
-                            <CardTitle className="text-red-600">Zona de Peligro</CardTitle>
-                            <CardDescription className="text-red-600/80">
+                            <CardTitle className="text-destructive">Zona de Peligro</CardTitle>
+                            <CardDescription className="text-destructive/80">
                                 Acciones irreversibles para tu cuenta.
                             </CardDescription>
                         </CardHeader>
@@ -531,10 +530,6 @@ export default function SettingsPage() {
                                 }
                             }}
                         />
-                        <div className="py-4">
-                            <Separator />
-                        </div>
-                        <ServicesManager />
                     </TabsContent>
                 )}
 
@@ -547,7 +542,7 @@ export default function SettingsPage() {
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
-                            <div className="flex items-center justify-between space-x-2">
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-2 sm:space-y-0 sm:space-x-2">
                                 <Label htmlFor="new-messages" className="flex flex-col space-y-1">
                                     <span>Mensajes Nuevos</span>
                                     <span className="font-normal text-xs text-muted-foreground">Recibe alertas cuando te envíen un mensaje.</span>
@@ -558,7 +553,7 @@ export default function SettingsPage() {
                                     onCheckedChange={(checked) => handleNotificationChange("newMessages", checked)}
                                 />
                             </div>
-                            <div className="flex items-center justify-between space-x-2">
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-2 sm:space-y-0 sm:space-x-2">
                                 <Label htmlFor="proposals" className="flex flex-col space-y-1">
                                     <span>Nuevas Propuestas</span>
                                     <span className="font-normal text-xs text-muted-foreground">Alertas sobre nuevas ofertas en tus solicitudes.</span>
@@ -569,7 +564,7 @@ export default function SettingsPage() {
                                     onCheckedChange={(checked) => handleNotificationChange("proposals", checked)}
                                 />
                             </div>
-                            <div className="flex items-center justify-between space-x-2">
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-2 sm:space-y-0 sm:space-x-2">
                                 <Label htmlFor="marketing" className="flex flex-col space-y-1">
                                     <span>Correos de Marketing</span>
                                     <span className="font-normal text-xs text-muted-foreground">Recibe noticias y promociones de Fixia.</span>

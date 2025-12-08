@@ -61,7 +61,7 @@ export function ProfessionalProfileCard({
       transition={{ duration: 0.5 }}
       viewport={{ once: true }}
     >
-      <Card className="overflow-hidden hover:shadow-warm transition-all duration-300">
+      <Card className="overflow-hidden hover:shadow-lg transition-all duration-300">
         {/* Cover Image */}
         {coverImage && (
           <div className="relative h-32 sm:h-40 overflow-hidden bg-gradient-to-br from-primary/20 to-accent/20">

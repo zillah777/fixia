@@ -95,6 +95,21 @@ export async function POST(req: NextRequest) {
             }
         });
 
+        // Determine recipient (the other person in the match)
+        const recipientId = match.providerId === session.user.id
+            ? match.clientId
+            : match.providerId
+
+        // Create notification for recipient
+        await prisma.notification.create({
+            data: {
+                userId: recipientId,
+                type: "NEW_MESSAGE",
+                message: `Nuevo mensaje de ${session.user.name}`,
+                actionUrl: `/dashboard/matches/${matchId}`
+            }
+        })
+
         return NextResponse.json(message);
 
     } catch (error) {

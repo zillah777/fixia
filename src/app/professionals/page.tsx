@@ -59,7 +59,6 @@ function ProfessionalsList() {
                     <h1 className="text-3xl font-bold tracking-tight">Profesionales Destacados</h1>
                     <p className="text-muted-foreground">Encuentra al experto ideal para tu proyecto.</p>
                 </div>
-                <Button>Publicar una Solicitud</Button>
             </div>
 
             {/* Filters */}
@@ -116,7 +115,7 @@ function ProfessionalsList() {
                     {professionals.map((pro) => (
                         <Card key={pro.id} className="overflow-hidden hover:shadow-md transition-shadow">
                             <CardHeader className="p-0">
-                                <div className="h-24 bg-gradient-to-r from-blue-500 to-cyan-500 relative">
+                                <div className="h-24 bg-gradient-to-r from-secondary to-primary relative">
                                     {pro.verified && (
                                         <Badge className="absolute top-2 right-2 bg-white/20 hover:bg-white/30 text-white border-none backdrop-blur-sm">
                                             Verificado

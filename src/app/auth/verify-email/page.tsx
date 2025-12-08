@@ -9,8 +9,8 @@ export default function VerifyEmailPage() {
         <div className="min-h-screen flex items-center justify-center bg-muted/30 p-4">
             <Card className="w-full max-w-md text-center">
                 <CardHeader>
-                    <div className="mx-auto h-16 w-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
-                        <Mail className="h-8 w-8 text-blue-600" />
+                    <div className="mx-auto h-16 w-16 bg-secondary/10 rounded-full flex items-center justify-center mb-4">
+                        <Mail className="h-8 w-8 text-secondary" />
                     </div>
                     <CardTitle className="text-2xl">Verifica tu correo electrónico</CardTitle>
                     <CardDescription>

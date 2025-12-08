@@ -86,7 +86,7 @@ export function ServiceCard({ data, className }: ServiceCardProps) {
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
                 <button className="absolute top-3 right-3 z-20 rounded-full p-2 hover:scale-110 transition-all">
-                    <Heart className="h-6 w-6 text-white drop-shadow-md hover:fill-red-500 hover:text-red-500 transition-colors" />
+                    <Heart className="h-6 w-6 text-white drop-shadow-md hover:fill-red-500 hover:text-destructive transition-colors" />
                 </button>
                 <div className="absolute top-3 left-3 z-20 flex gap-1 flex-wrap">
                     <Badge variant="secondary" className="backdrop-blur-md bg-white/90 font-medium text-xs shadow-sm capitalize">
@@ -121,7 +121,7 @@ export function ServiceCard({ data, className }: ServiceCardProps) {
                         <span className="text-sm font-medium truncate">{firstName}</span>
                         <div className="flex items-center gap-1 overflow-x-auto scrollbar-hide w-full mask-linear-fade">
                             {data.provider.badges.map((badge, i) => (
-                                <Badge key={i} variant="outline" className="text-[10px] px-1 h-4 border-blue-200 bg-blue-50 text-blue-700 whitespace-nowrap shrink-0">
+                                <Badge key={i} variant="outline" className="text-[10px] px-1 h-4 border-secondary/20 bg-secondary/5 text-secondary whitespace-nowrap shrink-0">
                                     {badge}
                                 </Badge>
                             ))}

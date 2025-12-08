@@ -1,9 +1,10 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Check, Loader2, Calendar, CreditCard, ShieldCheck, AlertTriangle } from "lucide-react"
+import { Check, Loader2, Calendar, CreditCard, ShieldCheck, AlertTriangle, ArrowLeft } from "lucide-react"
 import { toast } from "sonner"
 import { useAuth } from "@/providers/auth-provider"
 import { Badge } from "@/components/ui/badge"
@@ -74,13 +75,19 @@ export default function SubscriptionPage() {
     if (isProWithAccess) {
         return (
             <div className="container mx-auto py-10 max-w-3xl">
-                <div className="flex items-center gap-3 mb-8">
-                    <h1 className="text-3xl font-bold">Tu Suscripción</h1>
-                    {isSubscriptionCancelled ? (
-                        <Badge variant="destructive" className="text-base px-4 py-1">Cancelada (Vence pronto)</Badge>
-                    ) : (
-                        <Badge className="bg-green-600 hover:bg-green-700 text-base px-4 py-1">Activa</Badge>
-                    )}
+                <div className="flex flex-col gap-4 mb-8">
+                    <Link href="/dashboard/opportunities" className="flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors w-fit">
+                        <ArrowLeft className="mr-2 h-4 w-4" />
+                        Volver al Dashboard
+                    </Link>
+                    <div className="flex items-center gap-3">
+                        <h1 className="text-3xl font-bold">Tu Suscripción</h1>
+                        {isSubscriptionCancelled ? (
+                            <Badge variant="destructive" className="text-base px-4 py-1">Cancelada (Vence pronto)</Badge>
+                        ) : (
+                            <Badge className="bg-accent hover:bg-accent text-base px-4 py-1">Activa</Badge>
+                        )}
+                    </div>
                 </div>
 
                 <div className="grid gap-6">
@@ -116,7 +123,7 @@ export default function SubscriptionPage() {
                                 {!isSubscriptionCancelled && (
                                     <AlertDialog>
                                         <AlertDialogTrigger asChild>
-                                            <Button variant="outline" size="sm" className="text-red-600 border-red-200 hover:bg-red-50">
+                                            <Button variant="outline" size="sm" className="text-destructive border-destructive/20 hover:bg-destructive/5">
                                                 Cancelar Suscripción
                                             </Button>
                                         </AlertDialogTrigger>
@@ -129,7 +136,7 @@ export default function SubscriptionPage() {
                                             </AlertDialogHeader>
                                             <AlertDialogFooter>
                                                 <AlertDialogCancel>Volver</AlertDialogCancel>
-                                                <AlertDialogAction onClick={handleCancelSubscription} className="bg-red-600 hover:bg-red-700">
+                                                <AlertDialogAction onClick={handleCancelSubscription} className="bg-destructive hover:bg-destructive/90">
                                                     {cancelling ? <Loader2 className="h-4 w-4 animate-spin" /> : "Confirmar Cancelación"}
                                                 </AlertDialogAction>
                                             </AlertDialogFooter>
@@ -166,7 +173,7 @@ export default function SubscriptionPage() {
                                 <CardTitle className="text-lg">Comisión</CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <p className="text-3xl font-bold text-green-600">0%</p>
+                                <p className="text-3xl font-bold text-accent">0%</p>
                             </CardContent>
                         </Card>
                         <Card>
@@ -174,7 +181,7 @@ export default function SubscriptionPage() {
                                 <CardTitle className="text-lg">Visibilidad</CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <p className="text-3xl font-bold text-purple-600">Alta</p>
+                                <p className="text-3xl font-bold text-secondary">Alta</p>
                             </CardContent>
                         </Card>
                     </div>
@@ -204,26 +211,26 @@ export default function SubscriptionPage() {
 
                         <div className="space-y-3 pt-4 border-t">
                             <li className="flex items-start gap-3">
-                                <div className="bg-green-100 p-1 rounded-full mt-0.5">
-                                    <Check className="h-3 w-3 text-green-600" />
+                                <div className="bg-accent/10 p-1 rounded-full mt-0.5">
+                                    <Check className="h-3 w-3 text-accent" />
                                 </div>
                                 <span className="text-sm">Postulaciones <b>ilimitadas</b> a trabajos</span>
                             </li>
                             <li className="flex items-start gap-3">
-                                <div className="bg-green-100 p-1 rounded-full mt-0.5">
-                                    <Check className="h-3 w-3 text-green-600" />
+                                <div className="bg-accent/10 p-1 rounded-full mt-0.5">
+                                    <Check className="h-3 w-3 text-accent" />
                                 </div>
                                 <span className="text-sm">Perfil destacado con insignia <b>VERIFICADO</b></span>
                             </li>
                             <li className="flex items-start gap-3">
-                                <div className="bg-green-100 p-1 rounded-full mt-0.5">
-                                    <Check className="h-3 w-3 text-green-600" />
+                                <div className="bg-accent/10 p-1 rounded-full mt-0.5">
+                                    <Check className="h-3 w-3 text-accent" />
                                 </div>
                                 <span className="text-sm"><b>0% de comisión</b> por trabajo realizado</span>
                             </li>
                             <li className="flex items-start gap-3">
-                                <div className="bg-green-100 p-1 rounded-full mt-0.5">
-                                    <Check className="h-3 w-3 text-green-600" />
+                                <div className="bg-accent/10 p-1 rounded-full mt-0.5">
+                                    <Check className="h-3 w-3 text-accent" />
                                 </div>
                                 <span className="text-sm">Soporte prioritario 24/7</span>
                             </li>

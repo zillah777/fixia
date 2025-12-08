@@ -33,22 +33,22 @@ const statusConfig = {
     },
     confirmed: {
         label: "Confirmado",
-        color: "bg-blue-100 dark:bg-blue-900/20 text-blue-800 dark:text-blue-300",
+        color: "bg-secondary/10 dark:bg-blue-900/20 text-secondary dark:text-blue-300",
         icon: <CheckCircle className="h-4 w-4" />,
     },
     "in-progress": {
         label: "En progreso",
-        color: "bg-purple-100 dark:bg-purple-900/20 text-purple-800 dark:text-purple-300",
+        color: "bg-secondary/10 dark:bg-secondary/20 text-secondary dark:text-secondary",
         icon: <Loader2 className="h-4 w-4 animate-spin" />,
     },
     completed: {
         label: "Completado",
-        color: "bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-300",
+        color: "bg-accent/10 dark:bg-green-900/20 text-accent dark:text-accent",
         icon: <CheckCircle className="h-4 w-4" />,
     },
     cancelled: {
         label: "Cancelado",
-        color: "bg-red-100 dark:bg-red-900/20 text-red-800 dark:text-red-300",
+        color: "bg-destructive/10 dark:bg-red-900/20 text-red-800 dark:text-red-300",
         icon: <AlertCircle className="h-4 w-4" />,
     },
 }

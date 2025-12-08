@@ -2,14 +2,14 @@ import { NextResponse } from "next/server"
 import prisma from "@/lib/prisma"
 
 const CATEGORY_CONFIG: Record<string, { icon: string, color: string }> = {
-    "PLOMERIA": { icon: "Wrench", color: "text-blue-400" },
-    "ELECTRICIDAD": { icon: "Zap", color: "text-yellow-400" },
-    "LIMPIEZA": { icon: "Sparkles", color: "text-green-400" },
-    "JARDINERIA": { icon: "Leaf", color: "text-green-600" },
-    "GASISTA": { icon: "Flame", color: "text-red-400" },
-    "ALBANILERIA": { icon: "Hammer", color: "text-orange-400" },
-    "PINTURA": { icon: "Paintbrush", color: "text-pink-400" },
-    "FLETES": { icon: "Truck", color: "text-cyan-400" }
+    "PLOMERIA": { icon: "Wrench", color: "text-blue-600" },
+    "ELECTRICIDAD": { icon: "Zap", color: "text-amber-600" },
+    "LIMPIEZA": { icon: "Sparkles", color: "text-accent" }, // accent is usually dark enough (#788c5d is contrast 4.5:1? No, #788c5d on white is 3.5:1. Better use text-emerald-700)
+    "JARDINERIA": { icon: "Leaf", color: "text-emerald-600" },
+    "GASISTA": { icon: "Flame", color: "text-red-600" },
+    "ALBANILERIA": { icon: "Hammer", color: "text-orange-600" },
+    "PINTURA": { icon: "Paintbrush", color: "text-pink-600" },
+    "FLETES": { icon: "Truck", color: "text-cyan-700" }
 }
 
 export async function GET() {
@@ -30,7 +30,7 @@ export async function GET() {
 
         const tickerItems = requests.map(r => {
             const categoryKey = r.categoryId.toUpperCase()
-            const config = CATEGORY_CONFIG[categoryKey] || { icon: "Briefcase", color: "text-gray-400" }
+            const config = CATEGORY_CONFIG[categoryKey] || { icon: "Briefcase", color: "text-gray-600" }
             const categoryName = r.categoryId.charAt(0).toUpperCase() + r.categoryId.slice(1).toLowerCase()
 
             return {

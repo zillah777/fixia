@@ -27,7 +27,7 @@ export async function GET() {
 
         const formattedReviews = reviews.map(r => {
             // Try to get the first portfolio image as avatar, otherwise default
-            let avatarUrl = "/avatars/default.png"
+            let avatarUrl = `https://ui-avatars.com/api/?name=${r.author.name}&background=random`
             if (r.author.profile?.portfolioImages) {
                 try {
                     const images = JSON.parse(r.author.profile.portfolioImages)

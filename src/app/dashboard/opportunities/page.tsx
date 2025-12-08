@@ -5,9 +5,11 @@ import { useAuth } from "@/providers/auth-provider"
 import { RichRequestCard, RequestData } from "@/components/requests/rich-request-card"
 import { TeaserCard } from "@/components/opportunities/teaser-card"
 import { CATEGORIES } from "@/config/categories"
-import { Loader2 } from "lucide-react"
+import { Loader2, Info, Search } from "lucide-react"
+import { Button } from "@/components/ui/button"
 
 import { useRouter } from "next/navigation"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 
 export default function OpportunitiesPage() {
     const { user } = useAuth()
@@ -60,6 +62,17 @@ export default function OpportunitiesPage() {
                 </div>
             </div>
 
+            {/* Client Guidance Banner */}
+            {user?.role === 'CLIENT' && (
+                <Alert className="border-secondary/20 bg-secondary/5">
+                    <Info className="h-4 w-4 text-secondary" />
+                    <AlertTitle className="text-blue-900">Vista de Mercado</AlertTitle>
+                    <AlertDescription className="text-secondary">
+                        Estas son solicitudes activas de otros usuarios. Para crear tu propia solicitud y recibir propuestas, ve a <strong>Mis Solicitudes</strong>.
+                    </AlertDescription>
+                </Alert>
+            )}
+
             {isLoading ? (
                 <div className="flex items-center justify-center py-20">
                     <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -77,8 +90,13 @@ export default function OpportunitiesPage() {
                             <TeaserCard key={req.id} data={req} />
                         )
                     )) : (
-                        <div className="col-span-full text-center py-10 text-muted-foreground">
-                            No hay oportunidades disponibles por el momento.
+                        <div className="col-span-full flex flex-col items-center justify-center py-16 text-center">
+                            <Search className="h-16 w-16 text-muted-foreground mb-4" />
+                            <h3 className="text-xl font-semibold mb-2">No hay oportunidades disponibles</h3>
+                            <p className="text-muted-foreground mb-4">Por el momento no hay solicitudes activas. Vuelve pronto.</p>
+                            <Button variant="outline" onClick={() => window.location.reload()}>
+                                Actualizar
+                            </Button>
                         </div>
                     )}
                 </div>

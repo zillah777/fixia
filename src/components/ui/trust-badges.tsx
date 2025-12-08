@@ -16,8 +16,8 @@ const badgeConfig = {
     icon: CheckCircle2,
     label: "Verificado",
     color: "text-emerald-600 dark:text-emerald-400",
-    bgColor: "bg-emerald-50 dark:bg-emerald-950/30",
-    borderColor: "border-emerald-200 dark:border-emerald-800",
+    bgColor: "bg-accent/5 dark:bg-accent/20",
+    borderColor: "border-accent/20 dark:border-accent/30",
   },
   expert: {
     icon: Award,
@@ -43,16 +43,16 @@ const badgeConfig = {
   favorite: {
     icon: Heart,
     label: "Favorito",
-    color: "text-red-600 dark:text-red-400",
-    bgColor: "bg-red-50 dark:bg-red-950/30",
-    borderColor: "border-red-200 dark:border-red-800",
+    color: "text-destructive dark:text-red-400",
+    bgColor: "bg-destructive/5 dark:bg-red-950/30",
+    borderColor: "border-destructive/20 dark:border-red-800",
   },
   trending: {
     icon: TrendingUp,
     label: "En Tendencia",
     color: "text-teal-600 dark:text-teal-400",
-    bgColor: "bg-teal-50 dark:bg-teal-950/30",
-    borderColor: "border-teal-200 dark:border-teal-800",
+    bgColor: "bg-accent/5 dark:bg-accent/20",
+    borderColor: "border-accent/20 dark:border-accent/30",
   },
 }
 

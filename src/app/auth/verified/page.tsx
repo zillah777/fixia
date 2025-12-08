@@ -22,8 +22,8 @@ export default function VerifiedPage() {
         <div className="min-h-screen flex items-center justify-center bg-muted/30 p-4">
             <Card className="w-full max-w-md text-center">
                 <CardHeader>
-                    <div className="mx-auto h-16 w-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
-                        <CheckCircle2 className="h-8 w-8 text-green-600" />
+                    <div className="mx-auto h-16 w-16 bg-accent/10 rounded-full flex items-center justify-center mb-4">
+                        <CheckCircle2 className="h-8 w-8 text-accent" />
                     </div>
                     <CardTitle className="text-2xl">¡Email Verificado!</CardTitle>
                     <CardDescription>
@@ -37,7 +37,7 @@ export default function VerifiedPage() {
                 </CardContent>
                 <CardFooter>
                     <Link href="/login" className="w-full">
-                        <Button className="w-full bg-green-600 hover:bg-green-700">Ir a Iniciar Sesión</Button>
+                        <Button className="w-full bg-accent hover:bg-accent">Ir a Iniciar Sesión</Button>
                     </Link>
                 </CardFooter>
             </Card>

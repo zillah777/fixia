@@ -111,13 +111,13 @@ export default function VerificationPage() {
     if (status === "APPROVED") {
         return (
             <div className="container mx-auto p-6 max-w-2xl">
-                <Card className="border-green-200 bg-green-50 dark:bg-green-900/20">
+                <Card className="border-accent/20 bg-accent/5 dark:bg-green-900/20">
                     <CardContent className="pt-6 text-center space-y-4">
-                        <div className="mx-auto bg-green-100 p-3 rounded-full w-fit dark:bg-green-900">
-                            <CheckCircle className="h-12 w-12 text-green-600 dark:text-green-400" />
+                        <div className="mx-auto bg-accent/10 p-3 rounded-full w-fit dark:bg-green-900">
+                            <CheckCircle className="h-12 w-12 text-accent dark:text-accent" />
                         </div>
-                        <h2 className="text-2xl font-bold text-green-800 dark:text-green-300">¡Identidad Verificada!</h2>
-                        <p className="text-green-700 dark:text-green-400">
+                        <h2 className="text-2xl font-bold text-accent dark:text-accent">¡Identidad Verificada!</h2>
+                        <p className="text-accent dark:text-accent">
                             Tu perfil ahora muestra la insignia de verificación, lo que genera más confianza en los clientes.
                         </p>
                     </CardContent>
@@ -129,13 +129,13 @@ export default function VerificationPage() {
     if (status === "PENDING") {
         return (
             <div className="container mx-auto p-6 max-w-2xl">
-                <Card className="border-blue-200 bg-blue-50 dark:bg-blue-900/20">
+                <Card className="border-secondary/20 bg-secondary/5 dark:bg-blue-900/20">
                     <CardContent className="pt-6 text-center space-y-4">
-                        <div className="mx-auto bg-blue-100 p-3 rounded-full w-fit dark:bg-blue-900">
-                            <Loader2 className="h-12 w-12 text-blue-600 dark:text-blue-400 animate-spin" />
+                        <div className="mx-auto bg-secondary/10 p-3 rounded-full w-fit dark:bg-blue-900">
+                            <Loader2 className="h-12 w-12 text-secondary dark:text-blue-400 animate-spin" />
                         </div>
-                        <h2 className="text-2xl font-bold text-blue-800 dark:text-blue-300">Verificación en Proceso</h2>
-                        <p className="text-blue-700 dark:text-blue-400">
+                        <h2 className="text-2xl font-bold text-secondary dark:text-blue-300">Verificación en Proceso</h2>
+                        <p className="text-secondary dark:text-blue-400">
                             Estamos revisando tus documentos. Esto puede demorar hasta 24 horas hábiles.
                             Te notificaremos cuando el proceso finalice.
                         </p>
@@ -186,7 +186,7 @@ export default function VerificationPage() {
                                         disabled={uploadingFront}
                                     />
                                 </div>
-                                {idFront && <p className="text-sm text-green-600 flex items-center gap-1"><CheckCircle className="h-3 w-3" /> Imagen cargada</p>}
+                                {idFront && <p className="text-sm text-accent flex items-center gap-1"><CheckCircle className="h-3 w-3" /> Imagen cargada</p>}
                             </div>
 
                             <div className="space-y-2">
@@ -208,7 +208,7 @@ export default function VerificationPage() {
                                         disabled={uploadingBack}
                                     />
                                 </div>
-                                {idBack && <p className="text-sm text-green-600 flex items-center gap-1"><CheckCircle className="h-3 w-3" /> Imagen cargada</p>}
+                                {idBack && <p className="text-sm text-accent flex items-center gap-1"><CheckCircle className="h-3 w-3" /> Imagen cargada</p>}
                             </div>
                         </div>
 

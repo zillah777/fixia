@@ -2,6 +2,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ShieldCheck, Users, FileCheck, AlertTriangle } from "lucide-react"
 import prisma from "@/lib/prisma"
 
+export const dynamic = 'force-dynamic'
+
 export default async function AdminDashboard() {
     // Determine metrics
     const pendingVerifications = await prisma.verificationRequest.count({
@@ -51,7 +53,7 @@ export default async function AdminDashboard() {
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">Profesionales Verificados</CardTitle>
-                        <FileCheck className="h-4 w-4 text-green-500" />
+                        <FileCheck className="h-4 w-4 text-accent" />
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">{verifiedPros}</div>

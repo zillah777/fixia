@@ -110,7 +110,7 @@ export function NotificationCenter() {
                 <Button variant="ghost" size="icon" className="relative rounded-full">
                     <Bell className="h-5 w-5" />
                     {unreadCount > 0 && (
-                        <span className="absolute top-1 right-1 h-2.5 w-2.5 rounded-full bg-red-600 border-2 border-white animate-pulse" />
+                        <span className="absolute top-1 right-1 h-2.5 w-2.5 rounded-full bg-destructive border-2 border-white animate-pulse" />
                     )}
                 </Button>
             </DropdownMenuTrigger>
@@ -121,7 +121,7 @@ export function NotificationCenter() {
                         <Button
                             variant="ghost"
                             size="sm"
-                            className="text-xs text-blue-600 h-auto p-0 hover:bg-transparent hover:text-blue-700"
+                            className="text-xs text-secondary h-auto p-0 hover:bg-transparent hover:text-secondary"
                             onClick={markAllAsRead}
                         >
                             Marcar todo leído
@@ -141,20 +141,20 @@ export function NotificationCenter() {
                                     key={notification.id}
                                     className={cn(
                                         "flex flex-col items-start gap-1 p-4 cursor-pointer focus:bg-gray-50 border-b border-gray-50 last:border-0",
-                                        !notification.isRead && "bg-blue-50/50"
+                                        !notification.isRead && "bg-secondary/5/50"
                                     )}
                                     onClick={() => handleNotificationClick(notification)}
                                 >
                                     <div className="flex w-full justify-between gap-2">
                                         <div className="flex items-center gap-2">
                                             {!notification.isRead && (
-                                                <span className="h-2 w-2 rounded-full bg-blue-600 shrink-0" />
+                                                <span className="h-2 w-2 rounded-full bg-secondary shrink-0" />
                                             )}
                                             <span className={cn("font-medium text-sm line-clamp-1",
                                                 notification.type === 'MATCH' && "text-pink-600",
-                                                (notification.type === 'PROPOSAL' || notification.type === 'NEW_PROPOSAL') && "text-purple-600",
+                                                (notification.type === 'PROPOSAL' || notification.type === 'NEW_PROPOSAL') && "text-secondary",
                                                 notification.type === 'SYSTEM' && "text-gray-600",
-                                                notification.type === 'VERIFICATION' && "text-green-600",
+                                                notification.type === 'VERIFICATION' && "text-accent",
                                                 notification.type === 'SUBSCRIPTION' && "text-amber-600",
                                             )}>
                                                 {notification.type === 'MATCH' ? '¡Nuevo Match!' :
@@ -176,7 +176,7 @@ export function NotificationCenter() {
                                         <Button
                                             variant="ghost"
                                             size="icon"
-                                            className="h-6 w-6 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full"
+                                            className="h-6 w-6 text-gray-400 hover:text-destructive hover:bg-destructive/5 rounded-full"
                                             onClick={(e) => deleteNotification(notification.id, e)}
                                         >
                                             <Trash2 className="h-3 w-3" />

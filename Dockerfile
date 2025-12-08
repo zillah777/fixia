@@ -3,7 +3,7 @@ FROM node:20-alpine AS base
 
 # Install dependencies only when needed
 FROM base AS deps
-RUN apk add --no-cache libc6-compat
+RUN apk add --no-cache libc6-compat openssl
 WORKDIR /app
 
 # Install dependencies based on the preferred package manager
@@ -13,12 +13,13 @@ RUN npm install --legacy-peer-deps
 # Rebuild the source code only when needed
 FROM base AS builder
 WORKDIR /app
+RUN apk add --no-cache libc6-compat openssl
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 # Environment variables required for build
-ARG DATABASE_URL
-ENV DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy"
+ENV DATABASE_URL="postgresql://user:password@localhost:5432/db"
+ENV SKIP_ENV_VALIDATION=1
 ARG JWT_SECRET
 ENV JWT_SECRET="super_secret_dummy_key_at_least_32_chars_long"
 ENV NEXT_TELEMETRY_DISABLED 1

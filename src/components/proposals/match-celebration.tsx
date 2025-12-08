@@ -82,7 +82,7 @@ export function MatchCelebration({ isOpen, onClose, proName, proAvatar, proPhone
                                         <AvatarImage src={proAvatar} />
                                         <AvatarFallback>{proName.charAt(0)}</AvatarFallback>
                                     </Avatar>
-                                    <div className="absolute -bottom-2 -right-2 bg-green-500 text-white p-2 rounded-full border-4 border-white shadow-sm">
+                                    <div className="absolute -bottom-2 -right-2 bg-accent text-white p-2 rounded-full border-4 border-white shadow-sm">
                                         <CheckCircle2 className="h-6 w-6" />
                                     </div>
                                 </div>
@@ -99,7 +99,7 @@ export function MatchCelebration({ isOpen, onClose, proName, proAvatar, proPhone
                                         rel="noopener noreferrer"
                                         className="w-full"
                                     >
-                                        <Button className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white font-bold h-12 rounded-xl shadow-lg shadow-green-500/30 transition-transform hover:scale-105">
+                                        <Button className="w-full bg-accent hover:opacity-90 text-white font-bold h-12 rounded-xl shadow-lg transition-transform hover:scale-105">
                                             <MessageCircle className="mr-2 h-5 w-5" />
                                             Contactar por WhatsApp
                                         </Button>

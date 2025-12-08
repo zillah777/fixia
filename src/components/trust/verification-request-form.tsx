@@ -125,13 +125,13 @@ export function VerificationRequestForm() {
 
     if (status === "APPROVED") {
         return (
-            <Card className="border-green-200 bg-green-50">
+            <Card className="border-accent/20 bg-accent/5">
                 <CardContent className="pt-6 flex flex-col items-center text-center">
-                    <div className="h-12 w-12 rounded-full bg-green-100 flex items-center justify-center mb-4">
-                        <CheckCircle2 className="h-6 w-6 text-green-600" />
+                    <div className="h-12 w-12 rounded-full bg-accent/10 flex items-center justify-center mb-4">
+                        <CheckCircle2 className="h-6 w-6 text-accent" />
                     </div>
                     <h3 className="text-lg font-bold text-green-900">¡Identidad Verificada!</h3>
-                    <p className="text-green-700 mt-2">
+                    <p className="text-accent mt-2">
                         Tu perfil ahora muestra la insignia de verificación, lo que aumenta la confianza de los clientes.
                     </p>
                 </CardContent>
@@ -198,7 +198,7 @@ export function VerificationRequestForm() {
                         </div>
                     </div>
 
-                    <div className="bg-blue-50 p-4 rounded-lg flex gap-3 text-sm text-blue-700">
+                    <div className="bg-secondary/5 p-4 rounded-lg flex gap-3 text-sm text-secondary">
                         <AlertCircle className="h-5 w-5 shrink-0" />
                         <p>
                             Tus documentos se almacenan de forma segura y solo se utilizan para validar tu identidad. No serán visibles públicamente.

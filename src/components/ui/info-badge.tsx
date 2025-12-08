@@ -17,17 +17,17 @@ interface InfoBadgeProps {
 const typeConfig = {
   info: {
     icon: Info,
-    bg: "bg-blue-50 dark:bg-blue-950/30",
-    border: "border-blue-200 dark:border-blue-800",
-    text: "text-blue-800 dark:text-blue-200",
-    dotColor: "bg-blue-500",
+    bg: "bg-secondary/5 dark:bg-blue-950/30",
+    border: "border-secondary/20 dark:border-blue-800",
+    text: "text-secondary dark:text-blue-200",
+    dotColor: "bg-secondary",
   },
   success: {
     icon: Check,
-    bg: "bg-emerald-50 dark:bg-emerald-950/30",
-    border: "border-emerald-200 dark:border-emerald-800",
+    bg: "bg-accent/5 dark:bg-accent/20",
+    border: "border-accent/20 dark:border-accent/30",
     text: "text-emerald-800 dark:text-emerald-200",
-    dotColor: "bg-emerald-500",
+    dotColor: "bg-accent/50",
   },
   tip: {
     icon: Lightbulb,

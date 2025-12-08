@@ -22,10 +22,7 @@ const getResend = () => {
 };
 
 const getAppUrl = () => {
-  // Always force production URL if we are in production mode, ignoring potentially bad env vars
-  if (process.env.NODE_ENV === 'production') {
-    return 'https://fixia.app';
-  }
+  // Use the configured URL from environment, or fallback to localhost
   return process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
 };
 

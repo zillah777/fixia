@@ -120,9 +120,9 @@ export default function UsersPage() {
                                 </TableCell>
                                 <TableCell>
                                     {user.role === "ADMIN" ? (
-                                        <Badge variant="default" className="bg-purple-600">Admin</Badge>
+                                        <Badge variant="default" className="bg-secondary">Admin</Badge>
                                     ) : user.role === "PROFESSIONAL" ? (
-                                        <Badge variant="secondary" className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100">Profesional</Badge>
+                                        <Badge variant="secondary" className="bg-secondary/10 text-secondary dark:bg-blue-900 dark:text-blue-100">Profesional</Badge>
                                     ) : (
                                         <Badge variant="outline">Cliente</Badge>
                                     )}
@@ -130,7 +130,7 @@ export default function UsersPage() {
                                 <TableCell>
                                     <Badge
                                         variant={user.status === "ACTIVE" ? "default" : "destructive"}
-                                        className={user.status === "ACTIVE" ? "bg-green-600 hover:bg-green-700" : ""}
+                                        className={user.status === "ACTIVE" ? "bg-accent hover:bg-accent" : ""}
                                     >
                                         {user.status === "ACTIVE" ? "Activo" : "Suspendido"}
                                     </Badge>
@@ -165,7 +165,7 @@ export default function UsersPage() {
                                                     </>
                                                 ) : (
                                                     <>
-                                                        <CheckCircle className="mr-2 h-4 w-4 text-green-500" />
+                                                        <CheckCircle className="mr-2 h-4 w-4 text-accent" />
                                                         <span>Activar Cuenta</span>
                                                     </>
                                                 )}
@@ -174,7 +174,7 @@ export default function UsersPage() {
                                             <DropdownMenuSeparator />
 
                                             <DropdownMenuItem
-                                                className="text-red-600 focus:text-red-600 focus:bg-red-50 dark:focus:bg-red-950/50"
+                                                className="text-destructive focus:text-destructive focus:bg-destructive/5 dark:focus:bg-red-950/50"
                                                 onClick={() => setUserToDelete(user.id)}
                                             >
                                                 <Trash2 className="mr-2 h-4 w-4" />
@@ -200,7 +200,7 @@ export default function UsersPage() {
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                         <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                        <AlertDialogAction onClick={handleDelete} className="bg-red-600 hover:bg-red-700">
+                        <AlertDialogAction onClick={handleDelete} className="bg-destructive hover:bg-destructive/90">
                             Eliminar Cuenta
                         </AlertDialogAction>
                     </AlertDialogFooter>

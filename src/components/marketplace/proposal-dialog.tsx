@@ -74,7 +74,7 @@ export function ProposalDialog({ isOpen, onClose, requestTitle }: ProposalDialog
                                 <Badge
                                     key={t.id}
                                     variant="secondary"
-                                    className="cursor-pointer hover:bg-blue-100 hover:text-blue-700 whitespace-nowrap transition-colors"
+                                    className="cursor-pointer hover:bg-secondary/10 hover:text-secondary whitespace-nowrap transition-colors"
                                     onClick={() => handleTemplateClick(t.text)}
                                 >
                                     <Zap className="h-3 w-3 mr-1" />

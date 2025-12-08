@@ -49,13 +49,12 @@ export function Footer() {
                     <div className="space-y-4 col-span-1 md:col-span-2 lg:col-span-1">
                         <Link href="/" className="flex items-center gap-2">
                             <Image
-                                src="/logo.png"
+                                src="/logo.svg"
                                 alt="Fixia Logo"
-                                width={32}
-                                height={32}
-                                className="h-8 w-8 object-contain"
+                                width={150}
+                                height={45}
+                                className="h-10 sm:h-12 w-auto object-contain"
                             />
-                            <span className="font-bold text-xl tracking-tight">Fixia</span>
                         </Link>
                         <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
                             La plataforma líder para conectar profesionales de confianza con clientes que valoran la calidad.
@@ -119,7 +118,7 @@ export function Footer() {
                     </p>
                     <p className="text-xs text-muted-foreground flex items-center gap-1">
                         Hecho con{" "}
-                        <Heart className="h-3 w-3 text-red-500 fill-red-500" /> en Argentina
+                        <Heart className="h-3 w-3 text-destructive fill-red-500" /> en Argentina
                     </p>
                 </div>
             </div>

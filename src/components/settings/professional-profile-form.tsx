@@ -219,7 +219,7 @@ export function ProfessionalProfileForm({ initialData, onSave }: ProfessionalPro
                                 <img src={img} alt={`Portafolio ${i + 1}`} className="w-full h-full object-cover" />
                                 <button
                                     onClick={() => handleRemoveImage(i)}
-                                    className="absolute top-1 right-1 bg-black/50 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-500"
+                                    className="absolute top-1 right-1 bg-black/50 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-destructive"
                                 >
                                     <X className="h-4 w-4" />
                                 </button>

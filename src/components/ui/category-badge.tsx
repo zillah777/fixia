@@ -30,9 +30,9 @@ const colorConfig = {
     border: "border-secondary/30 dark:border-secondary/40",
   },
   emerald: {
-    bg: "bg-emerald-50 dark:bg-emerald-950/30",
-    text: "text-emerald-700 dark:text-emerald-400",
-    border: "border-emerald-200 dark:border-emerald-800",
+    bg: "bg-accent/5 dark:bg-accent/20",
+    text: "text-accent dark:text-emerald-400",
+    border: "border-accent/20 dark:border-accent/30",
   },
   amber: {
     bg: "bg-amber-50 dark:bg-amber-950/30",
