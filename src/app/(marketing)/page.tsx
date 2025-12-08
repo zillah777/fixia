@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card"
 import { TestimonialsCarousel } from "@/components/testimonials-carousel"
+import { MarketplaceShowcase } from "@/components/marketplace-showcase"
 
 // 3D Tilt Card Component
 function TiltCard({ children, className, onClick }: { children: React.ReactNode, className?: string, onClick?: () => void }) {
@@ -237,8 +238,15 @@ export default function Home() {
                 </div>
             </section>
 
+            {/* Marketplace Showcase - Beautiful Elements */}
+            <section className="py-16 sm:py-20 lg:py-28 bg-gradient-to-b from-background via-accent/2 to-background relative overflow-hidden">
+                <div className="container px-4 relative z-10">
+                    <MarketplaceShowcase />
+                </div>
+            </section>
+
             {/* Testimonials Carousel */}
-            <section className="py-24 bg-background overflow-hidden relative">
+            <section className="py-20 sm:py-24 lg:py-28 bg-background overflow-hidden relative">
                 <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent pointer-events-none" />
                 <div className="container px-4 relative z-10">
                     <motion.div
