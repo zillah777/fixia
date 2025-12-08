@@ -104,7 +104,7 @@ export default function Home() {
                         transition={{ duration: 0.8, ease: "easeOut" }}
                         className="mx-auto max-w-4xl space-y-8"
                     >
-                        <Badge variant="outline" className="px-4 py-2 rounded-full backdrop-blur-sm animate-pulse border-primary/20 bg-primary/5 text-primary">
+                        <Badge variant="outline" className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-full backdrop-blur-sm animate-pulse border-accent/30 bg-accent/10 text-accent font-medium text-xs sm:text-sm">
                             ✨ La forma más inteligente de contratar
                         </Badge>
 
@@ -113,13 +113,13 @@ export default function Home() {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.8, ease: "easeOut" }}
-                            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight"
+                            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tight"
                         >
                             <span className="block text-foreground mb-2 sm:mb-3 font-medium">
-                                Tu vida,
+                                Tu hogar,
                             </span>
                             <span className="block text-foreground mb-3 sm:mb-4">
-                                más simple.
+                                en buenas manos.
                             </span>
                             <motion.span
                                 initial={{ opacity: 0, y: 20 }}
@@ -129,13 +129,13 @@ export default function Home() {
                                 style={{
                                     WebkitTextStroke: '2px transparent',
                                     WebkitTextFillColor: 'transparent',
-                                    backgroundImage: 'linear-gradient(135deg, #60a5fa 0%, #a78bfa 50%, #ec4899 100%)',
+                                    backgroundImage: 'linear-gradient(135deg, #0d9488 0%, #10b981 50%, #d4a574 100%)',
                                     WebkitBackgroundClip: 'text',
                                     backgroundClip: 'text',
-                                    filter: 'drop-shadow(3px 3px 0px rgba(96, 165, 250, 0.4)) drop-shadow(6px 6px 0px rgba(168, 139, 250, 0.2))',
+                                    filter: 'drop-shadow(2px 2px 0px rgba(13, 148, 136, 0.3)) drop-shadow(4px 4px 0px rgba(16, 185, 129, 0.15))',
                                 }}
                             >
-                                Fixia.
+                                Fixia
                             </motion.span>
                         </motion.h1>
 
@@ -144,25 +144,25 @@ export default function Home() {
                             Sin esperas, sin complicaciones, con garantía total.
                         </p>
 
-                        {/* Floating Search Bar */}
+                        {/* Floating Search Bar - Fully Responsive */}
                         <motion.div
-                            whileHover={{ scale: 1.03, boxShadow: "0 25px 50px -12px rgba(96, 165, 250, 0.15)" }}
+                            whileHover={{ scale: 1.02, boxShadow: "0 25px 50px -12px rgba(13, 148, 136, 0.2)" }}
                             whileTap={{ scale: 0.98 }}
-                            className="mx-auto max-w-2xl p-1.5 sm:p-2 bg-card rounded-full shadow-2xl shadow-primary/5 border border-border/80 backdrop-blur-xl flex items-center gap-1 sm:gap-2 transition-all duration-300"
+                            className="mx-auto w-full max-w-2xl p-1 sm:p-1.5 bg-white dark:bg-card rounded-2xl shadow-lg shadow-primary/10 dark:shadow-primary/20 border border-border/50 backdrop-blur-sm flex items-center gap-1 sm:gap-2 transition-all duration-300"
                         >
-                            <div className="pl-3 sm:pl-4 text-muted-foreground">
+                            <div className="pl-3 sm:pl-4 text-muted-foreground flex-shrink-0">
                                 <motion.div
-                                    whileHover={{ scale: 1.1 }}
+                                    whileHover={{ scale: 1.1, color: "hsl(152 71% 40%)" }}
                                     transition={{ type: "spring", stiffness: 300 }}
                                 >
                                     <Search className="h-4 w-4 sm:h-5 sm:w-5" />
                                 </motion.div>
                             </div>
                             <Input
-                                className="border-none shadow-none bg-transparent h-10 sm:h-12 text-base sm:text-lg placeholder:text-muted-foreground/60 focus-visible:ring-0"
+                                className="border-none shadow-none bg-transparent h-10 sm:h-12 text-sm sm:text-base placeholder:text-muted-foreground/60 focus-visible:ring-0 flex-1"
                                 placeholder="¿Qué necesitas arreglar?"
                             />
-                            <Button size="lg" className="rounded-full px-4 sm:px-8 text-sm sm:text-base bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/20 hover:shadow-xl transition-all whitespace-nowrap font-semibold">
+                            <Button size="sm" className="rounded-xl px-3 sm:px-6 text-xs sm:text-sm bg-primary text-primary-foreground hover:bg-primary/90 shadow-md shadow-primary/20 hover:shadow-lg transition-all whitespace-nowrap font-semibold flex-shrink-0 h-9 sm:h-10">
                                 Buscar
                             </Button>
                         </motion.div>
@@ -180,15 +180,19 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* 3D Tilt Categories Section */}
-            <section className="py-16 sm:py-20 lg:py-24 relative">
+            {/* Services Categories Section */}
+            <section className="py-12 sm:py-16 lg:py-20 relative">
                 <div className="container px-4 sm:px-6">
-                    <div className="text-center mb-12 sm:mb-16">
-                        <h2 className="text-2xl sm:text-3xl font-bold tracking-tight lg:text-4xl mb-3 sm:mb-4">Servicios Populares</h2>
-                        <p className="text-muted-foreground text-base sm:text-lg">Los profesionales más solicitados de la semana.</p>
+                    <div className="text-center mb-10 sm:mb-12 lg:mb-16">
+                        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight mb-2 sm:mb-3 text-foreground">
+                            Servicios Populares
+                        </h2>
+                        <p className="text-muted-foreground text-base sm:text-lg max-w-2xl mx-auto">
+                            Los profesionales más solicitados de tu zona
+                        </p>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
                         {categories.length > 0 ? categories.map((category, index) => (
                             <motion.div
                                 key={category.id}
@@ -198,28 +202,30 @@ export default function Home() {
                                 viewport={{ once: true }}
                             >
                                 <TiltCard
-                                    className="group relative h-56 sm:h-64 rounded-[2rem] bg-card p-6 sm:p-8 shadow-xl shadow-primary/5 border border-border/60 backdrop-blur-sm hover:border-border hover:shadow-2xl hover:shadow-primary/15 active:shadow-2xl active:shadow-primary/15 transition-all duration-500 cursor-pointer"
+                                    className="group relative h-48 sm:h-56 lg:h-64 rounded-2xl bg-gradient-to-br from-white to-muted/30 dark:from-card dark:to-muted/20 p-6 sm:p-7 shadow-md shadow-primary/5 dark:shadow-primary/10 border border-border/40 backdrop-blur-sm hover:shadow-warm hover:border-border/80 active:shadow-warm transition-all duration-300 cursor-pointer overflow-hidden"
                                     onClick={() => router.push(`/services/${category.id}`)}
                                 >
-                                    <div className={`absolute inset-0 bg-gradient-to-br ${category.color} opacity-0 group-hover:opacity-100 group-active:opacity-100 transition-opacity duration-500 rounded-[2rem]`} />
+                                    {/* Subtle background accent */}
+                                    <div className={`absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-br ${category.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500 rounded-full blur-2xl`} />
+
                                     <div className="relative z-10 flex flex-col h-full justify-between">
                                         <motion.div
-                                            className="text-5xl sm:text-6xl mb-4"
-                                            whileHover={{ scale: 1.15, rotate: 5 }}
+                                            className="text-4xl sm:text-5xl mb-3 flex-shrink-0"
+                                            whileHover={{ scale: 1.1, rotate: 5 }}
                                             transition={{ type: "spring", stiffness: 300 }}
                                         >
                                             {category.icon}
                                         </motion.div>
-                                        <div>
-                                            <h3 className="text-xl sm:text-2xl font-bold mb-1">{category.name}</h3>
-                                            <p className="text-muted-foreground font-medium text-sm sm:text-base">{category.count} Profesionales</p>
+                                        <div className="flex-1">
+                                            <h3 className="text-lg sm:text-xl font-bold mb-1 text-foreground">{category.name}</h3>
+                                            <p className="text-muted-foreground font-medium text-xs sm:text-sm">{category.count} Profesionales</p>
                                         </div>
                                         <motion.div
-                                            className="w-10 h-10 rounded-full bg-primary/5 flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground group-active:bg-primary group-active:text-primary-foreground transition-colors duration-300"
-                                            whileHover={{ scale: 1.15, rotate: 90 }}
+                                            className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-accent/10 flex items-center justify-center group-hover:bg-accent group-hover:text-accent-foreground transition-colors duration-300 mt-auto flex-shrink-0"
+                                            whileHover={{ scale: 1.1, rotate: 45 }}
                                             transition={{ type: "spring", stiffness: 400 }}
                                         >
-                                            <ArrowRight className="h-5 w-5" />
+                                            <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
                                         </motion.div>
                                     </div>
                                 </TiltCard>
@@ -254,11 +260,10 @@ export default function Home() {
             </section>
 
             {/* Animated Stats Section */}
-            <section className="py-24 bg-black text-white relative overflow-hidden">
-                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center opacity-20 mix-blend-overlay" />
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10 mix-blend-soft-light pointer-events-none" />
+            <section className="py-16 sm:py-20 lg:py-28 relative overflow-hidden bg-gradient-to-b from-primary/5 to-accent/5 dark:from-primary/10 dark:to-accent/10">
+                <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-accent/5 to-primary/0 dark:via-accent/10 pointer-events-none" />
                 <div className="container px-4 relative z-10">
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 text-center">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 md:gap-10 text-center">
                         {stats.map((stat, index) => (
                             <motion.div
                                 key={index}
@@ -271,11 +276,12 @@ export default function Home() {
                                 <motion.div
                                     whileHover={{ scale: 1.05 }}
                                     transition={{ type: "spring", stiffness: 300 }}
+                                    className="p-4 sm:p-6 rounded-2xl bg-white/50 dark:bg-card/50 backdrop-blur-sm border border-border/30 hover:border-accent/50 transition-all duration-300"
                                 >
-                                    <div className="text-4xl md:text-6xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-b from-white via-white to-white/60 group-hover:from-blue-300 group-hover:via-purple-300 group-hover:to-pink-300 transition-all duration-500">
+                                    <div className="text-3xl sm:text-4xl md:text-5xl font-bold mb-2 sm:mb-3 text-gradient-primary">
                                         {stat.value}
                                     </div>
-                                    <div className="text-white/70 font-medium text-sm md:text-base group-hover:text-white/90 transition-colors">{stat.label}</div>
+                                    <div className="text-muted-foreground font-medium text-xs sm:text-sm md:text-base group-hover:text-foreground transition-colors">{stat.label}</div>
                                 </motion.div>
                             </motion.div>
                         ))}
@@ -284,24 +290,24 @@ export default function Home() {
             </section>
 
             {/* Immersive CTA */}
-            <section className="py-32 relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-transparent pointer-events-none" />
+            <section className="py-16 sm:py-24 lg:py-32 px-4 relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 dark:via-primary/10 to-transparent pointer-events-none" />
                 <div className="container px-4 text-center relative z-10">
                     <motion.div
                         initial={{ scale: 0.9, opacity: 0 }}
                         whileInView={{ scale: 1, opacity: 1 }}
                         transition={{ duration: 0.6, type: "spring", stiffness: 100 }}
                         viewport={{ once: true }}
-                        className="bg-aurora p-[1px] rounded-[3rem] inline-block"
+                        className="bg-aurora p-[2px] rounded-3xl inline-block w-full max-w-4xl"
                     >
-                        <div className="bg-card rounded-[3rem] p-12 sm:p-16 md:p-24 shadow-2xl shadow-primary/25 backdrop-blur-xl border border-border/80">
+                        <div className="bg-gradient-to-b from-white/80 to-muted/40 dark:from-card/80 dark:to-card/40 rounded-3xl p-8 sm:p-12 md:p-16 lg:p-20 shadow-lg shadow-primary/10 dark:shadow-primary/20 backdrop-blur-xl border border-border/40">
                             <motion.div
                                 initial={{ opacity: 0, y: 10 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.2, duration: 0.6 }}
                                 viewport={{ once: true }}
                             >
-                                <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 sm:mb-8 tracking-tight text-foreground">
+                                <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 tracking-tight text-foreground leading-tight">
                                     ¿Listo para transformar tu hogar?
                                 </h2>
                             </motion.div>
@@ -310,7 +316,7 @@ export default function Home() {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.3, duration: 0.6 }}
                                 viewport={{ once: true }}
-                                className="text-lg sm:text-xl text-muted-foreground mb-10 sm:mb-12 max-w-2xl mx-auto"
+                                className="text-base sm:text-lg md:text-xl text-muted-foreground mb-8 sm:mb-10 max-w-2xl mx-auto leading-relaxed"
                             >
                                 Únete a miles de usuarios que ya disfrutan de un servicio de calidad, rápido y seguro.
                             </motion.p>
@@ -319,14 +325,15 @@ export default function Home() {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.4, duration: 0.6 }}
                                 viewport={{ once: true }}
-                                className="flex flex-col sm:flex-row gap-4 justify-center"
+                                className="flex flex-col xs:flex-row gap-3 sm:gap-4 justify-center flex-wrap"
                             >
                                 <motion.div
                                     whileHover={{ scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}
                                     transition={{ type: "spring", stiffness: 400 }}
+                                    className="w-full xs:w-auto"
                                 >
-                                    <Button size="lg" className="h-14 px-8 sm:px-10 rounded-full text-base sm:text-lg bg-primary text-primary-foreground shadow-xl shadow-primary/30 hover:shadow-2xl hover:shadow-primary/40 transition-all font-semibold whitespace-nowrap shimmer">
+                                    <Button size="lg" className="w-full xs:w-auto h-12 sm:h-13 lg:h-14 px-6 sm:px-8 lg:px-10 rounded-xl sm:rounded-full text-sm sm:text-base lg:text-lg bg-primary text-primary-foreground shadow-md shadow-primary/20 hover:shadow-lg hover:shadow-primary/30 transition-all font-semibold">
                                         Comenzar Ahora
                                     </Button>
                                 </motion.div>
@@ -334,8 +341,9 @@ export default function Home() {
                                     whileHover={{ scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}
                                     transition={{ type: "spring", stiffness: 400 }}
+                                    className="w-full xs:w-auto"
                                 >
-                                    <Button size="lg" variant="outline" className="h-14 px-8 sm:px-10 rounded-full text-base sm:text-lg border-2 hover:bg-muted font-semibold whitespace-nowrap transition-all">
+                                    <Button size="lg" variant="outline" className="w-full xs:w-auto h-12 sm:h-13 lg:h-14 px-6 sm:px-8 lg:px-10 rounded-xl sm:rounded-full text-sm sm:text-base lg:text-lg border-2 hover:bg-muted/80 font-semibold transition-all">
                                         Ver Servicios
                                     </Button>
                                 </motion.div>

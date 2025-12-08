@@ -99,18 +99,20 @@ export default function DashboardPage() {
     }, [stats.recentActivity, (stats as any).weeklyStats]);
 
     return (
-        <div className="min-h-screen bg-background p-8 font-sans">
-            {/* Header */}
-            <header className="flex items-center justify-between mb-8">
-                <div>
-                    <h1 className="text-3xl font-bold tracking-tight">Hola {user?.name?.split(' ')[0] || 'Usuario'}, ¡Bienvenido!</h1>
-                    <p className="text-muted-foreground mt-1">Aquí tienes un resumen de tu actividad hoy.</p>
+        <div className="min-h-screen bg-background p-3 sm:p-4 md:p-6 lg:p-8 font-sans">
+            {/* Header - Fully Responsive */}
+            <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 md:mb-8">
+                <div className="min-w-0">
+                    <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-foreground">
+                        Hola {user?.name?.split(' ')[0] || 'Usuario'}, ¡Bienvenido!
+                    </h1>
+                    <p className="text-muted-foreground mt-1 text-sm md:text-base">Aquí tienes un resumen de tu actividad.</p>
                 </div>
-                <div className="flex items-center gap-4">
-                    <div className="relative hidden md:block">
-                        <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+                    <div className="relative hidden sm:block">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
                         <input
-                            className="h-10 w-64 rounded-full bg-white border-none pl-10 pr-4 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
+                            className="h-10 w-48 lg:w-64 rounded-full bg-white dark:bg-card border border-border/30 pl-10 pr-4 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-accent/30 transition-all"
                             placeholder="Buscar..."
                         />
                     </div>
@@ -125,9 +127,9 @@ export default function DashboardPage() {
                 animate="show"
                 className="grid grid-cols-1 md:grid-cols-12 gap-6"
             >
-                {/* Visual Hero Widget - Spans 4 columns */}
-                <motion.div variants={item} className="md:col-span-4 row-span-2">
-                    <Card className="h-full border-none shadow-xl overflow-hidden relative group">
+                {/* Visual Hero Widget - Spans 4 columns - Responsive */}
+                <motion.div variants={item} className="col-span-1 md:col-span-4 row-span-2">
+                    <Card className="h-full border-none shadow-md hover:shadow-warm transition-all overflow-hidden relative group bg-gradient-to-br from-primary/5 to-accent/5 dark:from-primary/10 dark:to-accent/10">
                         <div className="absolute inset-0 bg-black/20 z-10" /> {/* Overlay for text readability */}
 
                         <AnimatePresence mode="popLayout">
@@ -163,18 +165,18 @@ export default function DashboardPage() {
                     </Card>
                 </motion.div>
 
-                {/* Stats Widgets */}
-                <motion.div variants={item} className="md:col-span-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+                {/* Stats Widgets - Fully Responsive */}
+                <motion.div variants={item} className="col-span-1 md:col-span-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                     {/* Common Card: Completed Requests/Jobs */}
-                    <Card className="border-none shadow-sm hover:shadow-md transition-shadow">
+                    <Card className="border border-border/30 shadow-sm hover:shadow-warm hover:border-accent/30 transition-all bg-gradient-to-br from-white/50 to-muted/20 dark:from-card/50 dark:to-muted/10">
                         <CardHeader className="flex flex-row items-center justify-between pb-2">
-                            <CardTitle className="text-sm font-medium text-muted-foreground">
+                            <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground">
                                 {user?.role === 'PROFESSIONAL' ? 'Trabajos Completados' : 'Solicitudes Completadas'}
                             </CardTitle>
-                            <ShoppingBag className="h-4 w-4 text-muted-foreground" />
+                            <ShoppingBag className="h-4 w-4 text-accent flex-shrink-0" />
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold">{stats.completedRequests}</div>
+                            <div className="text-3xl sm:text-4xl font-bold text-primary">{stats.completedRequests}</div>
                             <p className="text-xs text-muted-foreground mt-1">
                                 Total histórico
                             </p>
@@ -184,26 +186,26 @@ export default function DashboardPage() {
                     {/* Professional Specific Cards */}
                     {user?.role === 'PROFESSIONAL' && (
                         <>
-                            <Card className="border-none shadow-sm hover:shadow-md transition-shadow">
+                            <Card className="border border-border/30 shadow-sm hover:shadow-warm hover:border-accent/30 transition-all bg-gradient-to-br from-white/50 to-muted/20 dark:from-card/50 dark:to-muted/10">
                                 <CardHeader className="flex flex-row items-center justify-between pb-2">
-                                    <CardTitle className="text-sm font-medium text-muted-foreground">Servicios Publicados</CardTitle>
-                                    <ShoppingBag className="h-4 w-4 text-muted-foreground" />
+                                    <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground">Servicios Publicados</CardTitle>
+                                    <ShoppingBag className="h-4 w-4 text-accent flex-shrink-0" />
                                 </CardHeader>
                                 <CardContent>
-                                    <div className="text-2xl font-bold">{(stats as any).servicesCount || 0}</div>
+                                    <div className="text-3xl sm:text-4xl font-bold text-primary">{(stats as any).servicesCount || 0}</div>
                                     <p className="text-xs text-muted-foreground mt-1">
-                                        Active en el mercado
+                                        Activos en el mercado
                                     </p>
                                 </CardContent>
                             </Card>
 
-                            <Card className="border-none shadow-sm hover:shadow-md transition-shadow">
+                            <Card className="border border-border/30 shadow-sm hover:shadow-warm hover:border-accent/30 transition-all bg-gradient-to-br from-white/50 to-muted/20 dark:from-card/50 dark:to-muted/10">
                                 <CardHeader className="flex flex-row items-center justify-between pb-2">
-                                    <CardTitle className="text-sm font-medium text-muted-foreground">Calificación</CardTitle>
-                                    <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                                    <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground">Calificación</CardTitle>
+                                    <TrendingUp className="h-4 w-4 text-accent flex-shrink-0" />
                                 </CardHeader>
                                 <CardContent>
-                                    <div className="text-2xl font-bold">{Number(stats.rating).toFixed(1)}</div>
+                                    <div className="text-3xl sm:text-4xl font-bold text-primary">{Number(stats.rating).toFixed(1)}</div>
                                     <p className="text-xs text-muted-foreground mt-1">
                                         Promedio de reseñas
                                     </p>
@@ -215,20 +217,20 @@ export default function DashboardPage() {
                     {/* Client Specific Cards */}
                     {user?.role === 'CLIENT' && (
                         <>
-                            <Card className="border-none shadow-sm hover:shadow-md transition-shadow">
+                            <Card className="border border-border/30 shadow-sm hover:shadow-warm hover:border-accent/30 transition-all bg-gradient-to-br from-white/50 to-muted/20 dark:from-card/50 dark:to-muted/10">
                                 <CardHeader className="flex flex-row items-center justify-between pb-2">
-                                    <CardTitle className="text-sm font-medium text-muted-foreground">Solicitudes Activas</CardTitle>
-                                    <ShoppingBag className="h-4 w-4 text-muted-foreground" />
+                                    <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground">Solicitudes Activas</CardTitle>
+                                    <ShoppingBag className="h-4 w-4 text-accent flex-shrink-0" />
                                 </CardHeader>
                                 <CardContent>
-                                    <div className="text-2xl font-bold">{stats.activeRequests}</div>
+                                    <div className="text-3xl sm:text-4xl font-bold text-primary">{stats.activeRequests}</div>
                                     <p className="text-xs text-muted-foreground mt-1">
                                         En búsqueda o proceso
                                     </p>
                                 </CardContent>
                             </Card>
-                            {/* Placeholder for 3rd card layout balance if needed, or just leave 2 cols */}
-                            <Card className="border-none shadow-sm hover:shadow-md transition-shadow opacity-0 pointer-events-none md:block hidden">
+                            {/* Placeholder for layout balance */}
+                            <Card className="border border-border/30 shadow-sm opacity-0 pointer-events-none hidden lg:block">
                                 <CardContent></CardContent>
                             </Card>
                         </>
@@ -237,31 +239,31 @@ export default function DashboardPage() {
                     {/* Admin Specific Cards */}
                     {user?.role === 'ADMIN' && (
                         <>
-                            <Card className="border-none shadow-sm hover:shadow-md transition-shadow">
+                            <Card className="border border-border/30 shadow-sm hover:shadow-warm hover:border-accent/30 transition-all bg-gradient-to-br from-white/50 to-muted/20 dark:from-card/50 dark:to-muted/10">
                                 <CardHeader className="flex flex-row items-center justify-between pb-2">
-                                    <CardTitle className="text-sm font-medium text-muted-foreground">Usuarios Totales</CardTitle>
-                                    <Users className="h-4 w-4 text-muted-foreground" />
+                                    <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground">Usuarios Totales</CardTitle>
+                                    <Users className="h-4 w-4 text-accent flex-shrink-0" />
                                 </CardHeader>
                                 <CardContent>
-                                    <div className="text-2xl font-bold">{stats.leads}</div>
+                                    <div className="text-3xl sm:text-4xl font-bold text-primary">{stats.leads}</div>
                                 </CardContent>
                             </Card>
-                            <Card className="border-none shadow-sm hover:shadow-md transition-shadow">
+                            <Card className="border border-border/30 shadow-sm hover:shadow-warm hover:border-accent/30 transition-all bg-gradient-to-br from-white/50 to-muted/20 dark:from-card/50 dark:to-muted/10">
                                 <CardHeader className="flex flex-row items-center justify-between pb-2">
-                                    <CardTitle className="text-sm font-medium text-muted-foreground">Solicitudes Totales</CardTitle>
-                                    <ShoppingBag className="h-4 w-4 text-muted-foreground" />
+                                    <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground">Solicitudes Totales</CardTitle>
+                                    <ShoppingBag className="h-4 w-4 text-accent flex-shrink-0" />
                                 </CardHeader>
                                 <CardContent>
-                                    <div className="text-2xl font-bold">{stats.activeRequests}</div>
+                                    <div className="text-3xl sm:text-4xl font-bold text-primary">{stats.activeRequests}</div>
                                 </CardContent>
                             </Card>
                         </>
                     )}
                 </motion.div>
 
-                {/* Large Chart Area */}
-                <motion.div variants={item} className="md:col-span-8">
-                    <Card className="h-full border-none shadow-sm hover:shadow-md transition-shadow">
+                {/* Large Chart Area - Responsive */}
+                <motion.div variants={item} className="col-span-1 md:col-span-8">
+                    <Card className="h-full border border-border/30 shadow-sm hover:shadow-warm transition-all bg-gradient-to-br from-white/50 to-muted/20 dark:from-card/50 dark:to-muted/10">
                         <CardHeader>
                             <div className="flex items-center justify-between">
                                 <CardTitle>Estadísticas de Rendimiento</CardTitle>
@@ -303,9 +305,9 @@ export default function DashboardPage() {
                     </Card>
                 </motion.div>
 
-                {/* Recent Activity / List */}
-                <motion.div variants={item} className="md:col-span-4">
-                    <Card className="h-full border-none shadow-sm hover:shadow-md transition-shadow">
+                {/* Recent Activity / List - Responsive */}
+                <motion.div variants={item} className="col-span-1 md:col-span-4">
+                    <Card className="h-full border border-border/30 shadow-sm hover:shadow-warm transition-all bg-gradient-to-br from-white/50 to-muted/20 dark:from-card/50 dark:to-muted/10">
                         <CardHeader>
                             <CardTitle>Actividad Reciente</CardTitle>
                         </CardHeader>

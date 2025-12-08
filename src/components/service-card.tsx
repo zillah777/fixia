@@ -63,46 +63,53 @@ export function ServiceCard({
     location,
 }: ServiceCardProps) {
     return (
-        <Card className="overflow-hidden group hover:shadow-lg transition-all duration-300 border-border/50">
-            <div className="relative aspect-[4/3] overflow-hidden">
+        <Card className="overflow-hidden group hover:shadow-warm transition-all duration-300 border-border/50 flex flex-col h-full bg-white dark:bg-card">
+            {/* Image Container */}
+            <div className="relative aspect-video overflow-hidden bg-gradient-to-br from-muted to-muted/50">
                 <Image
                     src={image}
                     alt={title}
                     fill
-                    className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    className="object-cover transition-transform duration-500 group-hover:scale-110"
                 />
+                {/* Gradient Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                {/* Favorite Button */}
                 <Button
                     variant="ghost"
                     size="icon"
-                    className="absolute top-2 right-2 h-8 w-8 rounded-full bg-background/80 backdrop-blur-sm hover:bg-background/90 text-muted-foreground hover:text-red-500 transition-colors"
+                    className="absolute top-3 right-3 h-9 w-9 rounded-full bg-white/90 dark:bg-card/90 backdrop-blur-sm hover:bg-white dark:hover:bg-card text-muted-foreground hover:text-accent transition-all shadow-md hover:shadow-lg"
                 >
                     <Heart className="h-4 w-4" />
                 </Button>
-                <Badge className="absolute top-2 left-2 bg-primary/90 hover:bg-primary/90 backdrop-blur-sm">
+
+                {/* Category Badge */}
+                <Badge className="absolute top-3 left-3 bg-accent/90 hover:bg-accent text-accent-foreground backdrop-blur-sm shadow-md text-xs sm:text-sm">
                     {category}
                 </Badge>
             </div>
 
-            <CardHeader className="p-4 pb-2 space-y-2">
-                <div className="flex justify-between items-start gap-2">
-                    <h3 className="font-semibold text-lg leading-tight line-clamp-2 group-hover:text-primary transition-colors">
-                        {title}
-                    </h3>
-                </div>
-                <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                    <MapPin className="h-3.5 w-3.5" />
+            {/* Content */}
+            <CardHeader className="p-4 pb-2 space-y-2 flex-1">
+                <h3 className="font-semibold text-base sm:text-lg leading-snug line-clamp-2 group-hover:text-primary transition-colors">
+                    {title}
+                </h3>
+                <div className="flex items-center gap-1 text-xs sm:text-sm text-muted-foreground">
+                    <MapPin className="h-3.5 w-3.5 flex-shrink-0" />
                     <span className="truncate">{location}</span>
                 </div>
             </CardHeader>
 
+            {/* Provider Info */}
             <CardContent className="p-4 pt-0 space-y-3">
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                        <Avatar className="h-6 w-6 border">
+                <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2 min-w-0">
+                        <Avatar className="h-7 w-7 border border-border/50 flex-shrink-0">
                             <AvatarImage src={providerAvatar} />
-                            <AvatarFallback>{providerName[0]}</AvatarFallback>
+                            <AvatarFallback className="text-xs">{providerName[0]}</AvatarFallback>
                         </Avatar>
-                        <span className="text-sm font-medium text-muted-foreground truncate max-w-[100px]">
+                        <span className="text-xs sm:text-sm font-medium text-muted-foreground truncate">
                             {providerName}
                         </span>
                     </div>
@@ -110,15 +117,19 @@ export function ServiceCard({
                 </div>
             </CardContent>
 
-            <CardFooter className="p-4 pt-0 flex items-center justify-between border-t bg-muted/20 mt-auto">
-                <div className="flex flex-col">
+            {/* Footer with Price & CTA */}
+            <CardFooter className="p-4 pt-0 flex items-center justify-between border-t border-border/30 bg-gradient-to-r from-transparent via-muted/10 to-transparent mt-auto gap-2">
+                <div className="flex flex-col min-w-0">
                     <span className="text-xs text-muted-foreground">Desde</span>
-                    <span className="font-bold text-lg text-primary">
+                    <span className="font-bold text-sm sm:text-base text-accent">
                         ${price.toLocaleString()}
                     </span>
                 </div>
-                <Button size="sm" className="font-medium">
-                    Ver Detalle
+                <Button
+                    size="sm"
+                    className="font-semibold text-xs sm:text-sm bg-accent text-accent-foreground hover:bg-accent/90 shadow-md shadow-accent/20 transition-all flex-shrink-0"
+                >
+                    Ver
                 </Button>
             </CardFooter>
         </Card>
