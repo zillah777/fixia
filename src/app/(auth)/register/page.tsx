@@ -41,6 +41,9 @@ const formSchema = z.object({
     phone: z.string().min(10, {
         message: "Ingresa un número de teléfono válido.",
     }),
+    location: z.string().min(2, {
+        message: "La localidad es requerida.",
+    }),
     dni: z.string().min(7, {
         message: "El DNI debe tener al menos 7 dígitos.",
     }).max(9, {
@@ -77,6 +80,7 @@ function RegisterForm() {
             name: "",
             email: "",
             phone: "",
+            location: "",
             dni: "",
             password: "",
             role: defaultRole,
@@ -117,15 +121,15 @@ function RegisterForm() {
 
     return (
         <div className="flex min-h-screen items-center justify-center flex-col bg-muted/50 p-4">
-            <Link href="/" className="flex items-center justify-center gap-2 mb-8">
-                <div className="relative h-12 sm:h-14 md:h-16 w-auto aspect-[3/1]">
+            <Link href="/" className="flex items-center justify-center gap-2 mb-16 md:mb-24 pl-8 md:pl-0">
+                <div className="relative h-24 w-auto aspect-[3/1]">
                     <Image
-                        src="/logo.svg"
+                        src="/logo.png"
                         alt="Fixia Logo"
-                        width={180}
-                        height={60}
-                        className="object-contain"
-                        style={{ width: "auto", height: "auto" }}
+                        width={270}
+                        height={90}
+                        className="object-contain w-48 sm:w-60 md:w-72"
+                        style={{ height: "auto" }}
                         priority
                     />
                 </div>
@@ -268,19 +272,34 @@ function RegisterForm() {
                                 )}
                             />
 
-                            <FormField
-                                control={form.control}
-                                name="phone"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Teléfono</FormLabel>
-                                        <FormControl>
-                                            <Input type="tel" placeholder="+54 9 11 ..." {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <FormField
+                                    control={form.control}
+                                    name="phone"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Teléfono</FormLabel>
+                                            <FormControl>
+                                                <Input type="tel" placeholder="+54 9 11 ..." {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="location"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Localidad</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="Ciudad, Provincia" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
 
                             <FormField
                                 control={form.control}

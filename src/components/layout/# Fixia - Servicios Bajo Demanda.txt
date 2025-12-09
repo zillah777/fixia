@@ -1,0 +1,47 @@
+# Fixia - Servicios Bajo Demanda
+
+[Servicios](http://localhost:3000/services)
+[Profesionales](http://localhost:3000/professionals)
+[Planes](http://localhost:3000/pricing)
+[Iniciar Sesión](http://localhost:3000/login)
+[Únete a Fixia](http://localhost:3000/register)
+
+# Tu vida,en buenas manos.
+Conectamos tus necesidades con los mejores profesionales verificados. Desde reparaciones hasta proyectos especiales, con garantía total.
+
+## Servicios Populares
+Los profesionales más solicitados de tu zona
+
+## Lo que dicen nuestros clientes
+Miles de usuarios han encontrado el profesional perfecto a través de Fixia
+
+## Soluciones expertas para cualquier necesidad
+Conecta con profesionales calificados para llevar a cabo tus proyectos con total confianza y seguridad.
+[Comenzar Ahora](http://localhost:3000/become-a-pro)
+[Ver Servicios](http://localhost:3000/services)
+
+### Newsletter
+Suscríbete para recibir notificaciones de nuevos profesionales
+La plataforma líder para conectar profesionales de confianza con clientes que valoran la calidad.
+- [Sobre Nosotros](http://localhost:3000/about)
+- [Blog](http://localhost:3000/blog)
+[Sobre Nosotros](http://localhost:3000/about)
+[Blog](http://localhost:3000/blog)
+- [Plomería](http://localhost:3000/services/plomeria)
+- [Electricidad](http://localhost:3000/services/electricidad)
+- [Limpieza](http://localhost:3000/services/limpieza)
+- [Ser Profesional](http://localhost:3000/become-a-pro)
+[Plomería](http://localhost:3000/services/plomeria)
+[Electricidad](http://localhost:3000/services/electricidad)
+[Limpieza](http://localhost:3000/services/limpieza)
+[Ser Profesional](http://localhost:3000/become-a-pro)
+- [Términos y Condiciones](http://localhost:3000/terms)
+- [Política de Privacidad](http://localhost:3000/privacy)
+- [Cookies](http://localhost:3000/cookies)
+- [Centro de Ayuda](http://localhost:3000/help)
+[Términos y Condiciones](http://localhost:3000/terms)
+[Política de Privacidad](http://localhost:3000/privacy)
+[Cookies](http://localhost:3000/cookies)
+[Centro de Ayuda](http://localhost:3000/help)
+© 2025 Fixia Inc. Todos los derechos reservados.
+Hecho con en Argentina

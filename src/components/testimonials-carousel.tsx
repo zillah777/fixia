@@ -79,13 +79,19 @@ export function TestimonialsCarousel({ testimonials }: TestimonialsCarouselProps
 
                                 {/* Author */}
                                 <div className="flex items-center gap-3 pt-4 border-t border-border/30">
-                                    <Avatar className="h-10 w-10">
-                                        <AvatarImage src={testimonial.avatar} />
-                                        <AvatarFallback>{testimonial.name[0]}</AvatarFallback>
+                                    <Avatar className="h-12 w-12 flex-shrink-0 ring-2 ring-primary/20">
+                                        <AvatarImage
+                                            src={testimonial.avatar}
+                                            alt={testimonial.name}
+                                            className="object-cover"
+                                        />
+                                        <AvatarFallback className="font-bold bg-gradient-to-br from-primary/30 to-accent/30">
+                                            {testimonial.name.split(' ').map(n => n[0]).join('')}
+                                        </AvatarFallback>
                                     </Avatar>
-                                    <div>
-                                        <p className="font-semibold text-sm">{testimonial.name}</p>
-                                        <p className="text-xs text-muted-foreground">{testimonial.role}</p>
+                                    <div className="flex-1 min-w-0">
+                                        <p className="font-semibold text-sm truncate">{testimonial.name}</p>
+                                        <p className="text-xs text-muted-foreground truncate">{testimonial.role}</p>
                                     </div>
                                 </div>
                             </div>

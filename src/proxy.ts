@@ -105,7 +105,6 @@ export const config = {
          *
          * This allows API routes to be handled separately
          */
-        '/((?!_next/static|_next/image|favicon.ico|public).*)',
+        '/((?!_next/static|_next/image|favicon.ico).*)',
     ],
 }
-

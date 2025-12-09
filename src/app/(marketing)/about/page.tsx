@@ -1,75 +1,129 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, Users, Target, Heart, ShieldCheck, ArrowRight } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import Image from "next/image";
 
 export default function AboutPage() {
     return (
-        <div className="container mx-auto px-4 py-12">
+        <div className="flex flex-col min-h-screen bg-background">
             {/* Hero Section */}
-            <div className="text-center max-w-3xl mx-auto mb-16">
-                <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-6">
-                    Revolucionando los servicios del hogar
-                </h1>
-                <p className="text-xl text-muted-foreground mb-8">
-                    En Fixia, nuestra misión es conectar a personas con los mejores profesionales locales de manera rápida, segura y confiable.
-                </p>
-                <div className="flex justify-center gap-4">
-                    <Link href="/register">
-                        <Button size="lg">Únete a Fixia</Button>
-                    </Link>
-                    <Link href="/contact">
-                        <Button variant="outline" size="lg">Contáctanos</Button>
-                    </Link>
+            <section className="relative py-20 md:py-32 overflow-hidden bg-primary/5">
+                <div className="container px-4 mx-auto text-center relative z-10">
+                    <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                        Más que servicios, construimos confianza
+                    </h1>
+                    <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-10 leading-relaxed">
+                        En Fixia, transformamos la manera en que encuentras ayuda para tu hogar, creando una comunidad segura, transparente y eficiente.
+                    </p>
+                    <div className="flex flex-col sm:flex-row justify-center gap-4">
+                        <Link href="/register">
+                            <Button size="lg" className="h-12 px-8 text-lg rounded-full">Únete a la Comunidad</Button>
+                        </Link>
+                        <Link href="/contact">
+                            <Button variant="outline" size="lg" className="h-12 px-8 text-lg rounded-full bg-background/50 backdrop-blur-sm">Contáctanos</Button>
+                        </Link>
+                    </div>
                 </div>
-            </div>
+                {/* Abstract shapes */}
+                <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+                    <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] bg-primary/10 rounded-full blur-[100px]" />
+                    <div className="absolute -bottom-[10%] -right-[10%] w-[40%] h-[40%] bg-accent/10 rounded-full blur-[100px]" />
+                </div>
+            </section>
 
-            {/* Values Section */}
-            <div className="grid md:grid-cols-3 gap-8 mb-16">
-                <div className="bg-card p-8 rounded-xl border shadow-sm">
-                    <div className="h-12 w-12 bg-primary/10 rounded-lg flex items-center justify-center mb-6">
-                        <CheckCircle2 className="h-6 w-6 text-primary" />
+            {/* Mission & Vision */}
+            <section className="py-20 bg-background">
+                <div className="container px-4 mx-auto">
+                    <div className="grid md:grid-cols-2 gap-12 lg:gap-20 items-center">
+                        <div className="space-y-6">
+                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 text-accent text-sm font-medium">
+                                <Target className="h-4 w-4" /> Nuestra Misión
+                            </div>
+                            <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Simplificar tu vida con soluciones expertas</h2>
+                            <p className="text-lg text-muted-foreground leading-relaxed">
+                                Creemos que cuidar de tu hogar no debería ser un dolor de cabeza. Nuestra plataforma utiliza tecnología avanzada para verificar a cada profesional, asegurar precios justos y garantizar la satisfacción en cada trabajo.
+                            </p>
+                            <ul className="space-y-4 pt-4">
+                                {[
+                                    "Verificación rigurosa de identidad y antecedentes.",
+                                    "Sistema de pagos seguro y protegido.",
+                                    "Garantía de satisfacción en todos los servicios."
+                                ].map((item, i) => (
+                                    <li key={i} className="flex items-center gap-3 text-foreground/80">
+                                        <CheckCircle2 className="h-5 w-5 text-green-500 flex-shrink-0" />
+                                        {item}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                        <div className="relative">
+                            <div className="aspect-square rounded-2xl overflow-hidden shadow-2xl bg-muted rotate-3 hover:rotate-0 transition-all duration-500">
+                                <Image
+                                    src="https://images.unsplash.com/photo-1581578731117-104f2a41272c?q=80&w=1000&auto=format&fit=crop"
+                                    alt="Professional working"
+                                    width={800}
+                                    height={800}
+                                    className="w-full h-full object-cover"
+                                />
+                            </div>
+                        </div>
                     </div>
-                    <h3 className="text-xl font-bold mb-3">Confianza</h3>
-                    <p className="text-muted-foreground">
-                        Verificamos a cada profesional para asegurar que recibas un servicio de calidad y seguridad en tu hogar.
-                    </p>
                 </div>
-                <div className="bg-card p-8 rounded-xl border shadow-sm">
-                    <div className="h-12 w-12 bg-primary/10 rounded-lg flex items-center justify-center mb-6">
-                        <CheckCircle2 className="h-6 w-6 text-primary" />
-                    </div>
-                    <h3 className="text-xl font-bold mb-3">Transparencia</h3>
-                    <p className="text-muted-foreground">
-                        Sin costos ocultos. Conoce los precios y lee reseñas reales antes de contratar.
-                    </p>
-                </div>
-                <div className="bg-card p-8 rounded-xl border shadow-sm">
-                    <div className="h-12 w-12 bg-primary/10 rounded-lg flex items-center justify-center mb-6">
-                        <CheckCircle2 className="h-6 w-6 text-primary" />
-                    </div>
-                    <h3 className="text-xl font-bold mb-3">Innovación</h3>
-                    <p className="text-muted-foreground">
-                        Utilizamos tecnología moderna para hacer que la contratación de servicios sea tan fácil como pedir un viaje.
-                    </p>
-                </div>
-            </div>
+            </section>
 
-            {/* Story Section */}
-            <div className="bg-muted/50 rounded-2xl p-8 md:p-12">
-                <div className="max-w-3xl mx-auto text-center">
-                    <h2 className="text-3xl font-bold mb-6">Nuestra Historia</h2>
-                    <p className="text-lg text-muted-foreground mb-6">
-                        Fixia nació en 2025 con una idea simple: encontrar un plomero o electricista de confianza no debería ser una odisea.
-                        Lo que comenzó como un pequeño directorio local se ha convertido en la plataforma líder de servicios bajo demanda,
-                        ayudando a miles de profesionales a crecer sus negocios y a clientes a resolver sus problemas domésticos.
-                    </p>
-                    <p className="text-lg text-muted-foreground">
-                        Hoy, seguimos comprometidos con nuestra visión de digitalizar y profesionalizar el sector de servicios,
-                        creando oportunidades económicas y mejorando la calidad de vida de nuestra comunidad.
-                    </p>
+            {/* Core Values */}
+            <section className="py-20 bg-muted/30">
+                <div className="container px-4 mx-auto">
+                    <div className="text-center max-w-2xl mx-auto mb-16">
+                        <h2 className="text-3xl font-bold mb-4">Lo que nos define</h2>
+                        <p className="text-muted-foreground">Nuestros valores fundamentales guían cada decisión que tomamos para servirte mejor.</p>
+                    </div>
+                    <div className="grid md:grid-cols-3 gap-8">
+                        <Card className="border-none shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
+                            <CardContent className="p-8 text-center space-y-4">
+                                <div className="w-16 h-16 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center mx-auto mb-4">
+                                    <ShieldCheck className="h-8 w-8" />
+                                </div>
+                                <h3 className="text-xl font-bold">Seguridad Primero</h3>
+                                <p className="text-muted-foreground">Tu seguridad es nuestra prioridad. Implementamos los estándares más altos de verificación.</p>
+                            </CardContent>
+                        </Card>
+                        <Card className="border-none shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
+                            <CardContent className="p-8 text-center space-y-4">
+                                <div className="w-16 h-16 rounded-2xl bg-purple-100 text-purple-600 flex items-center justify-center mx-auto mb-4">
+                                    <Users className="h-8 w-8" />
+                                </div>
+                                <h3 className="text-xl font-bold">Comunidad</h3>
+                                <p className="text-muted-foreground">Fomentamos relaciones duraderas basadas en el respeto mutuo entre clientes y profesionales.</p>
+                            </CardContent>
+                        </Card>
+                        <Card className="border-none shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
+                            <CardContent className="p-8 text-center space-y-4">
+                                <div className="w-16 h-16 rounded-2xl bg-pink-100 text-pink-600 flex items-center justify-center mx-auto mb-4">
+                                    <Heart className="h-8 w-8" />
+                                </div>
+                                <h3 className="text-xl font-bold">Pasión por Servir</h3>
+                                <p className="text-muted-foreground">Nos apasiona resolver problemas y mejorar la calidad de vida de nuestros usuarios día a día.</p>
+                            </CardContent>
+                        </Card>
+                    </div>
                 </div>
-            </div>
+            </section>
+
+            {/* CTA */}
+            <section className="py-20 bg-background border-t">
+                <div className="container px-4 mx-auto max-w-4xl text-center">
+                    <h2 className="text-3xl md:text-4xl font-bold mb-6">¿Listo para transformar tu hogar?</h2>
+                    <p className="text-xl text-muted-foreground mb-10">Únete a miles de usuarios que ya confían en Fixia para sus proyectos del hogar.</p>
+                    <Link href="/services">
+                        <Button size="lg" className="h-14 px-10 text-lg rounded-full shadow-lg hover:shadow-xl transition-all group">
+                            Explorar Servicios <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                        </Button>
+                    </Link>
+                </div>
+            </section>
         </div>
     );
 }

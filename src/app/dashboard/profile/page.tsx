@@ -52,37 +52,37 @@ export default function ProfilePage() {
     return (
         <div className="space-y-6">
             {/* Header */}
-            <div className="flex items-center gap-6">
+            <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
                 <div className="relative">
-                    <Avatar className="h-24 w-24 border-4 border-white shadow-lg">
+                    <Avatar className="h-20 w-20 md:h-24 md:w-24 border-4 border-white shadow-lg">
                         <AvatarImage src={user?.avatar || undefined} alt={user?.name || "User"} className="object-cover" />
-                        <AvatarFallback className="text-2xl font-bold bg-muted text-gray-500">
+                        <AvatarFallback className="text-xl md:text-2xl font-bold bg-muted text-gray-500">
                             {user?.name?.substring(0, 2).toUpperCase() || "US"}
                         </AvatarFallback>
                     </Avatar>
                     <div className="absolute bottom-0 right-0 bg-white rounded-full p-1 border-4 border-transparent shadow-sm">
                         {(profile?.verificationRequest?.status === 'APPROVED' || user?.role === 'PROFESSIONAL') ? (
-                            <CheckCircle2 className="h-6 w-6 text-secondary fill-white" />
+                            <CheckCircle2 className="h-5 w-5 md:h-6 md:w-6 text-secondary fill-white" />
                         ) : (
-                            <div className="bg-accent h-4 w-4 rounded-full border-2 border-white" />
+                            <div className="bg-accent h-3 w-3 md:h-4 md:w-4 rounded-full border-2 border-white" />
                         )}
                     </div>
                 </div>
-                <div>
-                    <h1 className="text-2xl font-bold">{user?.name}</h1>
-                    <p className="text-muted-foreground">Miembro desde {new Date(user?.createdAt || Date.now()).getFullYear()}</p>
-                    <div className="flex items-center gap-2 mt-2">
-                        <MapPin className="h-4 w-4 text-muted-foreground" />
-                        <span className="text-sm text-muted-foreground">
+                <div className="space-y-1">
+                    <h1 className="text-xl md:text-2xl font-bold">{user?.name}</h1>
+                    <p className="text-sm md:text-base text-muted-foreground">Miembro desde {new Date(user?.createdAt || Date.now()).getFullYear()}</p>
+                    <div className="flex items-center gap-2">
+                        <MapPin className="h-3 w-3 md:h-4 md:w-4 text-muted-foreground" />
+                        <span className="text-xs md:text-sm text-muted-foreground">
                             {profile?.profile?.locationLat && profile?.profile?.locationLng
                                 ? (profile?.profile?.city || "Buenos Aires") + ", Argentina"
                                 : "Ubicación no especificada"}
                         </span>
                     </div>
                 </div>
-                <div className="ml-auto">
-                    <Link href="/dashboard/settings">
-                        <Button variant="outline">
+                <div className="w-full md:w-auto md:ml-auto pt-4 md:pt-0">
+                    <Link href="/dashboard/settings" className="w-full md:w-auto">
+                        <Button variant="outline" className="w-full md:w-auto">
                             <Edit className="mr-2 h-4 w-4" />
                             Editar Perfil
                         </Button>
@@ -188,23 +188,23 @@ export default function ProfilePage() {
                     </Card>
 
                     {/* Stats */}
-                    <div className="grid grid-cols-3 gap-4">
+                    <div className="grid grid-cols-3 gap-2 md:gap-4">
                         <Card>
-                            <CardContent className="pt-6 text-center">
-                                <div className="text-2xl font-bold">{profile?.stats?.projects || 0}</div>
-                                <div className="text-xs text-muted-foreground mt-1">Proyectos</div>
+                            <CardContent className="pt-4 md:pt-6 text-center p-2 md:p-6">
+                                <div className="text-xl md:text-2xl font-bold">{profile?.stats?.projects || 0}</div>
+                                <div className="text-[10px] md:text-xs text-muted-foreground mt-1">Proyectos</div>
                             </CardContent>
                         </Card>
                         <Card>
-                            <CardContent className="pt-6 text-center">
-                                <div className="text-2xl font-bold">{profile?.stats?.reviews || 0}</div>
-                                <div className="text-xs text-muted-foreground mt-1">Reseñas</div>
+                            <CardContent className="pt-4 md:pt-6 text-center p-2 md:p-6">
+                                <div className="text-xl md:text-2xl font-bold">{profile?.stats?.reviews || 0}</div>
+                                <div className="text-[10px] md:text-xs text-muted-foreground mt-1">Reseñas</div>
                             </CardContent>
                         </Card>
                         <Card>
-                            <CardContent className="pt-6 text-center">
-                                <div className="text-2xl font-bold">{profile?.stats?.favorites || 0}</div>
-                                <div className="text-xs text-muted-foreground mt-1">Favoritos</div>
+                            <CardContent className="pt-4 md:pt-6 text-center p-2 md:p-6">
+                                <div className="text-xl md:text-2xl font-bold">{profile?.stats?.favorites || 0}</div>
+                                <div className="text-[10px] md:text-xs text-muted-foreground mt-1">Favoritos</div>
                             </CardContent>
                         </Card>
                     </div>

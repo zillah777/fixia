@@ -2,7 +2,11 @@ import { NextResponse } from "next/server"
 import { getSession } from "@/lib/auth"
 import prisma from "@/lib/prisma"
 
-export async function PATCH(
+/**
+ * DELETE /api/notifications/[id]
+ * Delete a single notification
+ */
+export async function DELETE(
     request: Request,
     { params }: { params: Promise<{ id: string }> }
 ) {

@@ -88,14 +88,14 @@ export default function LoginPage() {
         <div className="flex min-h-screen items-center justify-center md:items-start md:pt-32 bg-muted/50 p-4">
             <div className="w-full max-w-md space-y-8">
                 {/* Logo */}
-                <Link href="/" className="flex items-center justify-center gap-2">
-                    <div className="relative h-12 w-auto aspect-[3/1]">
+                <Link href="/" className="flex items-center justify-center gap-2 mb-16 md:mb-24 pl-8 md:pl-0">
+                    <div className="relative h-24 w-auto aspect-[3/1]">
                         <Image
-                            src="/logo.svg"
+                            src="/logo.png"
                             alt="Fixia Logo"
-                            width={180}
-                            height={60}
-                            className="object-contain w-32 sm:w-40 md:w-48"
+                            width={270}
+                            height={90}
+                            className="object-contain w-48 sm:w-60 md:w-72"
                             style={{ height: "auto" }}
                             priority
                         />

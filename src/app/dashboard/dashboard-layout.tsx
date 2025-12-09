@@ -47,18 +47,33 @@ export default function DashboardLayout({
     const { user, logout, isLoading } = useAuth()
     const [isOpen, setIsOpen] = useState(false)
 
+    // Aggressive redirect removed in favor of Middleware protection
+    // and AuthProvider resilience.
+
+    // Professional Subscription Enforcement
     useEffect(() => {
-        if (!isLoading && !user) {
-            router.replace("/login")
-            return
-        }
-
-        // Professional Subscription Enforcement
-
-    }, [user, isLoading, router, pathname])
+        // ... (keep subscription logic if any, currently empty in view)
+    }, [user, pathname])
 
     if (isLoading) {
-        return <div className="min-h-screen bg-background"></div>
+        return (
+            <div className="flex min-h-screen items-center justify-center bg-background">
+                <div className="animate-pulse flex flex-col items-center gap-4">
+                    <div className="h-12 w-12 bg-muted rounded-full" />
+                    <div className="h-4 w-32 bg-muted rounded" />
+                </div>
+            </div>
+        )
+    }
+
+    // If no user after loading (and middleware didn't catch it), 
+    // we should render a fallback or allow the UI to handle null user gracefully.
+    // However, for now, let's assume if user is null here, it's a real issue,
+    // but we won't auto-redirect to avoid the "flash" issue the user hated.
+    if (!user) {
+        // Optional: Render a "Please login" empty state or let it fall through 
+        // so the user sees *something* instead of a hard redirect loop.
+        // But effectively, if we have Middleware, we shouldn't reach here without a session usually.
     }
 
     return (
@@ -67,7 +82,7 @@ export default function DashboardLayout({
             <div className="md:hidden fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-4 bg-background/80 backdrop-blur-md border-b">
                 <div className="relative h-12 w-32">
                     <Image
-                        src="/logo.svg"
+                        src="/logo.png"
                         alt="Fixia Logo"
                         fill
                         className="object-contain"
@@ -88,7 +103,7 @@ export default function DashboardLayout({
                         <div className="p-8">
                             <div className="relative h-14 w-40 mb-6">
                                 <Image
-                                    src="/logo.svg"
+                                    src="/logo.png"
                                     alt="Fixia Logo"
                                     fill
                                     className="object-contain"
@@ -192,7 +207,7 @@ export default function DashboardLayout({
                         <Link href="/" className="flex items-center gap-2 mb-8">
                             <div className="relative h-12 w-auto aspect-[3/1]">
                                 <Image
-                                    src="/logo.svg"
+                                    src="/logo.png"
                                     alt="Fixia Logo"
                                     fill
                                     className="object-contain"
@@ -278,7 +293,7 @@ export default function DashboardLayout({
                             )}
                     </nav>
 
-                    <div className="p-4 mt-auto border-t border-border/50 bg-gray-50/50">
+                    <div className="p-4 mt-auto border-t border-border/50 bg-gray-50/50 flex-shrink-0">
                         <Button
                             variant="ghost"
                             className="w-full justify-start gap-3 text-destructive hover:text-destructive hover:bg-destructive/5 rounded-xl h-11"
@@ -292,8 +307,8 @@ export default function DashboardLayout({
             </aside>
 
             {/* Main Content Area */}
-            <main className="flex-1 md:ml-72 p-4 md:p-8 pt-20 md:pt-8 min-h-screen">
-                <div className="max-w-7xl mx-auto">
+            <main className="flex-1 md:ml-72 p-4 md:p-8 pt-20 md:pt-8 min-h-screen w-full max-w-[100vw] overflow-x-hidden">
+                <div className="max-w-7xl mx-auto w-full">
                     {children}
                 </div>
             </main>

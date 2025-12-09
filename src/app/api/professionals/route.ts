@@ -50,6 +50,9 @@ export async function GET(request: Request) {
                 avatar: true,
                 role: true,
                 createdAt: true,
+                verificationRequest: {
+                    select: { status: true }
+                },
                 profile: {
                     select: {
                         bio: true,
@@ -83,6 +86,8 @@ export async function GET(request: Request) {
         // Transform data to match frontend expectations
         const formattedPros = professionals.map(pro => {
             const tags = JSON.parse(pro.profile?.tags || "[]")
+            const isVerified = pro.verificationRequest?.status === "APPROVED"
+
             return {
                 id: pro.id,
                 name: pro.name,
@@ -92,8 +97,8 @@ export async function GET(request: Request) {
                 reviews: pro._count.matchesAsProvider,
                 location: "Buenos Aires", // Placeholder until we have real address field
                 image: pro.avatar || `https://ui-avatars.com/api/?name=${pro.name}&background=random`,
-                price: pro.services[0]?.price ? `$${pro.services[0].price}` : "A convenir",
-                verified: true, // Logic for verification?
+                price: pro.services[0]?.price ? new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(Number(pro.services[0].price)) : "A convenir",
+                verified: isVerified,
                 tags: tags,
                 bio: pro.profile?.bio
             }

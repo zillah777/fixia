@@ -11,6 +11,7 @@ const registerSchema = z.object({
     password: z.string().min(6),
     role: z.enum(["CLIENT", "PROFESSIONAL"]),
     phone: z.string().optional(),
+    location: z.string().min(2, "La localidad es requerida"), // Added location
     dni: z.string().min(7).max(9),
     birthdate: z.string().transform((str) => new Date(str)), // Receive as string, convert to Date
 });
@@ -18,7 +19,7 @@ const registerSchema = z.object({
 export async function POST(req: Request) {
     try {
         const body = await req.json();
-        const { name, email, password, role, phone, dni, birthdate } = registerSchema.parse(body);
+        const { name, email, password, role, phone, location, dni, birthdate } = registerSchema.parse(body);
 
         // Check if user exists (email, phone or dni)
         const existingUser = await prisma.user.findFirst({
@@ -55,6 +56,7 @@ export async function POST(req: Request) {
                 password: hashedPassword,
                 role,
                 phone,
+                location, // Save location
                 dni,
                 birthdate,
                 verificationToken,

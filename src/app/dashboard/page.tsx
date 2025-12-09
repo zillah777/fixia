@@ -99,7 +99,7 @@ export default function DashboardPage() {
     }, [stats.recentActivity, (stats as any).weeklyStats]);
 
     return (
-        <div className="min-h-screen bg-background p-3 sm:p-4 md:p-6 lg:p-8 font-sans">
+        <div className="min-h-screen bg-background p-3 sm:p-4 md:p-6 lg:p-8 font-sans overflow-x-hidden">
             {/* Header - Fully Responsive */}
             <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 md:mb-8">
                 <div className="min-w-0">

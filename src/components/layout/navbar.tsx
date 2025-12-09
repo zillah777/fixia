@@ -148,7 +148,7 @@ export function Navbar() {
 
                         <Link href="/" className="flex items-center gap-2 flex-shrink-0">
                             <Image
-                                src="/logo.svg"
+                                src="/logo.png"
                                 alt="Fixia Logo"
                                 width={180}
                                 height={60}
@@ -298,7 +298,7 @@ export function Navbar() {
                             <Link href="/login" className="hidden md:block text-sm font-medium transition-colors hover:text-foreground/80 text-foreground/60">
                                 Iniciar Sesión
                             </Link>
-                            <Link href="/register">
+                            <Link href="/register" className="mr-5 md:mr-0">
                                 <Button size="sm" className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold shadow-lg shadow-primary/20">
                                     Únete a Fixia
                                 </Button>

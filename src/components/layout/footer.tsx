@@ -13,12 +13,41 @@ import {
 } from "@/components/ui/collapsible"
 import { useState } from "react"
 
+// Imports needed
+import { toast } from "sonner"
+import { Loader2 } from "lucide-react"
+
 export function Footer() {
     const [openSections, setOpenSections] = useState({
         company: true,
         services: true,
         legal: true,
     })
+    const [email, setEmail] = useState("")
+    const [isLoading, setIsLoading] = useState(false)
+
+    const handleSubscribe = async (e: React.FormEvent) => {
+        e.preventDefault()
+        if (!email) return
+
+        setIsLoading(true)
+        try {
+            const res = await fetch("/api/newsletter", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email })
+            })
+
+            if (!res.ok) throw new Error("Error al suscribirse")
+
+            toast.success("¡Gracias por suscribirte!")
+            setEmail("")
+        } catch (error) {
+            toast.error("Hubo un error, intenta nuevamente.")
+        } finally {
+            setIsLoading(false)
+        }
+    }
 
     return (
         <footer className="bg-background border-t border-border/40 pt-16 pb-8">
@@ -31,16 +60,19 @@ export function Footer() {
                             Suscríbete para recibir notificaciones de nuevos profesionales
                         </p>
                     </div>
-                    <div className="flex gap-2">
+                    <form onSubmit={handleSubscribe} className="flex gap-2">
                         <Input
                             type="email"
                             placeholder="tu@email.com"
                             className="flex-1"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
                         />
-                        <Button size="sm" className="px-6">
-                            Suscribirse
+                        <Button size="sm" className="px-6" type="submit" disabled={isLoading}>
+                            {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Suscribirse"}
                         </Button>
-                    </div>
+                    </form>
                 </div>
 
                 {/* Links Grid */}
@@ -49,11 +81,11 @@ export function Footer() {
                     <div className="space-y-4 col-span-1 md:col-span-2 lg:col-span-1">
                         <Link href="/" className="flex items-center gap-2">
                             <Image
-                                src="/logo.svg"
+                                src="/logo.png"
                                 alt="Fixia Logo"
-                                width={150}
-                                height={45}
-                                className="h-10 sm:h-12 w-auto object-contain"
+                                width={240}
+                                height={80}
+                                className="h-16 h-auto w-48 object-contain"
                             />
                         </Link>
                         <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">

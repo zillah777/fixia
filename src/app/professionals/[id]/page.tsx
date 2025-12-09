@@ -40,7 +40,7 @@ function ProfessionalProfile() {
         "@type": "LocalBusiness",
         "name": pro.name,
         "image": pro.image,
-        "telephone": "+54 9 11 1234 5678", // Still hardcoded as we don't expose phone publicly usually
+        "telephone": "+54 9 11 1234 5678", // Placeholder
         "address": {
             "@type": "PostalAddress",
             "streetAddress": pro.location,
@@ -72,8 +72,8 @@ function ProfessionalProfile() {
                                     <AvatarFallback>{pro.name.substring(0, 2)}</AvatarFallback>
                                 </Avatar>
                                 {pro.verified && (
-                                    <div className="absolute bottom-0 right-0 bg-white rounded-full p-1 shadow-sm" title="Verificado">
-                                        <CheckCircle className="h-6 w-6 text-blue-500 fill-blue-100" />
+                                    <div className="absolute bottom-0 right-0 bg-blue-500 rounded-full p-1.5 shadow-md border-2 border-white" title="Identidad Verificada">
+                                        <CheckCircle className="h-5 w-5 text-white fill-none" />
                                     </div>
                                 )}
                             </div>
@@ -98,17 +98,38 @@ function ProfessionalProfile() {
                                     <Calendar className="h-4 w-4 text-muted-foreground" />
                                     <span>Miembro desde {pro.joinedDate}</span>
                                 </div>
-                                <div className="flex items-center gap-3 text-sm">
-                                    <Shield className="h-4 w-4 text-muted-foreground" />
-                                    <span>Identidad Verificada</span>
-                                </div>
+                                {pro.verified ? (
+                                    <div className="flex items-center gap-3 text-sm text-green-600 font-medium">
+                                        <Shield className="h-4 w-4" />
+                                        <span>Identidad Verificada</span>
+                                    </div>
+                                ) : (
+                                    <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                                        <Shield className="h-4 w-4" />
+                                        <span>Identidad No Verificada</span>
+                                    </div>
+                                )}
                             </div>
+
+                            {/* Badges Display */}
+                            {pro.badges && pro.badges.length > 0 && (
+                                <div className="mt-6 border-t pt-4 text-left">
+                                    <h4 className="text-sm font-semibold mb-2">Insignias</h4>
+                                    <div className="flex flex-wrap gap-2">
+                                        {pro.badges.map((badge: string, i: number) => (
+                                            <Badge key={i} variant="outline" className="text-xs bg-muted/50 border-primary/20 text-primary">
+                                                {badge}
+                                            </Badge>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
 
                             <div className="mt-8">
                                 <Link href={`/dashboard/requests/create?proId=${pro.id}`}>
                                     <Button className="w-full" size="lg">Contactar</Button>
                                 </Link>
-                                <p className="text-xs text-muted-foreground mt-2">
+                                <p className="text-xs text-muted-foreground mt-2 text-center">
                                     Debes registrarte para contactar.
                                 </p>
                             </div>
@@ -124,11 +145,40 @@ function ProfessionalProfile() {
                             <CardTitle>Sobre mí</CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <p className="text-muted-foreground leading-relaxed">
+                            <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
                                 {pro.bio}
                             </p>
                         </CardContent>
                     </Card>
+
+                    {/* Services */}
+                    {pro.services && pro.services.length > 0 && (
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Mis Servicios</CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                {pro.services.map((service: any) => (
+                                    <div key={service.id} className="border rounded-lg p-4 hover:bg-muted/30 transition-colors">
+                                        <div className="flex justify-between items-start mb-2">
+                                            <h3 className="font-semibold text-lg">{service.title}</h3>
+                                            <span className="font-bold text-primary">
+                                                {new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(service.price)}
+                                            </span>
+                                        </div>
+                                        <p className="text-sm text-muted-foreground mb-3">{service.description}</p>
+                                        {service.tags && service.tags.length > 0 && (
+                                            <div className="flex flex-wrap gap-2">
+                                                {service.tags.map((tag: string, idx: number) => (
+                                                    <Badge key={idx} variant="secondary" className="text-xs">{tag}</Badge>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                ))}
+                            </CardContent>
+                        </Card>
+                    )}
 
                     {/* Skills */}
                     <Card>
@@ -147,21 +197,21 @@ function ProfessionalProfile() {
                     </Card>
 
                     {/* Portfolio */}
-                    {pro.portfolioImages && pro.portfolioImages.length > 0 && (
+                    {pro.portfolio && pro.portfolio.length > 0 && (
                         <Card>
                             <CardHeader>
                                 <CardTitle>Portafolio de Trabajos</CardTitle>
                             </CardHeader>
                             <CardContent>
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                    {pro.portfolioImages.map((img: string, i: number) => (
-                                        <div key={i} className="relative aspect-square rounded-lg overflow-hidden bg-muted group">
+                                    {pro.portfolio.map((img: string, i: number) => (
+                                        <div key={i} className="relative aspect-square rounded-lg overflow-hidden bg-muted group cursor-zoom-in">
                                             <img
                                                 src={img}
                                                 alt={`Trabajo ${i + 1} de ${pro.name}`}
                                                 className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-500"
                                             />
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
                                         </div>
                                     ))}
                                 </div>
@@ -194,10 +244,7 @@ function ProfessionalProfile() {
                                     </p>
                                 </div>
                             )) : (
-                                <div className="text-center text-muted-foreground">Aún no hay reseñas.</div>
-                            )}
-                            {pro.reviews && pro.reviews.length > 0 && (
-                                <Button variant="outline" className="w-full">Ver todas las reseñas</Button>
+                                <div className="text-center text-muted-foreground py-4">Aún no hay reseñas.</div>
                             )}
                         </CardContent>
                     </Card>

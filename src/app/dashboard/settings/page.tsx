@@ -279,7 +279,7 @@ export default function SettingsPage() {
             <Separator />
 
             <Tabs defaultValue="profile" className="space-y-4">
-                <TabsList className="w-full justify-start overflow-x-auto flex-nowrap">
+                <TabsList className="w-full justify-start overflow-x-auto flex-nowrap max-w-full no-scrollbar">
                     <TabsTrigger value="profile" className="whitespace-nowrap">Perfil Público</TabsTrigger>
                     {user?.role === 'PROFESSIONAL' && <TabsTrigger value="professional" className="whitespace-nowrap">Profesional</TabsTrigger>}
                     <TabsTrigger value="account" className="whitespace-nowrap">Cuenta</TabsTrigger>

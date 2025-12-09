@@ -1,5 +1,5 @@
-import Image from "next/image"
-import Link from "next/link"
+import { Navbar } from "@/components/layout/navbar"
+import { Footer } from "@/components/layout/footer"
 
 export default function AuthLayout({
     children,
@@ -7,10 +7,12 @@ export default function AuthLayout({
     children: React.ReactNode
 }) {
     return (
-        <div className="flex min-h-screen flex-col items-center justify-center bg-muted/30">
-            <div className="w-full max-w-md space-y-4">
+        <div className="flex min-h-screen flex-col">
+            <Navbar />
+            <main className="flex-1 flex flex-col relative z-0">
                 {children}
-            </div>
+            </main>
+            <Footer />
         </div>
     )
 }

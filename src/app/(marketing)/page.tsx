@@ -116,17 +116,17 @@ export default function Home() {
                             className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tight"
                         >
                             <span className="block text-foreground mb-2 sm:mb-3 font-medium">
-                                Tu vida,
+                                Servicios confiables,
                             </span>
                             <span className="block text-foreground mb-3 sm:mb-4">
-                                en buenas manos.
+                                sin complicaciones.
                             </span>
                             <Image
-                                src="/logo.svg"
+                                src="/logo.png"
                                 alt="Fixia Logo"
                                 width={400}
                                 height={130}
-                                className="inline-block h-48 sm:h-64 md:h-80 w-auto object-contain -mt-4 sm:-mt-6"
+                                className="inline-block h-96 sm:h-[32rem] md:h-[40rem] w-auto object-contain -mt-4 sm:-mt-6"
                                 priority
                             />
                         </motion.h1>
@@ -257,7 +257,34 @@ export default function Home() {
                     {testimonials.length > 0 ? (
                         <TestimonialsCarousel testimonials={testimonials} />
                     ) : (
-                        <div className="text-center text-muted-foreground">Aún no hay reseñas destacadas.</div>
+                        <div className="space-y-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                {[...Array(3)].map((_, i) => (
+                                    <div
+                                        key={i}
+                                        className="h-64 rounded-xl bg-gradient-to-br from-muted/50 to-muted/30 border border-border/50 p-6 animate-pulse"
+                                    >
+                                        <div className="flex gap-1 mb-4">
+                                            {[...Array(5)].map((_, j) => (
+                                                <div key={j} className="h-4 w-4 rounded-full bg-muted" />
+                                            ))}
+                                        </div>
+                                        <div className="space-y-3 mb-6 flex-1">
+                                            <div className="h-4 bg-muted rounded w-full" />
+                                            <div className="h-4 bg-muted rounded w-5/6" />
+                                        </div>
+                                        <div className="flex items-center gap-3 pt-4 border-t border-border/30">
+                                            <div className="h-10 w-10 rounded-full bg-muted flex-shrink-0" />
+                                            <div className="space-y-2 flex-1">
+                                                <div className="h-3 bg-muted rounded w-24" />
+                                                <div className="h-2 bg-muted rounded w-16" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                            <p className="text-center text-muted-foreground text-sm">Cargando testimonios...</p>
+                        </div>
                     )}
                 </div>
             </section>
@@ -319,7 +346,7 @@ export default function Home() {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.3, duration: 0.6 }}
                                 viewport={{ once: true }}
-                                className="text-base sm:text-lg md:text-xl text-muted-foreground mb-8 sm:mb-10 max-w-2xl mx-auto leading-relaxed"
+                                className="text-base sm:text-lg md:text-xl text-foreground font-medium mb-8 sm:mb-10 max-w-2xl mx-auto leading-relaxed"
                             >
                                 Conecta con profesionales calificados para llevar a cabo tus proyectos con total confianza y seguridad.
                             </motion.p>
