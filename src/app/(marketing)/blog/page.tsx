@@ -1,9 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
-import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, Calendar, Clock } from "lucide-react"
+import { BlogImagePlaceholder } from "@/components/blog-image-placeholder"
 
 export const BLOG_POSTS = [
     {
@@ -11,7 +11,6 @@ export const BLOG_POSTS = [
         title: "Cómo elegir al mejor profesional para tu proyecto",
         excerpt: "Descubre los 5 puntos clave que debes evaluar antes de contratar a un plomero, electricista o cualquier experto.",
         category: "Consejos",
-        image: "https://placehold.co/1000x600/4f46e5/ffffff?text=Como+Elegir+al+Mejor+Profesional&font=roboto",
         date: "12 Oct 2025",
         readTime: "5 min",
         content: `
@@ -42,7 +41,6 @@ export const BLOG_POSTS = [
         title: "Top 5 tendencias de remodelación para 2025",
         excerpt: "Desde diseños minimalistas hasta integración de tecnología inteligente, conoce lo que está marcando tendencia.",
         category: "Diseño",
-        image: "https://placehold.co/1000x600/10b981/ffffff?text=Tendencias+Remodelacion+2025&font=roboto",
         date: "08 Oct 2025",
         readTime: "7 min",
         content: `
@@ -73,7 +71,6 @@ export const BLOG_POSTS = [
         title: "La importancia del mantenimiento preventivo",
         excerpt: "Ahorra dinero y evita emergencias realizando pequeños mantenimientos regularmente.",
         category: "Mantenimiento",
-        image: "https://placehold.co/1000x600/f59e0b/ffffff?text=Mantenimiento+Preventivo&font=roboto",
         date: "01 Oct 2025",
         readTime: "6 min",
         content: `
@@ -138,13 +135,8 @@ export default function BlogPage() {
                 {BLOG_POSTS.map((post) => (
                     <Link href={`/blog/${post.slug}`} key={post.slug} className="group h-full">
                         <Card className="h-full flex flex-col overflow-hidden hover:shadow-xl transition-all duration-300 border-border/50 group-hover:-translate-y-1">
-                            <div className="aspect-[16/9] relative overflow-hidden bg-muted">
-                                <Image
-                                    src={post.image}
-                                    alt={post.title}
-                                    fill
-                                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                                />
+                            <div className="relative">
+                                <BlogImagePlaceholder slug={post.slug} title={post.title} />
                                 <div className="absolute top-4 left-4">
                                     <Badge variant="secondary" className="backdrop-blur-md bg-background/80">
                                         {post.category}

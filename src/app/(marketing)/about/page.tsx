@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { CheckCircle2, Users, Target, Heart, ShieldCheck, ArrowRight } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import Image from "next/image";
+import { MissionImagePlaceholder } from "@/components/mission-image-placeholder";
 
 export default function AboutPage() {
     return (
@@ -59,15 +59,7 @@ export default function AboutPage() {
                             </ul>
                         </div>
                         <div className="relative">
-                            <div className="aspect-square rounded-2xl overflow-hidden shadow-2xl bg-muted rotate-3 hover:rotate-0 transition-all duration-500">
-                                <Image
-                                    src="https://images.unsplash.com/photo-1581578731117-104f2a41272c?q=80&w=1000&auto=format&fit=crop"
-                                    alt="Professional working"
-                                    width={800}
-                                    height={800}
-                                    className="w-full h-full object-cover"
-                                />
-                            </div>
+                            <MissionImagePlaceholder />
                         </div>
                     </div>
                 </div>
