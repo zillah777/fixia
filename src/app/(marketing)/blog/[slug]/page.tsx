@@ -6,8 +6,9 @@ import { Calendar, Clock, ArrowLeft, Share2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
-export default function BlogPost({ params }: { params: { slug: string } }) {
-    const post = BLOG_POSTS.find(p => p.slug === params.slug)
+export default async function BlogPost({ params }: { params: Promise<{ slug: string }> }) {
+    const resolvedParams = await params
+    const post = BLOG_POSTS.find(p => p.slug === resolvedParams.slug)
 
     if (!post) {
         notFound()
