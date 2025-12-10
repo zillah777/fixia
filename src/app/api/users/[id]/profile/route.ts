@@ -8,21 +8,10 @@ export async function GET(
 ) {
     try {
         const session = await getSession()
-        if (!session) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-        }
-
         const { id: userId } = await params
-        const currentUserId = session.user.id
-        const isAdmin = session.user.role === "ADMIN"
-
-        // SECURITY: Ownership validation - only own profile or admin can view sensitive data
-        if (userId !== currentUserId && !isAdmin) {
-            return NextResponse.json(
-                { error: "Forbidden - Cannot access other user profiles" },
-                { status: 403 }
-            )
-        }
+        const currentUserId = session?.user?.id
+        const isAdmin = session?.user?.role === "ADMIN"
+        const isOwnProfile = userId === currentUserId
 
         // Fetch user profile with reviews
         const user = await prisma.user.findUnique({
@@ -30,8 +19,8 @@ export async function GET(
             select: {
                 id: true,
                 name: true,
-                email: true, // Sensitive - only visible to owner or admin
-                phone: true, // Sensitive - only visible to owner or admin
+                email: isOwnProfile || isAdmin ? true : false, // Sensitive - only visible to owner or admin
+                phone: isOwnProfile || isAdmin ? true : false, // Sensitive - only visible to owner or admin
                 avatar: true,
                 role: true,
                 profile: {

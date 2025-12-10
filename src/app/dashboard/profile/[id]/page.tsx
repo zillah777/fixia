@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Star, MapPin, Phone, Mail, ArrowLeft, Loader2 } from "lucide-react"
 import { toast } from "sonner"
+import { getAvatarUrl, getInitials } from "@/lib/avatar-utils"
 
 interface UserProfile {
     id: string
@@ -97,8 +98,8 @@ export default function PublicProfilePage() {
                 <CardContent className="pt-6">
                     <div className="flex flex-col md:flex-row gap-6 items-start">
                         <Avatar className="h-24 w-24">
-                            <AvatarImage src={profile.avatar || `https://ui-avatars.com/api/?name=${profile.name}&background=random`} />
-                            <AvatarFallback>{profile.name?.substring(0, 2)}</AvatarFallback>
+                            <AvatarImage src={getAvatarUrl(profile.avatar, profile.name)} />
+                            <AvatarFallback>{getInitials(profile.name)}</AvatarFallback>
                         </Avatar>
 
                         <div className="flex-1 space-y-3">
