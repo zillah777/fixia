@@ -16,6 +16,7 @@ import { Match, Message, User } from "@/types/match"
 import { useAuth } from "@/providers/auth-provider"
 import { useParams, useRouter } from "next/navigation"
 import Link from "next/link"
+import { getAvatarUrl, getInitials } from "@/lib/avatar-utils"
 
 export default function MatchesPage() {
     const { user: currentUser } = useAuth()
@@ -62,8 +63,9 @@ export default function MatchesPage() {
         try {
             const res = await fetch("/api/matches")
             if (res.ok) {
-                const data: Match[] = await res.json()
-                setMatches(data)
+                const response = await res.json()
+                const data: Match[] = response.data || response
+                setMatches(Array.isArray(data) ? data : [])
 
                 // Deep link handling via URL params
                 if (params?.id) {
@@ -165,16 +167,19 @@ export default function MatchesPage() {
         return <div className="flex justify-center p-12"><Loader2 className="h-8 w-8 animate-spin" /></div>
     }
 
-    // Check for unrated matches
-    const unratedMatchesCount = matches.filter(m =>
-        m.isCompleted && !m.reviews?.some((r: any) => r.authorId === currentUser?.id)
-    ).length
+    // Check for unrated matches (defensive checks for reviews)
+    const unratedMatchesCount = matches.filter(m => {
+        if (!m.isCompleted) return false
+        const reviews = Array.isArray(m.reviews) ? m.reviews : []
+        return !reviews.some((r: any) => r.authorId === currentUser?.id)
+    }).length
 
-    // Check if both users have reviewed each other
+    // Check if both users have reviewed each other (defensive)
     const haveMutualReviews = (match: Match): boolean => {
-        if (!match.reviews || match.reviews.length < 2) return false
-        const clientReviewed = match.reviews.some((r: any) => r.authorId === match.clientId)
-        const providerReviewed = match.reviews.some((r: any) => r.authorId === match.providerId)
+        const reviews = Array.isArray(match.reviews) ? match.reviews : []
+        if (reviews.length < 2) return false
+        const clientReviewed = reviews.some((r: any) => r.authorId === match.clientId)
+        const providerReviewed = reviews.some((r: any) => r.authorId === match.providerId)
         return clientReviewed && providerReviewed
     }
 
@@ -236,8 +241,8 @@ export default function MatchesPage() {
                                 >
                                     <div className="relative shrink-0">
                                         <Avatar className="h-12 w-12">
-                                            <AvatarImage src={user.image || user.avatar || `https://ui-avatars.com/api/?name=${user.name}&background=random`} />
-                                            <AvatarFallback>{user.name?.substring(0, 2) || "U"}</AvatarFallback>
+                                            <AvatarImage src={getAvatarUrl(user.image || user.avatar, user.name)} />
+                                            <AvatarFallback>{getInitials(user.name || "User")}</AvatarFallback>
                                         </Avatar>
                                     </div>
                                     <div className="flex-1 overflow-hidden min-w-0">
@@ -280,8 +285,8 @@ export default function MatchesPage() {
                                 {canViewProfile ? (
                                     <Link href={`/dashboard/profile/${otherUser.id}`} className="flex items-center gap-3 hover:opacity-80 transition-opacity" title="Ver perfil">
                                         <Avatar className="h-10 w-10">
-                                            <AvatarImage src={otherUser.image || otherUser.avatar || `https://ui-avatars.com/api/?name=${otherUser.name}&background=random`} />
-                                            <AvatarFallback>{otherUser.name?.substring(0, 2) || "U"}</AvatarFallback>
+                                            <AvatarImage src={getAvatarUrl(otherUser.image || otherUser.avatar, otherUser.name)} />
+                                            <AvatarFallback>{getInitials(otherUser.name || "User")}</AvatarFallback>
                                         </Avatar>
                                         <div>
                                             <div className="font-semibold text-base hover:underline">{otherUser.name}</div>
@@ -293,8 +298,8 @@ export default function MatchesPage() {
                                 ) : (
                                     <div className="flex items-center gap-3">
                                         <Avatar className="h-10 w-10">
-                                            <AvatarImage src={otherUser.image || otherUser.avatar || `https://ui-avatars.com/api/?name=${otherUser.name}&background=random`} />
-                                            <AvatarFallback>{otherUser.name?.substring(0, 2) || "U"}</AvatarFallback>
+                                            <AvatarImage src={getAvatarUrl(otherUser.image || otherUser.avatar, otherUser.name)} />
+                                            <AvatarFallback>{getInitials(otherUser.name || "User")}</AvatarFallback>
                                         </Avatar>
                                         <div>
                                             <div className="font-semibold text-base">{otherUser.name}</div>
