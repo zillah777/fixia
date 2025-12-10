@@ -100,7 +100,7 @@ export async function DELETE(
 
         const { id: requestId } = await params
 
-        // Verify ownership
+        // Verify ownership - only the request creator (client or professional) or admin can delete
         const requestToDelete = await prisma.request.findUnique({
             where: { id: requestId },
             select: { clientId: true }
@@ -110,8 +110,9 @@ export async function DELETE(
             return NextResponse.json({ error: "Request not found" }, { status: 404 })
         }
 
+        // SECURITY: Only the request owner (who created it) or admin can delete
         if (requestToDelete.clientId !== session.user.id && session.user.role !== 'ADMIN') {
-            return NextResponse.json({ error: "Forbidden" }, { status: 403 })
+            return NextResponse.json({ error: "Forbidden - Only the request creator can delete this request" }, { status: 403 })
         }
 
         await prisma.request.delete({
