@@ -44,15 +44,18 @@ export default function ClientsPage() {
             const res = await fetch(url)
             if (res.ok) {
                 const data = await res.json()
-                const clients = Array.isArray(data.data) ? data.data : data
-                setClients(clients)
+                const clientsList = Array.isArray(data.data) ? data.data : (Array.isArray(data) ? data : [])
+                setClients(Array.isArray(clientsList) ? clientsList : [])
 
                 if (data.pagination) {
                     setTotalPages(data.pagination.pages)
                 }
+            } else {
+                setClients([])
             }
         } catch (error) {
             console.error("Error fetching clients:", error)
+            setClients([])
         } finally {
             setLoading(false)
         }

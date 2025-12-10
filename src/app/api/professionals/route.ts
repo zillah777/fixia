@@ -100,26 +100,23 @@ export async function GET(request: Request) {
 
         console.log("[PROFESSIONALS_API] Found", professionals.length, "professionals out of", total)
 
-        // Transform data to match frontend expectations
-        const formattedPros = professionals.map(pro => {
-            const tags = JSON.parse(pro.profile?.tags || "[]")
-            const isVerified = pro.verificationRequest?.status === "APPROVED"
-
-            return {
-                id: pro.id,
-                name: pro.name,
-                role: tags[0] || "Profesional", // Fallback role
-                category: pro.services[0]?.categoryId || "General",
-                rating: pro.profile?.ratingAvg || 0,
-                reviews: pro._count.matchesAsProvider,
-                location: "Buenos Aires", // Placeholder until we have real address field
-                image: pro.avatar || `https://ui-avatars.com/api/?name=${pro.name}&background=random`,
-                price: pro.services[0]?.price ? new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(Number(pro.services[0].price)) : "A convenir",
-                verified: isVerified,
-                tags: tags,
-                bio: pro.profile?.bio
+        // Return data in the format expected by frontend
+        const formattedPros = professionals.map(pro => ({
+            id: pro.id,
+            name: pro.name,
+            avatar: pro.avatar,
+            role: pro.role,
+            profile: {
+                bio: pro.profile?.bio,
+                locationLat: pro.profile?.locationLat,
+                locationLng: pro.profile?.locationLng,
+                ratingAvg: pro.profile?.ratingAvg || 0,
+                badges: pro.profile?.tags ? JSON.parse(pro.profile.tags) : []
+            },
+            _count: {
+                reviewsReceived: pro._count.matchesAsProvider || 0
             }
-        })
+        }))
 
         // Return paginated response
         return NextResponse.json({

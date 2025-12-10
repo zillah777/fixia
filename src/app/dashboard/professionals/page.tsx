@@ -49,15 +49,18 @@ export default function ProfessionalsPage() {
             const res = await fetch(url)
             if (res.ok) {
                 const data = await res.json()
-                const professionals = Array.isArray(data.data) ? data.data : data
-                setProfessionals(professionals)
+                const professionalsList = Array.isArray(data.data) ? data.data : (Array.isArray(data) ? data : [])
+                setProfessionals(Array.isArray(professionalsList) ? professionalsList : [])
 
                 if (data.pagination) {
                     setTotalPages(data.pagination.pages)
                 }
+            } else {
+                setProfessionals([])
             }
         } catch (error) {
             console.error("Error fetching professionals:", error)
+            setProfessionals([])
         } finally {
             setLoading(false)
         }
