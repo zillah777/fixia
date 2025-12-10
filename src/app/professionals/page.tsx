@@ -34,7 +34,8 @@ function ProfessionalsList() {
 
                 const res = await fetch(`/api/professionals?${params.toString()}`)
                 if (res.ok) {
-                    const data: Professional[] = await res.json()
+                    const response = await res.json()
+                    const data = Array.isArray(response.data) ? response.data : (Array.isArray(response) ? response : [])
                     setProfessionals(data)
                 }
             } catch (error) {

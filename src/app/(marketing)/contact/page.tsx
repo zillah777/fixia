@@ -1,17 +1,46 @@
 "use client"
 
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Mail, MapPin, Phone } from "lucide-react";
+import { Mail, MapPin, Phone, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 export default function ContactPage() {
-    const handleSubmit = (e: React.FormEvent) => {
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        toast.success("Mensaje enviado. Nos pondremos en contacto pronto.");
+        setIsSubmitting(true);
+
+        try {
+            const formData = new FormData(e.currentTarget);
+            const response = await fetch("/api/contact", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    name: formData.get("name"),
+                    lastname: formData.get("lastname"),
+                    email: formData.get("email"),
+                    subject: formData.get("subject"),
+                    message: formData.get("message")
+                })
+            });
+
+            if (response.ok) {
+                toast.success("Mensaje enviado. Nos pondremos en contacto pronto.");
+                e.currentTarget.reset();
+            } else {
+                toast.error("Error al enviar el mensaje. Intenta nuevamente.");
+            }
+        } catch (error) {
+            console.error("Error sending message:", error);
+            toast.error("Error al enviar el mensaje. Intenta nuevamente.");
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -50,7 +79,7 @@ export default function ContactPage() {
                                     </div>
                                     <div>
                                         <p className="font-medium">Teléfono</p>
-                                        <p className="text-muted-foreground">+54 11 1234-5678</p>
+                                        <p className="text-muted-foreground">+54 9 2804874166</p>
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-3">
@@ -59,7 +88,7 @@ export default function ContactPage() {
                                     </div>
                                     <div>
                                         <p className="font-medium">Oficina</p>
-                                        <p className="text-muted-foreground">Av. Corrientes 1234, CABA, Argentina</p>
+                                        <p className="text-muted-foreground">Playa Union, Chubut, Argentina</p>
                                     </div>
                                 </div>
                             </CardContent>
@@ -87,26 +116,35 @@ export default function ContactPage() {
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="space-y-2">
                                         <label htmlFor="name" className="text-sm font-medium">Nombre</label>
-                                        <Input id="name" placeholder="Tu nombre" required />
+                                        <Input id="name" name="name" placeholder="Tu nombre" required />
                                     </div>
                                     <div className="space-y-2">
                                         <label htmlFor="lastname" className="text-sm font-medium">Apellido</label>
-                                        <Input id="lastname" placeholder="Tu apellido" required />
+                                        <Input id="lastname" name="lastname" placeholder="Tu apellido" required />
                                     </div>
                                 </div>
                                 <div className="space-y-2">
                                     <label htmlFor="email" className="text-sm font-medium">Email</label>
-                                    <Input id="email" type="email" placeholder="tu@email.com" required />
+                                    <Input id="email" name="email" type="email" placeholder="tu@email.com" required />
                                 </div>
                                 <div className="space-y-2">
                                     <label htmlFor="subject" className="text-sm font-medium">Asunto</label>
-                                    <Input id="subject" placeholder="¿En qué podemos ayudarte?" required />
+                                    <Input id="subject" name="subject" placeholder="¿En qué podemos ayudarte?" required />
                                 </div>
                                 <div className="space-y-2">
                                     <label htmlFor="message" className="text-sm font-medium">Mensaje</label>
-                                    <Textarea id="message" placeholder="Escribe tu mensaje aquí..." className="min-h-[120px]" required />
+                                    <Textarea id="message" name="message" placeholder="Escribe tu mensaje aquí..." className="min-h-[120px]" required />
                                 </div>
-                                <Button type="submit" className="w-full">Enviar Mensaje</Button>
+                                <Button type="submit" className="w-full" disabled={isSubmitting}>
+                                    {isSubmitting ? (
+                                        <>
+                                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                            Enviando...
+                                        </>
+                                    ) : (
+                                        "Enviar Mensaje"
+                                    )}
+                                </Button>
                             </form>
                         </CardContent>
                     </Card>

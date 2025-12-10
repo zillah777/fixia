@@ -15,7 +15,7 @@ export default function AboutPage() {
                         Más que servicios, construimos confianza
                     </h1>
                     <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-10 leading-relaxed">
-                        En Fixia, transformamos la manera en que encuentras ayuda para tu hogar, creando una comunidad segura, transparente y eficiente.
+                        En Fixia, transformamos la manera en que encuentras profesionales de confianza, creando una comunidad segura, transparente y eficiente.
                     </p>
                     <div className="flex flex-col sm:flex-row justify-center gap-4">
                         <Link href="/register">
@@ -43,12 +43,12 @@ export default function AboutPage() {
                             </div>
                             <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Simplificar tu vida con soluciones expertas</h2>
                             <p className="text-lg text-muted-foreground leading-relaxed">
-                                Creemos que cuidar de tu hogar no debería ser un dolor de cabeza. Nuestra plataforma utiliza tecnología avanzada para verificar a cada profesional, asegurar precios justos y garantizar la satisfacción en cada trabajo.
+                                Creemos que encontrar profesionales de confianza no debería ser un dolor de cabeza. Nuestra plataforma utiliza tecnología avanzada para verificar a cada profesional, asegurar presupuestos justos y garantizar la satisfacción en cada trabajo.
                             </p>
                             <ul className="space-y-4 pt-4">
                                 {[
                                     "Verificación rigurosa de identidad y antecedentes.",
-                                    "Sistema de pagos seguro y protegido.",
+                                    "Comunicación directa entre clientes y profesionales.",
                                     "Garantía de satisfacción en todos los servicios."
                                 ].map((item, i) => (
                                     <li key={i} className="flex items-center gap-3 text-foreground/80">
@@ -115,8 +115,8 @@ export default function AboutPage() {
             {/* CTA */}
             <section className="py-20 bg-background border-t">
                 <div className="container px-4 mx-auto max-w-4xl text-center">
-                    <h2 className="text-3xl md:text-4xl font-bold mb-6">¿Listo para transformar tu hogar?</h2>
-                    <p className="text-xl text-muted-foreground mb-10">Únete a miles de usuarios que ya confían en Fixia para sus proyectos del hogar.</p>
+                    <h2 className="text-3xl md:text-4xl font-bold mb-6">¿Listo para encontrar al profesional ideal?</h2>
+                    <p className="text-xl text-muted-foreground mb-10">Únete a miles de usuarios que ya confían en Fixia para sus proyectos.</p>
                     <Link href="/services">
                         <Button size="lg" className="h-14 px-10 text-lg rounded-full shadow-lg hover:shadow-xl transition-all group">
                             Explorar Servicios <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
