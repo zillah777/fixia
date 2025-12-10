@@ -56,33 +56,11 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
                             {post.excerpt}
                         </p>
 
-                        {/* 
-                            In a real app, this would be dangerouslySetInnerHTML with sanitized content 
-                            or a Markdown renderer. For purely static mock, we can hardcode some structure
-                            or reuse the mock HTML.
-                        */}
-                        <div dangerouslySetInnerHTML={{ __html: post.content }} />
-
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                        </p>
-                        <h2>¿Por qué es importante?</h2>
-                        <p>
-                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                        </p>
-                        <ul className="list-disc pl-6 space-y-2">
-                            <li>Factor importante número uno.</li>
-                            <li>Consideración clave para el éxito.</li>
-                            <li>Elemento que no puedes ignorar.</li>
-                        </ul>
-                        <blockquote>
-                            "La calidad nunca es un accidente; siempre es el resultado de un esfuerzo de la inteligencia."
-                        </blockquote>
-                        <p>
-                            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.
-                        </p>
+                        {/* Render dynamic blog post content */}
+                        <div
+                            className="prose prose-headings:text-foreground prose-p:text-foreground/80 prose-li:text-foreground/80 prose-ul:text-foreground/80"
+                            dangerouslySetInnerHTML={{ __html: post.content }}
+                        />
                     </div>
 
                     {/* Sidebar */}
