@@ -78,17 +78,25 @@ export default function Home() {
         fetch("/api/public/categories")
             .then(res => res.json())
             .then(data => {
-                if (Array.isArray(data)) setCategories(data)
+                const categoryList = Array.isArray(data) ? data : (data?.data && Array.isArray(data.data) ? data.data : [])
+                setCategories(categoryList)
             })
-            .catch(err => console.error("Failed to fetch categories", err))
+            .catch(err => {
+                console.error("Failed to fetch categories", err)
+                setCategories([])
+            })
 
         // Fetch Testimonials
         fetch("/api/public/testimonials")
             .then(res => res.json())
             .then(data => {
-                if (Array.isArray(data)) setTestimonials(data)
+                const testimonialList = Array.isArray(data) ? data : (data?.data && Array.isArray(data.data) ? data.data : [])
+                setTestimonials(testimonialList)
             })
-            .catch(err => console.error("Failed to fetch testimonials", err))
+            .catch(err => {
+                console.error("Failed to fetch testimonials", err)
+                setTestimonials([])
+            })
     }, [])
 
     return (

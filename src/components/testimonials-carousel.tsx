@@ -21,6 +21,9 @@ interface TestimonialsCarouselProps {
 }
 
 export function TestimonialsCarousel({ testimonials }: TestimonialsCarouselProps) {
+    // Ensure testimonials is always an array
+    const testimonialsList = Array.isArray(testimonials) ? testimonials : []
+
     const [emblaRef, emblaApi] = useEmblaCarousel(
         { loop: true, align: "center" },
         [Autoplay({ delay: 5000, stopOnInteraction: true })]
@@ -53,7 +56,7 @@ export function TestimonialsCarousel({ testimonials }: TestimonialsCarouselProps
         <div className="w-full">
             <div className="overflow-hidden rounded-2xl" ref={emblaRef}>
                 <div className="flex gap-4 -ml-4">
-                    {testimonials.map((testimonial) => (
+                    {testimonialsList.map((testimonial) => (
                         <div
                             key={testimonial.id}
                             className="flex-[0_0_100%] sm:flex-[0_0_50%] lg:flex-[0_0_33.333%] pl-4"
