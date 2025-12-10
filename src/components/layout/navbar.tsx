@@ -98,6 +98,20 @@ export function Navbar() {
                                         Profesionales
                                     </Link>
 
+                                    {/* Explore Professionals - Only for logged in */}
+                                    {user && (
+                                        <Link href="/dashboard/professionals" className="text-lg font-semibold" onClick={closeSheet}>
+                                            Explorar Profesionales
+                                        </Link>
+                                    )}
+
+                                    {/* Explore Clients - Only for PROFESSIONAL */}
+                                    {user?.role === 'PROFESSIONAL' && (
+                                        <Link href="/dashboard/clients" className="text-lg font-semibold" onClick={closeSheet}>
+                                            Explorar Clientes
+                                        </Link>
+                                    )}
+
                                     {/* Opportunities - Only for PROFESSIONAL */}
                                     {user?.role === 'PROFESSIONAL' && (
                                         <Link href="/dashboard/opportunities" className="text-lg font-semibold" onClick={closeSheet}>
@@ -165,6 +179,11 @@ export function Navbar() {
                             <Link href="/professionals" className="transition-colors hover:text-foreground/80 text-foreground/60">
                                 Profesionales
                             </Link>
+                            {user && (
+                                <Link href="/dashboard/professionals" className="transition-colors hover:text-foreground/80 text-foreground/60">
+                                    Explorar
+                                </Link>
+                            )}
                             {/* Removed duplicate 'Únete a Fixia' button */}
                             <Link href="/pricing" className="transition-colors hover:text-foreground/80 text-foreground/60">
                                 Planes
