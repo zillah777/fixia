@@ -27,6 +27,7 @@ import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { NotificationCenter } from "@/components/notifications/notification-center"
+import { getAvatarUrl, getInitials } from "@/lib/avatar-utils"
 
 export function Navbar() {
     const [isScrolled, setIsScrolled] = React.useState(false)
@@ -69,10 +70,10 @@ export function Navbar() {
                                         <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg mb-2">
                                             <Avatar className="h-10 w-10">
                                                 <AvatarImage
-                                                    src={user.avatar || user.image || `https://ui-avatars.com/api/?name=${user.name}&background=random`}
+                                                    src={getAvatarUrl(user.avatar, user.name)}
                                                     alt={user.name || "User"}
                                                 />
-                                                <AvatarFallback>{user.name?.charAt(0) || "U"}</AvatarFallback>
+                                                <AvatarFallback>{getInitials(user.name || "User")}</AvatarFallback>
                                             </Avatar>
                                             <div className="flex-1 min-w-0">
                                                 <p className="text-sm font-semibold truncate">{user.name}</p>
@@ -203,11 +204,11 @@ export function Navbar() {
                                     <Button variant="ghost" size="icon" className="rounded-full relative h-9 w-9 border border-muted-foreground/20">
                                         <Avatar className="h-8 w-8">
                                             <AvatarImage
-                                                src={user.avatar || user.image || `https://ui-avatars.com/api/?name=${user.name}&background=random`}
+                                                src={getAvatarUrl(user.avatar, user.name)}
                                                 alt={user.name || "User"}
                                                 className="object-cover"
                                             />
-                                            <AvatarFallback>{user.name?.charAt(0) || "U"}</AvatarFallback>
+                                            <AvatarFallback>{getInitials(user.name || "User")}</AvatarFallback>
                                         </Avatar>
                                     </Button>
                                 </DropdownMenuTrigger>
