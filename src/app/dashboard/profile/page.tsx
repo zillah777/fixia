@@ -9,6 +9,7 @@ import { MapPin, Star, Shield, Award, CheckCircle2, AlertCircle, Edit, Link as L
 import { useAuth } from "@/providers/auth-provider"
 import { useEffect, useState } from "react"
 import Link from "next/link"
+import { getAvatarUrl, getInitials } from "@/lib/avatar-utils"
 
 export default function ProfilePage() {
     const { user } = useAuth()
@@ -55,9 +56,9 @@ export default function ProfilePage() {
             <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
                 <div className="relative">
                     <Avatar className="h-20 w-20 md:h-24 md:w-24 border-4 border-white shadow-lg">
-                        <AvatarImage src={user?.avatar || undefined} alt={user?.name || "User"} className="object-cover" />
+                        <AvatarImage src={getAvatarUrl(user?.avatar, user?.name)} alt={user?.name || "User"} className="object-cover" />
                         <AvatarFallback className="text-xl md:text-2xl font-bold bg-muted text-gray-500">
-                            {user?.name?.substring(0, 2).toUpperCase() || "US"}
+                            {getInitials(user?.name || "User")}
                         </AvatarFallback>
                     </Avatar>
                     <div className="absolute bottom-0 right-0 bg-white rounded-full p-1 border-4 border-transparent shadow-sm">
@@ -223,8 +224,8 @@ export default function ProfilePage() {
                                     profile.reviewsReceived.map((review: any) => (
                                         <div key={review.id} className="flex gap-4 p-4 rounded-xl bg-gray-50/50">
                                             <Avatar className="h-10 w-10 border border-white shadow-sm">
-                                                <AvatarImage src={`https://ui-avatars.com/api/?name=${review.author.name}&background=random`} />
-                                                <AvatarFallback>{review.author.name?.[0]}</AvatarFallback>
+                                                <AvatarImage src={getAvatarUrl(null, review.author.name)} />
+                                                <AvatarFallback>{getInitials(review.author.name)}</AvatarFallback>
                                             </Avatar>
                                             <div className="flex-1 space-y-1">
                                                 <div className="flex items-center justify-between">

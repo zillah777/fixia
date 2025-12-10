@@ -1,5 +1,7 @@
 "use client"
 
+export const dynamic = "force-dynamic"
+
 import React, { Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -8,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Star, MapPin, CheckCircle, Calendar, Shield } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import { getAvatarUrl, getInitials } from "@/lib/avatar-utils";
 
 function ProfessionalProfile() {
     const params = useParams();
@@ -68,8 +71,8 @@ function ProfessionalProfile() {
                         <CardContent className="pt-6 text-center">
                             <div className="relative inline-block mb-4">
                                 <Avatar className="h-32 w-32 mx-auto border-4 border-background shadow-lg">
-                                    <AvatarImage src={pro.image} />
-                                    <AvatarFallback>{pro.name.substring(0, 2)}</AvatarFallback>
+                                    <AvatarImage src={getAvatarUrl(pro.image, pro.name)} />
+                                    <AvatarFallback>{getInitials(pro.name)}</AvatarFallback>
                                 </Avatar>
                                 {pro.verified && (
                                     <div className="absolute bottom-0 right-0 bg-blue-500 rounded-full p-1.5 shadow-md border-2 border-white" title="Identidad Verificada">
