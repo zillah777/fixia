@@ -79,6 +79,7 @@ export default function RequestsPage() {
                             key={request.id}
                             data={request}
                             onClick={() => router.push(`/dashboard/requests/${request.id}`)}
+                            onDelete={(id) => setRequests(requests.filter(r => r.id !== id))}
                         />
                     ))}
                 </div>

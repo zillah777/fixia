@@ -3,9 +3,20 @@
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { MapPin, Calendar, Clock, DollarSign, ChevronRight, MessageSquare } from "lucide-react"
+import { MapPin, Calendar, Clock, DollarSign, ChevronRight, MessageSquare, Trash2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { motion } from "framer-motion"
+import { useState } from "react"
+import { toast } from "sonner"
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 
 export interface RequestData {
     id: string
@@ -28,6 +39,7 @@ export interface RequestData {
 interface RichRequestCardProps {
     data: RequestData
     onClick?: () => void
+    onDelete?: (id: string) => void
 }
 
 const urgencyColors = {
@@ -42,23 +54,49 @@ const statusColors = {
     COMPLETED: "bg-gray-500",
 }
 
-export function RichRequestCard({ data, onClick }: RichRequestCardProps) {
+export function RichRequestCard({ data, onClick, onDelete }: RichRequestCardProps) {
+    const [showDeleteDialog, setShowDeleteDialog] = useState(false)
+    const [isDeleting, setIsDeleting] = useState(false)
+
     const formatBudget = (min: number, max: number) => {
         if (!min || (min === 0 && max === 0)) return "A convenir"
         if (min === max) return `$${min.toLocaleString()}`
         return `$${min.toLocaleString()} - $${max.toLocaleString()}`
     }
 
+    const handleDelete = async () => {
+        setIsDeleting(true)
+        try {
+            const res = await fetch(`/api/requests/${data.id}`, {
+                method: "DELETE",
+            })
+            if (res.ok) {
+                toast.success("Solicitud eliminada correctamente")
+                onDelete?.(data.id)
+            } else {
+                const error = await res.json()
+                toast.error(error.error || "Error al eliminar la solicitud")
+            }
+        } catch (error) {
+            console.error("Error deleting request:", error)
+            toast.error("Error al eliminar la solicitud")
+        } finally {
+            setIsDeleting(false)
+            setShowDeleteDialog(false)
+        }
+    }
+
     return (
-        <motion.div
-            whileHover={{ y: -4 }}
-            whileTap={{ scale: 0.98 }}
-            className="group"
-        >
-            <Card
-                className="overflow-hidden border-none shadow-md hover:shadow-xl transition-all duration-300 bg-white/80 backdrop-blur-sm cursor-pointer relative"
-                onClick={onClick}
+        <>
+            <motion.div
+                whileHover={{ y: -4 }}
+                whileTap={{ scale: 0.98 }}
+                className="group"
             >
+                <Card
+                    className="overflow-hidden border-none shadow-md hover:shadow-xl transition-all duration-300 bg-white/80 backdrop-blur-sm cursor-pointer relative"
+                    onClick={onClick}
+                >
                 {/* Status Indicator Line */}
                 <div className={cn("absolute top-0 left-0 w-1.5 h-full transition-colors", statusColors[data.status])} />
 
@@ -117,13 +155,48 @@ export function RichRequestCard({ data, onClick }: RichRequestCardProps) {
                             <span>{data.proposalsCount} Propuestas</span>
                         </div>
 
-                        <Button size="sm" variant="ghost" className="h-8 text-xs hover:bg-primary/5 hover:text-primary rounded-full group-hover:pr-2 transition-all">
-                            Ver Detalles
-                            <ChevronRight className="h-3 w-3 ml-1 transition-transform group-hover:translate-x-1" />
-                        </Button>
+                        <div className="flex items-center gap-2">
+                            <Button
+                                size="sm"
+                                variant="ghost"
+                                className="h-8 text-xs hover:bg-destructive/10 hover:text-destructive rounded-full transition-all"
+                                onClick={(e) => {
+                                    e.stopPropagation()
+                                    setShowDeleteDialog(true)
+                                }}
+                            >
+                                <Trash2 className="h-3.5 w-3.5" />
+                            </Button>
+                            <Button size="sm" variant="ghost" className="h-8 text-xs hover:bg-primary/5 hover:text-primary rounded-full group-hover:pr-2 transition-all">
+                                Ver Detalles
+                                <ChevronRight className="h-3 w-3 ml-1 transition-transform group-hover:translate-x-1" />
+                            </Button>
+                        </div>
                     </div>
                 </CardContent>
             </Card>
-        </motion.div>
+            </motion.div>
+
+            <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>¿Eliminar solicitud?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Esta acción no se puede deshacer. Se eliminará la solicitud "{data.title}" y todas las propuestas asociadas.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <div className="flex gap-3 justify-end">
+                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                        <AlertDialogAction
+                            onClick={handleDelete}
+                            disabled={isDeleting}
+                            className="bg-destructive hover:bg-destructive/90"
+                        >
+                            {isDeleting ? "Eliminando..." : "Eliminar"}
+                        </AlertDialogAction>
+                    </div>
+                </AlertDialogContent>
+            </AlertDialog>
+        </>
     )
 }

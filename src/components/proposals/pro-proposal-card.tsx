@@ -4,9 +4,20 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
-import { Star, ShieldCheck, Award, MessageCircle, CheckCircle2 } from "lucide-react"
+import { Star, ShieldCheck, Award, MessageCircle, CheckCircle2, Trash2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { motion } from "framer-motion"
+import { useState } from "react"
+import { toast } from "sonner"
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 
 export interface ProposalData {
     id: string
@@ -23,12 +34,40 @@ export interface ProposalData {
 
 interface ProProposalCardProps {
     data: ProposalData
-    onAccept: () => void
+    onAccept?: () => void
     onViewProfile: () => void
+    onDelete?: (id: string) => void
+    isOwnProposal?: boolean
 }
 
-export function ProProposalCard({ data, onAccept, onViewProfile }: ProProposalCardProps) {
+export function ProProposalCard({ data, onAccept, onViewProfile, onDelete, isOwnProposal }: ProProposalCardProps) {
+    const [showDeleteDialog, setShowDeleteDialog] = useState(false)
+    const [isDeleting, setIsDeleting] = useState(false)
+
+    const handleDelete = async () => {
+        setIsDeleting(true)
+        try {
+            const res = await fetch(`/api/proposals/${data.id}`, {
+                method: "DELETE",
+            })
+            if (res.ok) {
+                toast.success("Propuesta eliminada correctamente")
+                onDelete?.(data.id)
+            } else {
+                const error = await res.json()
+                toast.error(error.error || "Error al eliminar la propuesta")
+            }
+        } catch (error) {
+            console.error("Error deleting proposal:", error)
+            toast.error("Error al eliminar la propuesta")
+        } finally {
+            setIsDeleting(false)
+            setShowDeleteDialog(false)
+        }
+    }
+
     return (
+        <>
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -105,22 +144,62 @@ export function ProProposalCard({ data, onAccept, onViewProfile }: ProProposalCa
                 </CardContent>
 
                 <CardFooter className="p-4 pt-0 flex gap-3">
-                    <Button variant="outline" className="flex-1 rounded-xl" onClick={onViewProfile}>
-                        Ver Perfil
-                    </Button>
-                    <Button
-                        className={cn(
-                            "flex-1 rounded-xl text-white shadow-lg transition-all hover:scale-105 active:scale-95",
-                            data.isElite
-                                ? "bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 shadow-orange-500/20"
-                                : "bg-black hover:bg-gray-800 shadow-black/20"
-                        )}
-                        onClick={onAccept}
-                    >
-                        Aceptar Propuesta
-                    </Button>
+                    {isOwnProposal ? (
+                        <>
+                            <Button variant="outline" className="flex-1 rounded-xl" onClick={onViewProfile}>
+                                Ver Solicitud
+                            </Button>
+                            <Button
+                                variant="ghost"
+                                className="flex-1 rounded-xl hover:bg-destructive/10 hover:text-destructive"
+                                onClick={() => setShowDeleteDialog(true)}
+                            >
+                                <Trash2 className="h-4 w-4 mr-2" />
+                                Eliminar
+                            </Button>
+                        </>
+                    ) : (
+                        <>
+                            <Button variant="outline" className="flex-1 rounded-xl" onClick={onViewProfile}>
+                                Ver Perfil
+                            </Button>
+                            <Button
+                                className={cn(
+                                    "flex-1 rounded-xl text-white shadow-lg transition-all hover:scale-105 active:scale-95",
+                                    data.isElite
+                                        ? "bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 shadow-orange-500/20"
+                                        : "bg-black hover:bg-gray-800 shadow-black/20"
+                                )}
+                                onClick={onAccept}
+                            >
+                                Aceptar Propuesta
+                            </Button>
+                        </>
+                    )}
                 </CardFooter>
             </Card>
         </motion.div>
+
+        <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                    <AlertDialogTitle>¿Eliminar propuesta?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                        Esta acción no se puede deshacer. Se eliminará tu propuesta de ${data.price.toLocaleString()}.
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
+                <div className="flex gap-3 justify-end">
+                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                    <AlertDialogAction
+                        onClick={handleDelete}
+                        disabled={isDeleting}
+                        className="bg-destructive hover:bg-destructive/90"
+                    >
+                        {isDeleting ? "Eliminando..." : "Eliminar"}
+                    </AlertDialogAction>
+                </div>
+            </AlertDialogContent>
+        </AlertDialog>
+        </>
     )
 }
