@@ -136,7 +136,6 @@ model Service {
   updatedAt   DateTime @updatedAt
 
   provider    User       @relation("ProviderServices", fields: [providerId], references: [id], onDelete: Cascade)
-  favorites   Favorite[]
 }
 
 model Request {
