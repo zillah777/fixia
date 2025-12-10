@@ -22,6 +22,10 @@ export default async function VerificationDetailPage(
     async function handleApprove() {
         "use server"
 
+        if (!verification) {
+            redirect("/admin/verifications")
+        }
+
         // Transaction: Approve Request + Add Badges + Notify
         await prisma.$transaction(async (tx) => {
             // 1. Update Request

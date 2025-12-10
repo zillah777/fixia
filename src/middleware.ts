@@ -1,111 +1,92 @@
 import { NextRequest, NextResponse } from "next/server";
 import { decrypt } from "@/lib/auth";
 
-/**
- * SECURITY: Next.js Middleware for Route Protection
- * Enforces authentication and role-based access control (RBAC) at the application level
- *
- * This is a critical security layer that protects routes BEFORE they reach the application
- * Prevents unauthorized access even if client-side checks are bypassed
- *
- * Protected Routes:
- * - /admin/* → Requires ADMIN role
- * - /dashboard/* → Requires authentication (CLIENT, PROFESSIONAL, or ADMIN)
- * - /professionals/[id]/edit → Requires PROFESSIONAL role
- */
-
-// Define protected routes and their required roles
-const protectedRoutes: {
-  pattern: RegExp;
-  requiredRole?: string;
-  requiresAuth: boolean;
-}[] = [
-  // Admin routes - ADMIN role required
-  {
-    pattern: /^\/admin/,
-    requiredRole: "ADMIN",
-    requiresAuth: true,
-  },
-  // Dashboard routes - Any authenticated user
-  {
-    pattern: /^\/dashboard/,
-    requiresAuth: true,
-  },
-  // Professional edit routes - PROFESSIONAL role required
-  {
-    pattern: /^\/professionals\/[^/]+\/edit/,
-    requiredRole: "PROFESSIONAL",
-    requiresAuth: true,
-  },
-];
-
+// SECURITY: Next.js Middleware for Route Protection with RBAC
+// Protects admin routes, dashboard routes, and professional-only routes
+// Runs on every request before reaching route handlers
 export async function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+    const { pathname } = request.nextUrl;
 
-  // Check if the current route requires protection
-  const protectedRoute = protectedRoutes.find((route) =>
-    route.pattern.test(pathname)
-  );
+    // Routes that require authentication
+    const protectedRoutes = [
+        "/admin",
+        "/dashboard",
+        "/matches",
+        "/professionals/*/edit",
+    ];
 
-  if (!protectedRoute) {
-    // Route does not require protection
-    return NextResponse.next();
-  }
+    // Check if current path is protected
+    const isProtected = protectedRoutes.some((route) => {
+        if (route.includes("*")) {
+            // Pattern matching for dynamic routes
+            const pattern = route.replace("*", "(.+)");
+            return new RegExp(`^${pattern}$`).test(pathname);
+        }
+        return pathname.startsWith(route);
+    });
 
-  // Extract session cookie
-  const sessionCookie = request.cookies.get("session")?.value;
-
-  if (!sessionCookie) {
-    // No session found - redirect to login
-    return NextResponse.redirect(new URL("/login", request.url));
-  }
-
-  // Decrypt and verify session
-  const session = await decrypt(sessionCookie);
-
-  if (!session) {
-    // Invalid or expired session - redirect to login
-    return NextResponse.redirect(new URL("/login", request.url));
-  }
-
-  // Check role-based access
-  if (protectedRoute.requiredRole) {
-    const userRole = session.user?.role;
-
-    if (userRole !== protectedRoute.requiredRole) {
-      // User lacks required role
-      // Admin can access everything, others redirected to dashboard
-      if (userRole === "ADMIN") {
+    if (!isProtected) {
+        // Public routes - allow access
         return NextResponse.next();
-      }
-
-      // Redirect based on user role
-      if (userRole === "PROFESSIONAL") {
-        return NextResponse.redirect(new URL("/dashboard", request.url));
-      }
-
-      // Default redirect for CLIENT role
-      return NextResponse.redirect(new URL("/dashboard", request.url));
     }
-  }
 
-  // Authorization successful - allow request to proceed
-  return NextResponse.next();
+    // Get session token from cookies
+    const token = request.cookies.get("session")?.value;
+
+    if (!token) {
+        // No session - redirect to login
+        return NextResponse.redirect(new URL("/login", request.url));
+    }
+
+    // Verify and decrypt session token
+    const session = await decrypt(token);
+
+    if (!session) {
+        // Invalid session - redirect to login
+        return NextResponse.redirect(new URL("/login", request.url));
+    }
+
+    // =========================================================================
+    // ROLE-BASED ACCESS CONTROL
+    // =========================================================================
+
+    const userRole = session.user.role;
+
+    // Admin routes - only ADMIN role allowed
+    if (pathname.startsWith("/admin")) {
+        if (userRole !== "ADMIN") {
+            // Not admin - redirect to dashboard
+            return NextResponse.redirect(new URL("/dashboard", request.url));
+        }
+        // Admin access granted
+        return NextResponse.next();
+    }
+
+    // Professional edit routes - only PROFESSIONAL role allowed
+    if (pathname.includes("/professionals/") && pathname.includes("/edit")) {
+        if (userRole !== "PROFESSIONAL") {
+            // Not professional - redirect to dashboard
+            return NextResponse.redirect(new URL("/dashboard", request.url));
+        }
+        // Professional access granted
+        return NextResponse.next();
+    }
+
+    // Dashboard and protected routes - any authenticated user allowed
+    if (
+        pathname.startsWith("/dashboard") ||
+        pathname.startsWith("/matches")
+    ) {
+        // User is authenticated - allow access
+        return NextResponse.next();
+    }
+
+    // Fallback - allow access (authenticated user)
+    return NextResponse.next();
 }
 
-/**
- * Configure which routes use this middleware
- * Using matcher is more efficient than checking every route
- */
+// Configure which routes use middleware
+// Middleware runs on all routes except api, static files, and favicon
 export const config = {
-  matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public folder
-     */
-    "/((?!_next/static|_next/image|favicon.ico|public).*)",
-  ],
+    matcher: ["/((?!api|_next/static|_next/image|favicon.ico|public).*)"],
 };

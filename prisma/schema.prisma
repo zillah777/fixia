@@ -113,11 +113,21 @@ model Profile {
   socialLinks     String?  // JSON string: { instagram: "", linkedin: "", website: "" }
   trustScore      Int      @default(0) // 0-100
   
-  // New Professional Fields
-  certification   String?  // Certification name/details
-  licenseNumber   String?  // Professional license number
-  experience      String?  // Years of experience or description
-  tags            String @default("[]") // Expertise tags (max 5)
+  // Professional Registration Fields
+  education           String?  // "Secundario", "Terciario", "Universitario", "Posgrado"
+  diploma             String?  // Nombre del diploma/certificación
+  courses             String?  // Cursos realizados (texto libre)
+  certification       String?  // Certification name/details
+  professionalLicense String?  // Matrícula profesional
+  licenseNumber       String?  // Professional license number (legacy)
+  yearsExperience     Int?     // Años de experiencia
+  experienceDetails   String?  // Descripción de experiencia
+  experience          String?  // Years of experience or description (legacy)
+  availability        String   @default("{}") // JSON: { morning: bool, afternoon: bool, evening: bool, weekend: bool }
+  workRadius          String   @default("Mi ciudad") // "Mi ciudad", "5", "10", "20", "A convenir"
+  workZones           String   @default("[]") // Array de zonas/barrios
+
+  tags                String @default("[]") // Expertise tags (max 5)
   notificationSettings String @default("{}") // JSON: { newMessages: true, proposals: true, marketing: false }
 
   user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -183,6 +193,12 @@ model Match {
   clientId           String
   whatsappRevealedAt DateTime?
   isCompleted        Boolean   @default(false)
+
+  // FEATURE: Two-way work completion approval system
+  providerApprovedCompletion   Boolean?      // null = not yet submitted, true/false = approval status
+  clientApprovedCompletion     Boolean?      // null = not yet submitted, true/false = approval status
+  providerCompletionComment    String?       // Professional's work description
+
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
 

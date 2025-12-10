@@ -13,6 +13,16 @@ export async function GET(
         }
 
         const { id: userId } = await params
+        const currentUserId = session.user.id
+        const isAdmin = session.user.role === "ADMIN"
+
+        // SECURITY: Ownership validation - only own profile or admin can view sensitive data
+        if (userId !== currentUserId && !isAdmin) {
+            return NextResponse.json(
+                { error: "Forbidden - Cannot access other user profiles" },
+                { status: 403 }
+            )
+        }
 
         // Fetch user profile with reviews
         const user = await prisma.user.findUnique({
@@ -20,8 +30,8 @@ export async function GET(
             select: {
                 id: true,
                 name: true,
-                email: true,
-                phone: true,
+                email: true, // Sensitive - only visible to owner or admin
+                phone: true, // Sensitive - only visible to owner or admin
                 avatar: true,
                 role: true,
                 profile: {

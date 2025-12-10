@@ -26,7 +26,14 @@ export async function POST(request: Request) {
                             subscriptionPlan: "professional_monthly",
                             subscriptionEndsAt: subscriptionEndDate,
                             status: "ACTIVE", // Ensure account is active
-                            subscriptionId: paymentData.id?.toString()
+                            subscriptionId: paymentData.id?.toString(),
+
+                            // ENABLE PROFESSIONAL FEATURES
+                            canCreateServices: true,
+                            listingVisible: true,
+                            canReceiveBookings: true,
+                            lastRenewalAt: new Date(),
+                            nextBillingDate: subscriptionEndDate
                         }
                     });
 

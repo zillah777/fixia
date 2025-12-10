@@ -8,6 +8,8 @@ import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Send, Phone, CheckCircle2, Star, Loader2, AlertTriangle, ArrowLeft, MessageCircle } from "lucide-react"
 import { ReviewDialog } from "@/components/reviews/review-dialog"
+import { WorkCompletionForm } from "@/components/match/work-completion-form"
+import { RatingGate } from "@/components/match/rating-gate"
 import { cn } from "@/lib/utils"
 import { toast } from "sonner"
 import { Match, Message, User } from "@/types/match"
@@ -263,61 +265,86 @@ export default function MatchesPage() {
                     !showChatOnMobile && "hidden md:flex"
                 )}>
                     {/* Chat Header */}
-                    <div className="flex items-center justify-between border-b px-4 py-3">
-                        <div className="flex items-center gap-3">
-                            {/* Back button for mobile */}
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                className="md:hidden"
-                                onClick={() => setShowChatOnMobile(false)}
-                            >
-                                <ArrowLeft className="h-5 w-5" />
-                            </Button>
-                            {canViewProfile ? (
-                                <Link href={`/dashboard/profile/${otherUser.id}`} className="flex items-center gap-3 hover:opacity-80 transition-opacity" title="Ver perfil">
-                                    <Avatar className="h-10 w-10">
-                                        <AvatarImage src={otherUser.image || otherUser.avatar || `https://ui-avatars.com/api/?name=${otherUser.name}&background=random`} />
-                                        <AvatarFallback>{otherUser.name?.substring(0, 2) || "U"}</AvatarFallback>
-                                    </Avatar>
-                                    <div>
-                                        <div className="font-semibold text-base hover:underline">{otherUser.name}</div>
-                                        <div className="text-xs text-muted-foreground">
-                                            {selectedMatch.isCompleted ? "Trabajo Completado" : "En Progreso"}
+                    <div className="border-b bg-muted/30 px-4 py-3 space-y-3">
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3 flex-1">
+                                {/* Back button for mobile */}
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="md:hidden"
+                                    onClick={() => setShowChatOnMobile(false)}
+                                >
+                                    <ArrowLeft className="h-5 w-5" />
+                                </Button>
+                                {canViewProfile ? (
+                                    <Link href={`/dashboard/profile/${otherUser.id}`} className="flex items-center gap-3 hover:opacity-80 transition-opacity" title="Ver perfil">
+                                        <Avatar className="h-10 w-10">
+                                            <AvatarImage src={otherUser.image || otherUser.avatar || `https://ui-avatars.com/api/?name=${otherUser.name}&background=random`} />
+                                            <AvatarFallback>{otherUser.name?.substring(0, 2) || "U"}</AvatarFallback>
+                                        </Avatar>
+                                        <div>
+                                            <div className="font-semibold text-base hover:underline">{otherUser.name}</div>
+                                            <div className="text-xs text-muted-foreground">
+                                                {selectedMatch.isCompleted ? "Trabajo Completado" : "En Progreso"}
+                                            </div>
+                                        </div>
+                                    </Link>
+                                ) : (
+                                    <div className="flex items-center gap-3">
+                                        <Avatar className="h-10 w-10">
+                                            <AvatarImage src={otherUser.image || otherUser.avatar || `https://ui-avatars.com/api/?name=${otherUser.name}&background=random`} />
+                                            <AvatarFallback>{otherUser.name?.substring(0, 2) || "U"}</AvatarFallback>
+                                        </Avatar>
+                                        <div>
+                                            <div className="font-semibold text-base">{otherUser.name}</div>
+                                            <div className="text-xs text-muted-foreground">
+                                                {selectedMatch.isCompleted ? "Trabajo Completado" : "En Progreso"}
+                                            </div>
                                         </div>
                                     </div>
-                                </Link>
-                            ) : (
-                                <div className="flex items-center gap-3">
-                                    <Avatar className="h-10 w-10">
-                                        <AvatarImage src={otherUser.image || otherUser.avatar || `https://ui-avatars.com/api/?name=${otherUser.name}&background=random`} />
-                                        <AvatarFallback>{otherUser.name?.substring(0, 2) || "U"}</AvatarFallback>
-                                    </Avatar>
-                                    <div>
-                                        <div className="font-semibold text-base">{otherUser.name}</div>
-                                        <div className="text-xs text-muted-foreground">
-                                            {selectedMatch.isCompleted ? "Trabajo Completado" : "En Progreso"}
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
+                                )}
+                            </div>
+                            <div className="flex items-center gap-2 shrink-0">
+                                <Button variant="outline" size="icon" onClick={handleWhatsAppClick} title="Contactar por WhatsApp" className="touch-manipulation">
+                                    <Phone className="h-4 w-4 text-accent" />
+                                </Button>
+                                {/* Review Dialog only if completed or allowed */}
+                                <ReviewDialog
+                                    matchId={selectedMatch.id}
+                                    targetName={otherUser.name}
+                                    targetId={otherUser.id}
+                                    trigger={
+                                        <Button variant="ghost" size="icon" title="Calificar Usuario" className="touch-manipulation">
+                                            <Star className="h-4 w-4" />
+                                        </Button>
+                                    }
+                                />
+                            </div>
                         </div>
-                        <div className="flex items-center gap-2">
-                            <Button variant="outline" size="icon" onClick={handleWhatsAppClick} title="Contactar por WhatsApp" className="touch-manipulation">
-                                <Phone className="h-4 w-4 text-accent" />
-                            </Button>
-                            {/* Review Dialog only if completed or allowed */}
-                            <ReviewDialog
+
+                        {/* Work Completion Form */}
+                        <WorkCompletionForm
+                            matchId={selectedMatch.id}
+                            isCompleted={selectedMatch.isCompleted}
+                            clientId={selectedMatch.clientId}
+                            providerId={selectedMatch.providerId}
+                            currentUserId={currentUser?.id || ""}
+                        />
+
+                        {/* Rating Gate - Show after work is completed */}
+                        {selectedMatch.isCompleted && (
+                            <RatingGate
                                 matchId={selectedMatch.id}
-                                targetName={otherUser.name}
-                                targetId={otherUser.id}
-                                trigger={
-                                    <Button variant="ghost" size="icon" title="Calificar Usuario" className="touch-manipulation">
-                                        <Star className="h-4 w-4" />
-                                    </Button>
-                                }
+                                clientId={selectedMatch.clientId}
+                                providerId={selectedMatch.providerId}
+                                currentUserId={currentUser?.id || ""}
+                                onBothRated={() => {
+                                    toast.success("¡Ambos han calificado! Match cerrado.")
+                                    fetchMatches()
+                                }}
                             />
-                        </div>
+                        )}
                     </div>
 
                     {/* Messages */}

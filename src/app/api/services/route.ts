@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import prisma from "@/lib/prisma"
 import { getSession } from "@/lib/auth"
+import { canUserCreateServices } from "@/lib/permissions"
 
 export async function GET(request: Request) {
     try {
@@ -32,6 +33,15 @@ export async function POST(request: Request) {
         const session = await getSession()
         if (!session) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+        }
+
+        // SECURITY: Validate user can create services
+        const canCreate = await canUserCreateServices()
+        if (!canCreate) {
+            return NextResponse.json({
+                error: "Se requiere una suscripción activa e identidad verificada para crear servicios",
+                code: "SUBSCRIPTION_REQUIRED"
+            }, { status: 403 })
         }
 
         const body = await request.json()

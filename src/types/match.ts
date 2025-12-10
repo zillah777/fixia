@@ -32,6 +32,10 @@ export interface Match {
     providerId: string
     request: Request
     reviews?: { authorId: string; rating: number; comment: string }[]
+    // Work completion approval system
+    providerApprovedCompletion?: boolean | null
+    clientApprovedCompletion?: boolean | null
+    providerCompletionComment?: string | null
 }
 
 export interface Message {

@@ -29,6 +29,15 @@ import { Label } from "@/components/ui/label"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Calendar } from "@/components/ui/calendar"
 import { DatePickerSelect } from "@/components/ui/date-picker-select"
+import { Checkbox } from "@/components/ui/checkbox"
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
+import { Textarea } from "@/components/ui/textarea"
 import { cn } from "@/lib/utils"
 
 const formSchema = z.object({
@@ -62,9 +71,29 @@ const formSchema = z.object({
     password: z.string().min(6, {
         message: "La contraseña debe tener al menos 6 caracteres.",
     }),
+    confirmPassword: z.string(),
     role: z.enum(["CLIENT", "PROFESSIONAL"], {
         required_error: "Debes seleccionar un tipo de cuenta.",
     }),
+
+    // Professional fields (optional)
+    education: z.string().optional(),
+    diploma: z.string().optional(),
+    courses: z.string().optional(),
+    professionalLicense: z.string().optional(),
+    yearsExperience: z.coerce.number().int().min(0).max(50).optional().or(z.literal("")),
+    experienceDetails: z.string().optional(),
+    availability: z.object({
+        morning: z.boolean().optional(),
+        afternoon: z.boolean().optional(),
+        evening: z.boolean().optional(),
+        weekend: z.boolean().optional()
+    }).optional(),
+    workRadius: z.enum(["Mi ciudad", "5", "10", "20", "A convenir"]).default("Mi ciudad"),
+    workZones: z.string().optional(),
+}).refine((data) => data.password === data.confirmPassword, {
+    message: "Las contraseñas no coinciden",
+    path: ["confirmPassword"]
 })
 
 function RegisterForm() {
@@ -83,9 +112,21 @@ function RegisterForm() {
             location: "",
             dni: "",
             password: "",
+            confirmPassword: "",
             role: defaultRole,
+            education: "",
+            diploma: "",
+            courses: "",
+            professionalLicense: "",
+            yearsExperience: undefined,
+            experienceDetails: "",
+            availability: {},
+            workRadius: "Mi ciudad",
+            workZones: "",
         },
     })
+
+    const role = form.watch("role")
 
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
@@ -314,6 +355,188 @@ function RegisterForm() {
                                     </FormItem>
                                 )}
                             />
+
+                            <FormField
+                                control={form.control}
+                                name="confirmPassword"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Confirmar Contraseña</FormLabel>
+                                        <FormControl>
+                                            <PasswordInput placeholder="••••••" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            {role === "PROFESSIONAL" && (
+                                <div className="space-y-4 border-t pt-4">
+                                    <h3 className="font-semibold text-sm">Información Profesional (opcional)</h3>
+
+                                    <FormField
+                                        control={form.control}
+                                        name="education"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Nivel Educativo</FormLabel>
+                                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                                    <FormControl>
+                                                        <SelectTrigger>
+                                                            <SelectValue placeholder="Seleccionar..." />
+                                                        </SelectTrigger>
+                                                    </FormControl>
+                                                    <SelectContent>
+                                                        <SelectItem value="Secundario">Secundario Completo</SelectItem>
+                                                        <SelectItem value="Terciario">Terciario/Técnico</SelectItem>
+                                                        <SelectItem value="Universitario">Universitario</SelectItem>
+                                                        <SelectItem value="Posgrado">Posgrado/Especialización</SelectItem>
+                                                    </SelectContent>
+                                                </Select>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+
+                                    <FormField
+                                        control={form.control}
+                                        name="diploma"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Certificación o Diploma</FormLabel>
+                                                <FormControl>
+                                                    <Input placeholder="Ej: Electricista Matriculado" {...field} />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+
+                                    <FormField
+                                        control={form.control}
+                                        name="courses"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Cursos Realizados</FormLabel>
+                                                <FormControl>
+                                                    <Textarea placeholder="Ej: Curso de instalaciones eléctricas industriales..." {...field} />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+
+                                    <FormField
+                                        control={form.control}
+                                        name="professionalLicense"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Matrícula Profesional</FormLabel>
+                                                <FormControl>
+                                                    <Input placeholder="Número de matrícula si aplica" {...field} />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+
+                                    <FormField
+                                        control={form.control}
+                                        name="yearsExperience"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Años de Experiencia</FormLabel>
+                                                <FormControl>
+                                                    <Input type="number" placeholder="Ej: 5" min="0" max="50" {...field} />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+
+                                    <FormField
+                                        control={form.control}
+                                        name="experienceDetails"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Detalle de Experiencia</FormLabel>
+                                                <FormControl>
+                                                    <Textarea placeholder="Describe tu experiencia profesional..." {...field} />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+
+                                    <div>
+                                        <FormLabel className="mb-3 block">Disponibilidad Horaria</FormLabel>
+                                        <div className="grid grid-cols-2 gap-3">
+                                            {[
+                                                { id: "morning" as const, label: "Mañana (8-12)" },
+                                                { id: "afternoon" as const, label: "Tarde (12-18)" },
+                                                { id: "evening" as const, label: "Noche (18-24)" },
+                                                { id: "weekend" as const, label: "Fines de semana" }
+                                            ].map((time) => (
+                                                <FormField
+                                                    key={time.id}
+                                                    control={form.control}
+                                                    name={`availability.${time.id}`}
+                                                    render={({ field }) => (
+                                                        <FormItem className="flex items-center gap-2 space-y-0">
+                                                            <FormControl>
+                                                                <Checkbox
+                                                                    checked={field.value}
+                                                                    onCheckedChange={field.onChange}
+                                                                />
+                                                            </FormControl>
+                                                            <FormLabel className="font-normal cursor-pointer">{time.label}</FormLabel>
+                                                        </FormItem>
+                                                    )}
+                                                />
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    <FormField
+                                        control={form.control}
+                                        name="workRadius"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Radio de Trabajo <span className="text-red-500">*</span></FormLabel>
+                                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                                    <FormControl>
+                                                        <SelectTrigger>
+                                                            <SelectValue placeholder="Seleccionar..." />
+                                                        </SelectTrigger>
+                                                    </FormControl>
+                                                    <SelectContent>
+                                                        <SelectItem value="Mi ciudad">Solo mi ciudad</SelectItem>
+                                                        <SelectItem value="5">5 km</SelectItem>
+                                                        <SelectItem value="10">10 km</SelectItem>
+                                                        <SelectItem value="20">20 km</SelectItem>
+                                                        <SelectItem value="A convenir">A convenir (todo el país)</SelectItem>
+                                                    </SelectContent>
+                                                </Select>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+
+                                    <FormField
+                                        control={form.control}
+                                        name="workZones"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Zonas de Trabajo</FormLabel>
+                                                <FormControl>
+                                                    <Textarea placeholder="Ej: Palermo, Belgrano, Recoleta..." {...field} />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                </div>
+                            )}
 
                             <Button type="submit" className="w-full" disabled={isLoading}>
                                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}

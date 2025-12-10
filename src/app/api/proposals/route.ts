@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import prisma from "@/lib/prisma"
 import { getSession } from "@/lib/auth"
+import { canUserReceiveBookings } from "@/lib/permissions"
 
 export async function POST(req: Request) {
     try {
@@ -13,6 +14,15 @@ export async function POST(req: Request) {
         // Only professionals can send proposals
         if (user.role !== "PROFESSIONAL") {
             return NextResponse.json({ error: "Solo los profesionales pueden enviar propuestas" }, { status: 403 })
+        }
+
+        // SECURITY: Validate user can receive bookings (subscription + verification)
+        const canReceive = await canUserReceiveBookings()
+        if (!canReceive) {
+            return NextResponse.json({
+                error: "Se requiere una suscripción activa e identidad verificada para enviar propuestas",
+                code: "SUBSCRIPTION_REQUIRED"
+            }, { status: 403 })
         }
 
         const body = await req.json()

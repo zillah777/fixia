@@ -8,9 +8,19 @@ export async function GET(request: Request) {
         const category = searchParams.get("category") || "all"
         const location = searchParams.get("location") || ""
 
+        // PERFORMANCE: Add pagination support
+        const page = Math.max(1, parseInt(searchParams.get("page") || "1"))
+        const limit = Math.min(100, Math.max(1, parseInt(searchParams.get("limit") || "20")))
+        const skip = (page - 1) * limit
+
         const whereClause: any = {
             role: "PROFESSIONAL",
-            status: "ACTIVE"
+            status: "ACTIVE",
+            listingVisible: true,  // Only show professionals with active listings
+            subscriptionStatus: "active",  // Only show active subscriptions
+            subscriptionEndsAt: {
+                gt: new Date()  // Subscription not expired
+            }
         }
 
         // Search filter (Name, Bio, Tags)
@@ -39,49 +49,56 @@ export async function GET(request: Request) {
             }
         }
 
-        console.log("[PROFESSIONALS_API] Fetching with filters:", { search, category, location })
+        console.log("[PROFESSIONALS_API] Fetching with filters:", { search, category, location, page, limit, skip })
 
-        const professionals = await prisma.user.findMany({
-            where: whereClause,
-            select: {
-                id: true,
-                name: true,
-                email: true,
-                avatar: true,
-                role: true,
-                createdAt: true,
-                verificationRequest: {
-                    select: { status: true }
-                },
-                profile: {
-                    select: {
-                        bio: true,
-                        ratingAvg: true,
-                        tags: true,
-                        portfolioImages: true,
-                        locationLat: true,
-                        locationLng: true,
-                        experience: true,
-                        certification: true
+        // PERFORMANCE: Use Promise.all to run count and findMany in parallel
+        const [professionals, total] = await Promise.all([
+            prisma.user.findMany({
+                where: whereClause,
+                select: {
+                    id: true,
+                    name: true,
+                    avatar: true,
+                    role: true,
+                    createdAt: true,
+                    subscriptionStatus: true,
+                    verificationRequest: {
+                        select: { status: true }
+                    },
+                    profile: {
+                        select: {
+                            bio: true,
+                            ratingAvg: true,
+                            tags: true,
+                            portfolioImages: true,
+                            locationLat: true,
+                            locationLng: true,
+                            experience: true,
+                            certification: true
+                        }
+                    },
+                    services: {
+                        select: {
+                            id: true,
+                            title: true,
+                            categoryId: true,
+                            price: true
+                        }
+                    },
+                    _count: {
+                        select: {
+                            matchesAsProvider: { where: { isCompleted: true } }
+                        }
                     }
                 },
-                services: {
-                    select: {
-                        id: true,
-                        title: true,
-                        categoryId: true,
-                        price: true
-                    }
-                },
-                _count: {
-                    select: {
-                        matchesAsProvider: { where: { isCompleted: true } }
-                    }
-                }
-            }
-        })
+                orderBy: { createdAt: 'desc' },
+                skip,
+                take: limit
+            }),
+            prisma.user.count({ where: whereClause })
+        ])
 
-        console.log("[PROFESSIONALS_API] Found", professionals.length, "professionals")
+        console.log("[PROFESSIONALS_API] Found", professionals.length, "professionals out of", total)
 
         // Transform data to match frontend expectations
         const formattedPros = professionals.map(pro => {
@@ -104,7 +121,16 @@ export async function GET(request: Request) {
             }
         })
 
-        return NextResponse.json(formattedPros)
+        // Return paginated response
+        return NextResponse.json({
+            data: formattedPros,
+            pagination: {
+                page,
+                limit,
+                total,
+                pages: Math.ceil(total / limit)
+            }
+        })
     } catch (error) {
         console.error("Error fetching professionals:", error)
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })
