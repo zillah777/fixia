@@ -34,7 +34,10 @@ export default function SubscriptionPage() {
                 method: "POST",
             })
             const data = await response.json()
-            if (data.url) {
+            if (data.init_point) {
+                window.location.href = data.init_point
+            } else if (data.url) {
+                // Fallback for old API response format
                 window.location.href = data.url
             } else {
                 toast.error("Error al iniciar el pago")
