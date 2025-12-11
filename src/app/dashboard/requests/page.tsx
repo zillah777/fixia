@@ -5,6 +5,7 @@ import { Plus } from "lucide-react"
 import Link from "next/link"
 import { RichRequestCard, RequestData } from "@/components/requests/rich-request-card"
 import { useRouter } from "next/navigation"
+import { StandardizedEmptyState } from "@/components/onboarding/standardized-empty-state"
 
 
 
@@ -86,16 +87,15 @@ export default function RequestsPage() {
             )}
 
             {!isLoading && requests.length === 0 && (
-                <div className="text-center py-20">
-                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 mb-4">
-                        <Plus className="h-8 w-8 text-gray-400" />
-                    </div>
-                    <h3 className="text-lg font-medium">No tienes solicitudes activas</h3>
-                    <p className="text-muted-foreground mb-6">Crea tu primera solicitud para encontrar profesionales.</p>
-                    <Link href="/create-request">
-                        <Button variant="outline">Crear Solicitud</Button>
-                    </Link>
-                </div>
+                <StandardizedEmptyState
+                    icon={Plus}
+                    title="No tienes solicitudes activas"
+                    description="Crea tu primera solicitud para encontrar profesionales verificados y obtener presupuestos."
+                    action={{
+                        label: "Crear Solicitud",
+                        onClick: () => router.push("/create-request"),
+                    }}
+                />
             )}
         </div>
     )

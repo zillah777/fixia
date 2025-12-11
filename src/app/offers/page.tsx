@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Search, SlidersHorizontal, Loader2, Star, CheckCircle, MapPin } from "lucide-react"
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuCheckboxItem, DropdownMenuLabel, DropdownMenuSeparator } from "@/components/ui/dropdown-menu"
 import { Badge } from "@/components/ui/badge"
+import { StandardizedEmptyState } from "@/components/onboarding/standardized-empty-state"
 
 const CATEGORIES = [
     { id: "all", label: "Todos", icon: "🔍" },
@@ -201,22 +202,20 @@ export default function OffersPage() {
                                 ))}
                             </div>
                         ) : (
-                            <div className="text-center py-20">
-                                <h3 className="text-lg font-semibold">No se encontraron resultados</h3>
-                                <p className="text-muted-foreground">Intenta ajustar tus filtros de búsqueda.</p>
-                                <Button
-                                    variant="outline"
-                                    className="mt-4"
-                                    onClick={() => {
+                            <StandardizedEmptyState
+                                icon={Search}
+                                title="No se encontraron resultados"
+                                description="No hay servicios que coincidan con tus criterios de búsqueda y filtros. Intenta ajustarlos."
+                                action={{
+                                    label: "Limpiar todos los filtros",
+                                    onClick: () => {
                                         setSearch("")
                                         setSelectedCategory("all")
                                         setMinRating(0)
                                         setSelectedBadges([])
-                                    }}
-                                >
-                                    Limpiar todos los filtros
-                                </Button>
-                            </div>
+                                    },
+                                }}
+                            />
                         )}
                     </>
                 )}

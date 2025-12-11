@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
 import { PublicProfileCard } from "@/components/profile/public-profile-card"
+import { StandardizedEmptyState } from "@/components/onboarding/standardized-empty-state"
 import { useDebounce } from "@/hooks/use-debounce"
 
 interface Professional {
@@ -106,17 +107,18 @@ export default function ProfessionalsPage() {
                 </div>
             ) : professionals.length === 0 ? (
                 /* Empty State */
-                <Card className="p-12 text-center">
-                    <p className="text-muted-foreground mb-4">
-                        No se encontraron profesionales con esos criterios
-                    </p>
-                    <Button variant="outline" onClick={() => {
-                        setSearch("")
-                        setPage(1)
-                    }}>
-                        Limpiar búsqueda
-                    </Button>
-                </Card>
+                <StandardizedEmptyState
+                    icon={Search}
+                    title="No se encontraron profesionales"
+                    description="No hay profesionales que coincidan con tus criterios de búsqueda. Intenta con otros términos o limpia los filtros."
+                    action={{
+                        label: "Limpiar búsqueda",
+                        onClick: () => {
+                            setSearch("")
+                            setPage(1)
+                        },
+                    }}
+                />
             ) : (
                 <>
                     {/* Grid of Professionals */}

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Search, Wrench, Zap, Droplets, Paintbrush, Hammer, Truck, Scissors, Smartphone, Briefcase } from "lucide-react"
+import { StandardizedEmptyState } from "@/components/onboarding/standardized-empty-state"
 import Link from "next/link"
 
 // Mapping for Icons and Descriptions based on Category ID
@@ -107,9 +108,15 @@ export default function ServicesPage() {
             )}
 
             {!loading && filteredCategories.length === 0 && (
-                <div className="text-center py-12">
-                    <p className="text-muted-foreground text-lg">No se encontraron categorías que coincidan con tu búsqueda.</p>
-                </div>
+                <StandardizedEmptyState
+                    icon={Search}
+                    title="No se encontraron categorías"
+                    description="No hay categorías de servicios que coincidan con tu búsqueda. Intenta con otros términos."
+                    action={{
+                        label: "Limpiar búsqueda",
+                        onClick: () => setSearch(""),
+                    }}
+                />
             )}
         </div>
     )

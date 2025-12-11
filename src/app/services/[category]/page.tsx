@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Star, Search, ArrowLeft } from "lucide-react"
+import { StandardizedEmptyState } from "@/components/onboarding/standardized-empty-state"
 import Link from "next/link"
 
 interface Service {
@@ -102,14 +103,15 @@ export default function CategoryServicesPage() {
             {loading ? (
                 <div className="text-center py-12">Cargando servicios...</div>
             ) : services.length === 0 ? (
-                <div className="text-center py-12">
-                    <p className="text-muted-foreground text-lg mb-4">
-                        No hay servicios disponibles en esta categoría
-                    </p>
-                    <Link href="/services">
-                        <Button>Ver todas las categorías</Button>
-                    </Link>
-                </div>
+                <StandardizedEmptyState
+                    icon={Search}
+                    title="No hay servicios disponibles"
+                    description="Por el momento no hay servicios en esta categoría. Vuelve más tarde o explora otras categorías."
+                    action={{
+                        label: "Ver todas las categorías",
+                        onClick: () => window.location.href = "/services",
+                    }}
+                />
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {services.map((service) => (

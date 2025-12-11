@@ -4,10 +4,12 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Calendar, Clock, MapPin, MessageCircle, Phone } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { StandardizedEmptyState } from "@/components/onboarding/standardized-empty-state"
 
 import { useState, useEffect } from "react"
 import { useAuth } from "@/providers/auth-provider"
 import { useRouter } from "next/navigation"
+import { toast } from "sonner"
 
 export default function BookingsPage() {
     const { user } = useAuth()
@@ -144,9 +146,15 @@ export default function BookingsPage() {
                         </Card>
                     ))
                 ) : (
-                    <div className="text-center py-20 text-muted-foreground">
-                        No tienes reservas activas.
-                    </div>
+                    <StandardizedEmptyState
+                        icon={Calendar}
+                        title="No tienes reservas activas"
+                        description="Las reservas confirmadas aparecerán aquí. Completa conversaciones para activar reservas."
+                        action={{
+                            label: "Ver conversaciones",
+                            onClick: () => router.push("/dashboard/matches"),
+                        }}
+                    />
                 )}
             </div>
         </div>

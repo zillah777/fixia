@@ -7,6 +7,7 @@ import { TeaserCard } from "@/components/opportunities/teaser-card"
 import { CATEGORIES } from "@/config/categories"
 import { Loader2, Info, Search } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { StandardizedEmptyState } from "@/components/onboarding/standardized-empty-state"
 
 import { useRouter } from "next/navigation"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
@@ -90,13 +91,16 @@ export default function OpportunitiesPage() {
                             <TeaserCard key={req.id} data={req} />
                         )
                     )) : (
-                        <div className="col-span-full flex flex-col items-center justify-center py-16 text-center">
-                            <Search className="h-16 w-16 text-muted-foreground mb-4" />
-                            <h3 className="text-xl font-semibold mb-2">No hay oportunidades disponibles</h3>
-                            <p className="text-muted-foreground mb-4">Por el momento no hay solicitudes activas. Vuelve pronto.</p>
-                            <Button variant="outline" onClick={() => window.location.reload()}>
-                                Actualizar
-                            </Button>
+                        <div className="col-span-full">
+                            <StandardizedEmptyState
+                                icon={Search}
+                                title="No hay oportunidades disponibles"
+                                description="Por el momento no hay solicitudes activas. Vuelve pronto para ver nuevas oportunidades."
+                                action={{
+                                    label: "Actualizar",
+                                    onClick: () => window.location.reload(),
+                                }}
+                            />
                         </div>
                     )}
                 </div>

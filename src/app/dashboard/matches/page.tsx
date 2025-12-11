@@ -12,6 +12,7 @@ import { WorkCompletionForm } from "@/components/match/work-completion-form"
 import { RatingGate } from "@/components/match/rating-gate"
 import { cn } from "@/lib/utils"
 import { toast } from "sonner"
+import { StandardizedEmptyState } from "@/components/onboarding/standardized-empty-state"
 import { Match, Message, User } from "@/types/match"
 import { useAuth } from "@/providers/auth-provider"
 import { useParams, useRouter } from "next/navigation"
@@ -185,20 +186,19 @@ export default function MatchesPage() {
 
     if (matches.length === 0) {
         return (
-            <div className="flex flex-col items-center justify-center p-12 border rounded-lg bg-muted/10 max-w-md mx-auto text-center">
-                <MessageCircle className="h-16 w-16 text-muted-foreground mb-4" />
-                <h3 className="text-xl font-semibold mb-2">No tienes conversaciones</h3>
-                <p className="text-muted-foreground mb-6">
-                    {currentUser?.role === 'PROFESSIONAL'
-                        ? "Envía propuestas a solicitudes activas para iniciar conversaciones con clientes."
-                        : "Crea una solicitud para recibir propuestas de profesionales y comenzar a chatear."}
-                </p>
-                <Button asChild>
-                    <Link href={currentUser?.role === 'PROFESSIONAL' ? "/dashboard/opportunities" : "/dashboard/requests/create"}>
-                        {currentUser?.role === 'PROFESSIONAL' ? "Ver Oportunidades" : "Crear Solicitud"}
-                    </Link>
-                </Button>
-            </div>
+            <StandardizedEmptyState
+                icon={MessageCircle}
+                title="No tienes conversaciones"
+                description={currentUser?.role === 'PROFESSIONAL'
+                    ? "Envía propuestas a solicitudes activas para iniciar conversaciones con clientes."
+                    : "Crea una solicitud para recibir propuestas de profesionales y comenzar a chatear."}
+                action={{
+                    label: currentUser?.role === 'PROFESSIONAL' ? "Ver Oportunidades" : "Crear Solicitud",
+                    onClick: () => {
+                        router.push(currentUser?.role === 'PROFESSIONAL' ? "/dashboard/opportunities" : "/create-request")
+                    },
+                }}
+            />
         )
     }
 
