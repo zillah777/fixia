@@ -64,6 +64,7 @@ model User {
 
   createdAt            DateTime   @default(now())
   updatedAt      DateTime   @updatedAt
+  completedOnboarding  Boolean    @default(false)
 
   // Relations
   profile           Profile?

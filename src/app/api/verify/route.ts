@@ -32,5 +32,6 @@ export async function GET(req: Request) {
         return new NextResponse("Error verifying account", { status: 500 });
     }
 
-    redirect('/dashboard?verified=true');
+    // Redirect to onboarding if not completed, otherwise to dashboard
+    redirect('/onboarding');
 }
