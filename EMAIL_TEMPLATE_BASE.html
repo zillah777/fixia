@@ -1,0 +1,325 @@
+<!-- FIXIA TRANSACTIONAL EMAIL TEMPLATE BASE -->
+<!-- Compatible: Outlook, Gmail, Apple Mail, Yahoo, Thunderbird -->
+<!-- Inline CSS only, Table-based layout for maximum compatibility -->
+
+<!DOCTYPE html>
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>{{SUBJECT}}</title>
+
+    <!-- Outlook-specific styles -->
+    <!--[if mso]>
+        <style>
+            table { border-collapse: collapse; }
+            td { border-collapse: collapse; }
+            body { font-family: Arial, sans-serif !important; }
+        </style>
+    <![endif]-->
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-width: 100% !important;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+            background-color: #faf9f5;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td {
+            border-collapse: collapse;
+            padding: 0;
+            vertical-align: top;
+        }
+
+        img {
+            border: 0;
+            -ms-interpolation-mode: nearest-neighbor;
+            display: block;
+        }
+
+        p, h1, h2, h3, h4, h5, h6 {
+            margin: 0;
+            padding: 0;
+        }
+
+        ul, ol {
+            margin: 0;
+            padding: 0;
+            padding-left: 20px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #d97757;
+        }
+
+        /* Responsive Design - Mobile First */
+        @media only screen and (max-width: 640px) {
+            .container {
+                width: 100% !important;
+            }
+
+            .mobile-full-width {
+                width: 100% !important;
+            }
+
+            .mobile-padding {
+                padding: 16px !important;
+            }
+
+            .mobile-text-center {
+                text-align: center !important;
+            }
+
+            .mobile-hide {
+                display: none !important;
+            }
+
+            .mobile-show {
+                display: block !important;
+            }
+
+            td.mobile-width-auto {
+                width: auto !important;
+            }
+        }
+
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: #141413 !important;
+            }
+
+            .bg-light {
+                background-color: #1a1a18 !important;
+            }
+
+            .text-dark {
+                color: #faf9f5 !important;
+            }
+
+            .text-muted {
+                color: #b0aea5 !important;
+            }
+
+            .border-color {
+                border-color: #1a1a18 !important;
+            }
+        }
+    </style>
+</head>
+
+<body style="margin: 0; padding: 16px; background-color: #faf9f5; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">
+
+    <!-- OUTER CONTAINER -->
+    <table role="presentation" cellpadding="0" cellspacing="0" style="width: 100%; max-width: 600px; margin: 0 auto;">
+        <tbody>
+
+            <!-- HEADER SECTION -->
+            <tr>
+                <td style="padding: 0; background-color: #faf9f5;">
+                    <table role="presentation" cellpadding="0" cellspacing="0" style="width: 100%;">
+                        <tbody>
+                            <tr>
+                                <td style="padding: 24px 20px; text-align: center; background-color: #faf9f5;">
+                                    <!-- Logo -->
+                                    <table role="presentation" cellpadding="0" cellspacing="0" style="margin: 0 auto; display: inline-block;">
+                                        <tbody>
+                                            <tr>
+                                                <td style="font-size: 24px; font-weight: 700; color: #d97757; letter-spacing: -0.5px;">
+                                                    Fixia
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+
+                            <!-- Optional Hero Banner (can be customized per email) -->
+                            <tr class="hero-banner" style="display: none;">
+                                <td style="padding: 0; background: linear-gradient(135deg, #d97757 0%, #6a9bcc 100%); height: 120px;"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+
+            <!-- MAIN CONTENT SECTION -->
+            <tr>
+                <td style="padding: 0; background-color: #faf9f5;">
+                    <table role="presentation" cellpadding="0" cellspacing="0" style="width: 100%;">
+                        <tbody>
+
+                            <!-- Content Padding -->
+                            <tr>
+                                <td style="padding: 32px 20px; background-color: #faf9f5;">
+
+                                    <!-- Main Content Container -->
+                                    <table role="presentation" cellpadding="0" cellspacing="0" style="width: 100%;">
+                                        <tbody>
+
+                                            <!-- GREETING -->
+                                            <tr>
+                                                <td style="padding: 0 0 24px 0;">
+                                                    <h1 style="margin: 0; font-size: 28px; line-height: 1.3; color: #141413; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; font-weight: 700;">
+                                                        {{HEADING}}
+                                                    </h1>
+                                                </td>
+                                            </tr>
+
+                                            <!-- BODY TEXT -->
+                                            <tr>
+                                                <td style="padding: 0 0 20px 0;">
+                                                    <p style="margin: 0 0 12px 0; font-size: 16px; line-height: 1.6; color: #141413; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">
+                                                        {{BODY_TEXT}}
+                                                    </p>
+                                                </td>
+                                            </tr>
+
+                                            <!-- SECONDARY TEXT (if needed) -->
+                                            <tr style="display: none;" class="secondary-text">
+                                                <td style="padding: 0 0 24px 0;">
+                                                    <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #b0aea5; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">
+                                                        {{SECONDARY_TEXT}}
+                                                    </p>
+                                                </td>
+                                            </tr>
+
+                                            <!-- CTA BUTTON -->
+                                            <tr>
+                                                <td style="padding: 32px 0;">
+                                                    <table role="presentation" cellpadding="0" cellspacing="0">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td style="background-color: #d97757; border-radius: 8px; text-align: center;">
+                                                                    <!--[if mso]>
+                                                                        <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="{{CTA_LINK}}" style="height:48px;v-text-anchor:middle;width:280px;" arcsize="8%" stroke="f" fillcolor="#d97757">
+                                                                            <w:anchorlock/>
+                                                                            <center style="color:#faf9f5;font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:16px;font-weight:600;line-height:48px;text-decoration:none;">{{CTA_TEXT}}</center>
+                                                                        </v:roundrect>
+                                                                    <![endif]-->
+                                                                    <a href="{{CTA_LINK}}" style="background-color: #d97757; border: none; border-radius: 8px; color: #faf9f5; display: inline-block; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; font-size: 16px; font-weight: 600; line-height: 48px; text-align: center; text-decoration: none; width: 280px; mso-padding-alt: 12px 24px; text-underline-color: #d97757;">
+                                                                        {{CTA_TEXT}}
+                                                                    </a>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+
+                                            <!-- INFO BOX (Optional) -->
+                                            <tr style="display: none;" class="info-box">
+                                                <td style="padding: 24px; background-color: #e8e6dc; border-left: 4px solid #d97757; margin-top: 20px;">
+                                                    <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #141413; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">
+                                                        {{INFO_BOX_TEXT}}
+                                                    </p>
+                                                </td>
+                                            </tr>
+
+                                            <!-- SUCCESS BOX (Green accent) -->
+                                            <tr style="display: none;" class="success-box">
+                                                <td style="padding: 24px; background-color: #e8e6dc; border-left: 4px solid #788c5d; margin-top: 20px;">
+                                                    <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #141413; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">
+                                                        <strong>💡 {{SUCCESS_TITLE}}:</strong> {{SUCCESS_TEXT}}
+                                                    </p>
+                                                </td>
+                                            </tr>
+
+                                            <!-- SECTIONS LIST (for multiple items) -->
+                                            <tr style="display: none;" class="sections-list">
+                                                <td style="padding: 24px 0; border-top: 1px solid #b0aea5; margin-top: 20px;">
+                                                    {{SECTIONS_CONTENT}}
+                                                </td>
+                                            </tr>
+
+                                            <!-- FOOTER TEXT -->
+                                            <tr>
+                                                <td style="padding: 24px 0 0 0; border-top: 1px solid #b0aea5;">
+                                                    <p style="margin: 12px 0 0 0; font-size: 12px; line-height: 1.6; color: #b0aea5; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">
+                                                        {{FOOTER_TEXT}}
+                                                    </p>
+                                                </td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+
+            <!-- FOOTER SECTION -->
+            <tr>
+                <td style="padding: 0; background-color: #141413;">
+                    <table role="presentation" cellpadding="0" cellspacing="0" style="width: 100%;">
+                        <tbody>
+                            <tr>
+                                <td style="padding: 32px 20px; background-color: #141413; text-align: center;">
+
+                                    <!-- Footer Links -->
+                                    <table role="presentation" cellpadding="0" cellspacing="0" style="margin: 0 auto; display: inline-block;">
+                                        <tbody>
+                                            <tr>
+                                                <td style="padding: 0 12px;">
+                                                    <a href="{{FOOTER_LINK_1}}" style="font-size: 12px; color: #b0aea5; text-decoration: none; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">
+                                                        Centro de Ayuda
+                                                    </a>
+                                                </td>
+                                                <td style="padding: 0; color: #b0aea5;">|</td>
+                                                <td style="padding: 0 12px;">
+                                                    <a href="{{FOOTER_LINK_2}}" style="font-size: 12px; color: #b0aea5; text-decoration: none; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">
+                                                        Política de Privacidad
+                                                    </a>
+                                                </td>
+                                                <td style="padding: 0; color: #b0aea5;">|</td>
+                                                <td style="padding: 0 12px;">
+                                                    <a href="{{FOOTER_LINK_3}}" style="font-size: 12px; color: #b0aea5; text-decoration: none; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">
+                                                        Términos de Servicio
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <!-- Footer Text -->
+                                    <p style="margin: 16px 0 0 0; font-size: 12px; line-height: 1.6; color: #b0aea5; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">
+                                        {{FOOTER_COMPANY_TEXT}}
+                                    </p>
+
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+
+            <!-- SAFE AREA SPACER (for iOS notch) -->
+            <tr>
+                <td style="padding: 0; height: 20px; font-size: 0; line-height: 0;"></td>
+            </tr>
+
+        </tbody>
+    </table>
+
+</body>
+</html>
