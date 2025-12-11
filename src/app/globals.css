@@ -140,6 +140,11 @@
 
   body {
     @apply font-sans antialiased bg-background text-foreground;
+    /* Safe area insets for notches (iPhone X+, Android notches) */
+    padding-left: max(0.5rem, env(safe-area-inset-left));
+    padding-right: max(0.5rem, env(safe-area-inset-right));
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
   }
 
   /* Brand Guidelines: Poppins for headings */
@@ -201,5 +206,168 @@
     to {
       transform: translateY(calc(-100% - var(--gap)));
     }
+  }
+
+  /* Enterprise-grade micro-interactions */
+  .button-ripple {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .button-ripple::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  .button-ripple:active::after {
+    animation: ripple 0.6s ease-out;
+  }
+
+  @keyframes ripple {
+    to {
+      width: 300px;
+      height: 300px;
+      opacity: 0;
+    }
+  }
+
+  /* Smooth button transitions - Tesla/SpaceX style */
+  button {
+    @apply transition-all duration-200 ease-out;
+  }
+
+  button:hover {
+    @apply transform hover:scale-[1.02];
+  }
+
+  button:active {
+    @apply scale-[0.98];
+  }
+
+  /* Refined focus states for accessibility */
+  input:focus,
+  textarea:focus,
+  select:focus {
+    @apply outline-none ring-2 ring-primary ring-offset-2;
+  }
+
+  /* Reduced motion support for accessibility */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+
+    button:hover {
+      @apply transform-none;
+    }
+
+    button:active {
+      @apply scale-100;
+    }
+  }
+
+  /* High contrast mode support */
+  @media (prefers-contrast: more) {
+    :root {
+      --border: 30 5% 40%;
+      --primary: 16 58% 50%;
+      --secondary: 207 36% 51%;
+      --accent: 79 19% 36%;
+    }
+
+    .dark {
+      --border: 30 5% 35%;
+      --primary: 16 58% 75%;
+      --secondary: 207 36% 78%;
+      --accent: 79 19% 65%;
+    }
+
+    button,
+    [role="button"],
+    input,
+    select,
+    textarea {
+      border-width: 2px;
+    }
+  }
+
+  /* Smooth scroll behavior */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Optimized link interactions */
+  a {
+    @apply transition-colors duration-200;
+  }
+
+  a:focus-visible {
+    @apply outline-none ring-2 ring-primary ring-offset-2 rounded;
+  }
+
+  /* Visual feedback for disabled states */
+  input:disabled,
+  button:disabled,
+  select:disabled,
+  textarea:disabled {
+    @apply opacity-50 cursor-not-allowed;
+  }
+
+  /* Placeholder styling consistency */
+  input::placeholder,
+  textarea::placeholder {
+    @apply text-muted-foreground;
+  }
+
+  /* Selection styling with brand colors */
+  ::selection {
+    @apply bg-primary text-primary-foreground;
+  }
+
+  /* Custom scrollbar styling for brand consistency */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-background;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-muted rounded-full hover:bg-muted-foreground transition-colors;
+  }
+
+  /* Subtle card elevation system */
+  .card-hover {
+    @apply transition-all duration-300 hover:shadow-lg hover:shadow-primary/10;
+  }
+
+  /* Loading state animation */
+  @keyframes pulse-subtle {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.7;
+    }
+  }
+
+  .loading {
+    animation: pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
 }

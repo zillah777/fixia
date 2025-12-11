@@ -102,7 +102,7 @@ export default function Home() {
     return (
         <div className="flex min-h-screen flex-col overflow-hidden bg-background">
             {/* Hero Section with Spotlight Effect */}
-            <section className="relative pt-20 pb-16 sm:pt-28 sm:pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+            <section className="relative pt-12 pb-8 sm:pt-20 sm:pb-16 lg:pt-32 lg:pb-24 overflow-hidden">
                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent opacity-70 dark:from-primary/10" />
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-primary/10 dark:bg-primary/20 blur-[120px] rounded-full pointer-events-none" />
 
@@ -113,15 +113,21 @@ export default function Home() {
                         transition={{ duration: 0.8, ease: "easeOut" }}
                         className="mx-auto max-w-4xl space-y-8"
                     >
-                        <Badge variant="outline" className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-full backdrop-blur-sm border-primary/30 bg-primary/10 text-primary font-medium text-xs sm:text-sm">
-                            ✨ La forma más inteligente de contratar
-                        </Badge>
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.5, delay: 0.1 }}
+                        >
+                            <Badge variant="outline" className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-full backdrop-blur-sm border-primary/30 bg-primary/10 text-primary font-medium text-xs sm:text-sm hover:bg-primary/20 transition-colors duration-300">
+                                ✨ La forma más inteligente de contratar
+                            </Badge>
+                        </motion.div>
 
                         <motion.h1
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.8, ease: "easeOut" }}
-                            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tight"
+                            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight"
                         >
                             <span className="block text-foreground mb-2 sm:mb-3 font-medium">
                                 Servicios confiables,
@@ -134,7 +140,7 @@ export default function Home() {
                                 alt="Fixia Logo"
                                 width={400}
                                 height={130}
-                                className="inline-block h-96 sm:h-[32rem] md:h-[40rem] w-auto object-contain -mt-4 sm:-mt-6"
+                                className="inline-block h-32 sm:h-48 md:h-64 lg:h-80 w-auto object-contain -mt-2 sm:-mt-4"
                                 priority
                             />
                         </motion.h1>
@@ -213,7 +219,7 @@ export default function Home() {
                                 viewport={{ once: true }}
                             >
                                 <TiltCard
-                                    className="group relative h-48 sm:h-56 lg:h-64 rounded-2xl bg-gradient-to-br from-white to-muted/30 dark:from-card dark:to-muted/20 p-6 sm:p-7 shadow-md border border-border/40 backdrop-blur-sm hover:border-primary/50 transition-all duration-300 cursor-pointer overflow-hidden"
+                                    className="group relative h-48 sm:h-56 lg:h-64 rounded-2xl bg-gradient-to-br from-white to-muted/30 dark:from-card dark:to-muted/20 p-6 sm:p-7 shadow-md border border-border/40 backdrop-blur-sm hover:border-primary/50 hover:shadow-lg hover:shadow-primary/20 transition-all duration-300 cursor-pointer overflow-hidden"
                                     onClick={() => router.push(`/services/${category.id}`)}
                                 >
                                     {/* Subtle background accent */}
@@ -314,7 +320,7 @@ export default function Home() {
                                 <motion.div
                                     whileHover={{ scale: 1.05 }}
                                     transition={{ type: "spring", stiffness: 300 }}
-                                    className="p-4 sm:p-6 rounded-2xl bg-white/50 dark:bg-card/50 backdrop-blur-sm border border-border/30 hover:border-accent/50 transition-all duration-300"
+                                    className="p-4 sm:p-6 rounded-2xl bg-white/50 dark:bg-card/50 backdrop-blur-sm border border-border/30 hover:border-accent/50 hover:shadow-lg hover:shadow-accent/20 transition-all duration-300"
                                 >
                                     <div className="text-3xl sm:text-4xl md:text-5xl font-bold mb-2 sm:mb-3 text-gradient-primary">
                                         {stat.value}
@@ -336,9 +342,9 @@ export default function Home() {
                         whileInView={{ scale: 1, opacity: 1 }}
                         transition={{ duration: 0.6, type: "spring", stiffness: 100 }}
                         viewport={{ once: true }}
-                        className="bg-aurora p-[2px] rounded-3xl inline-block w-full max-w-4xl"
+                        className="bg-aurora p-[2px] rounded-3xl inline-block w-full max-w-4xl hover:shadow-2xl hover:shadow-primary/20 transition-all duration-500"
                     >
-                        <div className="bg-gradient-to-b from-white/80 to-muted/40 dark:from-card/80 dark:to-card/40 rounded-3xl p-8 sm:p-12 md:p-16 lg:p-20 shadow-lg backdrop-blur-xl border border-border/40">
+                        <div className="bg-gradient-to-b from-white/80 to-muted/40 dark:from-card/80 dark:to-card/40 rounded-3xl p-8 sm:p-12 md:p-16 lg:p-20 shadow-lg backdrop-blur-xl border border-border/40 hover:border-primary/30 transition-all duration-300">
                             <motion.div
                                 initial={{ opacity: 0, y: 10 }}
                                 whileInView={{ opacity: 1, y: 0 }}
@@ -372,7 +378,7 @@ export default function Home() {
                                     className="w-full xs:w-auto"
                                 >
                                     <Link href="/become-a-pro">
-                                        <Button size="lg" className="w-full xs:w-auto h-12 sm:h-13 lg:h-14 px-6 sm:px-8 lg:px-10 rounded-xl sm:rounded-full text-sm sm:text-base lg:text-lg bg-primary text-primary-foreground shadow-md hover:shadow-lg transition-all font-semibold">
+                                        <Button size="lg" className="w-full xs:w-auto h-12 sm:h-13 lg:h-14 px-6 sm:px-8 lg:px-10 rounded-xl sm:rounded-full text-sm sm:text-base lg:text-lg bg-primary text-primary-foreground shadow-md hover:shadow-xl hover:shadow-primary/30 hover:opacity-90 transition-all font-semibold">
                                             Comenzar Ahora
                                         </Button>
                                     </Link>
@@ -384,7 +390,7 @@ export default function Home() {
                                     className="w-full xs:w-auto"
                                 >
                                     <Link href="/services">
-                                        <Button size="lg" variant="outline" className="w-full xs:w-auto h-12 sm:h-13 lg:h-14 px-6 sm:px-8 lg:px-10 rounded-xl sm:rounded-full text-sm sm:text-base lg:text-lg border-2 hover:bg-muted/80 font-semibold transition-all">
+                                        <Button size="lg" variant="outline" className="w-full xs:w-auto h-12 sm:h-13 lg:h-14 px-6 sm:px-8 lg:px-10 rounded-xl sm:rounded-full text-sm sm:text-base lg:text-lg border-2 hover:bg-muted/80 hover:shadow-lg hover:shadow-secondary/20 font-semibold transition-all">
                                             Ver Servicios
                                         </Button>
                                     </Link>

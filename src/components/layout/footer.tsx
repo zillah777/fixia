@@ -85,7 +85,7 @@ export function Footer() {
                                 alt="Fixia Logo"
                                 width={240}
                                 height={80}
-                                className="h-16 h-auto w-48 object-contain"
+                                className="h-16 w-auto object-contain"
                             />
                         </Link>
                         <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">

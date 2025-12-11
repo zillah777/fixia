@@ -50,7 +50,7 @@ export function Navbar() {
                 className={`sticky top-4 z-50 w-[95%] max-w-7xl mx-auto rounded-full border bg-background/70 backdrop-blur-xl supports-[backdrop-filter]:bg-background/40 transition-all duration-200 ${isScrolled ? "shadow-lg shadow-primary/5" : ""
                     }`}
             >
-                <div className="container flex h-20 md:h-24 items-center justify-between">
+                <div className="container flex h-14 md:h-20 items-center justify-between">
                     <div className="flex items-center gap-6 flex-1">
                         <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
                             <SheetTrigger asChild>
@@ -167,7 +167,7 @@ export function Navbar() {
                                 alt="Fixia Logo"
                                 width={180}
                                 height={60}
-                                className="h-16 md:h-20 w-auto object-contain"
+                                className="h-10 md:h-16 w-auto object-contain"
                                 priority
                             />
                         </Link>
@@ -220,7 +220,7 @@ export function Navbar() {
                             <NotificationCenter />
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
-                                    <Button variant="ghost" size="icon" className="rounded-full relative h-9 w-9 border border-muted-foreground/20">
+                                    <Button variant="ghost" size="icon" className="rounded-full relative h-12 w-12 border border-muted-foreground/20">
                                         <Avatar className="h-8 w-8">
                                             <AvatarImage
                                                 src={getAvatarUrl(user.avatar, user.name)}
