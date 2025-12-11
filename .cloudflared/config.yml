@@ -1,0 +1,9 @@
+tunnel: fixia-app
+credentials-file: /run/secrets/tunnel_credentials.json
+
+ingress:
+  - hostname: fixia.app
+    service: http://localhost:3000
+  - hostname: www.fixia.app
+    service: http://localhost:3000
+  - service: http_status:404

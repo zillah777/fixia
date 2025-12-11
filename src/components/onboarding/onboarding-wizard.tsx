@@ -100,7 +100,7 @@ export function OnboardingWizard({ user }: OnboardingWizardProps) {
                 </div>
 
                 {/* Step Indicators */}
-                <div className="mb-12 hidden md:flex gap-2">
+                <div className="mb-8 sm:mb-12 flex gap-2">
                     {steps.map((step, index) => (
                         <div key={step} className="flex items-center flex-1">
                             <button

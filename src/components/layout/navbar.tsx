@@ -47,10 +47,10 @@ export function Navbar() {
     return (
         <>
             <header
-                className={`sticky top-4 z-50 w-[95%] max-w-7xl mx-auto rounded-full border bg-background/70 backdrop-blur-xl supports-[backdrop-filter]:bg-background/40 transition-all duration-200 ${isScrolled ? "shadow-lg shadow-primary/5" : ""
+                className={`sticky top-0 z-50 w-full mx-auto rounded-full border bg-background/70 backdrop-blur-xl supports-[backdrop-filter]:bg-background/40 transition-all duration-200 ${isScrolled ? "shadow-lg shadow-primary/5" : ""
                     }`}
             >
-                <div className="container flex h-14 md:h-20 items-center justify-between">
+                <div className="container px-3 sm:px-4 flex h-14 md:h-20 items-center justify-between max-w-7xl mx-auto">
                     <div className="flex items-center gap-6 flex-1">
                         <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
                             <SheetTrigger asChild>
@@ -59,7 +59,7 @@ export function Navbar() {
                                     <span className="sr-only">Toggle menu</span>
                                 </Button>
                             </SheetTrigger>
-                            <SheetContent side="left" className="w-[300px] sm:w-[400px]">
+                            <SheetContent side="left" className="w-[80vw] max-w-[320px] sm:w-[400px]">
                                 <SheetHeader className="sr-only">
                                     <SheetTitle>Menú de Navegación</SheetTitle>
                                     <SheetDescription>Menú principal para navegar por la aplicación Fixia</SheetDescription>

@@ -138,13 +138,35 @@
     @apply border-border;
   }
 
+  /* CRITICAL: Mobile-First Base Stabilization */
+  html {
+    /* Prevent zoom on input focus (iOS) */
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    /* Prevent elastic scroll on overscroll */
+    overscroll-behavior: none;
+    /* Smooth scroll for better UX */
+    scroll-behavior: smooth;
+  }
+
   body {
     @apply font-sans antialiased bg-background text-foreground;
+    /* Critical: Prevent body horizontal scroll */
+    overflow-x: hidden;
+    /* Prevent overscroll bounce on iOS/Android */
+    overscroll-behavior-y: none;
+    /* Ensure body takes full viewport */
+    width: 100%;
+    /* Disable momentum scroll on body (drawer/sidebar handles it) */
+    -webkit-overflow-scrolling: auto;
     /* Safe area insets for notches (iPhone X+, Android notches) */
     padding-left: max(0.5rem, env(safe-area-inset-left));
     padding-right: max(0.5rem, env(safe-area-inset-right));
     padding-top: env(safe-area-inset-top);
     padding-bottom: env(safe-area-inset-bottom);
+    /* Disable pull-to-refresh on Chrome Android (prevent jitter) */
+    touch-action: manipulation;
   }
 
   /* Brand Guidelines: Poppins for headings */
@@ -369,5 +391,173 @@
 
   .loading {
     animation: pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  /* MOBILE-FIRST STABILITY: Drawer/Sidebar Independent Scroll */
+  .drawer-scroll-container,
+  .sidebar-scroll-container {
+    /* Allow independent vertical scroll */
+    overflow-y: auto;
+    /* Prevent horizontal scroll */
+    overflow-x: hidden;
+    /* Smooth momentum scroll on iOS */
+    -webkit-overflow-scrolling: touch;
+    /* Prevent scroll from affecting body position */
+    overscroll-behavior: contain;
+  }
+
+  /* Prevent body scroll when drawer/sidebar is open */
+  body.drawer-open,
+  body.sidebar-open {
+    overflow: hidden;
+    /* Prevent overscroll bounce */
+    overscroll-behavior: none;
+  }
+
+  /* NAVBAR STABILITY: Remove sticky gap, full-width support */
+  header {
+    /* Use top-0 for mobile, add gap only on larger screens if needed */
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    /* Prevent jitter from border/shadow */
+    will-change: transform;
+    /* Safe area insets for notched devices */
+    padding-top: max(0.5rem, env(safe-area-inset-top));
+    padding-left: max(0.5rem, env(safe-area-inset-left));
+    padding-right: max(0.5rem, env(safe-area-inset-right));
+  }
+
+  /* SHEET OVERLAY: Proper mobile handling */
+  [role="dialog"] {
+    /* Ensure dialog doesn't cause scroll jitter */
+    position: fixed;
+    /* Safe area support for notches */
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  /* SHEET CONTENT: Independent scroll with safety */
+  [role="dialog"] [role="region"],
+  .sheet-content,
+  .drawer-content {
+    /* Full height minus safe areas */
+    max-height: 100dvh;
+    /* Allow scrolling of menu items */
+    overflow-y: auto;
+    overflow-x: hidden;
+    /* Smooth scroll on iOS */
+    -webkit-overflow-scrolling: touch;
+    /* Prevent body scroll interaction */
+    overscroll-behavior: contain;
+  }
+
+  /* CONTENT CONTAINER: Prevent horizontal overflow */
+  main {
+    /* Full width without overflow */
+    width: 100%;
+    /* Ensure content stays within viewport */
+    box-sizing: border-box;
+    /* Prevent jitter on narrow screens */
+    overflow-x: hidden;
+  }
+
+  /* PAGE WRAPPER: Proper viewport utilization */
+  #__next {
+    /* Full viewport dimensions */
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    /* Prevent horizontal scroll */
+    overflow-x: hidden;
+    width: 100%;
+  }
+
+  /* INPUT FOCUS ZOOM PREVENTION */
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="search"],
+  textarea,
+  select {
+    /* Prevent iOS zoom on focus (while respecting font-size >= 16px) */
+    font-size: 16px;
+  }
+
+  /* TOUCH TARGET OPTIMIZATION */
+  button,
+  a[role="button"],
+  [role="button"] {
+    /* Minimum touch target per platform standards (44x44pt iOS, 48x48dp Android) */
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* LINK/BUTTON ACTIVE STATES */
+  a,
+  button {
+    /* Prevent text selection during rapid taps */
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    /* Remove default tap highlight on Android */
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* SMOOTH TRANSITIONS (respect prefers-reduced-motion) */
+  button,
+  a,
+  input,
+  select,
+  textarea {
+    @apply transition-colors duration-200;
+  }
+
+  /* IMAGE OPTIMIZATION */
+  img {
+    /* Prevent jitter from image loading */
+    display: block;
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Reduced motion support - override animations */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+
+    .drawer-scroll-container,
+    .sidebar-scroll-container {
+      -webkit-overflow-scrolling: auto;
+    }
+  }
+
+  /* Landscape orientation optimizations */
+  @media (orientation: landscape) and (max-height: 500px) {
+    /* Tighten spacing on landscape small screens */
+    body {
+      padding-top: max(0.25rem, env(safe-area-inset-top));
+    }
+
+    header {
+      padding-top: max(0.25rem, env(safe-area-inset-top));
+    }
+  }
+
+  /* Tablet and up - smooth transitions allowed */
+  @media (min-width: 768px) {
+    header {
+      /* Desktop can have minimal gap */
+      top: 0.5rem;
+    }
   }
 }

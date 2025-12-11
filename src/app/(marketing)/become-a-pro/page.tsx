@@ -24,9 +24,9 @@ export default function BecomeProPage() {
                         </p>
                     </div>
 
-                    <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-8 max-w-5xl mx-auto">
                         {/* Card for Professionals */}
-                        <div className="group relative bg-card border border-border rounded-3xl p-8 hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/5">
+                        <div className="group relative bg-card border border-border rounded-2xl sm:rounded-3xl p-6 sm:p-8 hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/5">
                             <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
                             <div className="relative z-10">
                                 <div className="h-14 w-14 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
@@ -57,7 +57,7 @@ export default function BecomeProPage() {
                         </div>
 
                         {/* Card for Clients */}
-                        <div className="group relative bg-card border border-border rounded-3xl p-8 hover:border-secondary/50 transition-all duration-300 hover:shadow-lg hover:shadow-secondary/5">
+                        <div className="group relative bg-card border border-border rounded-2xl sm:rounded-3xl p-6 sm:p-8 hover:border-secondary/50 transition-all duration-300 hover:shadow-lg hover:shadow-secondary/5">
                             <div className="absolute inset-0 bg-gradient-to-b from-secondary/5 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
                             <div className="relative z-10">
                                 <div className="h-14 w-14 bg-secondary/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">

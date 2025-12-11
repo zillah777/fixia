@@ -169,12 +169,12 @@ function FooterSection({
     const [open, setOpen] = useState(true)
 
     return (
-        <Collapsible open={open} onOpenChange={setOpen} className="md:open">
+        <Collapsible open={open} onOpenChange={setOpen} defaultOpen>
             <CollapsibleTrigger className="w-full md:w-auto md:pointer-events-none md:opacity-100 flex items-center justify-between md:justify-start gap-2 font-bold text-base mb-4 hover:text-primary transition-colors">
                 {title}
                 <ChevronDown className="h-4 w-4 md:hidden" />
             </CollapsibleTrigger>
-            <CollapsibleContent className="md:block">
+            <CollapsibleContent className="block">
                 <ul className="space-y-3">
                     {items.map((item) => (
                         <li key={item.href}>
