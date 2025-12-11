@@ -157,3 +157,102 @@ export function EmptyStateSearchResults() {
         />
     )
 }
+
+export function EmptyStateNoMatches() {
+    return (
+        <StandardizedEmptyState
+            icon={require("lucide-react").MessageCircle}
+            title="Sin conversaciones"
+            description="Aún no tienes conversaciones. Crea una solicitud o responde a oportunidades para comenzar a comunicarte."
+        />
+    )
+}
+
+export function EmptyStateNoOpportunities() {
+    return (
+        <StandardizedEmptyState
+            icon={require("lucide-react").TrendingUp}
+            title="Sin oportunidades disponibles"
+            description="No hay oportunidades en este momento. Intenta más tarde o expande tus criterios de búsqueda."
+            action={{
+                label: "Actualizar",
+                onClick: () => {
+                    // Refresh page
+                    window.location.reload()
+                },
+            }}
+        />
+    )
+}
+
+export function EmptyStateNoBookings() {
+    return (
+        <StandardizedEmptyState
+            icon={require("lucide-react").Calendar}
+            title="Sin reservas aún"
+            description="No tienes reservas confirmadas. Crea una solicitud o responde a oportunidades para comenzar."
+        />
+    )
+}
+
+export function EmptyStateNoActivity() {
+    return (
+        <StandardizedEmptyState
+            icon={require("lucide-react").Activity}
+            title="Sin actividad reciente"
+            description="Crea solicitudes, responde propuestas o completa trabajos para ver tu actividad aquí."
+        />
+    )
+}
+
+export function EmptyStateNoData() {
+    return (
+        <StandardizedEmptyState
+            icon={require("lucide-react").BarChart3}
+            title="Sin datos suficientes"
+            description="No hay suficientes datos para mostrar estadísticas. Completa más transacciones para ver tu progreso."
+        />
+    )
+}
+
+export function EmptyStateNoNotifications() {
+    return (
+        <StandardizedEmptyState
+            icon={require("lucide-react").Bell}
+            title="Sin notificaciones"
+            description="Estás al día. No hay notificaciones nuevas por el momento."
+        />
+    )
+}
+
+export function EmptyStateNoProfessionals() {
+    return (
+        <StandardizedEmptyState
+            icon={require("lucide-react").Users}
+            title="Sin resultados"
+            description="No se encontraron profesionales que coincidan con tu búsqueda. Intenta con otros criterios."
+            action={{
+                label: "Limpiar búsqueda",
+                onClick: () => {
+                    // Clear search filters
+                },
+            }}
+        />
+    )
+}
+
+export function EmptyStateNoClients() {
+    return (
+        <StandardizedEmptyState
+            icon={require("lucide-react").Users}
+            title="Sin resultados"
+            description="No se encontraron clientes que coincidan con tu búsqueda. Intenta con otros criterios."
+            action={{
+                label: "Limpiar búsqueda",
+                onClick: () => {
+                    // Clear search filters
+                },
+            }}
+        />
+    )
+}
