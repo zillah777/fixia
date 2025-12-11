@@ -2,7 +2,7 @@
 
 import { ReactNode } from "react"
 import { Button } from "@/components/ui/button"
-import { LucideIcon } from "lucide-react"
+import { LucideIcon, Briefcase, MailQuestion, FileText, Users, Search, TrendingUp, Calendar, Activity, BarChart3, Bell } from "lucide-react"
 
 interface StandardizedEmptyStateProps {
     icon: LucideIcon
@@ -75,7 +75,7 @@ export function StandardizedEmptyState({
 export function EmptyStateNoServices() {
     return (
         <StandardizedEmptyState
-            icon={require("lucide-react").Briefcase}
+            icon={Briefcase}
             title="Sin servicios aún"
             description="Comienza creando tu primer servicio para que los clientes puedan encontrarte."
             action={{
@@ -91,7 +91,7 @@ export function EmptyStateNoServices() {
 export function EmptyStateNoRequests() {
     return (
         <StandardizedEmptyState
-            icon={require("lucide-react").MailQuestion}
+            icon={MailQuestion}
             title="Sin solicitudes aún"
             description="Cuando los clientes creen que eres perfecto para su trabajo, recibirás solicitudes aquí."
             secondaryAction={{
@@ -107,7 +107,7 @@ export function EmptyStateNoRequests() {
 export function EmptyStateNoProposals() {
     return (
         <StandardizedEmptyState
-            icon={require("lucide-react").FileText}
+            icon={FileText}
             title="Sin propuestas aún"
             description="Responde a las solicitudes de clientes con propuestas personalizadas para ganar proyectos."
             action={{
@@ -123,7 +123,7 @@ export function EmptyStateNoProposals() {
 export function EmptyStateNoMatches() {
     return (
         <StandardizedEmptyState
-            icon={require("lucide-react").Users}
+            icon={Users}
             title="Sin profesionales disponibles"
             description="Parece que no hay profesionales disponibles para tu solicitud en este momento. Intenta más tarde."
             action={{
@@ -145,7 +145,7 @@ export function EmptyStateNoMatches() {
 export function EmptyStateSearchResults() {
     return (
         <StandardizedEmptyState
-            icon={require("lucide-react").Search}
+            icon={Search}
             title="Sin resultados"
             description="No encontramos profesionales que coincidan con tu búsqueda. Intenta con otros términos."
             action={{
@@ -158,20 +158,10 @@ export function EmptyStateSearchResults() {
     )
 }
 
-export function EmptyStateNoMatches() {
-    return (
-        <StandardizedEmptyState
-            icon={require("lucide-react").MessageCircle}
-            title="Sin conversaciones"
-            description="Aún no tienes conversaciones. Crea una solicitud o responde a oportunidades para comenzar a comunicarte."
-        />
-    )
-}
-
 export function EmptyStateNoOpportunities() {
     return (
         <StandardizedEmptyState
-            icon={require("lucide-react").TrendingUp}
+            icon={TrendingUp}
             title="Sin oportunidades disponibles"
             description="No hay oportunidades en este momento. Intenta más tarde o expande tus criterios de búsqueda."
             action={{
@@ -188,7 +178,7 @@ export function EmptyStateNoOpportunities() {
 export function EmptyStateNoBookings() {
     return (
         <StandardizedEmptyState
-            icon={require("lucide-react").Calendar}
+            icon={Calendar}
             title="Sin reservas aún"
             description="No tienes reservas confirmadas. Crea una solicitud o responde a oportunidades para comenzar."
         />
@@ -198,7 +188,7 @@ export function EmptyStateNoBookings() {
 export function EmptyStateNoActivity() {
     return (
         <StandardizedEmptyState
-            icon={require("lucide-react").Activity}
+            icon={Activity}
             title="Sin actividad reciente"
             description="Crea solicitudes, responde propuestas o completa trabajos para ver tu actividad aquí."
         />
@@ -208,7 +198,7 @@ export function EmptyStateNoActivity() {
 export function EmptyStateNoData() {
     return (
         <StandardizedEmptyState
-            icon={require("lucide-react").BarChart3}
+            icon={BarChart3}
             title="Sin datos suficientes"
             description="No hay suficientes datos para mostrar estadísticas. Completa más transacciones para ver tu progreso."
         />
@@ -218,7 +208,7 @@ export function EmptyStateNoData() {
 export function EmptyStateNoNotifications() {
     return (
         <StandardizedEmptyState
-            icon={require("lucide-react").Bell}
+            icon={Bell}
             title="Sin notificaciones"
             description="Estás al día. No hay notificaciones nuevas por el momento."
         />
@@ -228,7 +218,7 @@ export function EmptyStateNoNotifications() {
 export function EmptyStateNoProfessionals() {
     return (
         <StandardizedEmptyState
-            icon={require("lucide-react").Users}
+            icon={Users}
             title="Sin resultados"
             description="No se encontraron profesionales que coincidan con tu búsqueda. Intenta con otros criterios."
             action={{
@@ -244,7 +234,7 @@ export function EmptyStateNoProfessionals() {
 export function EmptyStateNoClients() {
     return (
         <StandardizedEmptyState
-            icon={require("lucide-react").Users}
+            icon={Users}
             title="Sin resultados"
             description="No se encontraron clientes que coincidan con tu búsqueda. Intenta con otros criterios."
             action={{
