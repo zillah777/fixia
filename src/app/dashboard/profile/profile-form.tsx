@@ -11,6 +11,8 @@ import { Badge } from "@/components/ui/badge"
 import { CheckCircle2, MapPin, Upload, Loader2 } from "lucide-react"
 import { toast } from "sonner"
 import { TagInput } from "@/components/ui/tag-input"
+import { ProfileFormHelp } from "@/components/onboarding/form-help-context"
+import { BioFieldHelper, TagsFieldHelper } from "@/components/onboarding/form-field-helper"
 
 interface ProfileFormProps {
     user: {
@@ -245,14 +247,19 @@ export function ProfileForm({ user }: ProfileFormProps) {
                     <Card>
                         <CardHeader>
                             <div className="flex justify-between items-center">
-                                <CardTitle>Información Personal</CardTitle>
-                                <Button variant={isEditing ? "default" : "outline"} onClick={() => isEditing ? handleSave() : setIsEditing(true)}>
-                                    {isEditing ? "Guardar Cambios" : "Editar Perfil"}
-                                </Button>
+                                <div className="flex-1">
+                                    <CardTitle>Información Personal</CardTitle>
+                                    <CardDescription>
+                                        Esta información será visible para los clientes.
+                                    </CardDescription>
+                                </div>
+                                <div className="flex gap-2 items-center">
+                                    <ProfileFormHelp />
+                                    <Button variant={isEditing ? "default" : "outline"} onClick={() => isEditing ? handleSave() : setIsEditing(true)}>
+                                        {isEditing ? "Guardar Cambios" : "Editar Perfil"}
+                                    </Button>
+                                </div>
                             </div>
-                            <CardDescription>
-                                Esta información será visible para los clientes.
-                            </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div className="grid grid-cols-2 gap-4">
@@ -300,6 +307,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
                                     disabled={!isEditing}
                                     onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
                                 />
+                                {isEditing && <BioFieldHelper />}
                             </div>
 
                             {formData.role === "PROFESSIONAL" && (
@@ -349,6 +357,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
                                         <p className="text-xs text-muted-foreground">
                                             Palabras clave que describen tus habilidades (ej. "Electricidad", "Plomería", "Urgencias").
                                         </p>
+                                        {isEditing && <TagsFieldHelper />}
                                     </div>
                                 </>
                             )}
