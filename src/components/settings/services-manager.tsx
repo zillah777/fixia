@@ -12,6 +12,8 @@ import { Trash2, Plus, DollarSign, Tag } from "lucide-react"
 import { toast } from "sonner"
 import { CATEGORIES } from "@/config/categories"
 import { CategorySelector } from "@/components/shared/category-selector"
+import { ServiceFormHelp } from "@/components/onboarding/form-help-context"
+import { PriceFieldHelper, TagsFieldHelper } from "@/components/onboarding/form-field-helper"
 
 export function ServicesManager() {
     const [services, setServices] = useState<any[]>([])
@@ -115,10 +117,15 @@ export function ServicesManager() {
         <div className="space-y-6">
             <Card>
                 <CardHeader>
-                    <CardTitle>Mis Servicios</CardTitle>
-                    <CardDescription>
-                        Administra los servicios que ofreces a los clientes.
-                    </CardDescription>
+                    <div className="flex items-start justify-between">
+                        <div>
+                            <CardTitle>Mis Servicios</CardTitle>
+                            <CardDescription>
+                                Administra los servicios que ofreces a los clientes.
+                            </CardDescription>
+                        </div>
+                        <ServiceFormHelp />
+                    </div>
                 </CardHeader>
                 <CardContent>
                     <div className="space-y-6">
@@ -153,6 +160,7 @@ export function ServicesManager() {
                                             onChange={(e) => setNewService({ ...newService, price: e.target.value })}
                                         />
                                     </div>
+                                    <PriceFieldHelper />
                                 </div>
                                 <div className="space-y-2">
                                     <Label>Etiquetas</Label>
@@ -175,6 +183,7 @@ export function ServicesManager() {
                                             </Badge>
                                         ))}
                                     </div>
+                                    <TagsFieldHelper />
                                 </div>
                             </div>
                             <div className="space-y-2">

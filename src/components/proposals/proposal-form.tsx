@@ -9,6 +9,8 @@ import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { DollarSign, Send } from "lucide-react"
 import { toast } from "sonner"
+import { ProposalFormHelp } from "@/components/onboarding/form-help-context"
+import { MessageFieldHelper, PriceFieldHelper } from "@/components/onboarding/form-field-helper"
 
 interface ProposalFormProps {
     requestId: string
@@ -65,10 +67,13 @@ export function ProposalForm({ requestId, onSuccess }: ProposalFormProps) {
     return (
         <Card className="border-2 border-primary/10 shadow-lg">
             <CardHeader className="bg-primary/5 pb-4">
-                <CardTitle className="flex items-center gap-2 text-primary">
-                    <Send className="h-5 w-5" />
-                    Enviar Propuesta
-                </CardTitle>
+                <div className="flex items-start justify-between">
+                    <CardTitle className="flex items-center gap-2 text-primary">
+                        <Send className="h-5 w-5" />
+                        Enviar Propuesta
+                    </CardTitle>
+                    <ProposalFormHelp />
+                </div>
             </CardHeader>
             <CardContent className="pt-6 text-left">
                 <form onSubmit={handleSubmit} className="space-y-4">
@@ -90,6 +95,7 @@ export function ProposalForm({ requestId, onSuccess }: ProposalFormProps) {
                         <p className="text-xs text-muted-foreground">
                             Ingresa el monto total estimado por tu trabajo.
                         </p>
+                        <PriceFieldHelper />
                     </div>
 
                     <div className="space-y-2">
@@ -104,6 +110,7 @@ export function ProposalForm({ requestId, onSuccess }: ProposalFormProps) {
                         <p className="text-xs text-muted-foreground">
                             Explica por qué eres el indicado para este trabajo.
                         </p>
+                        <MessageFieldHelper />
                     </div>
 
                     <Button type="submit" className="w-full text-base py-6" disabled={isLoading}>

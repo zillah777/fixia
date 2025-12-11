@@ -14,6 +14,8 @@ import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { CATEGORIES } from "@/config/categories"
 import { CategorySelector } from "@/components/shared/category-selector"
+import { RequestFormHelp } from "@/components/onboarding/form-help-context"
+import { TitleFieldHelper, DescriptionFieldHelper, PriceFieldHelper } from "@/components/onboarding/form-field-helper"
 
 export default function CreateRequestPage() {
     const router = useRouter()
@@ -133,11 +135,14 @@ export default function CreateRequestPage() {
                     </Button>
                 </Link>
 
-                <div className="mb-8">
-                    <h1 className="text-3xl font-bold tracking-tight">Nueva Solicitud</h1>
-                    <p className="text-muted-foreground mt-2">
-                        Describe lo que necesitas y recibe presupuestos de profesionales verificados.
-                    </p>
+                <div className="mb-8 flex items-start justify-between">
+                    <div>
+                        <h1 className="text-3xl font-bold tracking-tight">Nueva Solicitud</h1>
+                        <p className="text-muted-foreground mt-2">
+                            Describe lo que necesitas y recibe presupuestos de profesionales verificados.
+                        </p>
+                    </div>
+                    <RequestFormHelp />
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-8">
@@ -154,12 +159,13 @@ export default function CreateRequestPage() {
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="title">Título Breve</Label>
+                                <Label htmlFor="title">Título Breve *</Label>
                                 <Input id="title" name="title" placeholder="Ej: Reparación de canilla que gotea" className="h-12" required />
+                                <TitleFieldHelper />
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="description">Descripción Detallada</Label>
+                                <Label htmlFor="description">Descripción Detallada *</Label>
                                 <Textarea
                                     id="description"
                                     name="description"
@@ -167,14 +173,16 @@ export default function CreateRequestPage() {
                                     className="min-h-[120px] resize-none"
                                     required
                                 />
+                                <DescriptionFieldHelper />
                             </div>
                         </CardContent>
                     </Card>
 
                     {/* Step 2: Budget (Smart Suggestion) */}
                     {category && (
-                        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-3">
                             <SmartBudgetSuggestion category={category} onBudgetChange={setBudgetRange} />
+                            <PriceFieldHelper />
                         </div>
                     )}
 
