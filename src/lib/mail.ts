@@ -26,9 +26,9 @@ const getAppUrl = () => {
   return process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
 };
 
-export const sendVerificationEmail = async (email: string, token: string) => {
+export const sendVerificationEmail = async (email: string, name: string, token: string) => {
   const appUrl = getAppUrl();
-  const confirmLink = `${appUrl}/api/verify?token=${token}`;
+  const confirmLink = `${appUrl}/auth/verify-email?token=${token}`;
   const resend = getResend();
 
   try {
@@ -226,9 +226,9 @@ const generateWelcomeEmailHTML = (name: string, appUrl: string) => `
 </html>
 `;
 
-export const sendPasswordResetEmail = async (email: string, token: string) => {
+export const sendPasswordResetEmail = async (email: string, name: string, token: string) => {
   const appUrl = getAppUrl();
-  const resetLink = `${appUrl}/reset-password?token=${token}`;
+  const resetLink = `${appUrl}/(auth)/reset-password/${token}`;
   const resend = getResend();
 
   try {

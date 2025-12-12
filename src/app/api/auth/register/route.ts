@@ -127,7 +127,7 @@ export async function POST(req: Request) {
 
         // Send emails (non-blocking)
         sendRegistrationConfirmation(email, name, role).catch(e => console.error("Registration confirmation email failed", e));
-        sendVerificationEmail(email, verificationToken).catch(e => console.error("Verification email failed", e));
+        sendVerificationEmail(email, name, verificationToken).catch(e => console.error("Verification email failed", e));
 
         return NextResponse.json({
             user: {
