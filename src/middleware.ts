@@ -7,7 +7,43 @@ import { decrypt } from "@/lib/auth";
 export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
-    // Routes that require authentication
+    // Get session token from cookies
+    const token = request.cookies.get("session")?.value;
+
+    // =========================================================================
+    // PUBLIC AUTH ROUTES - Redirect authenticated users to dashboard
+    // =========================================================================
+    const publicAuthRoutes = [
+        "/login",
+        "/register",
+        "/forgot-password",
+        "/(auth)",
+    ];
+
+    const isPublicAuthRoute = publicAuthRoutes.some((route) => {
+        if (route.includes("*")) {
+            const pattern = route.replace("*", "(.+)");
+            return new RegExp(`^${pattern}$`).test(pathname);
+        }
+        return pathname.startsWith(route);
+    });
+
+    // If user is authenticated and trying to access public auth routes
+    if (isPublicAuthRoute && token) {
+        // Verify token is valid
+        const session = await decrypt(token);
+
+        if (session) {
+            // User is authenticated - redirect to appropriate dashboard
+            const userRole = session.user.role;
+            const dashboardUrl = userRole === "ADMIN" ? "/admin" : "/dashboard";
+            return NextResponse.redirect(new URL(dashboardUrl, request.url));
+        }
+    }
+
+    // =========================================================================
+    // PROTECTED ROUTES - Require authentication
+    // =========================================================================
     const protectedRoutes = [
         "/admin",
         "/dashboard",
@@ -29,9 +65,6 @@ export async function middleware(request: NextRequest) {
         // Public routes - allow access
         return NextResponse.next();
     }
-
-    // Get session token from cookies
-    const token = request.cookies.get("session")?.value;
 
     if (!token) {
         // No session - redirect to login
