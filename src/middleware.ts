@@ -4,11 +4,22 @@ import { decrypt } from "@/lib/auth";
 // SECURITY: Next.js Middleware for Route Protection with RBAC
 // Protects admin routes, dashboard routes, and professional-only routes
 // Runs on every request before reaching route handlers
+// Also sets RLS context for database-level security
 export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
     // Get session token from cookies
     const token = request.cookies.get("session")?.value;
+
+    // =========================================================================
+    // RLS CONTEXT: Set user identification for database security
+    // =========================================================================
+    // These values are used by PostgreSQL RLS policies to enforce row-level access control
+    // They're stored in thread-local storage and set by the Prisma middleware
+    const rlsContext = {
+        userId: null as string | null,
+        userRole: null as string | null
+    };
 
     // =========================================================================
     // PUBLIC AUTH ROUTES - Redirect authenticated users to dashboard
@@ -34,6 +45,11 @@ export async function middleware(request: NextRequest) {
         const session = await decrypt(token);
 
         if (session) {
+            // Set RLS context for authenticated user
+            rlsContext.userId = session.user.id;
+            rlsContext.userRole = session.user.role;
+            (globalThis as any).__rls_context = rlsContext;
+
             // User is authenticated - redirect to appropriate dashboard
             const userRole = session.user.role;
             const dashboardUrl = userRole === "ADMIN" ? "/admin" : "/dashboard";
@@ -78,6 +94,14 @@ export async function middleware(request: NextRequest) {
         // Invalid session - redirect to login
         return NextResponse.redirect(new URL("/login", request.url));
     }
+
+    // =========================================================================
+    // RLS CONTEXT: Set authenticated user context
+    // =========================================================================
+    // Store user ID and role for RLS policies to use during database queries
+    rlsContext.userId = session.user.id;
+    rlsContext.userRole = session.user.role;
+    (globalThis as any).__rls_context = rlsContext;
 
     // =========================================================================
     // ROLE-BASED ACCESS CONTROL

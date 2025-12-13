@@ -1,5 +1,4 @@
-tunnel: fixia-app
-credentials-file: /run/secrets/tunnel_credentials.json
+tunnel: fixia-tunnel
 
 ingress:
   - hostname: fixia.app

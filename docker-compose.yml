@@ -58,7 +58,7 @@ services:
     container_name: fixia-tunnel
     image: cloudflare/cloudflared:latest
     restart: always
-    command: tunnel --no-autoupdate run --token ${TUNNEL_TOKEN}
+    command: tunnel run --token ${TUNNEL_TOKEN}
     depends_on:
       - app
     networks:
