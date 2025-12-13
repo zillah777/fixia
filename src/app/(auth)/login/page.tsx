@@ -88,7 +88,7 @@ export default function LoginPage() {
         <div className="flex min-h-screen items-center justify-center md:items-start md:pt-32 bg-muted/50 p-4">
             <div className="w-full max-w-md space-y-8">
                 {/* Logo */}
-                <Link href="/" className="flex items-center justify-center gap-2 mb-12 sm:mb-16 md:mb-24">
+                <Link href="/" className="flex items-center justify-center gap-2 mb-12 sm:mb-16 md:mb-24 pl-20 md:pl-0">
                     <div className="relative h-24 w-auto aspect-[3/1]">
                         <Image
                             src="/logo.png"

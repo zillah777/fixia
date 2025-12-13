@@ -126,9 +126,9 @@ export default function SettingsPage() {
 
                     if (data.role === 'PROFESSIONAL' && data.profile) {
                         setProData({
-                            certification: data.profile.certification,
-                            licenseNumber: data.profile.licenseNumber,
-                            experience: data.profile.experience,
+                            certification: data.profile.certification || data.profile.diploma || "",
+                            licenseNumber: data.profile.licenseNumber || data.profile.professionalLicense || "",
+                            experience: data.profile.experience || data.profile.experienceDetails || "",
                             tags: data.profile.tags,
                             portfolioImages: data.profile.portfolioImages
                         })
@@ -279,12 +279,12 @@ export default function SettingsPage() {
             <Separator />
 
             <Tabs defaultValue="profile" className="space-y-4">
-                <TabsList className="w-full justify-start overflow-x-auto flex-nowrap max-w-full no-scrollbar">
-                    <TabsTrigger value="profile" className="whitespace-nowrap">Perfil Público</TabsTrigger>
-                    {user?.role === 'PROFESSIONAL' && <TabsTrigger value="professional" className="whitespace-nowrap">Profesional</TabsTrigger>}
-                    <TabsTrigger value="account" className="whitespace-nowrap">Cuenta</TabsTrigger>
-                    <TabsTrigger value="notifications" className="whitespace-nowrap">Notificaciones</TabsTrigger>
-                    <TabsTrigger value="verification" className="whitespace-nowrap">Verificación</TabsTrigger>
+                <TabsList className="grid grid-cols-2 h-auto md:flex md:flex-row md:w-full md:justify-start md:overflow-x-auto md:flex-nowrap md:max-w-full md:no-scrollbar gap-2">
+                    <TabsTrigger value="profile" className="whitespace-nowrap w-full md:w-auto">Perfil Público</TabsTrigger>
+                    {user?.role === 'PROFESSIONAL' && <TabsTrigger value="professional" className="whitespace-nowrap w-full md:w-auto">Profesional</TabsTrigger>}
+                    <TabsTrigger value="account" className="whitespace-nowrap w-full md:w-auto">Cuenta</TabsTrigger>
+                    <TabsTrigger value="notifications" className="whitespace-nowrap w-full md:w-auto">Notificaciones</TabsTrigger>
+                    <TabsTrigger value="verification" className="whitespace-nowrap w-full md:w-auto">Verificación</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="verification" className="space-y-4">

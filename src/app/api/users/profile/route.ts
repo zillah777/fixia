@@ -89,8 +89,11 @@ export async function PATCH(request: Request) {
                             bio,
                             socialLinks: JSON.stringify(socialLinks),
                             certification,
+                            diploma: certification, // Sync with registration field
                             licenseNumber,
+                            professionalLicense: licenseNumber, // Sync with registration field
                             experience,
+                            experienceDetails: experience, // Sync with registration field
                             tags,
                             trustScore: 0 // Default for new profiles
                         },
@@ -98,8 +101,11 @@ export async function PATCH(request: Request) {
                             bio,
                             socialLinks: JSON.stringify(socialLinks),
                             certification,
+                            diploma: certification, // Sync with registration field
                             licenseNumber,
+                            professionalLicense: licenseNumber, // Sync with registration field
                             experience,
+                            experienceDetails: experience, // Sync with registration field
                             tags,
                             notificationSettings: body.notificationSettings ? JSON.stringify(body.notificationSettings) : undefined, // Check if provided
                             portfolioImages: portfolioImages ? JSON.stringify(portfolioImages) : undefined // Update portfolio images

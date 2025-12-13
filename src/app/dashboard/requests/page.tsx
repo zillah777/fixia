@@ -7,8 +7,6 @@ import { RichRequestCard, RequestData } from "@/components/requests/rich-request
 import { useRouter } from "next/navigation"
 import { StandardizedEmptyState } from "@/components/onboarding/standardized-empty-state"
 
-
-
 import { useState, useEffect } from "react"
 import { CATEGORIES } from "@/config/categories"
 

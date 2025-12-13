@@ -96,106 +96,108 @@ export default function DashboardLayout({
                         </Button>
                     </SheetTrigger>
                     <SheetContent side="left" className="w-72 p-0 border-r-0 bg-background/95 backdrop-blur-xl">
-                        <SheetHeader className="sr-only">
-                            <SheetTitle>Menú Dashboard</SheetTitle>
-                            <SheetDescription>Navegación principal del panel de control</SheetDescription>
-                        </SheetHeader>
-                        <div className="p-8">
-                            <div className="relative h-14 w-40 mb-6">
-                                <Image
-                                    src="/logo.png"
-                                    alt="Fixia Logo"
-                                    fill
-                                    className="object-contain"
-                                    sizes="160px"
-                                />
-                            </div>
-                            {user && (
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <div className="mt-4 flex items-center gap-3 cursor-pointer hover:bg-muted/50 p-2 rounded-lg transition-colors">
-                                            <Avatar className="h-10 w-10 border border-border">
-                                                <AvatarImage src={user.avatar || undefined} alt={user.name || "User"} className="object-cover" />
-                                                <AvatarFallback className="bg-muted text-gray-500 font-medium">
-                                                    {user.name?.substring(0, 2).toUpperCase() || "US"}
-                                                </AvatarFallback>
-                                            </Avatar>
-                                            <div className="flex flex-col">
-                                                <span className="font-medium text-sm">{user.name}</span>
-                                                <span className="text-xs text-muted-foreground truncate max-w-[150px]">{user.email}</span>
+                        <div className="flex flex-col h-full overflow-y-auto">
+                            <SheetHeader className="sr-only">
+                                <SheetTitle>Menú Dashboard</SheetTitle>
+                                <SheetDescription>Navegación principal del panel de control</SheetDescription>
+                            </SheetHeader>
+                            <div className="p-6">
+                                <div className="relative h-12 w-36 mb-4">
+                                    <Image
+                                        src="/logo.png"
+                                        alt="Fixia Logo"
+                                        fill
+                                        className="object-contain"
+                                        sizes="160px"
+                                    />
+                                </div>
+                                {user && (
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                            <div className="mt-2 flex items-center gap-3 cursor-pointer hover:bg-muted/50 p-2 rounded-lg transition-colors">
+                                                <Avatar className="h-9 w-9 border border-border">
+                                                    <AvatarImage src={user.avatar || undefined} alt={user.name || "User"} className="object-cover" />
+                                                    <AvatarFallback className="bg-muted text-gray-500 font-medium">
+                                                        {user.name?.substring(0, 2).toUpperCase() || "US"}
+                                                    </AvatarFallback>
+                                                </Avatar>
+                                                <div className="flex flex-col">
+                                                    <span className="font-medium text-sm">{user.name}</span>
+                                                    <span className="text-xs text-muted-foreground truncate max-w-[150px]">{user.email}</span>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent align="start" className="w-56">
-                                        <DropdownMenuLabel>Mi Cuenta</DropdownMenuLabel>
-                                        <DropdownMenuSeparator />
-                                        {(user.role === "PROFESSIONAL" ? professionalAvatarItems : clientAvatarItems).map((item) => (
-                                            <DropdownMenuItem key={item.href} asChild>
-                                                <Link href={item.href} onClick={() => setIsOpen(false)} className="flex items-center gap-2 cursor-pointer">
-                                                    <item.icon className="h-4 w-4" />
-                                                    {item.label}
-                                                </Link>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent align="start" className="w-56">
+                                            <DropdownMenuLabel>Mi Cuenta</DropdownMenuLabel>
+                                            <DropdownMenuSeparator />
+                                            {(user.role === "PROFESSIONAL" ? professionalAvatarItems : clientAvatarItems).map((item) => (
+                                                <DropdownMenuItem key={item.href} asChild>
+                                                    <Link href={item.href} onClick={() => setIsOpen(false)} className="flex items-center gap-2 cursor-pointer">
+                                                        <item.icon className="h-4 w-4" />
+                                                        {item.label}
+                                                    </Link>
+                                                </DropdownMenuItem>
+                                            ))}
+                                            <DropdownMenuSeparator />
+                                            <DropdownMenuItem onClick={() => logout()} className="text-destructive cursor-pointer">
+                                                <LogOut className="h-4 w-4 mr-2" />
+                                                Cerrar Sesión
                                             </DropdownMenuItem>
-                                        ))}
-                                        <DropdownMenuSeparator />
-                                        <DropdownMenuItem onClick={() => logout()} className="text-destructive cursor-pointer">
-                                            <LogOut className="h-4 w-4 mr-2" />
-                                            Cerrar Sesión
-                                        </DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-                            )}
-                        </div>
-                        <nav className="flex flex-col px-4 gap-2">
-                            {(user?.role === "PROFESSIONAL" ? professionalSidebarItems : clientSidebarItems).map((item) => (
-                                <Link
-                                    key={item.href}
-                                    href={item.href}
-                                    onClick={() => setIsOpen(false)}
-                                    className={cn(
-                                        "flex items-center gap-4 px-4 py-3 rounded-2xl text-sm font-medium transition-all duration-200",
-                                        pathname === item.href
-                                            ? "bg-black text-white shadow-lg shadow-black/20 scale-[1.02]"
-                                            : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                                    )}
-                                >
-                                    <item.icon className="h-5 w-5" />
-                                    {item.label}
-                                </Link>
-                            ))}
-                            {/* Conditional Subscription Item */}
-                            {((user?.role === "PROFESSIONAL" && user?.subscriptionStatus !== "active") ||
-                                (user?.role === "CLIENT")) && (
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                )}
+                            </div>
+                            <nav className="flex flex-col px-4 gap-1 pb-6">
+                                {(user?.role === "PROFESSIONAL" ? professionalSidebarItems : clientSidebarItems).map((item) => (
                                     <Link
-                                        href={subscriptionItem.href}
+                                        key={item.href}
+                                        href={item.href}
                                         onClick={() => setIsOpen(false)}
                                         className={cn(
-                                            "flex items-center gap-4 px-4 py-3 rounded-2xl text-sm font-medium transition-all duration-200",
-                                            pathname === subscriptionItem.href
+                                            "flex items-center gap-4 px-4 py-2.5 rounded-2xl text-sm font-medium transition-all duration-200",
+                                            pathname === item.href
                                                 ? "bg-black text-white shadow-lg shadow-black/20 scale-[1.02]"
                                                 : "text-muted-foreground hover:bg-muted hover:text-foreground"
                                         )}
                                     >
-                                        <subscriptionItem.icon className="h-5 w-5" />
-                                        {subscriptionItem.label}
+                                        <item.icon className="h-5 w-5" />
+                                        {item.label}
                                     </Link>
-                                )}
-                            <div className="my-4 border-t border-border/50" />
-                            <Link href="/" onClick={() => setIsOpen(false)}>
-                                <Button variant="ghost" className="w-full justify-start gap-4 px-4 rounded-2xl h-12 text-muted-foreground hover:text-foreground">
-                                    <Home className="h-5 w-5" />
-                                    Volver al Inicio
+                                ))}
+                                {/* Conditional Subscription Item */}
+                                {((user?.role === "PROFESSIONAL" && user?.subscriptionStatus !== "active") ||
+                                    (user?.role === "CLIENT")) && (
+                                        <Link
+                                            href={subscriptionItem.href}
+                                            onClick={() => setIsOpen(false)}
+                                            className={cn(
+                                                "flex items-center gap-4 px-4 py-2.5 rounded-2xl text-sm font-medium transition-all duration-200",
+                                                pathname === subscriptionItem.href
+                                                    ? "bg-black text-white shadow-lg shadow-black/20 scale-[1.02]"
+                                                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                                            )}
+                                        >
+                                            <subscriptionItem.icon className="h-5 w-5" />
+                                            {subscriptionItem.label}
+                                        </Link>
+                                    )}
+                                <div className="my-2 border-t border-border/50" />
+                                <Link href="/" onClick={() => setIsOpen(false)}>
+                                    <Button variant="ghost" className="w-full justify-start gap-4 px-4 rounded-2xl h-10 text-muted-foreground hover:text-foreground">
+                                        <Home className="h-5 w-5" />
+                                        Volver al Inicio
+                                    </Button>
+                                </Link>
+                                <Button
+                                    variant="ghost"
+                                    className="w-full justify-start gap-4 px-4 rounded-2xl h-10 text-destructive hover:text-destructive hover:bg-destructive/5"
+                                    onClick={() => logout()}
+                                >
+                                    <LogOut className="h-5 w-5" />
+                                    <span className="ml-2">Cerrar Sesión</span>
                                 </Button>
-                            </Link>
-                            <Button
-                                variant="ghost"
-                                className="w-full justify-start gap-4 px-4 rounded-2xl h-12 text-destructive hover:text-destructive hover:bg-destructive/5"
-                                onClick={() => logout()}
-                            >
-                                <LogOut className="h-5 w-5" />
-                                <span className="ml-2">Cerrar Sesión</span>
-                            </Button>
-                        </nav>
+                            </nav>
+                        </div>
                     </SheetContent>
                 </Sheet>
             </div>

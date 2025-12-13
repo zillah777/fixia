@@ -1,14 +1,7 @@
 import type { Metadata } from "next";
 import { Poppins, Lora } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/components/theme-provider";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { Toaster } from "sonner";
-import { TickerLED } from "@/components/ticker-led";
-import { AuthProvider } from "@/providers/auth-provider";
-import { CookieBanner } from "@/components/cookie-banner";
-
-import GoogleAnalytics from "@/components/google-analytics";
+import { ClientProviders } from "./client-providers";
 
 // Brand Guidelines Typography
 const poppins = Poppins({
@@ -73,24 +66,9 @@ export default function RootLayout({
     return (
         <html lang="es" suppressHydrationWarning>
             <body className={`${lora.variable} ${poppins.variable} font-sans antialiased min-h-screen flex flex-col`}>
-                {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
-                    <GoogleAnalytics GA_MEASUREMENT_ID={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
-                )}
-                <ThemeProvider
-                    attribute="class"
-                    defaultTheme="light"
-                    enableSystem={false}
-                    disableTransitionOnChange
-                >
-                    <AuthProvider>
-                        <TooltipProvider>
-                            <TickerLED />
-                            {children}
-                            <Toaster position="top-center" richColors />
-                        </TooltipProvider>
-                        <CookieBanner />
-                    </AuthProvider>
-                </ThemeProvider>
+                <ClientProviders>
+                    {children}
+                </ClientProviders>
             </body>
         </html>
     );
