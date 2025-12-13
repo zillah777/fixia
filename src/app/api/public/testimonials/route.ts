@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server"
 import prisma from "@/lib/prisma"
 
+// Mark as dynamic to prevent prerendering during build
+export const dynamic = 'force-dynamic'
+
 // Cache testimonials for 5 minutes
 export const revalidate = 300
 
