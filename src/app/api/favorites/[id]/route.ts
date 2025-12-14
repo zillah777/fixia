@@ -2,6 +2,8 @@ import { NextResponse } from "next/server"
 import prisma from "@/lib/prisma"
 import { getSession } from "@/lib/auth"
 
+export const dynamic = 'force-dynamic';
+
 /**
  * DELETE /api/favorites/[id]
  * Remove a professional from favorites

@@ -11,6 +11,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
     // Security check - only allow in development
     if (process.env.NODE_ENV === 'production') {

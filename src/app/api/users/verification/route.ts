@@ -3,6 +3,8 @@ import prisma from "@/lib/prisma"
 import { getSession } from "@/lib/auth"
 import { z } from "zod"
 
+export const dynamic = 'force-dynamic';
+
 const verificationSchema = z.object({
     idFront: z.string().url(),
     idBack: z.string().url(),

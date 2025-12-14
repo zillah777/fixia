@@ -4,6 +4,8 @@ import { getSession } from '@/lib/auth';
 import { z } from 'zod';
 import prisma from '@/lib/prisma';
 
+export const dynamic = 'force-dynamic';
+
 // SECURITY: Validate checkout request schema
 const checkoutSchema = z.object({
     plan: z.enum(['professional']),

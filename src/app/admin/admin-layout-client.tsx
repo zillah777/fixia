@@ -58,7 +58,7 @@ export default function AdminLayoutClient({
     return (
         <div className="flex min-h-screen bg-gray-100 dark:bg-gray-900">
             {/* Sidebar (Desktop) */}
-            <aside className="hidden w-64 flex-col border-r bg-black text-white md:flex">
+            <aside className="hidden w-64 flex-col border-r bg-black text-white md:flex fixed h-screen left-0 top-0 z-40">
                 <div className="flex h-16 items-center border-b border-gray-800 px-6">
                     <Link href="/admin/dashboard" className="flex items-center gap-2 font-bold text-lg">
                         <Image
@@ -71,7 +71,7 @@ export default function AdminLayoutClient({
                         <span className="text-destructive">ADMIN</span>
                     </Link>
                 </div>
-                <nav className="flex-1 space-y-1 p-4">
+                <nav className="flex-1 space-y-1 p-4 overflow-y-auto">
                     {navItems.map((item) => (
                         <Link
                             key={item.href}
@@ -86,7 +86,7 @@ export default function AdminLayoutClient({
                         </Link>
                     ))}
                 </nav>
-                <div className="border-t border-gray-800 p-4">
+                <div className="border-t border-gray-800 p-4 mt-auto">
                     <Button
                         variant="ghost"
                         className="w-full justify-start gap-3 text-red-400 hover:bg-red-950/30 hover:text-red-300"
@@ -99,7 +99,7 @@ export default function AdminLayoutClient({
             </aside>
 
             {/* Main Content */}
-            <div className="flex flex-1 flex-col">
+            <div className="flex flex-1 flex-col md:pl-64">
                 <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-white px-6 shadow-sm dark:bg-gray-950 md:hidden">
                     <Button
                         variant="ghost"
@@ -115,7 +115,7 @@ export default function AdminLayoutClient({
                 {/* Mobile Menu Overlay */}
                 {isMobileMenuOpen && (
                     <div className="fixed inset-0 z-50 bg-black/80 md:hidden">
-                        <div className="fixed inset-y-0 left-0 w-64 bg-black text-white p-4 flex flex-col">
+                        <div className="fixed inset-y-0 left-0 w-64 bg-black text-white p-4 flex flex-col h-full">
                             <div className="flex justify-between items-center mb-8">
                                 <div className="flex items-center gap-2">
                                     <Image
@@ -131,7 +131,7 @@ export default function AdminLayoutClient({
                                     <X className="h-6 w-6" />
                                 </Button>
                             </div>
-                            <nav className="space-y-2 flex-1">
+                            <nav className="space-y-2 flex-1 overflow-y-auto">
                                 {navItems.map((item) => (
                                     <Link
                                         key={item.href}
@@ -147,7 +147,7 @@ export default function AdminLayoutClient({
                                     </Link>
                                 ))}
                             </nav>
-                            <div className="border-t border-gray-800 pt-4 mt-4">
+                            <div className="border-t border-gray-800 pt-4 mt-auto">
                                 <Button
                                     variant="ghost"
                                     className="w-full justify-start gap-3 text-red-400 hover:bg-red-950/30 hover:text-red-300"

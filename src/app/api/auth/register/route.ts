@@ -5,6 +5,8 @@ import { z } from 'zod';
 import { sendVerificationEmail, sendRegistrationConfirmation } from '@/lib/mail';
 import { randomUUID } from 'crypto';
 
+export const dynamic = 'force-dynamic';
+
 const registerSchema = z.object({
     name: z.string().min(2),
     email: z.string().email(),

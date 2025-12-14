@@ -7,6 +7,8 @@ import prisma from "@/lib/prisma"
 import { notFound, redirect } from "next/navigation"
 import Image from "next/image"
 
+export const dynamic = 'force-dynamic'
+
 export default async function VerificationDetailPage(
     { params }: { params: Promise<{ id: string }> }
 ) {

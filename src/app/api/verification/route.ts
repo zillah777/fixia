@@ -4,6 +4,8 @@ import { getSession } from '@/lib/auth';
 import { z } from 'zod';
 import { rateLimit } from '@/lib/rate-limit';
 
+export const dynamic = 'force-dynamic';
+
 // SECURITY: Configure rate limiting for verification uploads (1 per user per hour)
 const verificationLimiter = rateLimit({
     interval: 60 * 60 * 1000, // 1 hour

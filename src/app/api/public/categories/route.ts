@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server"
 import prisma from "@/lib/prisma"
 
+export const dynamic = 'force-dynamic';
+
 const CATEGORY_CONFIG: Record<string, { icon: string, color: string }> = {
     "PLOMERIA": { icon: "💧", color: "from-blue-500/20 to-cyan-500/20" },
     "ELECTRICIDAD": { icon: "⚡", color: "from-yellow-500/20 to-orange-500/20" },

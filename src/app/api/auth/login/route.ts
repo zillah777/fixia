@@ -5,6 +5,8 @@ import { z } from 'zod';
 import { encrypt, setSessionCookie, SessionPayload } from '@/lib/auth';
 import { rateLimit } from '@/lib/rate-limit';
 
+export const dynamic = 'force-dynamic';
+
 // SECURITY: Rate limiting - 5 attempts per minute per IP
 const loginLimiter = rateLimit({
     interval: 60 * 1000, // 1 minute

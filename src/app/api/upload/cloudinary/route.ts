@@ -4,6 +4,8 @@ import { generateSignedUploadToken, uploadToCloudinary } from '@/lib/cloudinary'
 import { z } from 'zod';
 import { rateLimit } from '@/lib/rate-limit';
 
+export const dynamic = 'force-dynamic';
+
 // SECURITY: Rate limit uploads (10 per user per day)
 const uploadLimiter = rateLimit({
     interval: 24 * 60 * 60 * 1000, // 24 hours

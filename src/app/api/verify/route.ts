@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { redirect } from 'next/navigation';
 import prisma from '@/lib/prisma';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
     const token = searchParams.get('token');

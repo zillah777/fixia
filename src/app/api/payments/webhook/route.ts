@@ -3,6 +3,8 @@ import { payment } from "@/lib/mercadopago";
 import prisma from "@/lib/prisma";
 import { SUBSCRIPTION_PLANS } from "@/lib/constants";
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: Request) {
     try {
         const url = new URL(request.url);

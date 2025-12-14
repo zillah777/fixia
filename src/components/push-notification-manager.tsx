@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Bell } from "lucide-react";
+import { Bell, X } from "lucide-react";
 import { toast } from "sonner";
+import { useAuth } from "@/providers/auth-provider";
 
 const VAPID_PUBLIC_KEY = 'BAe4hkL2QSfUlgegiIkitfH5L8tEFMBxe4KZTUA231yXmiaapWzAjHlFOVJNIbCUS1eq5-WSoUSB66Y09ubefto';
 
@@ -23,10 +24,16 @@ function urlBase64ToUint8Array(base64String: string) {
 }
 
 export function PushNotificationManager() {
+    const { user } = useAuth();
     const [isSupported, setIsSupported] = useState(false);
     const [subscription, setSubscription] = useState<PushSubscription | null>(null);
+    const [isDismissed, setIsDismissed] = useState(true); // Default to true to avoid flash
 
     useEffect(() => {
+        // Check if dismissed in localStorage
+        const dismissed = localStorage.getItem('push_notification_dismissed');
+        setIsDismissed(dismissed === 'true');
+
         if ('serviceWorker' in navigator && 'PushManager' in window) {
             setIsSupported(true);
             registerServiceWorker();
@@ -83,24 +90,37 @@ export function PushNotificationManager() {
         }
     }
 
-    if (!isSupported) {
-        return null;
+    function handleDismiss() {
+        setIsDismissed(true);
+        localStorage.setItem('push_notification_dismissed', 'true');
     }
 
-    // Only show if not subscribed.
-    // We can also make this a settings toggle later.
-    if (subscription) {
+    // Conditions to NOT show the button:
+    // 1. Not supported by browser
+    // 2. User not logged in
+    // 3. Already subscribed
+    // 4. User dismissed the prompt
+    if (!isSupported || !user || subscription || isDismissed) {
         return null;
     }
 
     return (
-        <div className="fixed bottom-20 right-4 z-40 md:bottom-4 md:right-auto md:left-4">
+        <div className="fixed bottom-20 right-4 z-40 md:bottom-4 md:right-auto md:left-4 flex items-center gap-2">
             <Button
                 onClick={subscribeToPush}
                 className="bg-stone-900 hover:bg-stone-800 text-white shadow-lg rounded-full px-4 py-2 flex items-center gap-2 text-xs font-medium"
             >
                 <Bell className="h-4 w-4" />
                 Activar Notificaciones
+            </Button>
+            <Button
+                onClick={handleDismiss}
+                variant="secondary"
+                size="icon"
+                className="h-8 w-8 rounded-full shadow-lg bg-white hover:bg-gray-100 dark:bg-stone-800 dark:hover:bg-stone-700"
+            >
+                <X className="h-4 w-4" />
+                <span className="sr-only">Cerrar</span>
             </Button>
         </div>
     );
