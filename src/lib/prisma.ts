@@ -22,6 +22,8 @@ const prisma = globalForPrisma.prisma ?? prismaClientSingleton()
 // ============================================================================
 // This middleware sets PostgreSQL session variables for RLS policies
 // to identify the current user and their role in the database layer
+// TODO: Migrate to Prisma Client Extensions for Prisma 6+
+/*
 prisma.$use(async (params, next) => {
     // Only set context for operations - skip for introspection, etc.
     if (!params.action || params.action === 'findMany' || params.action === 'findFirst' ||
@@ -59,6 +61,7 @@ prisma.$use(async (params, next) => {
 
     return next(params)
 })
+*/
 
 export default prisma
 
