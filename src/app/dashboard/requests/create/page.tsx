@@ -263,6 +263,15 @@ export default function CreateRequestPage() {
                                 />
                             </div>
 
+                            <div className="bg-blue-50 border border-blue-100 rounded-lg p-4 text-sm text-blue-800">
+                                <p className="flex gap-2">
+                                    <span className="text-lg">🤝</span>
+                                    <span>
+                                        <strong>Recuerda:</strong> Fixia conecta partes. El precio y las condiciones finales se acuerdan directamente con el profesional.
+                                    </span>
+                                </p>
+                            </div>
+
                             <div className="flex justify-end gap-4 pt-4">
                                 <Button type="button" variant="outline" onClick={() => router.back()}>
                                     Cancelar

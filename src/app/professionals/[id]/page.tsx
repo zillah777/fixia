@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Star, MapPin, CheckCircle, Calendar, Shield } from "lucide-react";
+import { Star, MapPin, CheckCircle, Calendar, Shield, Heart } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { getAvatarUrl, getInitials } from "@/lib/avatar-utils";
@@ -129,11 +129,55 @@ function ProfessionalProfile() {
                             )}
 
                             <div className="mt-8">
-                                <Link href={`/dashboard/requests/create?proId=${pro.id}`}>
-                                    <Button className="w-full" size="lg">Contactar</Button>
-                                </Link>
+                                {pro.isFavorite ? (
+                                    <Button
+                                        className="w-full bg-red-50 hover:bg-red-100 text-red-600 border-red-200"
+                                        variant="outline"
+                                        size="lg"
+                                        onClick={async () => {
+                                            try {
+                                                const res = await fetch(`/api/favorites/${pro.favoriteId}`, {
+                                                    method: 'DELETE'
+                                                })
+                                                if (res.ok) {
+                                                    setPro({ ...pro, isFavorite: false, favoriteId: null })
+                                                }
+                                            } catch (err) {
+                                                console.error("Error removing favorite", err)
+                                            }
+                                        }}
+                                    >
+                                        <Heart className="mr-2 h-5 w-5 fill-current" />
+                                        Quitar de Favoritos
+                                    </Button>
+                                ) : (
+                                    <Button
+                                        className="w-full"
+                                        size="lg"
+                                        onClick={async () => {
+                                            try {
+                                                const res = await fetch('/api/favorites', {
+                                                    method: 'POST',
+                                                    headers: { 'Content-Type': 'application/json' },
+                                                    body: JSON.stringify({ professionalId: pro.id })
+                                                })
+                                                if (res.ok) {
+                                                    const data = await res.json()
+                                                    setPro({ ...pro, isFavorite: true, favoriteId: data.id })
+                                                } else if (res.status === 401) {
+                                                    window.location.href = '/login'
+                                                }
+                                            } catch (err) {
+                                                console.error("Error adding favorite", err)
+                                            }
+                                        }}
+                                    >
+                                        <Heart className="mr-2 h-5 w-5" />
+                                        Agregar a Favoritos
+                                    </Button>
+                                )}
                                 <p className="text-xs text-muted-foreground mt-2 text-center">
-                                    Debes registrarte para contactar.
+                                    Guarda este perfil para contactarlo más tarde.
                                 </p>
                             </div>
                         </CardContent>

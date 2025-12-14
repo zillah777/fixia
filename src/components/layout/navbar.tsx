@@ -64,18 +64,18 @@ export function Navbar() {
                                     <SheetTitle>Menú de Navegación</SheetTitle>
                                     <SheetDescription>Menú principal para navegar por la aplicación Fixia</SheetDescription>
                                 </SheetHeader>
-                                <nav className="flex flex-col gap-4 mt-8">
+                                <nav className="flex flex-col gap-4 mt-8 items-center text-center">
                                     {/* User Info or Login */}
                                     {user ? (
-                                        <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg mb-2">
+                                        <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg mb-2 w-full max-w-[280px]">
                                             <Avatar className="h-10 w-10">
                                                 <AvatarImage
-                                                    src={getAvatarUrl(user.avatar, user.name)}
+                                                    src={getAvatarUrl(user.avatar || undefined, user.name)}
                                                     alt={user.name || "User"}
                                                 />
                                                 <AvatarFallback>{getInitials(user.name || "User")}</AvatarFallback>
                                             </Avatar>
-                                            <div className="flex-1 min-w-0">
+                                            <div className="flex-1 min-w-0 text-left">
                                                 <p className="text-sm font-semibold truncate">{user.name}</p>
                                                 <p className="text-xs text-muted-foreground">
                                                     {user.role === 'PROFESSIONAL' ? 'Profesional' : 'Cliente'}
@@ -126,6 +126,13 @@ export function Navbar() {
                                         </Link>
                                     )}
 
+                                    {/* Favorites - Only for CLIENT */}
+                                    {user?.role === 'CLIENT' && (
+                                        <Link href="/dashboard/favorites" className="text-lg font-semibold" onClick={closeSheet}>
+                                            Favoritos
+                                        </Link>
+                                    )}
+
                                     {/* Plans - Only for CLIENT or not logged in */}
                                     {(!user || user.role === 'CLIENT') && (
                                         <Link href="/pricing" className="text-lg font-semibold" onClick={closeSheet}>
@@ -133,9 +140,14 @@ export function Navbar() {
                                         </Link>
                                     )}
 
+                                    {/* How it works - Always visible */}
+                                    <Link href="/how-it-works" className="text-lg font-semibold" onClick={closeSheet}>
+                                        Cómo funciona
+                                    </Link>
+
                                     {/* Join Fixia - Only if not logged in or is CLIENT */}
                                     {(!user || user.role === 'CLIENT') && (
-                                        <Link href="/become-a-pro" className="w-full" onClick={closeSheet}>
+                                        <Link href="/become-a-pro" className="w-full max-w-[280px]" onClick={closeSheet}>
                                             <Button className="w-full">
                                                 Únete a Fixia
                                             </Button>
@@ -145,13 +157,13 @@ export function Navbar() {
                                     {/* Logout - Only if logged in */}
                                     {user && (
                                         <>
-                                            <div className="border-t my-2" />
+                                            <div className="border-t my-2 w-full max-w-[280px]" />
                                             <button
                                                 onClick={() => {
                                                     logout()
                                                     closeSheet()
                                                 }}
-                                                className="text-lg font-semibold text-destructive text-left"
+                                                className="text-lg font-semibold text-destructive w-full text-center"
                                             >
                                                 Cerrar Sesión
                                             </button>
@@ -188,6 +200,9 @@ export function Navbar() {
                             <Link href="/pricing" className="transition-colors hover:text-foreground/80 text-foreground/60">
                                 Planes
                             </Link>
+                            <Link href="/how-it-works" className="transition-colors hover:text-foreground/80 text-foreground/60">
+                                Cómo funciona
+                            </Link>
                         </nav>
 
                         {/* Desktop Search Bar */}
@@ -223,7 +238,7 @@ export function Navbar() {
                                     <Button variant="ghost" size="icon" className="rounded-full relative h-12 w-12 border border-muted-foreground/20">
                                         <Avatar className="h-8 w-8">
                                             <AvatarImage
-                                                src={getAvatarUrl(user.avatar, user.name)}
+                                                src={getAvatarUrl(user.avatar || undefined, user.name)}
                                                 alt={user.name || "User"}
                                                 className="object-cover"
                                             />

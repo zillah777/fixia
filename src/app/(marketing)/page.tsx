@@ -197,6 +197,143 @@ export default function Home() {
                 </div>
             </section>
 
+            {/* How It Works Preview Section */}
+            <section className="py-20 sm:py-28 relative overflow-hidden bg-stone-50 dark:bg-muted/10">
+                <div className="container px-4 sm:px-6 relative z-10">
+
+                    {/* Clients Flow */}
+                    <div className="mb-20">
+                        <div className="text-center mb-12">
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                            >
+                                <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mb-4 text-stone-900 dark:text-foreground">
+                                    ¿Cómo funciona?
+                                </h2>
+                                <p className="text-stone-600 dark:text-muted-foreground text-lg max-w-2xl mx-auto">
+                                    La forma más simple de solucionar tus pendientes del hogar
+                                </p>
+                            </motion.div>
+                        </div>
+
+                        <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                            {[
+                                {
+                                    title: "1. Cuéntanos qué necesitas",
+                                    desc: "Describe tu proyecto o reparación. Es gratis y te tomará menos de 2 minutos.",
+                                    icon: <Search className="h-6 w-6" />,
+                                    color: "text-stone-700 dark:text-primary"
+                                },
+                                {
+                                    title: "2. Elige con Confianza",
+                                    desc: "Recibe propuestas y compara perfiles verificados con reseñas reales.",
+                                    icon: <CheckCircle2 className="h-6 w-6" />,
+                                    color: "text-stone-700 dark:text-primary"
+                                },
+                                {
+                                    title: "3. Conecta Directo",
+                                    desc: "Sin intermediarios. Habla directamente con el profesional y acuerda el precio.",
+                                    icon: <Sparkles className="h-6 w-6" />,
+                                    color: "text-stone-700 dark:text-primary"
+                                }
+                            ].map((step, i) => (
+                                <motion.div
+                                    key={i}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: i * 0.2 }}
+                                    viewport={{ once: true }}
+                                    className="relative group"
+                                >
+                                    <div className="h-full p-8 rounded-2xl bg-white dark:bg-card border border-stone-200 dark:border-border shadow-sm hover:shadow-md transition-all duration-300 text-center">
+                                        <div className={`mx-auto w-14 h-14 rounded-xl bg-stone-100 dark:bg-primary/10 ${step.color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
+                                            {step.icon}
+                                        </div>
+                                        <h3 className="text-xl font-bold mb-3 text-stone-900 dark:text-foreground">{step.title}</h3>
+                                        <p className="text-stone-600 dark:text-muted-foreground leading-relaxed">{step.desc}</p>
+                                    </div>
+                                    {i < 2 && (
+                                        <div className="hidden md:block absolute top-1/2 -right-4 -translate-y-1/2 text-stone-300 dark:text-muted-foreground/30 z-10">
+                                            <ArrowRight className="h-6 w-6" />
+                                        </div>
+                                    )}
+                                </motion.div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Professionals Flow */}
+                    <div className="max-w-5xl mx-auto pt-12 border-t border-stone-200 dark:border-border">
+                        <div className="text-center mb-12">
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                            >
+                                <span className="text-sm font-semibold text-primary uppercase tracking-wider mb-2 block">Para Profesionales</span>
+                                <h3 className="text-2xl sm:text-3xl font-bold text-stone-900 dark:text-foreground mb-4">
+                                    Haz crecer tu negocio
+                                </h3>
+                            </motion.div>
+                        </div>
+
+                        <div className="grid md:grid-cols-3 gap-8">
+                            {[
+                                {
+                                    title: "Crea tu Perfil",
+                                    desc: "Destaca tus habilidades y experiencia para atraer clientes.",
+                                    icon: <Shield className="h-5 w-5" />
+                                },
+                                {
+                                    title: "Recibe Solicitudes",
+                                    desc: "Accede a oportunidades de trabajo reales en tu zona.",
+                                    icon: <Search className="h-5 w-5" />
+                                },
+                                {
+                                    title: "Gana Clientes",
+                                    desc: "Construye tu reputación y fideliza a tus clientes.",
+                                    icon: <Star className="h-5 w-5" />
+                                }
+                            ].map((step, i) => (
+                                <motion.div
+                                    key={i}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: i * 0.2 }}
+                                    viewport={{ once: true }}
+                                >
+                                    <div className="flex flex-col items-center text-center p-6 rounded-xl hover:bg-white/50 dark:hover:bg-white/5 transition-colors">
+                                        <div className="w-12 h-12 rounded-full bg-stone-200 dark:bg-accent/20 text-stone-700 dark:text-accent flex items-center justify-center mb-4">
+                                            {step.icon}
+                                        </div>
+                                        <h4 className="font-bold text-lg mb-2 text-stone-900 dark:text-foreground">{step.title}</h4>
+                                        <p className="text-sm text-stone-600 dark:text-muted-foreground">{step.desc}</p>
+                                    </div>
+                                </motion.div>
+                            ))}
+                        </div>
+
+                        <div className="text-center mt-8">
+                            <Link href="/become-a-pro">
+                                <Button variant="outline" className="rounded-full border-stone-300 text-stone-700 hover:bg-stone-100 dark:border-accent dark:text-accent dark:hover:bg-accent/10">
+                                    Soy Profesional
+                                </Button>
+                            </Link>
+                        </div>
+                    </div>
+
+                    <div className="text-center mt-16">
+                        <Link href="/how-it-works">
+                            <Button variant="link" className="text-stone-900 dark:text-primary font-semibold text-lg hover:no-underline group">
+                                Ver proceso detallado <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                            </Button>
+                        </Link>
+                    </div>
+                </div>
+            </section>
+
             {/* Services Categories Section */}
             <section className="py-12 sm:py-16 lg:py-20 relative">
                 <div className="container px-4 sm:px-6">

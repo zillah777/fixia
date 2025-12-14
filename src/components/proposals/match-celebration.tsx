@@ -17,9 +17,11 @@ interface MatchCelebrationProps {
     proName: string
     proAvatar: string
     proPhone: string
+    requestTitle: string
+    price: number
 }
 
-export function MatchCelebration({ isOpen, onClose, proName, proAvatar, proPhone }: MatchCelebrationProps) {
+export function MatchCelebration({ isOpen, onClose, proName, proAvatar, proPhone, requestTitle, price }: MatchCelebrationProps) {
     const [showContent, setShowContent] = useState(false)
 
     useEffect(() => {
@@ -56,6 +58,10 @@ export function MatchCelebration({ isOpen, onClose, proName, proAvatar, proPhone
             setShowContent(false)
         }
     }, [isOpen])
+
+    const whatsappMessage = encodeURIComponent(
+        `Hola ${proName},\n\nConfirmación de servicio Fixia:\nServicio: ${requestTitle}\nPrecio: $${price.toLocaleString()}\n\nQuedo a la espera de tu respuesta.\n\n🤝 Construyamos confianza: este acuerdo queda respaldado en Fixia para tranquilidad de ambos.`
+    )
 
     return (
         <AnimatePresence>
@@ -94,7 +100,7 @@ export function MatchCelebration({ isOpen, onClose, proName, proAvatar, proPhone
 
                                 <div className="w-full space-y-3">
                                     <a
-                                        href={`https://wa.me/${proPhone}?text=Hola ${proName}, te contacté por Fixia!`}
+                                        href={`https://wa.me/${proPhone}?text=${whatsappMessage}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="w-full"

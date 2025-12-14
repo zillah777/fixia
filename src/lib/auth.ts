@@ -40,7 +40,7 @@ export async function encrypt(payload: SessionPayload): Promise<string> {
     return await new SignJWT(payload)
         .setProtectedHeader({ alg: "HS256" })
         .setIssuedAt()
-        .setExpirationTime("15 minutes") // Short-lived access token
+        .setExpirationTime("7 days") // Long-lived access token
         .sign(key);
 }
 
@@ -100,7 +100,7 @@ export async function setSessionCookie(
         secure: isProduction, // HTTPS only in production
         sameSite: "strict", // Strict CSRF protection
         path: "/",
-        maxAge: 15 * 60, // 15 minutes (match token expiration)
+        maxAge: 7 * 24 * 60 * 60, // 7 days
     });
 }
 

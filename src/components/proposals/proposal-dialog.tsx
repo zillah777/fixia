@@ -122,13 +122,12 @@ export function ProposalDialog({ requestId, requestTitle, trigger }: ProposalDia
                                 <FormItem>
                                     <div className="flex justify-between items-center mb-2">
                                         <FormLabel className="text-sm font-medium">Mensaje</FormLabel>
-                                        <span className={`text-xs ${
-                                            messageLength > MAX_MESSAGE_LENGTH - 50
+                                        <span className={`text-xs ${messageLength > MAX_MESSAGE_LENGTH - 50
                                                 ? "text-destructive"
                                                 : messageLength > MAX_MESSAGE_LENGTH - 100
-                                                ? "text-amber-500"
-                                                : "text-muted-foreground"
-                                        }`}>
+                                                    ? "text-amber-500"
+                                                    : "text-muted-foreground"
+                                            }`}>
                                             {messageLength}/{MAX_MESSAGE_LENGTH}
                                         </span>
                                     </div>
@@ -152,6 +151,12 @@ export function ProposalDialog({ requestId, requestTitle, trigger }: ProposalDia
                                 </FormItem>
                             )}
                         />
+
+                        <div className="text-xs text-muted-foreground bg-muted p-3 rounded-md">
+                            <p>
+                                <strong>Nota:</strong> Al enviar esta propuesta, aceptas que el acuerdo final es entre tú y el cliente. Fixia no interviene en el cobro ni en la ejecución del servicio.
+                            </p>
+                        </div>
 
                         <DialogFooter>
                             <Button

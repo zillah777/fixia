@@ -37,6 +37,12 @@ export default function TermsPage() {
                         No somos responsables directos de la calidad, seguridad o legalidad de los servicios prestados por los Profesionales,
                         aunque nos esforzamos por mantener altos estándares de calidad mediante nuestro sistema de verificación y reseñas.
                     </p>
+                    <div className="bg-amber-50 border-l-4 border-amber-500 p-4 my-6">
+                        <p className="text-amber-700 font-medium">
+                            Importante: Fixia no interviene en la fijación de precios, cobros, ni garantías de los trabajos.
+                            El acuerdo es exclusivamente entre el Cliente y el Profesional.
+                        </p>
+                    </div>
                     <p className="mb-4">
                         <strong>Los Usuarios se comprometen a:</strong>
                     </p>

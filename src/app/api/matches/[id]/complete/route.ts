@@ -27,8 +27,7 @@ export async function POST(
                 id: true,
                 providerId: true,
                 clientId: true,
-                isCompleted: true,
-                status: true
+                isCompleted: true
             }
         })
 

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import prisma from "@/lib/prisma"
+import { getSession } from "@/lib/auth"
 
 export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
     try {
@@ -12,6 +13,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
                 id: true,
                 name: true,
                 avatar: true,
+                location: true, // Added location
                 createdAt: true,
                 profile: {
                     select: {
@@ -65,11 +67,52 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
 
         // Transform data
         const tags = JSON.parse(pro.profile?.tags || "[]")
-        const portfolioImages = JSON.parse(pro.profile?.portfolioImages || "[]")
+
+        let portfolioImages = []
+        try {
+            const parsed = JSON.parse(pro.profile?.portfolioImages || "[]")
+            if (Array.isArray(parsed)) {
+                portfolioImages = parsed
+            } else if (typeof parsed === 'string') {
+                // Handle potential double-encoding
+                try {
+                    const doubleParsed = JSON.parse(parsed)
+                    if (Array.isArray(doubleParsed)) {
+                        portfolioImages = doubleParsed
+                    }
+                } catch (e) {
+                    console.warn("Failed to double-parse portfolioImages", e)
+                }
+            }
+        } catch (e) {
+            console.error("Error parsing portfolioImages", e)
+        }
+
         const badges = JSON.parse(pro.profile?.badges || "[]")
 
         // Calculate verified status
         const isVerified = pro.verificationRequest?.status === "APPROVED"
+
+        // Check if user has favorited this professional
+        let isFavorite = false
+        let favoriteId = null
+
+        const session = await getSession()
+        if (session && session.user) {
+            const favorite = await prisma.favorite.findUnique({
+                where: {
+                    userId_professionalId: {
+                        userId: session.user.id,
+                        professionalId: pro.id
+                    }
+                },
+                select: { id: true }
+            })
+            if (favorite) {
+                isFavorite = true
+                favoriteId = favorite.id
+            }
+        }
 
         const formattedPro = {
             id: pro.id,
@@ -77,10 +120,12 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
             role: tags[0] || "Profesional",
             rating: pro.profile?.ratingAvg || 0,
             reviewsCount: pro._count.reviewsReceived,
-            location: "Buenos Aires", // Placeholder as location is not yet in DB schema
+            location: pro.location || "Ubicación no disponible",
             image: pro.avatar || `https://ui-avatars.com/api/?name=${pro.name}&background=random`,
             bio: pro.profile?.bio || "Sin biografía.",
             verified: isVerified,
+            isFavorite, // Added field
+            favoriteId, // Added field
             joinedDate: pro.createdAt.toLocaleDateString(),
             skills: tags,
             portfolio: portfolioImages,

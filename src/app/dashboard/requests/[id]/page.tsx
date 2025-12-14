@@ -293,6 +293,8 @@ export default function RequestDetailPage() {
                 proName={selectedPro?.proName || request?.match?.provider?.name || "Profesional"}
                 proAvatar={selectedPro?.proAvatar || `https://ui-avatars.com/api/?name=${request?.match?.provider?.name}&background=random`}
                 proPhone={request?.match?.provider?.phone || ""}
+                requestTitle={request.title}
+                price={selectedPro?.price || 0}
             />
 
             {/* Header / Nav */}
@@ -376,10 +378,19 @@ export default function RequestDetailPage() {
                     </Card>
 
                     {/* Proposals Section */}
-                    {!isInvitedPro && (
+                    {!isInvitedPro && status === 'OPEN' && (
                         <div className="pt-8">
                             <div className="flex items-center justify-between mb-6">
                                 <h2 className="text-2xl font-bold">Propuestas ({formattedProposals.length})</h2>
+                            </div>
+
+                            <div className="bg-amber-50 border border-amber-100 rounded-lg p-4 mb-6 text-sm text-amber-800">
+                                <p className="flex gap-2">
+                                    <span className="text-lg">⚠️</span>
+                                    <span>
+                                        <strong>Importante:</strong> Al aceptar una propuesta, estableces un acuerdo directo con el profesional. Fixia no interviene en pagos ni garantías.
+                                    </span>
+                                </p>
                             </div>
 
                             {formattedProposals.length === 0 ? (
