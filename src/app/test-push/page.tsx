@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import { TestPushForm } from "./test-push-form";
+import { TestSubscribeButton } from "./test-subscribe-button";
 
 export const dynamic = 'force-dynamic';
 
@@ -30,7 +31,10 @@ export default async function TestPushPage() {
                     </CardHeader>
                     <CardContent>
                         {usersWithSubs.length === 0 ? (
-                            <p className="text-muted-foreground">No hay usuarios suscritos aún. Activa las notificaciones en tu dispositivo primero.</p>
+                            <div className="text-center py-8">
+                                <p className="text-muted-foreground mb-4">No hay usuarios suscritos aún. Activa las notificaciones en tu dispositivo primero.</p>
+                                <TestSubscribeButton />
+                            </div>
                         ) : (
                             <div className="space-y-4">
                                 {usersWithSubs.map(user => (

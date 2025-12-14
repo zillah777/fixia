@@ -20,6 +20,16 @@ export function InstallPrompt() {
         const isStandalone = window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone;
         if (isStandalone) return;
 
+        // Check for cooldown
+        const dismissedAt = localStorage.getItem('fixia_pwa_prompt_dismissed_at');
+        if (dismissedAt) {
+            const sevenDaysInMs = 7 * 24 * 60 * 60 * 1000;
+            const now = Date.now();
+            if (now - parseInt(dismissedAt) < sevenDaysInMs) {
+                return;
+            }
+        }
+
         const handler = (e: Event) => {
             e.preventDefault();
             setDeferredPrompt(e);
@@ -48,6 +58,7 @@ export function InstallPrompt() {
 
     const handleClose = () => {
         setIsVisible(false);
+        localStorage.setItem('fixia_pwa_prompt_dismissed_at', Date.now().toString());
     };
 
     if (!isVisible && !isIOS) return null;
