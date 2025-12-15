@@ -30,6 +30,7 @@ export default function MatchesPage() {
     const [loading, setLoading] = useState(true)
     const [sending, setSending] = useState(false)
     const [showChatOnMobile, setShowChatOnMobile] = useState(false)
+    const [ratingRefreshTrigger, setRatingRefreshTrigger] = useState(0)
     const scrollRef = useRef<HTMLDivElement>(null)
 
     // Poll for messages every 5 seconds
@@ -138,6 +139,12 @@ export default function MatchesPage() {
             if (res.ok) {
                 const savedMessage = await res.json()
                 setMessages((prev) => [...prev, savedMessage])
+            } else if (res.status === 410) {
+                // Match is closed - both users have rated
+                const error = await res.json()
+                toast.error(error.error || "Esta conversación ha finalizado")
+                // Refresh to update UI
+                setRatingRefreshTrigger(prev => prev + 1)
             } else {
                 throw new Error("Failed to send")
             }
@@ -346,6 +353,7 @@ export default function MatchesPage() {
                                 clientId={selectedMatch.clientId}
                                 providerId={selectedMatch.providerId}
                                 currentUserId={currentUser?.id || ""}
+                                refreshTrigger={ratingRefreshTrigger}
                                 onBothRated={() => {
                                     toast.success("¡Ambos han calificado! Match cerrado.")
                                     fetchMatches()
@@ -393,19 +401,26 @@ export default function MatchesPage() {
 
                     {/* Input Area */}
                     <div className="p-3 md:p-4 border-t bg-background">
-                        <form onSubmit={handleSendMessage} className="flex gap-2">
-                            <Input
-                                placeholder="Escribe un mensaje..."
-                                value={newMessage}
-                                onChange={(e) => setNewMessage(e.target.value)}
-                                className="flex-1 min-h-[44px]"
-                                disabled={sending}
-                            />
-                            <Button type="submit" size="icon" disabled={sending} className="min-h-[44px] min-w-[44px]">
-                                {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-                                <span className="sr-only">Enviar</span>
-                            </Button>
-                        </form>
+                        {selectedMatch.isCompleted && haveMutualReviews(selectedMatch) ? (
+                            <div className="flex items-center justify-center gap-2 p-4 bg-amber-50 border border-amber-200 rounded-lg text-sm text-amber-900">
+                                <CheckCircle2 className="h-4 w-4" />
+                                <span>Conversación finalizada. Ambos usuarios han completado las calificaciones.</span>
+                            </div>
+                        ) : (
+                            <form onSubmit={handleSendMessage} className="flex gap-2">
+                                <Input
+                                    placeholder="Escribe un mensaje..."
+                                    value={newMessage}
+                                    onChange={(e) => setNewMessage(e.target.value)}
+                                    className="flex-1 min-h-[44px]"
+                                    disabled={sending}
+                                />
+                                <Button type="submit" size="icon" disabled={sending} className="min-h-[44px] min-w-[44px]">
+                                    {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+                                    <span className="sr-only">Enviar</span>
+                                </Button>
+                            </form>
+                        )}
                     </div>
                 </Card>
             ) : (

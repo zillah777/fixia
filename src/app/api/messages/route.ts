@@ -77,7 +77,7 @@ export async function POST(req: NextRequest) {
         // Verify user belongs to match
         const match = await prisma.match.findUnique({
             where: { id: matchId },
-            select: { providerId: true, clientId: true }
+            select: { providerId: true, clientId: true, isCompleted: true }
         });
 
         if (!match) {
@@ -86,6 +86,30 @@ export async function POST(req: NextRequest) {
 
         if (match.providerId !== session.user.id && match.clientId !== session.user.id) {
             return new NextResponse("Forbidden", { status: 403 });
+        }
+
+        // Check if both users have rated (match is fully closed)
+        if (match.isCompleted) {
+            const reviews = await prisma.review.findMany({
+                where: { matchId },
+                select: { authorId: true }
+            });
+
+            const clientHasRated = reviews.some(r => r.authorId === match.clientId);
+            const providerHasRated = reviews.some(r => r.authorId === match.providerId);
+
+            // If both have rated, conversation is closed
+            if (clientHasRated && providerHasRated) {
+                return new NextResponse(
+                    JSON.stringify({
+                        error: "Esta conversación ha finalizado. Ambos usuarios han completado las calificaciones."
+                    }),
+                    {
+                        status: 410,
+                        headers: { 'Content-Type': 'application/json' }
+                    }
+                );
+            }
         }
 
         const message = await prisma.message.create({
