@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
         // serverActions: true, // Enabled by default in Next.js 15
     },
     output: 'standalone',
+    skipTrailingSlashRedirect: true,
     typescript: {
         ignoreBuildErrors: true,
     },

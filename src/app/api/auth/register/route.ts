@@ -1,155 +1,88 @@
-import { NextResponse } from "next/server"
-import { hash } from "bcryptjs"
-import { z } from "zod"
-import prisma from "@/lib/prisma"
-import { sendVerificationEmail } from "@/lib/mail"
-import { v4 as uuidv4 } from "uuid"
+import { NextResponse } from 'next/server';
+import prisma from '@/lib/prisma';
+import bcrypt from 'bcryptjs';
+import { z } from 'zod';
+import { sendVerificationEmail, sendWelcomeEmail } from '@/lib/mail';
+import { randomUUID } from 'crypto';
 
 const registerSchema = z.object({
     name: z.string().min(2),
     email: z.string().email(),
-    phone: z.string().min(10),
-    location: z.string().min(2),
-    dni: z.string().min(7).max(9).regex(/^\d+$/),
     password: z.string().min(6),
-    confirmPassword: z.string(),
     role: z.enum(["CLIENT", "PROFESSIONAL"]),
-    // Professional fields (optional)
-    education: z.string().optional(),
-    diploma: z.string().optional(),
-    courses: z.string().optional(),
-    professionalLicense: z.string().optional(),
-    yearsExperience: z.number().optional(),
-    experienceDetails: z.string().optional(),
-    availability: z.object({
-        morning: z.boolean().optional(),
-        afternoon: z.boolean().optional(),
-        evening: z.boolean().optional(),
-        weekend: z.boolean().optional()
-    }).optional(),
-    workRadius: z.enum(["Mi ciudad", "5", "10", "20", "A convenir"]).default("Mi ciudad"),
-    workZones: z.string().optional(),
-}).refine((data) => data.password === data.confirmPassword, {
-    message: "Las contraseÒas no coinciden",
-    path: ["confirmPassword"]
-})
+    phone: z.string().optional(),
+    dni: z.string().min(7).max(9),
+    birthdate: z.string().transform((str) => new Date(str)),
+});
 
-export async function POST(request: Request) {
+export async function POST(req: Request) {
     try {
-        const body = await request.json()
+        const body = await req.json();
+        const { name, email, password, role, phone, dni, birthdate } = registerSchema.parse(body);
 
-        // Validate request body
-        const validation = registerSchema.safeParse(body)
-        if (!validation.success) {
-            return NextResponse.json(
-                { error: "Datos inv·lidos", details: validation.error.flatten() },
-                { status: 400 }
-            )
-        }
-
-        const data = validation.data
-
-        // Check if user already exists
+        // Check if user exists (email, phone or dni)
         const existingUser = await prisma.user.findFirst({
             where: {
                 OR: [
-                    { email: data.email },
-                    { phone: data.phone },
-                    { dni: data.dni }
+                    { email },
+                    { phone: phone || undefined },
+                    { dni }
                 ]
             }
-        })
+        });
 
         if (existingUser) {
-            if (existingUser.email === data.email) {
-                return NextResponse.json(
-                    { error: "Este email ya est· registrado" },
-                    { status: 409 }
-                )
+            if (existingUser.email === email) {
+                return new NextResponse("El email ya est√° registrado", { status: 409 });
             }
-            if (existingUser.phone === data.phone) {
-                return NextResponse.json(
-                    { error: "Este telÈfono ya est· registrado" },
-                    { status: 409 }
-                )
+            if (existingUser.phone === phone) {
+                return new NextResponse("El tel√©fono ya est√° registrado", { status: 409 });
             }
-            if (existingUser.dni === data.dni) {
-                return NextResponse.json(
-                    { error: "Este DNI ya est· registrado" },
-                    { status: 409 }
-                )
+            if (existingUser.dni === dni) {
+                return new NextResponse("El DNI ya est√° registrado", { status: 409 });
             }
         }
 
         // Hash password
-        const hashedPassword = await hash(data.password, 12)
-
-        // Generate verification token
-        const verificationToken = uuidv4()
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const verificationToken = randomUUID();
 
         // Create user
         const user = await prisma.user.create({
             data: {
-                email: data.email,
-                name: data.name,
-                phone: data.phone,
-                dni: data.dni,
-                birthdate: body.birthdate ? new Date(body.birthdate) : null,
-                location: data.location,
+                name,
+                email,
                 password: hashedPassword,
-                role: data.role,
-                status: "PENDING", // Email verification required
+                role,
+                phone,
+                dni,
+                birthdate,
                 verificationToken,
-                // Professional fields
-                ...(data.role === "PROFESSIONAL" && {
-                    profile: {
-                        create: {
-                            education: data.education || null,
-                            diploma: data.diploma || null,
-                            courses: data.courses || null,
-                            professionalLicense: data.professionalLicense || null,
-                            yearsExperience: data.yearsExperience || null,
-                            experienceDetails: data.experienceDetails || null,
-                            availability: data.availability ? JSON.stringify(data.availability) : null,
-                            workRadius: data.workRadius,
-                            workZones: data.workZones || null,
-                        }
-                    }
-                })
             },
-            select: {
-                id: true,
-                email: true,
-                name: true,
-                role: true
+        });
+
+        // Send emails (non-blocking)
+        sendWelcomeEmail(email, name).catch(e => console.error("Welcome email failed", e));
+        sendVerificationEmail(email, verificationToken).catch(e => console.error("Verification email failed", e));
+
+        return NextResponse.json({
+            user: {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                role: user.role
             }
-        })
+        });
 
-        // Send verification email
-        try {
-            await sendVerificationEmail(user.email, user.name || "Usuario", verificationToken)
-        } catch (emailError) {
-            console.error("Error sending verification email:", emailError)
-            // Don't fail the registration if email fails, but log it
+    } catch (error: any) {
+        console.error('[REGISTER_ERROR]', error);
+        if (error instanceof z.ZodError) {
+            return new NextResponse("Datos inv√°lidos", { status: 400 });
         }
-
-        return NextResponse.json(
-            {
-                message: "Cuenta creada exitosamente. Por favor verifica tu email.",
-                user: {
-                    id: user.id,
-                    email: user.email,
-                    name: user.name,
-                    role: user.role
-                }
-            },
-            { status: 201 }
-        )
-    } catch (error) {
-        console.error("Register error:", error)
-        return NextResponse.json(
-            { error: "Error interno del servidor" },
-            { status: 500 }
-        )
+        // Handle Prisma Unique Constraint Violation
+        if (error.code === 'P2002') {
+            return new NextResponse("El usuario ya existe (email, tel√©fono o DNI)", { status: 409 });
+        }
+        return new NextResponse(`Error interno del servidor: ${error.message}`, { status: 500 });
     }
 }
