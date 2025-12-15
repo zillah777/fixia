@@ -55,10 +55,10 @@ export function useConfirmDialog() {
                     <AlertDialogCancel disabled={isLoading}>
                         {cancelLabel}
                     </AlertDialogCancel>
-                    <AlertDialogAction
+                    <button
                         onClick={handleConfirm}
                         disabled={isLoading}
-                        className="bg-red-600 hover:bg-red-700"
+                        className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-all duration-200 bg-red-600 text-white hover:opacity-90 shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2"
                     >
                         {isLoading ? (
                             <>
@@ -68,7 +68,7 @@ export function useConfirmDialog() {
                         ) : (
                             actionLabel
                         )}
-                    </AlertDialogAction>
+                    </button>
                 </div>
             </AlertDialogContent>
         </AlertDialog>
