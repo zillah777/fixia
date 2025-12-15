@@ -136,17 +136,28 @@ export async function GET(request: Request) {
         }
 
         const where = matchId ? { matchId } : { targetId: userId };
+
+        // Get reviews with author data (fetched separately to avoid Prisma relation issues)
         const reviews = await prisma.review.findMany({
             where,
-            include: {
-                author: {
-                    select: { id: true, name: true, avatar: true },
-                },
-            },
             orderBy: { createdAt: "desc" },
         });
 
-        return NextResponse.json(reviews);
+        // Fetch author details for each review
+        const reviewsWithAuthor = await Promise.all(
+            reviews.map(async (review) => {
+                const author = await prisma.user.findUnique({
+                    where: { id: review.authorId },
+                    select: { id: true, name: true, avatar: true },
+                });
+                return {
+                    ...review,
+                    author,
+                };
+            })
+        );
+
+        return NextResponse.json(reviewsWithAuthor);
     } catch (error) {
         console.error("[REVIEWS_GET_ERROR]", error);
         return NextResponse.json(

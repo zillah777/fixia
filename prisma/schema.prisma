@@ -161,7 +161,7 @@ model Match {
   updatedAt                  DateTime  @updatedAt
   client                     User      @relation("ClientMatches", fields: [clientId], references: [id])
   provider                   User      @relation("ProviderMatches", fields: [providerId], references: [id])
-  request                    Request   @relation(fields: [requestId], references: [id])
+  request                    Request   @relation(fields: [requestId], references: [id], onDelete: Cascade)
   messages                   Message[]
   reviews                    Review[]
 }
@@ -189,7 +189,7 @@ model Review {
   comment   String?
   createdAt DateTime @default(now())
   author    User     @relation("ReviewAuthor", fields: [authorId], references: [id])
-  match     Match    @relation(fields: [matchId], references: [id])
+  match     Match    @relation(fields: [matchId], references: [id], onDelete: Cascade)
   target    User     @relation("ReviewTarget", fields: [targetId], references: [id])
 
   @@unique([matchId, authorId])

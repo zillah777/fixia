@@ -2,7 +2,7 @@
  * Generates an avatar URL for a user
  * Tries multiple fallback sources in order:
  * 1. User's stored avatar URL
- * 2. DiceBear API (generates beautiful avatars from name)
+ * 2. ui-avatars.com (generates beautiful avatars from name)
  * 3. initials in a colored circle
  */
 export function getAvatarUrl(avatar: string | null | undefined, name: string = "User"): string {
@@ -11,10 +11,9 @@ export function getAvatarUrl(avatar: string | null | undefined, name: string = "
         return avatar
     }
 
-    // Fallback to DiceBear API with fun avatars
-    // DiceBear provides multiple styles: avataaars, personas, initials, lorelei, etc.
+    // Fallback to ui-avatars.com API with fun avatars
     const encodedName = encodeURIComponent(name)
-    return `https://api.dicebear.com/9.x/personas/svg?seed=${encodedName}&backgroundColor=random`
+    return `https://ui-avatars.com/api/?name=${encodedName}&background=random`
 }
 
 /**

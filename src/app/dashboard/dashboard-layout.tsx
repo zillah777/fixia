@@ -36,7 +36,6 @@ import {
     subscriptionItem
 } from "@/config/navigation"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { DailyTipBuddy } from "@/components/dashboard/daily-tip-buddy" // [NEW]
 
 export default function DashboardLayout({
     children,
@@ -315,9 +314,6 @@ export default function DashboardLayout({
                     {children}
                 </div>
             </main>
-
-            {/* Daily Tip Buddy (Floating Animated Assistant) */}
-            <DailyTipBuddy />
         </div>
     )
 }

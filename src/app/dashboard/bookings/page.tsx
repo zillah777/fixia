@@ -23,7 +23,10 @@ export default function BookingsPage() {
             try {
                 const res = await fetch("/api/matches")
                 if (res.ok) {
-                    const data = await res.json()
+                    const response = await res.json()
+                    // API returns { data: [...], pagination: {...} }
+                    const data = Array.isArray(response) ? response : response.data || []
+
                     // Filter: Only completed matches with both users rated
                     const completedAndRated = data.filter((match: any) => {
                         if (!match.isCompleted) return false
