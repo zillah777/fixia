@@ -135,6 +135,21 @@ export async function GET(request: Request) {
             return NextResponse.json({ error: "matchId or userId required" }, { status: 400 });
         }
 
+        // Validate UUID format if provided
+        if (matchId) {
+            const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+            if (!uuidRegex.test(matchId)) {
+                return NextResponse.json({ error: "Invalid match ID format" }, { status: 400 });
+            }
+        }
+
+        if (userId) {
+            const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+            if (!uuidRegex.test(userId)) {
+                return NextResponse.json({ error: "Invalid user ID format" }, { status: 400 });
+            }
+        }
+
         const where = matchId ? { matchId } : { targetId: userId };
 
         // Get reviews with author data (fetched separately to avoid Prisma relation issues)
@@ -158,10 +173,18 @@ export async function GET(request: Request) {
         );
 
         return NextResponse.json(reviewsWithAuthor);
-    } catch (error) {
+    } catch (error: any) {
         console.error("[REVIEWS_GET_ERROR]", error);
+        console.error("[REVIEWS_GET_ERROR_DETAILS]", {
+            message: error?.message,
+            code: error?.code,
+            meta: error?.meta
+        });
         return NextResponse.json(
-            { error: "Internal server error" },
+            {
+                error: "Internal server error",
+                message: process.env.NODE_ENV === 'development' ? error?.message : undefined
+            },
             { status: 500 }
         );
     }

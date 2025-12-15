@@ -58,6 +58,26 @@ export async function POST(req: Request) {
                 dni,
                 birthdate,
                 verificationToken,
+                // Professional fields - Create profile if PROFESSIONAL role
+                ...(role === "PROFESSIONAL" && {
+                    profile: {
+                        create: {
+                            education: body.education || null,
+                            diploma: body.diploma || null,
+                            certification: body.diploma || null, // Sync both field names
+                            courses: body.courses || null,
+                            professionalLicense: body.professionalLicense || null,
+                            licenseNumber: body.professionalLicense || null, // Sync both field names
+                            yearsExperience: body.yearsExperience ? parseInt(body.yearsExperience) : null,
+                            experienceDetails: body.experienceDetails || null,
+                            experience: body.experienceDetails || null, // Sync both field names
+                            availability: body.availability ? JSON.stringify(body.availability) : null,
+                            workRadius: body.workRadius || "Mi ciudad",
+                            workZones: body.workZones || null,
+                            tags: body.tags && Array.isArray(body.tags) ? JSON.stringify(body.tags) : "[]",
+                        }
+                    }
+                })
             },
         });
 

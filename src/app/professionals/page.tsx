@@ -11,10 +11,12 @@ import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Star, MapPin, Search, Filter } from "lucide-react"
 import { Professional } from "@/types/professional"
+import { useAuth } from "@/providers/auth-provider"
 
 function ProfessionalsList() {
     const searchParams = useSearchParams()
     const categoryParam = searchParams.get("category")
+    const { user } = useAuth()
 
     const [search, setSearch] = useState("")
     const [categoryFilter, setCategoryFilter] = useState(categoryParam || "all")
@@ -35,7 +37,13 @@ function ProfessionalsList() {
                 const res = await fetch(`/api/professionals?${params.toString()}`)
                 if (res.ok) {
                     const response = await res.json()
-                    const data = Array.isArray(response.data) ? response.data : (Array.isArray(response) ? response : [])
+                    let data = Array.isArray(response.data) ? response.data : (Array.isArray(response) ? response : [])
+
+                    // Filter out current user if they are a professional
+                    if (user?.id && user?.role === 'PROFESSIONAL') {
+                        data = data.filter((pro: Professional) => pro.id !== user.id)
+                    }
+
                     setProfessionals(data)
                 }
             } catch (error) {
@@ -51,7 +59,7 @@ function ProfessionalsList() {
         }, 500)
 
         return () => clearTimeout(timeoutId)
-    }, [search, categoryFilter, locationFilter])
+    }, [search, categoryFilter, locationFilter, user?.id, user?.role])
 
     return (
         <div className="container mx-auto px-4 py-8">

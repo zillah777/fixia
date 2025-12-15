@@ -115,40 +115,53 @@ export function ReviewDialog({ matchId, targetName, targetId, trigger, onSuccess
             <DialogTrigger asChild>
                 {trigger || <Button variant="outline">Calificar</Button>}
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
-                    <DialogTitle>Calificar a {targetName}</DialogTitle>
-                    <DialogDescription>
-                        Comparte tu experiencia para ayudar a otros usuarios.
-                    </DialogDescription>
-                </DialogHeader>
+            <DialogContent className="sm:max-w-[475px] border rounded-xl overflow-hidden p-0" style={{
+                borderColor: '#e8e6dc'
+            }}>
+                <div className="relative bg-gradient-to-br from-blue-50 to-transparent p-6 border-b" style={{
+                    borderColor: '#e8e6dc'
+                }}>
+                    <DialogHeader className="">
+                        <DialogTitle className="text-xl" style={{ color: '#2d3d24' }}>
+                            Califica tu experiencia
+                        </DialogTitle>
+                        <DialogDescription className="text-sm mt-2" style={{ color: '#666666' }}>
+                            Tu opinión ayuda a <span style={{ fontWeight: 500 }}>{targetName}</span> a mejorar y guía a otros usuarios.
+                        </DialogDescription>
+                    </DialogHeader>
+                </div>
+
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 p-6">
                         <FormField
                             control={form.control}
                             name="rating"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Calificación</FormLabel>
+                                    <FormLabel style={{ color: '#2d3d24', fontWeight: 500 }}>¿Cómo fue tu experiencia?</FormLabel>
                                     <FormControl>
-                                        <div className="flex justify-center gap-2 py-4">
+                                        <div className="flex justify-center gap-3 py-6 bg-gradient-to-br rounded-xl p-6" style={{
+                                            backgroundColor: '#f8f6f1'
+                                        }}>
                                             {[1, 2, 3, 4, 5].map((star) => (
                                                 <button
                                                     key={star}
                                                     type="button"
-                                                    className="focus:outline-none transition-transform hover:scale-110"
+                                                    className="focus:outline-none transition-all duration-200 hover:scale-125"
                                                     onMouseEnter={() => setHoverRating(star)}
                                                     onMouseLeave={() => setHoverRating(0)}
                                                     onClick={() => field.onChange(star)}
                                                 >
                                                     <Star
                                                         className={cn(
-                                                            "h-8 w-8 transition-colors",
-                                                            // Safe rating comparison with default 0
+                                                            "h-10 w-10 transition-all duration-200",
                                                             (hoverRating || field.value || 0) >= star
-                                                                ? "fill-yellow-400 text-yellow-400"
-                                                                : "text-muted-foreground"
+                                                                ? "fill-current"
+                                                                : "text-gray-300"
                                                         )}
+                                                        style={{
+                                                            color: (hoverRating || field.value || 0) >= star ? '#d4a574' : undefined
+                                                        }}
                                                     />
                                                 </button>
                                             ))}
@@ -163,11 +176,15 @@ export function ReviewDialog({ matchId, targetName, targetId, trigger, onSuccess
                             name="comment"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Comentario</FormLabel>
+                                    <FormLabel style={{ color: '#2d3d24', fontWeight: 500 }}>Comparte tus comentarios</FormLabel>
                                     <FormControl>
                                         <Textarea
-                                            placeholder="¿Qué tal fue el servicio? ¿Lo recomendarías?"
-                                            className="min-h-[100px]"
+                                            placeholder="Cuéntanos sobre tu experiencia. ¿Qué estuvo bien? ¿Algo a mejorar?"
+                                            className="min-h-[100px] border rounded-lg focus:ring-2 focus:ring-offset-0"
+                                            style={{
+                                                borderColor: '#e8e6dc',
+                                                color: '#2d3d24'
+                                            }}
                                             {...field}
                                         />
                                     </FormControl>
@@ -175,10 +192,19 @@ export function ReviewDialog({ matchId, targetName, targetId, trigger, onSuccess
                                 </FormItem>
                             )}
                         />
-                        <DialogFooter>
-                            <Button type="submit" disabled={isLoading}>
+                        <DialogFooter className="pt-6 border-t mt-6" style={{ borderColor: '#e8e6dc' }}>
+                            <Button
+                                type="submit"
+                                disabled={isLoading}
+                                className="w-full font-semibold text-base h-10 rounded-lg"
+                                style={{
+                                    backgroundColor: '#788c5d',
+                                    color: 'white',
+                                    transition: 'all 0.2s'
+                                }}
+                            >
                                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                Enviar Reseña
+                                {isLoading ? 'Enviando...' : 'Enviar Reseña'}
                             </Button>
                         </DialogFooter>
                     </form>

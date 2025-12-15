@@ -90,11 +90,11 @@ export default function BookingsPage() {
                 ) : bookings.length > 0 ? (
                     bookings.map((booking) => (
                         <Card key={booking.id} className="border-none shadow-md overflow-hidden" style={{ backgroundColor: '#faf9f5' }}>
-                            <div className="h-2 w-full" style={{ backgroundColor: '#d97757' }} />
+                            <div className="h-2 w-full" style={{ backgroundColor: '#788c5d' }} />
                             <CardContent className="p-6">
                                 <div className="flex flex-col md:flex-row gap-6">
                                     {/* Date Box */}
-                                    <div className="flex flex-col items-center justify-center p-4 rounded-2xl min-w-[100px]" style={{ backgroundColor: '#e8e6dc', color: '#d97757' }}>
+                                    <div className="flex flex-col items-center justify-center p-4 rounded-2xl min-w-[100px]" style={{ backgroundColor: '#e8f0e6', color: '#788c5d' }}>
                                         <span className="text-3xl font-bold">{new Date(booking.createdAt).getDate()}</span>
                                         <span className="text-sm font-medium uppercase">{new Date(booking.createdAt).toLocaleString('es-AR', { month: 'short' })}</span>
                                         <span className="text-xs mt-1">{new Date(booking.createdAt).getFullYear()}</span>
@@ -105,7 +105,7 @@ export default function BookingsPage() {
                                         <div>
                                             <div className="flex items-center gap-2">
                                                 <h3 className="text-xl font-bold">{booking.request.title}</h3>
-                                                <CheckCircle2 className="h-5 w-5" style={{ color: '#d97757' }} />
+                                                <CheckCircle2 className="h-5 w-5" style={{ color: '#788c5d' }} />
                                             </div>
                                             <div className="flex items-center gap-2 text-muted-foreground text-sm mt-1">
                                                 <MapPin className="h-4 w-4" />

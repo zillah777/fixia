@@ -102,14 +102,25 @@ export async function DELETE(
 
         const { id: requestId } = await params
 
+        // Validate UUID format
+        const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+        if (!uuidRegex.test(requestId)) {
+            return NextResponse.json({ error: "Invalid request ID format" }, { status: 400 })
+        }
+
         // Verify ownership - only the request creator (client or professional) or admin can delete
         const requestToDelete = await prisma.request.findUnique({
             where: { id: requestId },
-            select: { clientId: true }
+            select: { clientId: true, isDeleted: true }
         })
 
         if (!requestToDelete) {
             return NextResponse.json({ error: "Request not found" }, { status: 404 })
+        }
+
+        // Check if already deleted
+        if (requestToDelete.isDeleted) {
+            return NextResponse.json({ error: "Request already deleted" }, { status: 410 })
         }
 
         // SECURITY: Only the request owner (who created it) or admin can delete
@@ -121,14 +132,22 @@ export async function DELETE(
         // This preserves all associated data (matches, messages, reviews, proposals)
         await prisma.request.update({
             where: { id: requestId },
-            data: { isDeleted: true }
+            data: { isDeleted: true, updatedAt: new Date() }
         })
 
-        return NextResponse.json({ success: true })
-    } catch (error) {
-        console.error("Error deleting request:", error)
+        return NextResponse.json({ success: true, message: "Request deleted successfully" })
+    } catch (error: any) {
+        console.error("[DELETE_REQUEST_ERROR]", error);
+        console.error("[DELETE_REQUEST_ERROR_DETAILS]", {
+            message: error?.message,
+            code: error?.code,
+            meta: error?.meta
+        });
         return NextResponse.json(
-            { error: "Error al eliminar la solicitud. Intenta nuevamente." },
+            {
+                error: "Error al eliminar la solicitud. Intenta nuevamente.",
+                message: process.env.NODE_ENV === 'development' ? error?.message : undefined
+            },
             { status: 500 }
         )
     }

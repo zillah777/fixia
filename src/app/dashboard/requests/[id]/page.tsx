@@ -415,8 +415,8 @@ export default function RequestDetailPage() {
                             {/* Actions Buttons Logic */}
                             {!isInvitedPro && (
                                 status === 'OPEN' ? (
-                                    <Button className="w-full bg-white text-black hover:bg-white/90 font-bold">
-                                        Editar Solicitud
+                                    <Button className="w-full bg-white text-black hover:bg-white/90 font-bold" onClick={() => router.push('/create-request')}>
+                                        Necesito otro servicio
                                     </Button>
                                 ) : ( // IN_PROGRESS or COMPLETED
                                     <div className="space-y-4">

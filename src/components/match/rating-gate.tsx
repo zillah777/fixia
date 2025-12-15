@@ -96,12 +96,25 @@ export function RatingGate({
   // If both have rated, show success message
   if (clientHasRated && providerHasRated) {
     return (
-      <Alert className="bg-green-50 border-green-200">
-        <CheckCircle2 className="h-4 w-4 text-green-600" />
-        <AlertDescription className="text-green-800">
-          ¡Ambos han calificado! Este match está cerrado.
-        </AlertDescription>
-      </Alert>
+      <div className="relative overflow-hidden rounded-xl border" style={{
+        backgroundColor: '#f0f4ed',
+        borderColor: '#788c5d'
+      }}>
+        <div className="absolute inset-0 opacity-5" style={{
+          background: 'linear-gradient(135deg, #788c5d, transparent)'
+        }} />
+        <div className="relative flex items-start gap-3 p-4">
+          <CheckCircle2 className="h-5 w-5 flex-shrink-0 mt-0.5" style={{ color: '#788c5d' }} />
+          <div className="flex-1">
+            <p className="font-semibold text-sm" style={{ color: '#2d3d24' }}>
+              ¡Ambos han calificado!
+            </p>
+            <p className="text-xs mt-1" style={{ color: '#5a6b4a' }}>
+              Este match ha sido completado y cerrado correctamente.
+            </p>
+          </div>
+        </div>
+      </div>
     )
   }
 
@@ -111,20 +124,31 @@ export function RatingGate({
     : "el cliente"
 
   return (
-    <div className="space-y-2 p-3 bg-blue-50 rounded-lg border border-blue-200">
-      <div className="space-y-2">
+    <div className="rounded-xl border overflow-hidden" style={{
+      backgroundColor: '#fafaf8',
+      borderColor: '#e8e6dc'
+    }}>
+      <div className="h-1 w-full" style={{ backgroundColor: '#788c5d' }} />
+
+      <div className="p-4 space-y-4">
         {/* Current user status */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 text-sm">
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-start gap-3 flex-1">
             {userHasRated ? (
               <>
-                <CheckCircle2 className="h-4 w-4 text-green-600" />
-                <span className="text-green-800">Tú: ✓ Has calificado</span>
+                <CheckCircle2 className="h-5 w-5 flex-shrink-0 mt-0.5" style={{ color: '#788c5d' }} />
+                <div>
+                  <p className="text-sm font-medium" style={{ color: '#2d3d24' }}>Has calificado</p>
+                  <p className="text-xs" style={{ color: '#788c5d' }}>Gracias por tu reseña</p>
+                </div>
               </>
             ) : (
               <>
-                <AlertCircle className="h-4 w-4 text-blue-600" />
-                <span className="text-blue-800">Necesitas calificar a {otherUserName}</span>
+                <AlertCircle className="h-5 w-5 flex-shrink-0 mt-0.5" style={{ color: '#d4a574' }} />
+                <div>
+                  <p className="text-sm font-medium" style={{ color: '#2d3d24' }}>Califica a {otherUserName}</p>
+                  <p className="text-xs" style={{ color: '#888888' }}>Tu opinión es importante</p>
+                </div>
               </>
             )}
           </div>
@@ -136,11 +160,17 @@ export function RatingGate({
               targetName={otherName}
               targetId={isClient ? providerId : clientId}
               onSuccess={() => {
-                // Force re-fetch of ratings after successful submission
                 setUserHasRated(true)
               }}
               trigger={
-                <Button size="sm" className="text-xs px-2 h-7">
+                <Button
+                  size="sm"
+                  className="text-xs px-4 h-8 font-semibold whitespace-nowrap flex-shrink-0"
+                  style={{
+                    backgroundColor: '#788c5d',
+                    color: 'white'
+                  }}
+                >
                   Calificar
                 </Button>
               }
@@ -149,18 +179,26 @@ export function RatingGate({
         </div>
 
         {/* Other user status */}
-        <div className="flex items-center gap-2 text-sm">
+        <div className="flex items-start gap-3 pt-2 border-t" style={{ borderColor: '#e8e6dc' }}>
           {isClient ? (
             <>
               {providerHasRated ? (
                 <>
-                  <CheckCircle2 className="h-4 w-4 text-green-600" />
-                  <span className="text-green-800">Profesional: ✓ Ha calificado</span>
+                  <CheckCircle2 className="h-5 w-5 flex-shrink-0 mt-0.5" style={{ color: '#788c5d' }} />
+                  <div>
+                    <p className="text-sm font-medium" style={{ color: '#2d3d24' }}>Profesional ha calificado</p>
+                    <p className="text-xs" style={{ color: '#788c5d' }}>Reseña completada</p>
+                  </div>
                 </>
               ) : (
                 <>
-                  <AlertCircle className="h-4 w-4 text-yellow-600" />
-                  <span className="text-yellow-800">Profesional: ⏳ Pendiente</span>
+                  <div className="h-5 w-5 flex-shrink-0 mt-0.5 rounded-full flex items-center justify-center" style={{ backgroundColor: '#f0f0f0' }}>
+                    <span className="text-xs" style={{ color: '#999999' }}>⏳</span>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium" style={{ color: '#2d3d24' }}>Profesional: Pendiente</p>
+                    <p className="text-xs" style={{ color: '#888888' }}>Esperando su calificación</p>
+                  </div>
                 </>
               )}
             </>
@@ -168,13 +206,21 @@ export function RatingGate({
             <>
               {clientHasRated ? (
                 <>
-                  <CheckCircle2 className="h-4 w-4 text-green-600" />
-                  <span className="text-green-800">Cliente: ✓ Ha calificado</span>
+                  <CheckCircle2 className="h-5 w-5 flex-shrink-0 mt-0.5" style={{ color: '#788c5d' }} />
+                  <div>
+                    <p className="text-sm font-medium" style={{ color: '#2d3d24' }}>Cliente ha calificado</p>
+                    <p className="text-xs" style={{ color: '#788c5d' }}>Reseña completada</p>
+                  </div>
                 </>
               ) : (
                 <>
-                  <AlertCircle className="h-4 w-4 text-yellow-600" />
-                  <span className="text-yellow-800">Cliente: ⏳ Pendiente</span>
+                  <div className="h-5 w-5 flex-shrink-0 mt-0.5 rounded-full flex items-center justify-center" style={{ backgroundColor: '#f0f0f0' }}>
+                    <span className="text-xs" style={{ color: '#999999' }}>⏳</span>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium" style={{ color: '#2d3d24' }}>Cliente: Pendiente</p>
+                    <p className="text-xs" style={{ color: '#888888' }}>Esperando su calificación</p>
+                  </div>
                 </>
               )}
             </>

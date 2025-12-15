@@ -20,6 +20,10 @@ const sizeConfig = {
   lg: { star: "h-5 w-5", text: "text-base" },
 }
 
+const GOLD_COLOR = "#d4a574"
+const DARK_TEXT = "#2d3d24"
+const LIGHT_GRAY = "#e8e8e8"
+
 export function RatingBadge({
   rating,
   maxRating = 5,
@@ -40,23 +44,28 @@ export function RatingBadge({
         {[...Array(filledStars)].map((_, i) => (
           <Star
             key={`filled-${i}`}
-            className={cn(
-              sizeConfig[size].star,
-              "fill-amber-400 text-amber-400"
-            )}
+            className={sizeConfig[size].star}
+            style={{
+              fill: GOLD_COLOR,
+              color: GOLD_COLOR
+            }}
           />
         ))}
 
         {/* Half Star */}
         {hasHalfStar && (
           <div className="relative">
-            <Star className={cn(sizeConfig[size].star, "text-gray-300")} />
+            <Star
+              className={sizeConfig[size].star}
+              style={{ color: LIGHT_GRAY }}
+            />
             <div className="absolute inset-0 overflow-hidden w-1/2">
               <Star
-                className={cn(
-                  sizeConfig[size].star,
-                  "fill-amber-400 text-amber-400"
-                )}
+                className={sizeConfig[size].star}
+                style={{
+                  fill: GOLD_COLOR,
+                  color: GOLD_COLOR
+                }}
               />
             </div>
           </div>
@@ -66,22 +75,26 @@ export function RatingBadge({
         {[...Array(emptyStars)].map((_, i) => (
           <Star
             key={`empty-${i}`}
-            className={cn(
-              sizeConfig[size].star,
-              variant === "filled"
-                ? "text-gray-300"
-                : "text-gray-200 dark:text-gray-700"
-            )}
+            className={sizeConfig[size].star}
+            style={{
+              color: variant === "filled" ? LIGHT_GRAY : "#e0e0e0"
+            }}
           />
         ))}
       </div>
 
-      <div className={cn("font-semibold text-amber-700 dark:text-amber-400", sizeConfig[size].text)}>
+      <div
+        className={cn("font-semibold", sizeConfig[size].text)}
+        style={{ color: DARK_TEXT }}
+      >
         {rating.toFixed(1)}
       </div>
 
       {showCount && (
-        <span className={cn("text-muted-foreground", sizeConfig[size].text)}>
+        <span
+          className={cn("", sizeConfig[size].text)}
+          style={{ color: "#888888" }}
+        >
           ({count})
         </span>
       )}
