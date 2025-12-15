@@ -21,10 +21,12 @@ import { WorkCompletionForm } from "@/components/match/work-completion-form"
 import { RatingGate } from "@/components/match/rating-gate"
 import { toast } from "sonner"
 import { useAuth } from "@/providers/auth-provider"
+import { useConfirmDialog } from "@/hooks/use-confirm-dialog"
 
 export default function RequestDetailPage() {
     const params = useParams()
     const router = useRouter()
+    const { confirm, ConfirmDialog } = useConfirmDialog()
     const [request, setRequest] = useState<any>(null)
     const [isLoading, setIsLoading] = useState(true)
     const [isCelebrationOpen, setIsCelebrationOpen] = useState(false)
@@ -192,25 +194,33 @@ export default function RequestDetailPage() {
         }
     }
 
-    const handleDelete = async () => {
-        if (!confirm("¿Estás seguro de eliminar esta solicitud?")) return
+    const handleDelete = () => {
+        confirm(
+            '¿Eliminar solicitud?',
+            '¿Estás seguro de eliminar esta solicitud? Esta acción no se puede deshacer.',
+            async () => {
+                try {
+                    const res = await fetch(`/api/requests/${params.id}`, {
+                        method: "DELETE",
+                    })
 
-        try {
-            const res = await fetch(`/api/requests/${params.id}`, {
-                method: "DELETE",
-            })
+                    if (!res.ok) {
+                        throw new Error("Error al eliminar")
+                    }
 
-            if (!res.ok) {
-                throw new Error("Error al eliminar")
+                    toast.success("Solicitud eliminada")
+                    router.push("/dashboard/requests")
+
+                } catch (error) {
+                    console.error(error)
+                    toast.error("Error al eliminar la solicitud")
+                }
+            },
+            {
+                actionLabel: 'Eliminar',
+                cancelLabel: 'Cancelar'
             }
-
-            toast.success("Solicitud eliminada")
-            router.push("/dashboard/requests")
-
-        } catch (error) {
-            console.error(error)
-            toast.error("Error al eliminar la solicitud")
-        }
+        )
     }
 
     if (isLoading) {
@@ -237,6 +247,7 @@ export default function RequestDetailPage() {
 
     return (
         <div className="space-y-8 pb-20">
+            <ConfirmDialog />
             {/* Match Celebration Modal */}
             <MatchCelebration
                 isOpen={isCelebrationOpen}

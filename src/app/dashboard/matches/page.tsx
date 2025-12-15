@@ -355,7 +355,6 @@ export default function MatchesPage() {
                                 currentUserId={currentUser?.id || ""}
                                 refreshTrigger={ratingRefreshTrigger}
                                 onBothRated={() => {
-                                    toast.success("¡Ambos han calificado! Match cerrado.")
                                     fetchMatches()
                                 }}
                             />

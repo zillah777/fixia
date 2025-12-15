@@ -14,8 +14,10 @@ import { CATEGORIES } from "@/config/categories"
 import { CategorySelector } from "@/components/shared/category-selector"
 import { ServiceFormHelp } from "@/components/onboarding/form-help-context"
 import { PriceFieldHelper, TagsFieldHelper } from "@/components/onboarding/form-field-helper"
+import { useConfirmDialog } from "@/hooks/use-confirm-dialog"
 
 export function ServicesManager() {
+    const { confirm, ConfirmDialog } = useConfirmDialog()
     const [services, setServices] = useState<any[]>([])
     const [isLoading, setIsLoading] = useState(true)
     const [isCreating, setIsCreating] = useState(false)
@@ -96,25 +98,34 @@ export function ServicesManager() {
         }
     }
 
-    const handleDelete = async (id: string) => {
-        if (!confirm("¿Estás seguro de eliminar este servicio?")) return
+    const handleDelete = (id: string) => {
+        confirm(
+            '¿Eliminar servicio?',
+            '¿Estás seguro de eliminar este servicio? Esta acción no se puede deshacer.',
+            async () => {
+                try {
+                    const res = await fetch(`/api/services/${id}`, {
+                        method: "DELETE"
+                    })
 
-        try {
-            const res = await fetch(`/api/services/${id}`, {
-                method: "DELETE"
-            })
+                    if (!res.ok) throw new Error("Error deleting service")
 
-            if (!res.ok) throw new Error("Error deleting service")
-
-            toast.success("Servicio eliminado")
-            setServices(prev => prev.filter(s => s.id !== id))
-        } catch (error) {
-            toast.error("Error al eliminar servicio")
-        }
+                    toast.success("Servicio eliminado")
+                    setServices(prev => prev.filter(s => s.id !== id))
+                } catch (error) {
+                    toast.error("Error al eliminar servicio")
+                }
+            },
+            {
+                actionLabel: 'Eliminar',
+                cancelLabel: 'Cancelar'
+            }
+        )
     }
 
     return (
         <div className="space-y-6">
+            <ConfirmDialog />
             <Card>
                 <CardHeader>
                     <div className="flex items-start justify-between">

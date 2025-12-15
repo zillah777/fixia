@@ -29,6 +29,7 @@ export function RatingGate({
   const [clientHasRated, setClientHasRated] = useState(false)
   const [providerHasRated, setProviderHasRated] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [hasTriggeredCallback, setHasTriggeredCallback] = useState(false)
 
   const isClient = currentUserId === clientId
   const isProvider = currentUserId === providerId
@@ -63,8 +64,10 @@ export function RatingGate({
         setProviderHasRated(providerReviewed)
         setUserHasRated(isClient ? clientReviewed : providerReviewed)
 
-        // Call onBothRated if both have rated
-        if (clientReviewed && providerReviewed && onBothRated) {
+        // Call onBothRated if both have rated (only once)
+        if (clientReviewed && providerReviewed && onBothRated && !hasTriggeredCallback) {
+          setHasTriggeredCallback(true)
+          toast.success("¡Ambos han calificado! Match cerrado.")
           onBothRated()
         }
       } catch (error) {
