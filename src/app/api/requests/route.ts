@@ -17,11 +17,12 @@ export async function GET(request: Request) {
         const mode = searchParams.get("mode");
 
         if (mode === 'marketplace') {
-            // Exclude own requests
+            // Exclude own requests and soft-deleted requests
             const requests = await prisma.request.findMany({
                 where: {
                     status: "OPEN",
-                    clientId: { not: session.user.id }
+                    clientId: { not: session.user.id },
+                    isDeleted: false
                 },
                 orderBy: { createdAt: "desc" },
                 include: {
@@ -36,9 +37,12 @@ export async function GET(request: Request) {
             }));
             return NextResponse.json(formattedRequests);
         } else {
-            // Default: Fetch my requests (as client)
+            // Default: Fetch my requests (as client) - exclude soft-deleted
             const requests = await prisma.request.findMany({
-                where: { clientId: session.user.id },
+                where: {
+                    clientId: session.user.id,
+                    isDeleted: false
+                },
                 orderBy: { createdAt: "desc" },
                 include: { _count: { select: { proposals: true } } }
             });

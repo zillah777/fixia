@@ -442,7 +442,6 @@ export default function RequestDetailPage() {
                                                         currentUserId={currentUser?.id || ""}
                                                         refreshTrigger={ratingRefreshTrigger}
                                                         onBothRated={() => {
-                                                            toast.success("¡Ambos han calificado! Match cerrado.")
                                                             router.refresh()
                                                         }}
                                                     />

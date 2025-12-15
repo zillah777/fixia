@@ -126,6 +126,7 @@ model Request {
   images      String     @default("[]")
   tags        String     @default("[]")
   status      String     @default("OPEN")
+  isDeleted   Boolean    @default(false)
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
   match       Match?
