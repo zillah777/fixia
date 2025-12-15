@@ -13,6 +13,8 @@ interface WorkCompletionFormProps {
   clientId: string
   providerId: string
   currentUserId: string
+  clientApprovedCompletion?: boolean | null
+  providerApprovedCompletion?: boolean | null
 }
 
 interface CompletionStatus {
@@ -27,19 +29,23 @@ export function WorkCompletionForm({
   clientId,
   providerId,
   currentUserId,
+  clientApprovedCompletion,
+  providerApprovedCompletion,
 }: WorkCompletionFormProps) {
   const [loading, setLoading] = useState(false)
-  const [status, setStatus] = useState<CompletionStatus>({})
+  // Initialize status from props
+  const [status, setStatus] = useState<CompletionStatus>({
+    clientApproved: !!clientApprovedCompletion,
+    providerApproved: !!providerApprovedCompletion
+  })
   const [showForm, setShowForm] = useState(false)
   const [comment, setComment] = useState("")
   const isClient = currentUserId === clientId
   const isProvider = currentUserId === providerId
 
   const handleMarkComplete = async () => {
-    if (!comment.trim() && isProvider) {
-      toast.error("Por favor agrega un comentario sobre el trabajo realizado")
-      return
-    }
+    // Comment is now optional for everyone
+    // if (!comment.trim() && isProvider) { ... }
 
     setLoading(true)
     try {
@@ -57,8 +63,8 @@ export function WorkCompletionForm({
         setStatus(data)
         toast.success(
           isProvider
-            ? "Trabajo marcado como completado. Esperando aprobación del cliente."
-            : "Trabajo aprobado como completado."
+            ? "Trabajo completado. Esperando confirmación del cliente."
+            : "Has confirmado el trabajo."
         )
         setComment("")
         setShowForm(false)

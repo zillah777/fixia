@@ -20,7 +20,7 @@ export async function POST(request: Request) {
         }
 
         const user = await prisma.user.findUnique({
-            where: { id: session.payload.id as string }
+            where: { id: session.user.id as string }
         })
 
         if (!user) {

@@ -117,7 +117,7 @@ export function PushNotificationManager() {
                 onClick={handleDismiss}
                 variant="secondary"
                 size="icon"
-                className="h-8 w-8 rounded-full shadow-lg bg-white hover:bg-gray-100 dark:bg-stone-800 dark:hover:bg-stone-700"
+                className="h-8 w-8 rounded-full shadow-lg bg-white hover:bg-gray-100 dark:bg-stone-800 dark:hover:bg-stone-700 text-stone-500 hover:text-stone-700 dark:text-stone-400 dark:hover:text-stone-200"
             >
                 <X className="h-4 w-4" />
                 <span className="sr-only">Cerrar</span>

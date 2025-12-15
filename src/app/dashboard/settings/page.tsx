@@ -15,6 +15,8 @@ import { Camera, Save, Facebook, Instagram, Twitter, Trash2 } from "lucide-react
 import { toast } from "sonner"
 import { VerificationRequestForm } from "@/components/trust/verification-request-form"
 import { ProfessionalProfileForm } from "@/components/settings/professional-profile-form"
+import { PushSubscriptionButton } from "@/components/settings/push-subscription-button"
+import { PWAInstallGuide } from "@/components/pwa/pwa-install-guide"
 import {
     AlertDialog,
     AlertDialogAction,
@@ -570,10 +572,26 @@ export default function SettingsPage() {
                                     <span className="font-normal text-xs text-muted-foreground">Recibe noticias y promociones de Fixia.</span>
                                 </Label>
                                 <Switch
-                                    id="marketing"
-                                    checked={notificationPreferences.marketing}
                                     onCheckedChange={(checked) => handleNotificationChange("marketing", checked)}
                                 />
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Notificaciones Push</CardTitle>
+                            <CardDescription>
+                                Gestiona la conexión de este dispositivo.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <PushSubscriptionButton />
+                            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                                <span>¿No sabes cómo instalar la App?</span>
+                                <PWAInstallGuide trigger={
+                                    <Button variant="link" className="h-auto p-0 text-xs">Ver instrucciones</Button>
+                                } />
                             </div>
                         </CardContent>
                     </Card>

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { X, Download } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import { PWAInstallGuide } from "./pwa-install-guide";
 
 export function InstallPrompt() {
     const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
@@ -76,7 +77,7 @@ export function InstallPrompt() {
                     exit={{ y: 100, opacity: 0 }}
                     className="fixed bottom-4 left-4 right-4 z-50 md:left-auto md:right-4 md:w-96"
                 >
-                    <div className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl shadow-xl p-4 flex items-center gap-4">
+                    <div className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl shadow-xl p-4 flex items-center gap-4 relative">
                         <div className="flex-shrink-0 bg-stone-100 dark:bg-stone-800 rounded-xl p-2">
                             <Image src="/logo.svg" alt="Fixia Logo" width={40} height={40} className="w-10 h-10" />
                         </div>
@@ -98,6 +99,14 @@ export function InstallPrompt() {
                             >
                                 <X className="h-4 w-4" />
                             </button>
+                        </div>
+                        <div className="absolute -top-2 -right-2">
+                            <PWAInstallGuide trigger={
+                                <button className="bg-stone-200 dark:bg-stone-700 rounded-full p-1 text-stone-500 hover:text-stone-900 dark:text-stone-400 dark:hover:text-white transition-colors shadow-sm">
+                                    <span className="sr-only">Ayuda</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" /><path d="M12 17h.01" /></svg>
+                                </button>
+                            } />
                         </div>
                     </div>
                 </motion.div>

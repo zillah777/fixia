@@ -10,6 +10,7 @@ export async function POST(request: Request) {
         const session = await getSession();
 
         if (!session || !session.user) {
+            console.error("[PUSH_SUBSCRIBE] Unauthorized: No session found")
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 

@@ -16,7 +16,9 @@ import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import { ProProposalCard } from "@/components/proposals/pro-proposal-card"
 import { MatchCelebration } from "@/components/proposals/match-celebration"
-import { ReviewForm } from "@/components/reviews/review-form"
+// import { ReviewForm } from "@/components/reviews/review-form" // REMOVED
+import { WorkCompletionForm } from "@/components/match/work-completion-form"
+import { RatingGate } from "@/components/match/rating-gate"
 import { toast } from "sonner"
 import { useAuth } from "@/providers/auth-provider"
 
@@ -27,12 +29,13 @@ export default function RequestDetailPage() {
     const [isLoading, setIsLoading] = useState(true)
     const [isCelebrationOpen, setIsCelebrationOpen] = useState(false)
     const [selectedPro, setSelectedPro] = useState<any>(null)
-    const [isReviewOpen, setIsReviewOpen] = useState(false)
+    // const [isReviewOpen, setIsReviewOpen] = useState(false) // REMOVED
     const [status, setStatus] = useState("OPEN")
 
     // Check if current user is the invited professional
     const [isInvitedPro, setIsInvitedPro] = useState(false)
     const [myProposalId, setMyProposalId] = useState<string | null>(null)
+    const { user: currentUser } = useAuth() // Need current user for new components
 
     // Fetch Request Data
     useEffect(() => {
@@ -44,10 +47,6 @@ export default function RequestDetailPage() {
                     setRequest(data)
                     setStatus(data.status)
 
-                    // Check if I am the invited professional
-                    // logic depends on how API returns data. 
-                    // Assuming API returns `isInvited` or searching in proposals if user is Pro.
-                    // For now, let's assume the API returns a 'myProposal' field if the user is a provider involved.
                     if (data.myProposal && data.myProposal.status === "PENDING_PRO_APPROVAL") {
                         setIsInvitedPro(true)
                         setMyProposalId(data.myProposal.id)
@@ -171,51 +170,7 @@ export default function RequestDetailPage() {
         }
     }
 
-    const handleCompleteJob = async () => {
-        try {
-            const res = await fetch(`/api/matches/${request.match?.id}/complete`, {
-                method: "POST",
-            })
-
-            if (!res.ok) {
-                throw new Error("Error al completar trabajo")
-            }
-
-            setStatus("COMPLETED")
-            setIsReviewOpen(true)
-            toast.success("Trabajo marcado como completado")
-
-        } catch (error) {
-            console.error(error)
-            toast.error("Error al completar el trabajo")
-        }
-    }
-
-    const handleReviewSubmit = async (rating: number, comment: string) => {
-        try {
-            const res = await fetch("/api/reviews", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    targetId: request.match?.providerId,
-                    matchId: request.match?.id,
-                    score: rating,
-                    comment
-                })
-            })
-
-            if (!res.ok) {
-                throw new Error("Error al enviar reseña")
-            }
-
-            toast.success("¡Gracias por tu reseña!")
-            setIsReviewOpen(false)
-
-        } catch (error) {
-            console.error(error)
-            toast.error("Error al enviar la reseña")
-        }
-    }
+    // OLD HANDLERS REMOVED (handleCompleteJob, handleReviewSubmit)
 
     const handleShare = async () => {
         try {
@@ -276,13 +231,6 @@ export default function RequestDetailPage() {
 
     return (
         <div className="space-y-8 pb-20">
-            <ReviewForm
-                isOpen={isReviewOpen}
-                onClose={() => setIsReviewOpen(false)}
-                proName={request?.match?.provider?.name || selectedPro?.proName || "Profesional"}
-                onSubmit={handleReviewSubmit}
-            />
-
             {/* Match Celebration Modal */}
             <MatchCelebration
                 isOpen={isCelebrationOpen}
@@ -447,15 +395,43 @@ export default function RequestDetailPage() {
                             {/* If Client: Edit / Mark Complete */}
                             {/* If Invited Pro: Actions are in the top banner already, or repeat here? */}
 
+                            {/* Actions Buttons Logic */}
                             {!isInvitedPro && (
                                 status === 'OPEN' ? (
                                     <Button className="w-full bg-white text-black hover:bg-white/90 font-bold">
                                         Editar Solicitud
                                     </Button>
-                                ) : (
-                                    <Button className="w-full bg-green-500 hover:bg-green-600 text-white font-bold" onClick={handleCompleteJob} disabled={status === 'COMPLETED'}>
-                                        {status === 'COMPLETED' ? 'Trabajo Completado' : 'Marcar como Completado'}
-                                    </Button>
+                                ) : ( // IN_PROGRESS or COMPLETED
+                                    <div className="space-y-4">
+                                        {/* UNIFIED Work Completion Form */}
+                                        {request.match && (
+                                            <>
+                                                <WorkCompletionForm
+                                                    matchId={request.match.id}
+                                                    isCompleted={request.match.isCompleted}
+                                                    clientId={request.match.clientId}
+                                                    providerId={request.match.providerId}
+                                                    currentUserId={currentUser?.id || ""}
+                                                    providerApprovedCompletion={request.match.providerApprovedCompletion}
+                                                    clientApprovedCompletion={request.match.clientApprovedCompletion}
+                                                />
+
+                                                {/* Unified Rating Gate */}
+                                                {(request.match.isCompleted) && (
+                                                    <RatingGate
+                                                        matchId={request.match.id}
+                                                        clientId={request.match.clientId}
+                                                        providerId={request.match.providerId}
+                                                        currentUserId={currentUser?.id || ""}
+                                                        onBothRated={() => {
+                                                            toast.success("¡Ambos han calificado! Match cerrado.")
+                                                            router.refresh()
+                                                        }}
+                                                    />
+                                                )}
+                                            </>
+                                        )}
+                                    </div>
                                 )
                             )}
                         </CardContent>

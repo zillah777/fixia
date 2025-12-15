@@ -16,6 +16,7 @@ import { useState } from "react"
 // Imports needed
 import { toast } from "sonner"
 import { Loader2 } from "lucide-react"
+import { PWAInstallGuide } from "@/components/pwa/pwa-install-guide"
 
 export function Footer() {
     const [openSections, setOpenSections] = useState({
@@ -117,7 +118,15 @@ export function Footer() {
                             { label: "Sobre Nosotros", href: "/about" },
                             { label: "Blog", href: "/blog" },
                         ]}
-                    />
+                    >
+                        <div className="md:hidden mt-3">
+                            <PWAInstallGuide trigger={
+                                <Button variant="link" className="h-auto p-0 text-sm text-muted-foreground hover:text-primary transition-colors">
+                                    Instalar App
+                                </Button>
+                            } />
+                        </div>
+                    </FooterSection>
 
                     {/* Services Section */}
                     <FooterSection
@@ -162,9 +171,11 @@ export function Footer() {
 function FooterSection({
     title,
     items,
+    children
 }: {
     title: string
     items: Array<{ label: string; href: string }>
+    children?: React.ReactNode
 }) {
     const [open, setOpen] = useState(true)
 
@@ -187,6 +198,7 @@ function FooterSection({
                         </li>
                     ))}
                 </ul>
+                {children}
             </CollapsibleContent>
         </Collapsible>
     )

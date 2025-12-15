@@ -7,7 +7,12 @@
       "Bash(docker compose:*)",
       "Bash(python3:*)",
       "Bash(docker-compose:*)",
-      "Bash(npx prisma:*)"
+      "Bash(npx prisma:*)",
+      "Bash(dir \"c:\\xampp\\htdocs\\fixia.app\")",
+      "Bash(dir \"c:\\xampp\\htdocs\\fixia.app\\src\\app\")",
+      "Bash(dir \"c:\\xampp\\htdocs\\fixia.app\\prisma\")",
+      "Bash(ls:*)",
+      "Bash(cat:*)"
     ],
     "deny": [],
     "ask": []

@@ -335,6 +335,8 @@ export default function MatchesPage() {
                             clientId={selectedMatch.clientId}
                             providerId={selectedMatch.providerId}
                             currentUserId={currentUser?.id || ""}
+                            providerApprovedCompletion={selectedMatch.providerApprovedCompletion}
+                            clientApprovedCompletion={selectedMatch.clientApprovedCompletion}
                         />
 
                         {/* Rating Gate - Show after work is completed */}

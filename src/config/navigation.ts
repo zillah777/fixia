@@ -23,7 +23,7 @@ export const professionalSidebarItems = [
     { icon: FolderOpen, label: "Portafolio", href: "/dashboard/portfolio" },
     { icon: Calendar, label: "Reservas", href: "/dashboard/bookings" },
     { icon: Settings, label: "Configuración", href: "/dashboard/settings" },
-    { icon: Bell, label: "Test Push", href: "/test-push" },
+
     // Suscripción is conditional - shown only if not subscribed or cancelled
 ]
 
@@ -44,7 +44,7 @@ export const clientSidebarItems = [
     { icon: MessageCircle, label: "Mensajes", href: "/dashboard/matches" },
     { icon: Calendar, label: "Reservas", href: "/dashboard/bookings" },
     { icon: Settings, label: "Configuración", href: "/dashboard/settings" },
-    { icon: Bell, label: "Test Push", href: "/test-push" },
+
     // Suscripción is conditional - shown only if not subscribed
 ]
 

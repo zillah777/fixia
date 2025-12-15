@@ -1,86 +1,145 @@
-import { NextResponse } from "next/server"
-import prisma from "@/lib/prisma"
-import { getSession } from "@/lib/auth"
-import { canUserReceiveBookings } from "@/lib/permissions"
+import { NextResponse } from "next/server";
+import prisma from "@/lib/prisma";
+import { getSession } from "@/lib/auth";
+import { z } from "zod";
+import { sendProposalNotification } from "@/lib/mail";
 
-export const dynamic = 'force-dynamic';
+const proposalSchema = z.object({
+    requestId: z.string().uuid("Invalid request ID"),
+    price: z.number().positive("Price must be greater than 0").max(999999, "Price is too high"),
+    message: z.string().min(10, "Message must be at least 10 characters").max(1000, "Message must be less than 1000 characters"),
+});
 
-export async function POST(req: Request) {
+export async function POST(request: Request) {
     try {
-        const session = await getSession()
-        const user = session?.user
-        if (!user) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+        const session = await getSession();
+        if (!session) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
-        // Only professionals can send proposals
-        if (user.role !== "PROFESSIONAL") {
-            return NextResponse.json({ error: "Solo los profesionales pueden enviar propuestas" }, { status: 403 })
+        if (session.user.role !== "PROFESSIONAL") {
+            return NextResponse.json({ error: "Only professionals can submit proposals" }, { status: 403 });
         }
 
-        // SECURITY: Validate user can receive bookings (subscription + verification)
-        const canReceive = await canUserReceiveBookings()
-        if (!canReceive) {
-            return NextResponse.json({
-                error: "Se requiere una suscripción activa e identidad verificada para enviar propuestas",
-                code: "SUBSCRIPTION_REQUIRED"
-            }, { status: 403 })
+        const body = await request.json();
+        
+        // Validate with Zod
+        const validation = proposalSchema.safeParse(body);
+        if (!validation.success) {
+            return NextResponse.json(
+                { error: validation.error.errors[0]?.message || "Invalid proposal data" },
+                { status: 400 }
+            );
         }
 
-        const body = await req.json()
-        const { requestId, price, message } = body
+        const { requestId, price, message } = validation.data;
+        const providerId = session.user.id as string;
 
-        if (!requestId || !price) {
-            return NextResponse.json({ error: "Faltan datos requeridos" }, { status: 400 })
+        // Verify request exists and is still open
+        const serviceRequest = await prisma.request.findUnique({
+            where: { id: requestId },
+            select: { id: true, clientId: true, status: true },
+        });
+
+        if (!serviceRequest) {
+            return NextResponse.json({ error: "Request not found" }, { status: 404 });
         }
 
-        // Check if professional already applied
+        if (serviceRequest.status !== "OPEN") {
+            return NextResponse.json({ error: "Request is no longer open" }, { status: 400 });
+        }
+
+        // Prevent self-proposals
+        if (serviceRequest.clientId === providerId) {
+            return NextResponse.json({ error: "Cannot propose your own request" }, { status: 400 });
+        }
+
+        // Check if proposal already exists for this professional
         const existingProposal = await prisma.proposal.findFirst({
             where: {
                 requestId,
-                providerId: user.id
-            }
-        })
+                providerId,
+            },
+        });
 
         if (existingProposal) {
-            return NextResponse.json({ error: "Ya enviaste una propuesta para este trabajo" }, { status: 400 })
+            return NextResponse.json({ error: "You already have a proposal for this request" }, { status: 400 });
         }
 
-        // Verify Request exists and get Client ID
-        const request = await prisma.request.findUnique({
-            where: { id: requestId },
-            select: { clientId: true, title: true }
-        })
-
-        if (!request) {
-            return NextResponse.json({ error: "Solicitud no encontrada" }, { status: 404 })
-        }
-
-        // Create Proposal
+        // Create proposal
         const proposal = await prisma.proposal.create({
             data: {
                 requestId,
-                providerId: user.id,
-                price: Number(price),
+                providerId,
+                price,
                 message,
-                status: "PENDING"
-            }
-        })
+            },
+            include: {
+                provider: {
+                    select: { name: true, profile: { select: { ratingAvg: true, badges: true } } },
+                },
+            },
+        });
 
-        // Notify Client
-        await prisma.notification.create({
-            data: {
-                userId: request.clientId,
-                type: "NEW_PROPOSAL",
-                message: `¡Nueva propuesta! Un profesional ha ofertado en tu solicitud: ${request.title}`,
-                actionUrl: `/dashboard/requests/${requestId}`
-            }
-        })
+        // Send notification to client
+        sendProposalNotification(serviceRequest.clientId, proposal).catch(err =>
+            console.error("[PROPOSAL] Failed to send notification:", err)
+        );
 
-        return NextResponse.json(proposal)
-
+        return NextResponse.json(proposal, { status: 201 });
     } catch (error) {
-        console.error("Error creating proposal:", error)
-        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })
+        console.error("[PROPOSALS_POST_ERROR]", error);
+        return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    }
+}
+
+export async function GET(request: Request) {
+    try {
+        const session = await getSession();
+        if (!session) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
+
+        const { searchParams } = new URL(request.url);
+        const requestId = searchParams.get("requestId");
+        const page = Math.max(1, parseInt(searchParams.get("page") || "1"));
+        const limit = Math.min(50, Math.max(1, parseInt(searchParams.get("limit") || "10")));
+        const skip = (page - 1) * limit;
+
+        let where: any = {};
+
+        if (requestId) {
+            where.requestId = requestId;
+        } else if (session.user.role === "PROFESSIONAL") {
+            where.providerId = session.user.id;
+        } else {
+            where.request = { clientId: session.user.id };
+        }
+
+        const [proposals, total] = await Promise.all([
+            prisma.proposal.findMany({
+                where,
+                skip,
+                take: limit,
+                include: {
+                    provider: {
+                        select: { id: true, name: true, avatar: true, profile: { select: { ratingAvg: true } } },
+                    },
+                    request: {
+                        select: { title: true, status: true },
+                    },
+                },
+                orderBy: { createdAt: "desc" },
+            }),
+            prisma.proposal.count({ where }),
+        ]);
+
+        return NextResponse.json({
+            data: proposals,
+            pagination: { total, page, limit, pages: Math.ceil(total / limit) },
+        });
+    } catch (error) {
+        console.error("[PROPOSALS_GET_ERROR]", error);
+        return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     }
 }

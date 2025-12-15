@@ -1,0 +1,82 @@
+npm warn Unknown project config "warn-deprecated". This will stop working in the next major version of npm.
+
+> fixia-pwa@0.1.0 build
+> next build
+
+ ⚠ You are using a non-standard "NODE_ENV" value in your environment. This creates inconsistencies in the project and is strongly advised against. Read more: https://nextjs.org/docs/messages/non-standard-node-env
+   ▲ Next.js 15.0.3
+   - Environments: .env.local, .env
+
+   Creating an optimized production build ...
+(node:76420) ExperimentalWarning: Type Stripping is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ Compiled successfully
+   Skipping validation of types
+   Skipping linting
+   Collecting page data ...
+TypeError: Cannot read properties of undefined (reading 'bind')
+    at Qr.wrapEngine (C:\xampp\htdocs\fixia.app\node_modules\@prisma\client\runtime\library.js:111:10643)
+    at Qr.loadEngine (C:\xampp\htdocs\fixia.app\node_modules\@prisma\client\runtime\library.js:112:749)
+    at async Qr.instantiateLibrary (C:\xampp\htdocs\fixia.app\node_modules\@prisma\client\runtime\library.js:111:11901)
+TypeError: Cannot read properties of undefined (reading 'bind')
+    at Qr.wrapEngine (C:\xampp\htdocs\fixia.app\node_modules\@prisma\client\runtime\library.js:111:10643)
+    at Qr.loadEngine (C:\xampp\htdocs\fixia.app\node_modules\@prisma\client\runtime\library.js:112:749)
+    at async Qr.instantiateLibrary (C:\xampp\htdocs\fixia.app\node_modules\@prisma\client\runtime\library.js:111:11901)
+MP_ACCESS_TOKEN is not defined in environment variables
+TypeError: Cannot read properties of undefined (reading 'bind')
+    at Qr.wrapEngine (C:\xampp\htdocs\fixia.app\node_modules\@prisma\client\runtime\library.js:111:10643)
+    at Qr.loadEngine (C:\xampp\htdocs\fixia.app\node_modules\@prisma\client\runtime\library.js:112:749)
+    at async Qr.instantiateLibrary (C:\xampp\htdocs\fixia.app\node_modules\@prisma\client\runtime\library.js:111:11901)
+TypeError: Cannot read properties of undefined (reading 'bind')
+    at Qr.wrapEngine (C:\xampp\htdocs\fixia.app\node_modules\@prisma\client\runtime\library.js:111:10643)
+    at Qr.loadEngine (C:\xampp\htdocs\fixia.app\node_modules\@prisma\client\runtime\library.js:112:749)
+    at async Qr.instantiateLibrary (C:\xampp\htdocs\fixia.app\node_modules\@prisma\client\runtime\library.js:111:11901)
+TypeError: Cannot read properties of undefined (reading 'bind')
+    at Qr.wrapEngine (C:\xampp\htdocs\fixia.app\node_modules\@prisma\client\runtime\library.js:111:10643)
+    at Qr.loadEngine (C:\xampp\htdocs\fixia.app\node_modules\@prisma\client\runtime\library.js:112:749)
+    at async Qr.instantiateLibrary (C:\xampp\htdocs\fixia.app\node_modules\@prisma\client\runtime\library.js:111:11901)
+MP_ACCESS_TOKEN is not defined in environment variables
+TypeError: Cannot read properties of undefined (reading 'bind')
+    at Qr.wrapEngine (C:\xampp\htdocs\fixia.app\node_modules\@prisma\client\runtime\library.js:111:10643)
+    at Qr.loadEngine (C:\xampp\htdocs\fixia.app\node_modules\@prisma\client\runtime\library.js:112:749)
+    at async Qr.instantiateLibrary (C:\xampp\htdocs\fixia.app\node_modules\@prisma\client\runtime\library.js:111:11901)
+TypeError: Cannot read properties of undefined (reading 'bind')
+    at Qr.wrapEngine (C:\xampp\htdocs\fixia.app\node_modules\@prisma\client\runtime\library.js:111:10643)
+    at Qr.loadEngine (C:\xampp\htdocs\fixia.app\node_modules\@prisma\client\runtime\library.js:112:749)
+    at async Qr.instantiateLibrary (C:\xampp\htdocs\fixia.app\node_modules\@prisma\client\runtime\library.js:111:11901)
+TypeError: Cannot read properties of undefined (reading 'bind')
+    at Qr.wrapEngine (C:\xampp\htdocs\fixia.app\node_modules\@prisma\client\runtime\library.js:111:10643)
+    at Qr.loadEngine (C:\xampp\htdocs\fixia.app\node_modules\@prisma\client\runtime\library.js:112:749)
+    at async Qr.instantiateLibrary (C:\xampp\htdocs\fixia.app\node_modules\@prisma\client\runtime\library.js:111:11901)
+TypeError: Cannot read properties of undefined (reading 'bind')
+    at Qr.wrapEngine (C:\xampp\htdocs\fixia.app\node_modules\@prisma\client\runtime\library.js:111:10643)
+    at Qr.loadEngine (C:\xampp\htdocs\fixia.app\node_modules\@prisma\client\runtime\library.js:112:749)
+    at async Qr.instantiateLibrary (C:\xampp\htdocs\fixia.app\node_modules\@prisma\client\runtime\library.js:111:11901)
+TypeError: Cannot read properties of undefined (reading 'bind')
+    at Qr.wrapEngine (C:\xampp\htdocs\fixia.app\node_modules\@prisma\client\runtime\library.js:111:10643)
+    at Qr.loadEngine (C:\xampp\htdocs\fixia.app\node_modules\@prisma\client\runtime\library.js:112:749)
+    at async Qr.instantiateLibrary (C:\xampp\htdocs\fixia.app\node_modules\@prisma\client\runtime\library.js:111:11901)
+TypeError: Cannot read properties of undefined (reading 'bind')
+    at Qr.wrapEngine (C:\xampp\htdocs\fixia.app\node_modules\@prisma\client\runtime\library.js:111:10643)
+    at Qr.loadEngine (C:\xampp\htdocs\fixia.app\node_modules\@prisma\client\runtime\library.js:112:749)
+    at async Qr.instantiateLibrary (C:\xampp\htdocs\fixia.app\node_modules\@prisma\client\runtime\library.js:111:11901)
+   Generating static pages (0/29) ...
+Error: <Html> should not be imported outside of pages/_document.
+Read more: https://nextjs.org/docs/messages/no-document-import-in-page
+    at K (C:\xampp\htdocs\fixia.app\node_modules\next\dist\compiled\next-server\pages.runtime.prod.js:16:5430)
+    at y (C:\xampp\htdocs\fixia.app\.next\server\chunks\7627.js:6:1263)
+Error occurred prerendering page "/500". Read more: https://nextjs.org/docs/messages/prerender-error
+Error: <Html> should not be imported outside of pages/_document.
+Read more: https://nextjs.org/docs/messages/no-document-import-in-page
+    at K (C:\xampp\htdocs\fixia.app\node_modules\next\dist\compiled\next-server\pages.runtime.prod.js:16:5430)
+    at y (C:\xampp\htdocs\fixia.app\.next\server\chunks\7627.js:6:1263)
+    at react-stack-bottom-frame (C:\xampp\htdocs\fixia.app\node_modules\react-dom\cjs\react-dom-server.edge.development.js:8798:18)
+    at renderWithHooks (C:\xampp\htdocs\fixia.app\node_modules\react-dom\cjs\react-dom-server.edge.development.js:4722:19)
+    at renderElement (C:\xampp\htdocs\fixia.app\node_modules\react-dom\cjs\react-dom-server.edge.development.js:5157:23)
+    at retryNode (C:\xampp\htdocs\fixia.app\node_modules\react-dom\cjs\react-dom-server.edge.development.js:5805:22)
+    at renderNodeDestructive (C:\xampp\htdocs\fixia.app\node_modules\react-dom\cjs\react-dom-server.edge.development.js:5631:11)
+    at renderElement (C:\xampp\htdocs\fixia.app\node_modules\react-dom\cjs\react-dom-server.edge.development.js:5143:11)
+    at retryNode (C:\xampp\htdocs\fixia.app\node_modules\react-dom\cjs\react-dom-server.edge.development.js:5805:22)
+    at renderNodeDestructive (C:\xampp\htdocs\fixia.app\node_modules\react-dom\cjs\react-dom-server.edge.development.js:5631:11)
+Export encountered an error on /_error: /500, exiting the build.
+ ⨯ Static worker exited with code: 1 and signal: null
