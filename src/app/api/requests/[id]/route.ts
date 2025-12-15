@@ -105,7 +105,7 @@ export async function DELETE(
         // Verify ownership - only the request creator (client or professional) or admin can delete
         const requestToDelete = await prisma.request.findUnique({
             where: { id: requestId },
-            select: { clientId: true }
+            select: { clientId: true, match: { select: { id: true } } }
         })
 
         if (!requestToDelete) {
@@ -117,6 +117,14 @@ export async function DELETE(
             return NextResponse.json({ error: "Forbidden - Only the request creator can delete this request" }, { status: 403 })
         }
 
+        // If there's an active match, delete it first (cascade will handle messages/reviews)
+        if (requestToDelete.match) {
+            await prisma.match.delete({
+                where: { id: requestToDelete.match.id }
+            })
+        }
+
+        // Now delete the request (proposals will cascade delete)
         await prisma.request.delete({
             where: { id: requestId }
         })
@@ -124,6 +132,16 @@ export async function DELETE(
         return NextResponse.json({ success: true })
     } catch (error) {
         console.error("Error deleting request:", error)
+
+        // Check if this is a constraint violation
+        const errorMessage = error instanceof Error ? error.message : "Internal Server Error"
+        if (errorMessage.includes("constraint") || errorMessage.includes("Unique constraint failed")) {
+            return NextResponse.json(
+                { error: "Cannot delete request with active matches or proposals. Please cancel the match first." },
+                { status: 400 }
+            )
+        }
+
         return NextResponse.json(
             { error: "Internal Server Error" },
             { status: 500 }
