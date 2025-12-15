@@ -38,9 +38,10 @@ interface ReviewDialogProps {
     targetName: string
     targetId?: string
     trigger?: React.ReactNode
+    onSuccess?: () => void // Callback when review is successfully submitted
 }
 
-export function ReviewDialog({ matchId, targetName, targetId, trigger }: ReviewDialogProps) {
+export function ReviewDialog({ matchId, targetName, targetId, trigger, onSuccess }: ReviewDialogProps) {
     const [open, setOpen] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const [hoverRating, setHoverRating] = useState(0)
@@ -93,8 +94,13 @@ export function ReviewDialog({ matchId, targetName, targetId, trigger }: ReviewD
             setOpen(false)
             form.reset()
 
-            // Refresh page to update UI
-            window.location.reload()
+            // Call success callback instead of full page reload
+            if (onSuccess) {
+                onSuccess()
+            } else {
+                // Fallback: refresh page if no callback provided
+                window.location.reload()
+            }
 
         } catch (error: any) {
             console.error(error)

@@ -31,11 +31,17 @@ export default function RequestDetailPage() {
     const [selectedPro, setSelectedPro] = useState<any>(null)
     // const [isReviewOpen, setIsReviewOpen] = useState(false) // REMOVED
     const [status, setStatus] = useState("OPEN")
+    const [ratingRefreshTrigger, setRatingRefreshTrigger] = useState(0)
 
     // Check if current user is the invited professional
     const [isInvitedPro, setIsInvitedPro] = useState(false)
     const [myProposalId, setMyProposalId] = useState<string | null>(null)
     const { user: currentUser } = useAuth() // Need current user for new components
+
+    // Function to refresh ratings when a review is submitted
+    const handleReviewSuccess = () => {
+        setRatingRefreshTrigger(prev => prev + 1)
+    }
 
     // Fetch Request Data
     useEffect(() => {
@@ -423,6 +429,7 @@ export default function RequestDetailPage() {
                                                         clientId={request.match.clientId}
                                                         providerId={request.match.providerId}
                                                         currentUserId={currentUser?.id || ""}
+                                                        refreshTrigger={ratingRefreshTrigger}
                                                         onBothRated={() => {
                                                             toast.success("¡Ambos han calificado! Match cerrado.")
                                                             router.refresh()

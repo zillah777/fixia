@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
 import { z } from "zod";
-import { sendProposalNotification } from "@/lib/mail";
 
 const proposalSchema = z.object({
     requestId: z.string().uuid("Invalid request ID"),
@@ -80,11 +79,6 @@ export async function POST(request: Request) {
                 },
             },
         });
-
-        // Send notification to client
-        sendProposalNotification(serviceRequest.clientId, proposal).catch(err =>
-            console.error("[PROPOSAL] Failed to send notification:", err)
-        );
 
         return NextResponse.json(proposal, { status: 201 });
     } catch (error) {

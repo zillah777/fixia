@@ -12,7 +12,9 @@
       "Bash(dir \"c:\\xampp\\htdocs\\fixia.app\\src\\app\")",
       "Bash(dir \"c:\\xampp\\htdocs\\fixia.app\\prisma\")",
       "Bash(ls:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ],
     "deny": [],
     "ask": []
