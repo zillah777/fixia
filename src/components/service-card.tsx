@@ -1,3 +1,6 @@
+"use client"
+
+import { useState } from "react"
 import Image from "next/image"
 import { Star, Heart, MapPin } from "lucide-react"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
@@ -7,8 +10,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { TrustBadge } from "@/components/ui/trust-badges"
 import { RatingBadge } from "@/components/ui/rating-badge"
+import { cn } from "@/lib/utils"
+import { toast } from "sonner"
 
 interface ServiceCardProps {
+    id: string
     title: string
     providerName: string
     providerAvatar?: string
@@ -21,6 +27,7 @@ interface ServiceCardProps {
     isVerified?: boolean
     isFast?: boolean
     isPremium?: boolean
+    initialIsFavorite?: boolean
 }
 
 function StarRating({ rating, reviewsCount }: { rating: number; reviewsCount: number }) {
@@ -57,6 +64,7 @@ function StarRating({ rating, reviewsCount }: { rating: number; reviewsCount: nu
 }
 
 export function ServiceCard({
+    id,
     title,
     providerName,
     providerAvatar,
@@ -69,7 +77,51 @@ export function ServiceCard({
     isVerified = true,
     isFast = false,
     isPremium = false,
+    initialIsFavorite = false,
 }: ServiceCardProps) {
+    const [isFavorite, setIsFavorite] = useState(initialIsFavorite)
+    const [isLoading, setIsLoading] = useState(false)
+
+    const handleFavoriteClick = async (e: React.MouseEvent) => {
+        e.preventDefault()
+        e.stopPropagation()
+
+        setIsLoading(true)
+        try {
+            if (isFavorite) {
+                // TODO: Implement remove from favorites when API endpoint supports DELETE with serviceId
+                setIsFavorite(false)
+                toast.success("Removido de favoritos")
+            } else {
+                const res = await fetch("/api/service-favorites", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ serviceId: id })
+                })
+
+                if (res.ok) {
+                    setIsFavorite(true)
+                    toast.success(`${title} agregado a favoritos`)
+                } else if (res.status === 401) {
+                    window.location.href = "/login"
+                } else if (res.status === 409) {
+                    toast.info("Ya está en tu lista de favoritos")
+                    setIsFavorite(true)
+                } else if (res.status === 400) {
+                    const error = await res.json()
+                    toast.error(error.error || "No puedes guardar tu propio servicio")
+                } else {
+                    toast.error("Error al agregar a favoritos")
+                }
+            }
+        } catch (error) {
+            console.error("Error toggling favorite:", error)
+            toast.error("Error al actualizar favoritos")
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
     return (
         <Card className="overflow-hidden group hover:shadow-lg transition-all duration-300 border-border/50 flex flex-col h-full bg-white dark:bg-card">
             {/* Image Container */}
@@ -87,9 +139,19 @@ export function ServiceCard({
                 <Button
                     variant="ghost"
                     size="icon"
-                    className="absolute top-3 right-3 h-9 w-9 rounded-full bg-white/90 dark:bg-card/90 backdrop-blur-sm hover:bg-white dark:hover:bg-card text-muted-foreground hover:text-accent transition-all shadow-md hover:shadow-lg"
+                    onClick={handleFavoriteClick}
+                    disabled={isLoading}
+                    className={cn(
+                        "absolute top-3 right-3 h-9 w-9 rounded-full backdrop-blur-sm transition-all shadow-md hover:shadow-lg",
+                        isFavorite
+                            ? "bg-red-500/90 dark:bg-red-900/90 text-white hover:bg-red-500 dark:hover:bg-red-900"
+                            : "bg-white/90 dark:bg-card/90 text-muted-foreground hover:bg-white dark:hover:bg-card hover:text-red-500"
+                    )}
                 >
-                    <Heart className="h-4 w-4" />
+                    <Heart
+                        className="h-4 w-4"
+                        fill={isFavorite ? "currentColor" : "none"}
+                    />
                 </Button>
 
                 {/* Category Badge */}

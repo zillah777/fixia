@@ -38,6 +38,7 @@ model User {
   deletedAt               DateTime?
   favoritedBy             Favorite[]           @relation("FavoritedProfessionals")
   favorites               Favorite[]           @relation("UserFavorites")
+  serviceFavorites        ServiceFavorite[]    @relation("ServiceFavorites")
   matchesAsClient         Match[]              @relation("ClientMatches")
   matchesAsProvider       Match[]              @relation("ProviderMatches")
   messagesSent            Message[]            @relation("MessageSender")
@@ -100,17 +101,18 @@ model Profile {
 }
 
 model Service {
-  id          String   @id @default(uuid())
-  providerId  String
-  title       String
-  description String
-  categoryId  String
-  price       Decimal
-  images      String   @default("[]")
-  tags        String   @default("[]")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  provider    User     @relation("ProviderServices", fields: [providerId], references: [id], onDelete: Cascade)
+  id               String            @id @default(uuid())
+  providerId       String
+  title            String
+  description      String
+  categoryId       String
+  price            Decimal
+  images           String            @default("[]")
+  tags             String            @default("[]")
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  provider         User              @relation("ProviderServices", fields: [providerId], references: [id], onDelete: Cascade)
+  favoritedBy      ServiceFavorite[] @relation("FavoritedServices")
 }
 
 model Request {
@@ -223,6 +225,19 @@ model Favorite {
   @@index([professionalId])
   @@index([professionalId], map: "idx_favorite_professional_id")
   @@index([userId], map: "idx_favorite_user_id")
+}
+
+model ServiceFavorite {
+  id        String   @id @default(uuid())
+  userId    String
+  serviceId String
+  createdAt DateTime @default(now())
+  service   Service  @relation("FavoritedServices", fields: [serviceId], references: [id], onDelete: Cascade)
+  user      User     @relation("ServiceFavorites", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, serviceId])
+  @@index([userId])
+  @@index([serviceId])
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.

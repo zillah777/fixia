@@ -141,7 +141,6 @@ export default function Home() {
                                 width={400}
                                 height={130}
                                 className="inline-block h-32 sm:h-48 md:h-64 lg:h-80 w-auto object-contain -mt-2 sm:-mt-4"
-                                priority
                             />
                         </motion.h1>
 

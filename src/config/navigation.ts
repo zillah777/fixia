@@ -9,7 +9,8 @@ import {
     MessageCircle,
     FolderOpen,
     Bell,
-    LogOut
+    LogOut,
+    Heart
 } from "lucide-react"
 
 // Professional Sidebar Menu
@@ -19,6 +20,7 @@ export const professionalSidebarItems = [
     { icon: Search, label: "Oportunidades", href: "/dashboard/opportunities" },
     { icon: Briefcase, label: "Mis Solicitudes", href: "/dashboard/requests" },
     { icon: Briefcase, label: "Mis Servicios", href: "/dashboard/services" },
+    { icon: Heart, label: "Mis Favoritos", href: "/dashboard/favorites" },
     { icon: MessageCircle, label: "Mensajes", href: "/dashboard/matches" },
     { icon: FolderOpen, label: "Portafolio", href: "/dashboard/portfolio" },
     { icon: Calendar, label: "Mis Matches", href: "/dashboard/bookings" },
@@ -33,6 +35,7 @@ export const professionalAvatarItems = [
     { icon: User, label: "Perfil", href: "/dashboard/profile" },
     { icon: Search, label: "Oportunidades", href: "/dashboard/opportunities" },
     { icon: Briefcase, label: "Mis Servicios", href: "/dashboard/services" },
+    { icon: Heart, label: "Mis Favoritos", href: "/dashboard/favorites" },
     { icon: Settings, label: "Configuración", href: "/dashboard/settings" },
 ]
 
@@ -41,6 +44,7 @@ export const clientSidebarItems = [
     { icon: LayoutDashboard, label: "Dashboard", href: "/dashboard" },
     { icon: User, label: "Perfil", href: "/dashboard/profile" },
     { icon: Briefcase, label: "Mis Solicitudes", href: "/dashboard/requests" },
+    { icon: Heart, label: "Mis Favoritos", href: "/dashboard/favorites" },
     { icon: MessageCircle, label: "Mensajes", href: "/dashboard/matches" },
     { icon: Calendar, label: "Mis Matches", href: "/dashboard/bookings" },
     { icon: Settings, label: "Configuración", href: "/dashboard/settings" },
@@ -53,6 +57,7 @@ export const clientAvatarItems = [
     { icon: LayoutDashboard, label: "Dashboard", href: "/dashboard" },
     { icon: User, label: "Perfil", href: "/dashboard/profile" },
     { icon: Briefcase, label: "Mis Solicitudes", href: "/dashboard/requests" },
+    { icon: Heart, label: "Mis Favoritos", href: "/dashboard/favorites" },
     { icon: Settings, label: "Configuración", href: "/dashboard/settings" },
 ]
 

@@ -37,14 +37,7 @@ export async function GET() {
             }
         })
 
-        // Fallback if no services exist yet (to avoid empty homepage)
-        if (categories.length === 0) {
-            return NextResponse.json([
-                { id: "plomeria", name: "Plomería", icon: "💧", count: "0", color: "from-blue-500/20 to-cyan-500/20" },
-                { id: "electricidad", name: "Electricidad", icon: "⚡", count: "0", color: "from-yellow-500/20 to-orange-500/20" }
-            ])
-        }
-
+        // Only return real categories from the database
         return NextResponse.json(categories)
     } catch (error) {
         return NextResponse.json({ error: "Error fetching categories" }, { status: 500 })

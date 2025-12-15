@@ -1,6 +1,7 @@
 "use client"
 
-import { User, Mail, MapPin, Star, Badge as BadgeIcon } from "lucide-react"
+import { useState } from "react"
+import { User, Mail, MapPin, Star, Badge as BadgeIcon, Heart } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
@@ -8,6 +9,7 @@ import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { getAvatarUrl, getInitials } from "@/lib/avatar-utils"
 import { cn } from "@/lib/utils"
+import { toast } from "sonner"
 
 interface PublicProfileCardProps {
     id: string
@@ -20,6 +22,7 @@ interface PublicProfileCardProps {
     badges?: string[]
     reviewCount?: number
     averageRating?: number
+    initialIsFavorite?: boolean
 }
 
 export function PublicProfileCard({
@@ -33,25 +36,93 @@ export function PublicProfileCard({
     badges = [],
     reviewCount = 0,
     averageRating = 0,
+    initialIsFavorite = false,
 }: PublicProfileCardProps) {
+    const [isFavorite, setIsFavorite] = useState(initialIsFavorite)
+    const [isLoading, setIsLoading] = useState(false)
     const isProfessional = role === "PROFESSIONAL"
     const displayEmail = email && email.includes("@") ? email : null
 
+    const handleFavoriteClick = async (e: React.MouseEvent) => {
+        e.preventDefault()
+        e.stopPropagation()
+
+        if (!isProfessional) {
+            toast.error("Solo puedes guardar profesionales")
+            return
+        }
+
+        setIsLoading(true)
+        try {
+            if (isFavorite) {
+                // Remover de favoritos - para esto necesitaríamos el favoriteId
+                // Por ahora solo cambiamos el estado local
+                setIsFavorite(false)
+                toast.success("Removido de favoritos")
+            } else {
+                const res = await fetch("/api/favorites", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ professionalId: id })
+                })
+
+                if (res.ok) {
+                    setIsFavorite(true)
+                    toast.success(`${name} agregado a favoritos`)
+                } else if (res.status === 401) {
+                    window.location.href = "/login"
+                } else if (res.status === 409) {
+                    toast.info("Ya está en tu lista de favoritos")
+                    setIsFavorite(true)
+                } else {
+                    toast.error("Error al agregar a favoritos")
+                }
+            }
+        } catch (error) {
+            console.error("Error toggling favorite:", error)
+            toast.error("Error al actualizar favoritos")
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
     return (
-        <Link href={`/dashboard/profile/${id}`}>
-            <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer overflow-hidden">
-                <CardHeader className="pb-3">
-                    <div className="flex items-start justify-between">
-                        <Avatar className="h-16 w-16">
-                            <AvatarImage src={getAvatarUrl(avatar, name)} />
-                            <AvatarFallback>{getInitials(name)}</AvatarFallback>
-                        </Avatar>
-                        <Badge
-                            variant={isProfessional ? "default" : "secondary"}
-                            className="text-xs"
-                        >
-                            {isProfessional ? "Profesional" : "Cliente"}
-                        </Badge>
+        <Link href={`/professionals/${id}`} className="h-full block">
+            <div className="h-full">
+                <Card className="h-full hover:shadow-lg transition-shadow overflow-hidden flex flex-col">
+                    <CardHeader className="pb-3">
+                        <div className="flex items-start justify-between">
+                            <Avatar className="h-16 w-16 cursor-pointer hover:opacity-80">
+                                <AvatarImage src={getAvatarUrl(avatar, name)} />
+                                <AvatarFallback>{getInitials(name)}</AvatarFallback>
+                            </Avatar>
+                        <div className="flex gap-2">
+                            {isProfessional && (
+                                <Button
+                                    size="icon"
+                                    variant="ghost"
+                                    className={cn(
+                                        "h-8 w-8 transition-colors",
+                                        isFavorite
+                                            ? "text-red-500 hover:bg-red-50 dark:hover:bg-red-950"
+                                            : "text-muted-foreground hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950"
+                                    )}
+                                    onClick={handleFavoriteClick}
+                                    disabled={isLoading}
+                                >
+                                    <Heart
+                                        className="h-4 w-4"
+                                        fill={isFavorite ? "currentColor" : "none"}
+                                    />
+                                </Button>
+                            )}
+                            <Badge
+                                variant={isProfessional ? "default" : "secondary"}
+                                className="text-xs"
+                            >
+                                {isProfessional ? "Profesional" : "Cliente"}
+                            </Badge>
+                        </div>
                     </div>
                 </CardHeader>
 
@@ -126,12 +197,9 @@ export function PublicProfileCard({
                         </div>
                     )}
 
-                    {/* View Profile Button */}
-                    <Button className="w-full mt-4" size="sm" variant="outline">
-                        Ver Perfil Completo
-                    </Button>
                 </CardContent>
             </Card>
+            </div>
         </Link>
     )
 }

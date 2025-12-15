@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { Star, Heart } from "lucide-react"
@@ -27,10 +28,13 @@ interface ServiceCardProps {
         }
     }
     className?: string
+    initialIsFavorite?: boolean
 }
 
-export function ServiceCard({ data, className }: ServiceCardProps) {
+export function ServiceCard({ data, className, initialIsFavorite = false }: ServiceCardProps) {
     const router = useRouter()
+    const [isFavorite, setIsFavorite] = useState(initialIsFavorite)
+    const [isLoading, setIsLoading] = useState(false)
     const mainImage = data.images.length > 0 ? data.images[0] : "/placeholder-service.jpg"
     const firstName = data.provider.name.split(" ")[0]
 
@@ -74,6 +78,46 @@ export function ServiceCard({ data, className }: ServiceCardProps) {
         }
     }
 
+    const handleFavoriteClick = async (e: React.MouseEvent) => {
+        e.preventDefault()
+        e.stopPropagation()
+
+        setIsLoading(true)
+        try {
+            if (isFavorite) {
+                // TODO: Implement remove from favorites when API endpoint supports DELETE with serviceId
+                setIsFavorite(false)
+                toast.success("Removido de favoritos")
+            } else {
+                const res = await fetch("/api/service-favorites", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ serviceId: data.id })
+                })
+
+                if (res.ok) {
+                    setIsFavorite(true)
+                    toast.success(`${data.title} agregado a favoritos`)
+                } else if (res.status === 401) {
+                    window.location.href = "/login"
+                } else if (res.status === 409) {
+                    toast.info("Ya está en tu lista de favoritos")
+                    setIsFavorite(true)
+                } else if (res.status === 400) {
+                    const error = await res.json()
+                    toast.error(error.error || "No puedes guardar tu propio servicio")
+                } else {
+                    toast.error("Error al agregar a favoritos")
+                }
+            }
+        } catch (error) {
+            console.error("Error toggling favorite:", error)
+            toast.error("Error al actualizar favoritos")
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
     return (
         <div className={cn("group flex flex-col gap-3 rounded-xl transition-all h-full", className)}>
             {/* Image Container */}
@@ -85,8 +129,20 @@ export function ServiceCard({ data, className }: ServiceCardProps) {
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
-                <button className="absolute top-3 right-3 z-20 rounded-full p-2 hover:scale-110 transition-all">
-                    <Heart className="h-6 w-6 text-white drop-shadow-md hover:fill-red-500 hover:text-destructive transition-colors" />
+                <button
+                    onClick={handleFavoriteClick}
+                    disabled={isLoading}
+                    className={cn(
+                        "absolute top-3 right-3 z-20 rounded-full p-2 transition-all hover:scale-110",
+                        isFavorite
+                            ? "bg-red-500/90 text-white"
+                            : "bg-black/20 text-white hover:bg-black/40"
+                    )}
+                >
+                    <Heart
+                        className="h-6 w-6 drop-shadow-md transition-colors"
+                        fill={isFavorite ? "currentColor" : "none"}
+                    />
                 </button>
                 <div className="absolute top-3 left-3 z-20 flex gap-1 flex-wrap">
                     <Badge variant="secondary" className="backdrop-blur-md bg-white/90 font-medium text-xs shadow-sm capitalize">
