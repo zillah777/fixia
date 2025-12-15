@@ -6,12 +6,16 @@ const nextConfig: NextConfig = {
         // serverActions: true, // Enabled by default in Next.js 15
     },
     output: 'standalone',
-    skipTrailingSlashRedirect: true,
     typescript: {
         ignoreBuildErrors: true,
     },
     eslint: {
         ignoreDuringBuilds: true,
+    },
+    staticPageGenerationTimeout: 120,
+    onDemandEntries: {
+        maxInactiveAge: 1000 * 60 * 60,
+        pagesBufferLength: 5,
     },
     images: {
         remotePatterns: [

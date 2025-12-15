@@ -3,6 +3,8 @@ import { getSession } from "@/lib/auth"
 import { getUserById } from "@/lib/db"
 import { OnboardingWizard } from "@/components/onboarding/onboarding-wizard"
 
+export const dynamic = 'force-dynamic'
+
 export const metadata = {
     title: "Onboarding - Fixia",
     description: "Completa tu configuración inicial en Fixia",
