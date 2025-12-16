@@ -58,7 +58,7 @@ export function useConfirmDialog() {
                     <button
                         onClick={handleConfirm}
                         disabled={isLoading}
-                        className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-all duration-200 bg-red-600 text-white hover:opacity-90 shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2"
+                        className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-semibold transition-all duration-200 bg-red-600 text-white hover:bg-red-700 hover:shadow-md shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2 min-w-[100px]"
                     >
                         {isLoading ? (
                             <>
