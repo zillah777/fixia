@@ -24,7 +24,7 @@ export async function GET() {
         let recentActivity: any[] = [];
 
         if (role === "CLIENT") {
-            const [completed, active] = await Promise.all([
+            const [completedRequests, activeRequests, completedMatches, rating, requests] = await Promise.all([
                 prisma.request.count({
                     where: {
                         clientId: userId,
@@ -37,9 +37,34 @@ export async function GET() {
                         status: { in: ["OPEN", "MATCHED"] },
                     },
                 }),
+                prisma.match.count({
+                    where: {
+                        clientId: userId,
+                        isCompleted: true,
+                    },
+                }),
+                prisma.review.aggregate({
+                    where: { targetId: userId },
+                    _avg: { score: true }
+                }),
+                prisma.request.findMany({
+                    where: { clientId: userId },
+                    orderBy: { createdAt: 'desc' },
+                    take: 5,
+                    select: { id: true, title: true, status: true, createdAt: true }
+                })
             ]);
-            stats.completedRequests = completed;
-            stats.activeRequests = active;
+            stats.completedRequests = completedMatches;
+            stats.activeRequests = activeRequests;
+            stats.rating = rating._avg.score || 0;
+            recentActivity = requests.map(r => ({
+                id: r.id,
+                type: 'REQUEST',
+                title: r.title,
+                description: `Estado: ${r.status}`,
+                date: r.createdAt,
+                status: r.status
+            }));
         } else if (role === "PROFESSIONAL") {
             const [completedMatches, activeMatches, profile, servicesCount, activeProposals] = await Promise.all([
                 prisma.match.count({

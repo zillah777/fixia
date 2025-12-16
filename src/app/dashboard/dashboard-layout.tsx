@@ -309,7 +309,7 @@ export default function DashboardLayout({
             </aside>
 
             {/* Main Content Area */}
-            <main className="flex-1 md:ml-72 p-3 sm:p-4 md:p-8 pt-16 sm:pt-20 md:pt-8 min-h-screen w-full max-w-[100vw] overflow-x-hidden">
+            <main className="flex-1 md:ml-72 p-3 sm:p-4 md:p-8 pt-24 sm:pt-28 md:pt-8 min-h-screen w-full max-w-[100vw] overflow-x-hidden">
                 <div className="max-w-7xl mx-auto w-full">
                     {children}
                 </div>
