@@ -58,11 +58,37 @@ export function useConfirmDialog() {
                     <button
                         onClick={handleConfirm}
                         disabled={isLoading}
-                        className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-semibold transition-all duration-200 bg-red-600 text-white hover:bg-red-700 hover:shadow-md shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2 min-w-[100px]"
+                        style={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '8px',
+                            whiteSpace: 'nowrap',
+                            borderRadius: '0.5rem',
+                            fontSize: '0.875rem',
+                            fontWeight: '600',
+                            transitionProperty: 'all',
+                            transitionDuration: '200ms',
+                            backgroundColor: '#DC2626',
+                            color: 'white',
+                            boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+                            outline: 'none',
+                            height: '40px',
+                            paddingLeft: '16px',
+                            paddingRight: '16px',
+                            paddingTop: '8px',
+                            paddingBottom: '8px',
+                            minWidth: '100px',
+                            cursor: isLoading ? 'not-allowed' : 'pointer',
+                            opacity: isLoading ? 0.5 : 1,
+                            pointerEvents: isLoading ? 'none' : 'auto',
+                        }}
+                        onMouseEnter={(e) => !isLoading && (e.currentTarget.style.backgroundColor = '#991B1B')}
+                        onMouseLeave={(e) => !isLoading && (e.currentTarget.style.backgroundColor = '#DC2626')}
                     >
                         {isLoading ? (
                             <>
-                                <span className="inline-block animate-spin mr-2">⟳</span>
+                                <span style={{ display: 'inline-block', animation: 'spin 1s linear infinite', marginRight: '8px' }}>⟳</span>
                                 {actionLabel}...
                             </>
                         ) : (
