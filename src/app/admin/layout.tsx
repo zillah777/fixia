@@ -2,6 +2,8 @@ import { redirect } from "next/navigation"
 import { getSession } from "@/lib/auth"
 import AdminLayoutClient from "./admin-layout-client"
 
+export const dynamic = 'force-dynamic'
+
 /**
  * SECURITY: Server-side authentication check
  * This component runs on the server and verifies admin access BEFORE rendering
