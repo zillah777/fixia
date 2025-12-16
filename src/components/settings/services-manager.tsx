@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Trash2, Plus, DollarSign, Tag } from "lucide-react"
+import { Trash2, Plus, DollarSign, Tag, Sparkles } from "lucide-react"
 import { toast } from "sonner"
 import { CATEGORIES } from "@/config/categories"
 import { CategorySelector } from "@/components/shared/category-selector"
@@ -21,6 +21,7 @@ export function ServicesManager() {
     const [services, setServices] = useState<any[]>([])
     const [isLoading, setIsLoading] = useState(true)
     const [isCreating, setIsCreating] = useState(false)
+    const [newServiceId, setNewServiceId] = useState<string | null>(null)
 
     // New Service Form
     const [newService, setNewService] = useState({
@@ -49,6 +50,14 @@ export function ServicesManager() {
     useEffect(() => {
         fetchServices()
     }, [])
+
+    // Auto-clear new service highlight after 5 seconds
+    useEffect(() => {
+        if (newServiceId) {
+            const timer = setTimeout(() => setNewServiceId(null), 5000)
+            return () => clearTimeout(timer)
+        }
+    }, [newServiceId])
 
     const handleAddTag = () => {
         if (!tagInput.trim()) return
@@ -82,6 +91,7 @@ export function ServicesManager() {
 
             if (!res.ok) throw new Error("Error creating service")
 
+            const createdService = await res.json()
             toast.success("Servicio creado correctamente")
             setNewService({
                 title: "",
@@ -90,6 +100,7 @@ export function ServicesManager() {
                 categoryId: "",
                 tags: []
             })
+            setNewServiceId(createdService.id)
             fetchServices()
         } catch (error) {
             toast.error("Error al crear servicio")
@@ -221,11 +232,26 @@ export function ServicesManager() {
                                     No has creado ningún servicio aún.
                                 </div>
                             ) : (
-                                services.map((service) => (
-                                    <div key={service.id} className="flex items-start justify-between p-4 border rounded-lg hover:bg-muted/10 transition-colors">
+                                services.map((service) => {
+                                    const isNew = service.id === newServiceId
+                                    return (
+                                    <div
+                                        key={service.id}
+                                        className={`flex items-start justify-between p-4 rounded-lg transition-all duration-300 ${
+                                            isNew
+                                                ? 'border-2 border-green-500 bg-green-50/50 shadow-lg scale-105'
+                                                : 'border hover:bg-muted/10 transition-colors'
+                                        }`}
+                                    >
                                         <div className="space-y-1">
                                             <h4 className="font-medium flex items-center gap-2">
                                                 {service.title}
+                                                {isNew && (
+                                                    <Badge className="bg-green-500 hover:bg-green-600 gap-1 animate-pulse">
+                                                        <Sparkles className="h-3 w-3" />
+                                                        Nuevo
+                                                    </Badge>
+                                                )}
                                                 <Badge variant="outline" className="text-xs font-normal">
                                                     {CATEGORIES.find(c => c.id === service.categoryId)?.label || service.categoryId}
                                                 </Badge>
@@ -235,7 +261,7 @@ export function ServicesManager() {
                                             </p>
                                             <div className="flex items-center gap-4 text-sm pt-2">
                                                 <span className="font-medium text-primary">
-                                                    ${parseFloat(service.price).toLocaleString()}
+                                                    ${parseFloat(service.price).toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
                                                 </span>
                                                 {service.tags && service.tags.length > 0 && (
                                                     <div className="flex gap-1">
@@ -257,7 +283,8 @@ export function ServicesManager() {
                                             <Trash2 className="h-4 w-4" />
                                         </Button>
                                     </div>
-                                ))
+                                    )
+                                })
                             )}
                         </div>
                     </div>
