@@ -2,7 +2,10 @@ import { NextResponse } from "next/server"
 import prisma from "@/lib/prisma"
 import { getSession } from "@/lib/auth"
 
-export async function GET(request: Request) {
+export async function PATCH(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
   try {
     const session = await getSession()
 
@@ -11,22 +14,21 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    const verifications = await prisma.verificationRequest.findMany({
-      include: {
-        user: {
-          select: {
-            id: true,
-            name: true,
-            email: true
-          }
-        }
-      },
-      orderBy: { createdAt: "desc" }
+    const body = await request.json()
+    const { status } = body
+
+    if (!status) {
+      return NextResponse.json({ error: "Status is required" }, { status: 400 })
+    }
+
+    const user = await prisma.user.update({
+      where: { id: params.id },
+      data: { status }
     })
 
-    return NextResponse.json(verifications)
+    return NextResponse.json(user)
   } catch (error) {
-    console.error("[ADMIN_VERIFICATIONS_GET_ERROR]", error)
+    console.error("[ADMIN_USER_PATCH_ERROR]", error)
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
