@@ -63,8 +63,7 @@ services:
     command: tunnel run --token ${TUNNEL_TOKEN}
     depends_on:
       - app
-    networks:
-      - fixia-network
+    network_mode: service:app
 
 networks:
   fixia-network:

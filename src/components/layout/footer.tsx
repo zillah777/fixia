@@ -76,6 +76,31 @@ export function Footer() {
                     </form>
                 </div>
 
+                {/* PWA Install Banner */}
+                <div className="mb-16 p-6 rounded-2xl bg-gradient-to-r from-primary/10 via-primary/5 to-background border border-primary/20 flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden group">
+                    <div className="absolute inset-0 bg-grid-white/10 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] -z-10" />
+
+                    <div className="flex items-center gap-4 relative z-10">
+                        <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-smartphone"><rect width="14" height="20" x="5" y="2" rx="2" ry="2" /><path d="M12 18h.01" /></svg>
+                        </div>
+                        <div className="space-y-1">
+                            <h3 className="text-xl font-bold tracking-tight">Instalar Fixia</h3>
+                            <p className="text-sm text-muted-foreground max-w-xl">
+                                Sigue estos pasos para agregar Fixia a tu pantalla de inicio y usarla como una app nativa.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="relative z-10">
+                        <PWAInstallGuide trigger={
+                            <Button className="rounded-full font-semibold shadow-lg hover:shadow-primary/25 transition-all">
+                                Ver Instrucciones
+                            </Button>
+                        } />
+                    </div>
+                </div>
+
                 {/* Links Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
                     {/* Logo Section */}
