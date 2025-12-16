@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Star, MapPin, Search, Filter } from "lucide-react"
 import { Professional } from "@/types/professional"
 import { useAuth } from "@/providers/auth-provider"
+import { TrustBadgesGroup } from "@/components/ui/trust-badges"
 
 function ProfessionalsList() {
     const searchParams = useSearchParams()
@@ -152,6 +153,23 @@ function ProfessionalsList() {
                                         {pro.location}
                                     </div>
                                 </div>
+
+                                {/* Trust Badges */}
+                                {pro.profile?.badges && (
+                                    <div className="mb-4 pb-4 border-b">
+                                        <TrustBadgesGroup
+                                            badges={(() => {
+                                                try {
+                                                    const parsed = JSON.parse(pro.profile.badges)
+                                                    return Array.isArray(parsed) ? parsed : []
+                                                } catch {
+                                                    return []
+                                                }
+                                            })()}
+                                            size="sm"
+                                        />
+                                    </div>
+                                )}
 
                                 <div className="flex flex-wrap gap-2 mb-4">
                                     {pro.tags && pro.tags.map((tag: string) => (
