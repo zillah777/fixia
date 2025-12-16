@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Calendar, MapPin, Trash2, CheckCircle2, Loader2 } from "lucide-react"
+import { Calendar, MapPin, Trash2, CheckCircle2, Loader2, Mail, Phone, XCircle } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { StandardizedEmptyState } from "@/components/onboarding/standardized-empty-state"
 import { useConfirmDialog } from "@/hooks/use-confirm-dialog"
@@ -29,17 +29,14 @@ export default function BookingsPage() {
                     // API returns { data: [...], pagination: {...} }
                     const data = Array.isArray(response) ? response : response.data || []
 
-                    // Filter: Only completed matches with both users rated
-                    const completedAndRated = data.filter((match: any) => {
-                        if (!match.isCompleted) return false
-
-                        const reviews = Array.isArray(match.reviews) ? match.reviews : []
-                        const clientReviewed = reviews.some((r: any) => r.authorId === match.clientId)
-                        const providerReviewed = reviews.some((r: any) => r.authorId === match.providerId)
-
-                        return clientReviewed && providerReviewed
+                    // Filter: Show Completed or Cancelled matches (History)
+                    // We relax the "rated" check so users can see history even if they haven't reviewed yet.
+                    const historyMatches = data.filter((match: any) => {
+                        // Simplify: If it's completed, it's history. 
+                        // If request is Cancelled (and match exists), it's history (failed).
+                        return match.isCompleted || match.request.status === 'CANCELLED' || match.request.status === 'COMPLETED'
                     })
-                    setBookings(completedAndRated)
+                    setBookings(historyMatches)
                 }
             } catch (error) {
                 console.error("Error fetching bookings:", error)
@@ -111,6 +108,7 @@ export default function BookingsPage() {
                                                 <MapPin className="h-4 w-4" />
                                                 <span>{booking.request.location}</span>
                                             </div>
+
                                         </div>
 
                                         <div className="flex items-center gap-4 p-3 bg-white rounded-xl" style={{ borderColor: '#e8e6dc', borderWidth: '1px' }}>
@@ -124,13 +122,44 @@ export default function BookingsPage() {
                                             </Avatar>
                                             <div className="flex-1">
                                                 <p className="text-sm font-medium">{user?.role === 'CLIENT' ? booking.provider.name : booking.client.name}</p>
-                                                <p className="text-xs text-muted-foreground">{user?.role === 'CLIENT' ? 'Profesional' : 'Cliente'}</p>
+                                                <p className="text-xs text-muted-foreground mb-1">{user?.role === 'CLIENT' ? 'Profesional' : 'Cliente'}</p>
+
+                                                {/* Contact Info */}
+                                                <div className="flex flex-col gap-1 text-xs text-muted-foreground">
+                                                    {(user?.role === 'CLIENT' ? booking.provider.email : booking.client.email) && (
+                                                        <div className="flex items-center gap-2">
+                                                            <Mail className="h-3 w-3" />
+                                                            <span>{user?.role === 'CLIENT' ? booking.provider.email : booking.client.email}</span>
+                                                        </div>
+                                                    )}
+                                                    {(user?.role === 'CLIENT' ? booking.provider.phone : booking.client.phone) && (
+                                                        <div className="flex items-center gap-2">
+                                                            <Phone className="h-3 w-3" />
+                                                            <span>{user?.role === 'CLIENT' ? booking.provider.phone : booking.client.phone}</span>
+                                                        </div>
+                                                    )}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
 
-                                    {/* Actions */}
+                                    {/* Actions & Status */}
                                     <div className="flex flex-col justify-center gap-2 min-w-[150px]">
+                                        {/* Status Badge */}
+                                        <div className="mb-2">
+                                            {booking.request.status === 'CANCELLED' ? (
+                                                <div className="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-orange-100 text-orange-800 shadow">
+                                                    <XCircle className="w-3 h-3 mr-1" />
+                                                    Cancelado / Fallido
+                                                </div>
+                                            ) : (
+                                                <div className="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-primary/10 text-primary shadow hover:bg-primary/20">
+                                                    <CheckCircle2 className="w-3 h-3 mr-1" />
+                                                    Completado con éxito
+                                                </div>
+                                            )}
+                                        </div>
+
                                         <Button
                                             variant="destructive"
                                             className="w-full rounded-xl"

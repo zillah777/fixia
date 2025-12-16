@@ -58,7 +58,7 @@ export async function POST(request: Request) {
                 providerId: session.user.id as string,
                 title,
                 categoryId,
-                price: parseFloat(price),
+                price: price, // Pass as string to preserve precision with Decimal
                 description: description || "",
                 tags: tags ? JSON.stringify(tags) : "[]",
                 images: images ? JSON.stringify(images) : "[]"

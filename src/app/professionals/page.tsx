@@ -16,7 +16,7 @@ import { TrustBadgesGroup } from "@/components/ui/trust-badges"
 
 function ProfessionalsList() {
     const searchParams = useSearchParams()
-    const categoryParam = searchParams.get("category")
+    const categoryParam = searchParams?.get("category")
     const { user } = useAuth()
 
     const [search, setSearch] = useState("")
@@ -136,7 +136,7 @@ function ProfessionalsList() {
                             <CardContent className="pt-0 px-6 pb-6">
                                 <div className="relative -mt-12 mb-4 flex justify-between items-end">
                                     <Avatar className="h-24 w-24 border-4 border-background">
-                                        <AvatarImage src={pro.image} />
+                                        <AvatarImage src={pro.avatar || `https://ui-avatars.com/api/?name=${pro.name}&background=random`} />
                                         <AvatarFallback>{pro.name.substring(0, 2)}</AvatarFallback>
                                     </Avatar>
                                     <div className="flex items-center gap-1 bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-sm font-medium dark:bg-yellow-900 dark:text-yellow-200">
@@ -158,14 +158,7 @@ function ProfessionalsList() {
                                 {pro.profile?.badges && (
                                     <div className="mb-4 pb-4 border-b">
                                         <TrustBadgesGroup
-                                            badges={(() => {
-                                                try {
-                                                    const parsed = JSON.parse(pro.profile.badges)
-                                                    return Array.isArray(parsed) ? parsed : []
-                                                } catch {
-                                                    return []
-                                                }
-                                            })()}
+                                            badges={(pro.profile?.badges || []) as any}
                                             size="sm"
                                         />
                                     </div>

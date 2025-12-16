@@ -107,7 +107,13 @@ export async function GET(request: Request) {
             id: pro.id,
             name: pro.name,
             avatar: pro.avatar,
-            role: pro.role,
+            role: pro.services.length > 0
+                ? Array.from(new Set(pro.services.map(s => s.categoryId))).join(", ")
+                : "Profesional",
+            location: "Buenos Aires, Argentina", // Placeholder
+            price: pro.services.length > 0
+                ? `Desde ${new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(Math.min(...pro.services.map(s => Number(s.price))))}`
+                : "A consultar",
             profile: {
                 bio: pro.profile?.bio,
                 locationLat: pro.profile?.locationLat,

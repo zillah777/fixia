@@ -147,7 +147,9 @@ export default function CategoryServicesPage() {
 
                                 {/* Price */}
                                 <div className="flex items-baseline gap-2">
-                                    <span className="text-3xl font-bold">${service.price}</span>
+                                    <span className="text-3xl font-bold">
+                                        {new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(service.price)}
+                                    </span>
                                     <span className="text-sm text-muted-foreground">por servicio</span>
                                 </div>
                             </CardContent>

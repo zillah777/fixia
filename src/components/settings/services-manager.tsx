@@ -235,54 +235,51 @@ export function ServicesManager() {
                                 services.map((service) => {
                                     const isNew = service.id === newServiceId
                                     return (
-                                    <div
-                                        key={service.id}
-                                        className={`flex items-start justify-between p-4 rounded-lg transition-all duration-300 ${
-                                            isNew
-                                                ? 'border-2 border-green-500 bg-green-50/50 shadow-lg scale-105'
-                                                : 'border hover:bg-muted/10 transition-colors'
-                                        }`}
-                                    >
-                                        <div className="space-y-1">
-                                            <h4 className="font-medium flex items-center gap-2">
-                                                {service.title}
-                                                {isNew && (
-                                                    <Badge className="bg-green-500 hover:bg-green-600 gap-1 animate-pulse">
-                                                        <Sparkles className="h-3 w-3" />
-                                                        Nuevo
-                                                    </Badge>
-                                                )}
-                                                <Badge variant="outline" className="text-xs font-normal">
-                                                    {CATEGORIES.find(c => c.id === service.categoryId)?.label || service.categoryId}
-                                                </Badge>
-                                            </h4>
-                                            <p className="text-sm text-muted-foreground line-clamp-2">
-                                                {service.description}
-                                            </p>
-                                            <div className="flex items-center gap-4 text-sm pt-2">
-                                                <span className="font-medium text-primary">
-                                                    ${parseFloat(service.price).toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
-                                                </span>
-                                                {service.tags && service.tags.length > 0 && (
-                                                    <div className="flex gap-1">
-                                                        {service.tags.map((t: string, i: number) => (
-                                                            <span key={i} className="text-xs bg-secondary/50 px-1 rounded text-muted-foreground">
-                                                                {t}
-                                                            </span>
-                                                        ))}
-                                                    </div>
-                                                )}
-                                            </div>
-                                        </div>
-                                        <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            className="text-muted-foreground hover:text-destructive"
-                                            onClick={() => handleDelete(service.id)}
+                                        <div
+                                            key={service.id}
+                                            className={`flex items-start justify-between p-4 rounded-lg transition-all duration-300 border hover:bg-muted/10 transition-colors ${isNew ? 'ring-2 ring-primary ring-offset-2' : ''
+                                                }`}
                                         >
-                                            <Trash2 className="h-4 w-4" />
-                                        </Button>
-                                    </div>
+                                            <div className="space-y-1">
+                                                <h4 className="font-medium flex items-center gap-2">
+                                                    {service.title}
+                                                    <div className="inline-flex items-center rounded-md border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-foreground border-[#e8e6dc] text-xs font-normal">
+                                                        {CATEGORIES.find(c => c.id === service.categoryId)?.label || service.categoryId}
+                                                    </div>
+                                                    {isNew && (
+                                                        <Badge className="bg-green-500 hover:bg-green-600 gap-1 animate-pulse ml-2 text-white border-green-600">
+                                                            <Sparkles className="h-3 w-3" />
+                                                            Nuevo
+                                                        </Badge>
+                                                    )}
+                                                </h4>
+                                                <p className="text-sm text-muted-foreground line-clamp-2">
+                                                    {service.description}
+                                                </p>
+                                                <div className="flex items-center gap-4 text-sm pt-2">
+                                                    <span className="font-bold text-lg text-emerald-600 bg-emerald-50 px-3 py-1 rounded-md border border-emerald-100 shadow-sm">
+                                                        {new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(Number(service.price))}
+                                                    </span>
+                                                    {service.tags && service.tags.length > 0 && (
+                                                        <div className="flex gap-1">
+                                                            {service.tags.map((t: string, i: number) => (
+                                                                <span key={i} className="text-xs bg-secondary/50 px-1 rounded text-muted-foreground">
+                                                                    {t}
+                                                                </span>
+                                                            ))}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                            <Button
+                                                variant="ghost"
+                                                size="icon"
+                                                className="text-muted-foreground hover:text-destructive h-10 w-10"
+                                                onClick={() => handleDelete(service.id)}
+                                            >
+                                                <Trash2 className="h-4 w-4" />
+                                            </Button>
+                                        </div>
                                     )
                                 })
                             )}

@@ -2,7 +2,7 @@ export interface Professional {
     id: string
     name: string
     role: string
-    image?: string
+    avatar?: string
     location: string
     rating: number
     reviews: number
@@ -10,4 +10,9 @@ export interface Professional {
     tags: string[]
     price: string
     bio?: string
+    profile?: {
+        badges: string[]
+        bio?: string
+        ratingAvg?: number
+    }
 }

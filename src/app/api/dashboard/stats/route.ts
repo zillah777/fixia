@@ -79,9 +79,10 @@ export async function GET() {
                         isCompleted: false,
                     },
                 }),
-                prisma.profile.findUnique({
-                    where: { userId },
-                    select: { ratingAvg: true },
+                // Fetch real-time average rating
+                prisma.review.aggregate({
+                    where: { targetId: userId },
+                    _avg: { score: true }
                 }),
                 prisma.service.count({
                     where: { providerId: userId }
@@ -93,7 +94,7 @@ export async function GET() {
 
             stats.completedRequests = completedMatches;
             stats.leads = activeMatches; // Active Matches (Jobs in progress)
-            stats.rating = profile?.ratingAvg || 0;
+            stats.rating = profile._avg.score || 0;
             // Add custom stats for professional
             (stats as any).servicesCount = servicesCount;
             (stats as any).activeProposals = activeProposals;

@@ -74,6 +74,12 @@ const addToRemoveQueue = (toastId: string) => {
 export const reducer = (state: State, action: Action): State => {
     switch (action.type) {
         case "ADD_TOAST":
+            const isDuplicate = state.toasts.some(
+                (t) => t.title === action.toast.title && t.description === action.toast.description
+            )
+            if (isDuplicate) {
+                return state
+            }
             return {
                 ...state,
                 toasts: [action.toast, ...state.toasts].slice(0, TOAST_LIMIT),
