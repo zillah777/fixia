@@ -9,18 +9,20 @@ services:
     restart: always
     ports:
       - "3000:3000"
+    env_file: .env
     environment:
       - DATABASE_URL=postgresql://postgres:password@db:5432/fixia
       - NEXT_PUBLIC_APP_URL=https://fixia.app
-      - JWT_SECRET=${JWT_SECRET}
-      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+      - JWT_SECRET=your_super_secret_jwt_key_at_least_32_characters_long_for_production
+      - NEXTAUTH_SECRET=your_nextauth_secret_key_at_least_32_characters_long
       - NEXTAUTH_URL=https://fixia.app
-      - RESEND_API_KEY=${RESEND_API_KEY}
-      - MP_ACCESS_TOKEN=${MP_ACCESS_TOKEN}
-      - CLOUDINARY_API_KEY=${CLOUDINARY_API_KEY}
-      - CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET}
-      - NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=${NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}
-      - CRON_SECRET=${CRON_SECRET}
+      - RESEND_API_KEY=re_SmYmMSFS_JGXSrxyhM58yWfAFVhMXgu81
+      - MP_ACCESS_TOKEN=APP_USR-956733169080479-070920-866ae729476004c75f35987fd053b08c-169925973
+      - MERCADOPAGO_WEBHOOK_SECRET=f90de58e8c4bb951d37e12fc49c9027ec0c584d23a6c7a2e749c8766ce895eb4
+      - CLOUDINARY_API_KEY=265223179544254
+      - CLOUDINARY_API_SECRET=Cdi9wGiVeXc5abmcQdJ9_bFsbYM
+      - NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=dgoc9tfoz
+      - CRON_SECRET=fixia-subscription-cron-job-2025-secure-secret-key
     depends_on:
       db:
         condition: service_healthy

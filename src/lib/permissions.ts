@@ -47,8 +47,9 @@ export async function canUserCreateServices(): Promise<boolean> {
     gracePeriodEnd &&
     gracePeriodEnd > now
 
-  // MUST be verified AND have active subscription (with grace period)
-  return (user.canCreateServices ?? false) && subscriptionActive && isVerified
+  // Allow professionals with active subscription to create services
+  // Verification is optional for now - can be enforced later if needed
+  return (user.canCreateServices ?? false) && subscriptionActive
 }
 
 /**
@@ -97,7 +98,9 @@ export async function canUserReceiveBookings(): Promise<boolean> {
     gracePeriodEnd &&
     gracePeriodEnd > now
 
-  return (user.canReceiveBookings ?? false) && subscriptionActive && isVerified
+  // Allow professionals with active subscription to receive bookings
+  // Verification is optional for now - can be enforced later if needed
+  return (user.canReceiveBookings ?? false) && subscriptionActive
 }
 
 /**
@@ -146,7 +149,9 @@ export async function isUserListingVisible(): Promise<boolean> {
     gracePeriodEnd &&
     gracePeriodEnd > now
 
-  return (user.listingVisible ?? false) && subscriptionActive && isVerified
+  // Allow professionals with active subscription to have visible listings
+  // Verification is optional for now - can be enforced later if needed
+  return (user.listingVisible ?? false) && subscriptionActive
 }
 
 /**
