@@ -126,6 +126,7 @@ export async function POST(request: Request) {
                 const updatedUser = await prisma.user.update({
                     where: { id: userId },
                     data: {
+                        role: "PROFESSIONAL",
                         subscriptionStatus: "active",
                         subscriptionPlan: "professional_monthly",
                         subscriptionEndsAt: subscriptionEndDate,
