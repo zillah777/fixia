@@ -17,6 +17,7 @@ interface Service {
     description: string
     price: number
     category: string
+    images?: string[]
     provider: {
         id: string
         name: string
@@ -117,11 +118,24 @@ export default function CategoryServicesPage() {
                     {services.map((service) => (
                         <Card key={service.id} className="overflow-hidden hover:shadow-lg transition-shadow">
                             <CardHeader className="p-0">
-                                <div className="h-48 bg-gradient-to-br from-secondary to-primary flex items-center justify-center">
-                                    <div className="text-white text-center p-6">
-                                        <h3 className="text-2xl font-bold mb-2">{service.title}</h3>
+                                {service.images && service.images.length > 0 ? (
+                                    <div className="h-48 w-full relative">
+                                        <img
+                                            src={service.images[0]}
+                                            alt={service.title}
+                                            className="w-full h-full object-cover"
+                                        />
                                     </div>
-                                </div>
+                                ) : (
+                                    <div className="h-48 bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center relative overflow-hidden">
+                                        <div className="absolute inset-0 opacity-20" style={{
+                                            backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")",
+                                        }} />
+                                        <div className="text-white text-center p-6 relative z-10">
+                                            <h3 className="text-2xl font-bold mb-2 drop-shadow-md">{service.title}</h3>
+                                        </div>
+                                    </div>
+                                )}
                             </CardHeader>
                             <CardContent className="p-6">
                                 <p className="text-muted-foreground text-sm mb-4 line-clamp-3">

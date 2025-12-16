@@ -114,6 +114,10 @@ export async function GET(request: Request) {
             price: pro.services.length > 0
                 ? `Desde ${new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(Math.min(...pro.services.map(s => Number(s.price))))}`
                 : "A consultar",
+            rating: pro.profile?.ratingAvg || 0,
+            reviews: pro._count.matchesAsProvider || 0,
+            verified: pro.verificationRequest?.status === 'APPROVED',
+            tags: pro.profile?.tags ? JSON.parse(pro.profile.tags) : [],
             profile: {
                 bio: pro.profile?.bio,
                 locationLat: pro.profile?.locationLat,
