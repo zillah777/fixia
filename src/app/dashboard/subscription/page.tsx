@@ -94,10 +94,10 @@ export default function SubscriptionPage() {
                 </div>
 
                 <div className="grid gap-6">
-                    <Card className={`border-${isSubscriptionCancelled ? 'orange' : 'green'}-200 bg-${isSubscriptionCancelled ? 'orange' : 'green'}-50/50`}>
+                    <Card className={isSubscriptionCancelled ? 'border-orange-200 bg-orange-50/50' : 'border-green-200 bg-green-50/50'}>
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
-                                <ShieldCheck className={`h-6 w-6 text-${isSubscriptionCancelled ? 'orange' : 'green'}-600`} />
+                                <ShieldCheck className={isSubscriptionCancelled ? 'h-6 w-6 text-orange-600' : 'h-6 w-6 text-green-600'} />
                                 Plan Profesional
                             </CardTitle>
                             <CardDescription>
