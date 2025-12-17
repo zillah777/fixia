@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, Suspense } from "react"
+import { useState, Suspense, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { useRouter, useSearchParams } from "next/navigation"
@@ -106,11 +106,12 @@ function RegisterForm() {
     const [isLoading, setIsLoading] = useState(false)
 
     // SECURITY: If user is already logged in, redirect to dashboard
-    // This prevents double login and ensures security
-    if (user) {
-        router.push(user.role === 'ADMIN' ? '/admin' : '/dashboard')
-        return null
-    }
+    // Use useEffect to avoid returning null which breaks Radix UI Portal cleanup
+    useEffect(() => {
+        if (user) {
+            router.push(user.role === 'ADMIN' ? '/admin' : '/dashboard')
+        }
+    }, [user, router])
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
