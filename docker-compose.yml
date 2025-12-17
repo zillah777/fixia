@@ -11,23 +11,12 @@ services:
       - "3000:3000"
     env_file: .env
     environment:
-      - DATABASE_URL=postgresql://postgres:password@db:5432/fixia
-      - NEXT_PUBLIC_APP_URL=https://fixia.app
-      - JWT_SECRET=Wh/Mmlg+xTbSsW11m7v7rSEesn69GrMOP7kLerxdJ00=
-      - NEXTAUTH_SECRET=8KLp9QxTvB2mN6wS4fD3hJ7rL5jM8kP1xC9zA0bE4c=
-      - NEXTAUTH_URL=https://fixia.app
-      - RESEND_API_KEY=re_SmYmMSFS_JGXSrxyhM58yWfAFVhMXgu81
-      - MP_ACCESS_TOKEN=APP_USR-956733169080479-070920-866ae729476004c75f35987fd053b08c-169925973
-      - MERCADOPAGO_WEBHOOK_SECRET=f90de58e8c4bb951d37e12fc49c9027ec0c584d23a6c7a2e749c8766ce895eb4
-      - CLOUDINARY_API_KEY=265223179544254
-      - CLOUDINARY_API_SECRET=Cdi9wGiVeXc5abmcQdJ9_bFsbYM
-      - NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=dgoc9tfoz
-      - CRON_SECRET=fixia-subscription-cron-job-2025-secure-secret-key
+      - HOSTNAME=0.0.0.0
     depends_on:
       db:
         condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:3000/api/health || exit 1"]
+      test: ["CMD-SHELL", "curl -f http://127.0.0.1:3000/api/health || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
