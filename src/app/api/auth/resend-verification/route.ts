@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { sendVerificationEmail } from '@/lib/mail';
+import { randomUUID } from 'crypto';
 
 export const dynamic = 'force-dynamic';
 
@@ -36,8 +37,17 @@ export async function POST(req: Request) {
             );
         }
 
-        // Send verification email (non-blocking)
-        sendVerificationEmail(user.email, user.name, user.verificationToken!).catch(error => {
+        // Generate NEW token to replace expired one
+        const newToken = randomUUID();
+
+        // Update user with new verification token
+        await prisma.user.update({
+            where: { id: user.id },
+            data: { verificationToken: newToken }
+        });
+
+        // Send verification email with NEW token (non-blocking)
+        sendVerificationEmail(user.email, user.name, newToken).catch(error => {
             console.error('Failed to send verification email:', error);
         });
 

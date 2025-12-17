@@ -83,6 +83,7 @@ export async function POST(req: Request) {
                             workRadius: body.workRadius || "Mi ciudad",
                             workZones: body.workZones || undefined,
                             tags: body.tags && Array.isArray(body.tags) ? JSON.stringify(body.tags) : "[]",
+                            badges: JSON.stringify([]) // Empty initially, will be VERIFIED after payment
                         }
                     }
                 })

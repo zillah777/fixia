@@ -123,6 +123,11 @@ export async function POST(request: Request) {
                 const subscriptionEndDate = new Date();
                 subscriptionEndDate.setDate(subscriptionEndDate.getDate() + 30);
 
+                // Check if user has a profile, if not create one
+                const existingProfile = await prisma.profile.findUnique({
+                    where: { userId }
+                });
+
                 const updatedUser = await prisma.user.update({
                     where: { id: userId },
                     data: {
@@ -142,10 +147,28 @@ export async function POST(request: Request) {
                         lastRenewalAt: new Date(),
                         nextBillingDate: subscriptionEndDate,
                         autoRenew: true,
+                        // Create profile if doesn't exist with VERIFIED badge
+                        ...((!existingProfile) && {
+                            profile: {
+                                create: {
+                                    badges: JSON.stringify(["VERIFIED"]) // Auto-verify paid professionals
+                                }
+                            }
+                        }),
                     },
                 });
 
-                console.log(`[WEBHOOK] Subscription activated for user ${userId} (Payment: ${paymentData.id}) - Role converted to PROFESSIONAL`);
+                // If profile exists, update badges to include VERIFIED
+                if (existingProfile) {
+                    await prisma.profile.update({
+                        where: { userId },
+                        data: {
+                            badges: JSON.stringify(["VERIFIED"]) // Ensure VERIFIED badge
+                        }
+                    });
+                }
+
+                console.log(`[WEBHOOK] Subscription activated for user ${userId} (Payment: ${paymentData.id}) - Role converted to PROFESSIONAL with VERIFIED badge`);
             } else if (paymentData.status === "rejected" || paymentData.status === "cancelled") {
                 // Handle failed/cancelled payments
                 const userId = paymentData.metadata.user_id;
