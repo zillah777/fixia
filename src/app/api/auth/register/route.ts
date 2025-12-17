@@ -57,23 +57,30 @@ export async function POST(req: Request) {
                 phone,
                 dni,
                 birthdate,
+                status: 'PENDING', // User must verify email before login
                 verificationToken,
-                // Professional fields - Create profile if PROFESSIONAL role
+                // Auto-enable basic plan for professionals
                 ...(role === "PROFESSIONAL" && {
+                    subscriptionPlan: "basic",
+                    subscriptionStatus: "active",
+                    subscriptionEndsAt: new Date(Date.now() + 100 * 365 * 24 * 60 * 60 * 1000), // 100 years for free plan
+                    canCreateServices: true,
+                    listingVisible: true,
+                    canReceiveBookings: true,
                     profile: {
                         create: {
-                            education: body.education || null,
-                            diploma: body.diploma || null,
-                            certification: body.diploma || null, // Sync both field names
-                            courses: body.courses || null,
-                            professionalLicense: body.professionalLicense || null,
-                            licenseNumber: body.professionalLicense || null, // Sync both field names
-                            yearsExperience: body.yearsExperience ? parseInt(body.yearsExperience) : null,
-                            experienceDetails: body.experienceDetails || null,
-                            experience: body.experienceDetails || null, // Sync both field names
-                            availability: body.availability ? JSON.stringify(body.availability) : null,
+                            education: body.education || undefined,
+                            diploma: body.diploma || undefined,
+                            certification: body.diploma || undefined, // Sync both field names
+                            courses: body.courses || undefined,
+                            professionalLicense: body.professionalLicense || undefined,
+                            licenseNumber: body.professionalLicense || undefined, // Sync both field names
+                            yearsExperience: body.yearsExperience ? parseInt(body.yearsExperience) : undefined,
+                            experienceDetails: body.experienceDetails || undefined,
+                            experience: body.experienceDetails || undefined, // Sync both field names
+                            availability: body.availability ? JSON.stringify(body.availability) : "{}",
                             workRadius: body.workRadius || "Mi ciudad",
-                            workZones: body.workZones || null,
+                            workZones: body.workZones || undefined,
                             tags: body.tags && Array.isArray(body.tags) ? JSON.stringify(body.tags) : "[]",
                         }
                     }
