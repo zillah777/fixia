@@ -16,7 +16,12 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(docker restart:*)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(docker ps:*)",
+      "Bash(docker logs:*)",
+      "Bash(docker exec:*)",
+      "Bash(docker inspect:*)",
+      "Bash(DATABASE_URL=\"postgresql://postgres:password@localhost:5432/fixia\" npx prisma migrate:*)"
     ],
     "deny": [],
     "ask": []

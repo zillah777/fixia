@@ -19,6 +19,7 @@ export function ClientProfileAlert() {
             fetch(`/api/users/profile`)
                 .then(res => res.json())
                 .then(data => {
+                    console.log('Profile data:', data); // Debug: see what we're getting
                     setProfileData(data)
                 })
                 .finally(() => setIsLoading(false))
@@ -31,14 +32,18 @@ export function ClientProfileAlert() {
 
     // Check completion status
     const hasPhoto = profileData?.avatar
-    const dniVerified = profileData?.status === "VERIFIED" // DNI verified
-    const hasBio = profileData?.bio || profileData?.description
+
+    // Check DNI verification - look at verificationRequest status
+    const dniVerified = profileData?.verificationRequest?.status === "APPROVED"
+
+    const hasBio = profileData?.profile?.bio || profileData?.profile?.description
     const hasPhone = profileData?.phone
 
-    // Parse socialLinks (es un string JSON)
+    // Parse socialLinks (es un string JSON) - check in profile
     let socialLinks: any = {}
     try {
-        socialLinks = profileData?.socialLinks ? JSON.parse(profileData.socialLinks) : {}
+        const socialLinksStr = profileData?.profile?.socialLinks
+        socialLinks = socialLinksStr ? JSON.parse(socialLinksStr) : {}
     } catch (e) {
         socialLinks = {}
     }
