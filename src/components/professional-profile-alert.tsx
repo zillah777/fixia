@@ -35,13 +35,18 @@ export function ProfessionalProfileAlert() {
         return null
     }
 
-    // Check completion status
-    const profileComplete = profileData?.yearsExperience && profileData?.education && profileData?.bio
+    // Check completion status - INCLUDE DATA FROM REGISTRATION
+    // Note: yearsExperience, education, bio are saved during registration
+    const hasExperience = profileData?.yearsExperience > 0 || profileData?.experienceDetails
+    const hasEducation = profileData?.education || profileData?.diploma
+    const hasBio = profileData?.bio || profileData?.description
+    const profileComplete = hasExperience && hasEducation && hasBio
+
     const dniVerified = verificationData?.status === "APPROVED"
     const hasCertification = certificationsData?.certifications?.some((c: any) => c.status === "APPROVED")
     const hasPhoto = profileData?.avatar
 
-    // Check if alert should show
+    // Check if alert should show - HIDE only if ALL 4 core items are complete
     const needsProfileCompletion = !profileComplete
     const needsIdentityVerification = !dniVerified
     const needsPhoto = !hasPhoto
@@ -50,12 +55,12 @@ export function ProfessionalProfileAlert() {
         return null
     }
 
-    // Calculate profile strength
+    // Calculate profile strength - 4 CORE items (certifications are optional)
     const completionItems = [
         { done: profileComplete, label: "Perfil completo" },
-        { done: dniVerified, label: "Identidad verificada" },
-        { done: hasCertification, label: "Certificaciones verificadas" },
         { done: hasPhoto, label: "Foto de perfil" },
+        { done: dniVerified, label: "Identidad verificada" },
+        { done: hasCertification, label: "Certificaciones", optional: true },
     ]
 
     const completionPercentage = Math.round((completionItems.filter(i => i.done).length / completionItems.length) * 100)
@@ -124,14 +129,14 @@ export function ProfessionalProfileAlert() {
                             )}
                         </div>
 
-                        {/* Certifications */}
+                        {/* Certifications - OPTIONAL */}
                         <div className={`flex items-center gap-3 p-3 rounded-lg border ${hasCertification ? 'bg-green-50 border-green-200 text-green-700' : 'bg-white border-blue-100 text-gray-600'}`}>
                             <Award className="h-4 w-4 flex-shrink-0" />
                             <span className="flex-1">Certificaciones</span>
                             {hasCertification ? (
                                 <CheckCircle2 className="h-4 w-4 flex-shrink-0" />
                             ) : (
-                                <span className="text-xs font-medium">Opcional</span>
+                                <span className="text-xs font-medium text-amber-600">Opcional</span>
                             )}
                         </div>
                     </div>
