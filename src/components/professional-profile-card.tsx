@@ -61,10 +61,10 @@ export function ProfessionalProfileCard({
       transition={{ duration: 0.5 }}
       viewport={{ once: true }}
     >
-      <Card className="overflow-hidden hover:shadow-lg transition-all duration-300">
+      <Card className="overflow-hidden hover:shadow-lg transition-all duration-300 border-[#d97757]/20 hover:border-[#d97757]/50 hover:shadow-[#d97757]/20 group">
         {/* Cover Image */}
         {coverImage && (
-          <div className="relative h-32 sm:h-40 overflow-hidden bg-gradient-to-br from-primary/20 to-accent/20">
+          <div className="relative h-32 sm:h-40 overflow-hidden bg-gradient-to-br from-[#d97757]/20 to-[#6a9bcc]/20 group-hover:from-[#d97757]/30 group-hover:to-[#6a9bcc]/30 transition-all duration-500">
             <Image
               src={coverImage}
               alt={name}
@@ -115,16 +115,16 @@ export function ProfessionalProfileCard({
 
         <CardContent className="space-y-4">
           {/* Stats Row */}
-          <div className="grid grid-cols-3 gap-4 py-3 border-y border-border/50">
+          <div className="grid grid-cols-3 gap-4 py-3 border-y border-[#e8e6dc]/50 dark:border-border/50">
             <div className="text-center">
-              <div className="text-lg sm:text-xl font-bold text-primary">
+              <div className="text-lg sm:text-xl font-bold" style={{ color: "#d97757" }}>
                 {completedJobs}
               </div>
               <p className="text-xs sm:text-sm text-muted-foreground">
                 Trabajos
               </p>
             </div>
-            <div className="text-center border-x border-border/50">
+            <div className="text-center border-x border-[#e8e6dc]/50 dark:border-border/50">
               <RatingBadge rating={rating} size="sm" />
               <p className="text-xs sm:text-sm text-muted-foreground mt-1">
                 {reviewsCount} reseñas
@@ -133,7 +133,7 @@ export function ProfessionalProfileCard({
             <div className="text-center">
               {responseTime && (
                 <>
-                  <div className="text-xs sm:text-sm font-semibold text-accent">
+                  <div className="text-xs sm:text-sm font-semibold" style={{ color: "#6a9bcc" }}>
                     {responseTime}
                   </div>
                   <p className="text-xs text-muted-foreground">Respuesta</p>
@@ -151,30 +151,31 @@ export function ProfessionalProfileCard({
 
           {/* Contact Info */}
           <div className="space-y-2 py-2">
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <MapPin className="h-4 w-4 flex-shrink-0 text-accent" />
+            <div className="flex items-center gap-2 text-sm text-muted-foreground group/contact">
+              <MapPin className="h-4 w-4 flex-shrink-0" style={{ color: "#d97757" }} />
               <span>{location}</span>
             </div>
             {phone && (
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Phone className="h-4 w-4 flex-shrink-0 text-accent" />
+              <div className="flex items-center gap-2 text-sm text-muted-foreground group/contact">
+                <Phone className="h-4 w-4 flex-shrink-0" style={{ color: "#6a9bcc" }} />
                 <span className="truncate">{phone}</span>
               </div>
             )}
             {email && (
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Mail className="h-4 w-4 flex-shrink-0 text-accent" />
+              <div className="flex items-center gap-2 text-sm text-muted-foreground group/contact">
+                <Mail className="h-4 w-4 flex-shrink-0" style={{ color: "#788c5d" }} />
                 <span className="truncate">{email}</span>
               </div>
             )}
             {website && (
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Globe className="h-4 w-4 flex-shrink-0 text-accent" />
+              <div className="flex items-center gap-2 text-sm text-muted-foreground group/contact">
+                <Globe className="h-4 w-4 flex-shrink-0" style={{ color: "#d97757" }} />
                 <a
                   href={website}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-primary hover:underline truncate"
+                  className="hover:underline truncate transition-colors"
+                  style={{ color: "#6a9bcc" }}
                 >
                   {website.replace(/^https?:\/\//, "")}
                 </a>
@@ -186,13 +187,13 @@ export function ProfessionalProfileCard({
           <div className="flex gap-2 pt-2">
             <Button
               variant="outline"
-              className="flex-1"
+              className="flex-1 border-[#6a9bcc] text-[#6a9bcc] hover:bg-[#6a9bcc]/10 transition-colors"
               onClick={onMessage}
             >
               Mensaje
             </Button>
             <Button
-              className="flex-1 bg-accent hover:bg-accent/90"
+              className="flex-1 bg-gradient-to-r from-[#d97757] to-[#d97757]/90 hover:from-[#d97757]/90 hover:to-[#d97757] text-white transition-all shadow-md hover:shadow-lg"
               onClick={onHire}
             >
               Contratar
