@@ -31,7 +31,9 @@ export function ClientProfileAlert() {
     // Check completion status
     const hasPhoto = profileData?.avatar
     const emailVerified = profileData?.status === "VERIFIED" || user?.emailVerified
-    const profileDataComplete = profileData?.bio && profileData?.phone
+    const hasBio = profileData?.bio || profileData?.description
+    const hasPhone = profileData?.phone
+    const profileDataComplete = hasBio && hasPhone
 
     // Check if alert should show
     const needsPhoto = !hasPhoto
@@ -42,7 +44,7 @@ export function ClientProfileAlert() {
         return null
     }
 
-    // Calculate profile strength
+    // Calculate profile strength - 3 items for clients
     const completionItems = [
         { done: hasPhoto, label: "Foto de perfil" },
         { done: emailVerified, label: "Email verificado" },
