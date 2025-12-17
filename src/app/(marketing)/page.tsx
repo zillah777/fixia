@@ -292,21 +292,21 @@ export default function Home() {
                                 {
                                     title: "Crea tu Perfil",
                                     desc: "Destaca tus habilidades y experiencia para atraer clientes.",
-                                    icon: <Shield className="h-5 w-5" />,
+                                    icon: <Shield className="h-5 w-5 sm:h-6 sm:w-6" />,
                                     color: "text-[#d97757]",
                                     bgColor: "bg-[#d97757]/10 dark:bg-[#d97757]/20"
                                 },
                                 {
                                     title: "Recibe Solicitudes",
                                     desc: "Accede a oportunidades de trabajo reales en tu zona.",
-                                    icon: <Search className="h-5 w-5" />,
+                                    icon: <Search className="h-5 w-5 sm:h-6 sm:w-6" />,
                                     color: "text-[#6a9bcc]",
                                     bgColor: "bg-[#6a9bcc]/10 dark:bg-[#6a9bcc]/20"
                                 },
                                 {
                                     title: "Gana Clientes",
                                     desc: "Construye tu reputación y fideliza a tus clientes.",
-                                    icon: <Star className="h-5 w-5" />,
+                                    icon: <Star className="h-5 w-5 sm:h-6 sm:w-6" />,
                                     color: "text-[#788c5d]",
                                     bgColor: "bg-[#788c5d]/10 dark:bg-[#788c5d]/20"
                                 }
@@ -319,7 +319,7 @@ export default function Home() {
                                     viewport={{ once: true }}
                                 >
                                     <div className="flex flex-col items-center text-center p-6 rounded-xl hover:bg-white/50 dark:hover:bg-white/5 transition-colors group">
-                                        <div className={`w-12 h-12 rounded-full ${step.bgColor} ${step.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                                        <div className={`w-12 sm:w-14 h-12 sm:h-14 rounded-full ${step.bgColor} ${step.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
                                             {step.icon}
                                         </div>
                                         <h4 className="font-bold text-lg mb-2 text-stone-900 dark:text-foreground">{step.title}</h4>
