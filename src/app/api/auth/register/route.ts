@@ -92,7 +92,7 @@ export async function POST(req: Request) {
 
         // Send emails (non-blocking)
         sendWelcomeEmail(email, name).catch(e => console.error("Welcome email failed", e));
-        sendVerificationEmail(email, verificationToken).catch(e => console.error("Verification email failed", e));
+        sendVerificationEmail(email, name, verificationToken).catch(e => console.error("Verification email failed", e));
 
         return NextResponse.json({
             user: {
