@@ -35,9 +35,16 @@ const formSchema = z.object({
 
 export default function LoginPage() {
     const router = useRouter()
-    const { refreshUser } = useAuth()
+    const { refreshUser, user } = useAuth()
     const [isLoading, setIsLoading] = useState(false)
     const [showPassword, setShowPassword] = useState(false)
+
+    // SECURITY: If user is already logged in, redirect to dashboard
+    // This prevents double login and ensures security
+    if (user) {
+        router.push(user.role === 'ADMIN' ? '/admin' : '/dashboard')
+        return null
+    }
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),

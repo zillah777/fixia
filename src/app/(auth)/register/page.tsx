@@ -39,6 +39,7 @@ import {
 } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { cn } from "@/lib/utils"
+import { useAuth } from "@/providers/auth-provider"
 
 const formSchema = z.object({
     name: z.string().min(2, {
@@ -101,7 +102,15 @@ function RegisterForm() {
     const searchParams = useSearchParams()
     const defaultRole = searchParams.get("role") === "professional" ? "PROFESSIONAL" : "CLIENT"
 
+    const { user } = useAuth()
     const [isLoading, setIsLoading] = useState(false)
+
+    // SECURITY: If user is already logged in, redirect to dashboard
+    // This prevents double login and ensures security
+    if (user) {
+        router.push(user.role === 'ADMIN' ? '/admin' : '/dashboard')
+        return null
+    }
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
