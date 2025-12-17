@@ -3,6 +3,7 @@ import DOMPurify from "isomorphic-dompurify"
 import { z } from "zod"
 
 export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
 
 // Zod schema for validation
 const contactSchema = z.object({
