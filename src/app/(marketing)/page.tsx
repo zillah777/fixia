@@ -227,22 +227,19 @@ export default function Home() {
                                     title: "1. Cuéntanos qué necesitas",
                                     desc: "Describe tu proyecto o reparación. Es gratis y te tomará menos de 2 minutos.",
                                     icon: <Search className="h-6 w-6" />,
-                                    color: "text-[#d97757]",
-                                    bgColor: "bg-[#d97757]/10 dark:bg-[#d97757]/20"
+                                    color: "#d97757"
                                 },
                                 {
                                     title: "2. Elige con Confianza",
                                     desc: "Recibe propuestas y compara perfiles verificados con reseñas reales.",
                                     icon: <CheckCircle2 className="h-6 w-6" />,
-                                    color: "text-[#6a9bcc]",
-                                    bgColor: "bg-[#6a9bcc]/10 dark:bg-[#6a9bcc]/20"
+                                    color: "#6a9bcc"
                                 },
                                 {
                                     title: "3. Conecta Directo",
                                     desc: "Sin intermediarios. Habla directamente con el profesional y acuerda el precio.",
                                     icon: <Sparkles className="h-6 w-6" />,
-                                    color: "text-[#788c5d]",
-                                    bgColor: "bg-[#788c5d]/10 dark:bg-[#788c5d]/20"
+                                    color: "#788c5d"
                                 }
                             ].map((step, i) => (
                                 <motion.div
@@ -254,13 +251,13 @@ export default function Home() {
                                     className="relative group"
                                 >
                                     <div className="h-full p-5 sm:p-8 rounded-xl sm:rounded-2xl bg-white dark:bg-card border border-stone-200 dark:border-border shadow-sm hover:shadow-lg hover:shadow-current/10 transition-all duration-300 text-center overflow-hidden">
-                                        <div className={`absolute top-0 right-0 w-24 sm:w-32 h-24 sm:h-32 ${step.bgColor} rounded-full blur-xl sm:blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
-                                        <div className={`mx-auto w-12 sm:w-14 h-12 sm:h-14 rounded-lg sm:rounded-xl ${step.bgColor} ${step.color} flex items-center justify-center mb-3 sm:mb-6 group-hover:scale-110 transition-transform duration-300 relative z-10 flex-shrink-0`}>
+                                        <div className="absolute top-0 right-0 w-24 sm:w-32 h-24 sm:h-32 rounded-full blur-xl sm:blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ backgroundColor: `${step.color}20` }} />
+                                        <div className="mx-auto w-12 sm:w-14 h-12 sm:h-14 rounded-lg sm:rounded-xl flex items-center justify-center mb-3 sm:mb-6 group-hover:scale-110 transition-transform duration-300 relative z-10 flex-shrink-0" style={{ backgroundColor: `${step.color}15`, color: step.color }}>
                                             {step.icon}
                                         </div>
                                         <h3 className="text-base sm:text-xl font-bold mb-2 sm:mb-3 text-stone-900 dark:text-foreground relative z-10">{step.title}</h3>
                                         <p className="text-xs sm:text-sm text-stone-600 dark:text-muted-foreground leading-relaxed relative z-10">{step.desc}</p>
-                                        <div className={`absolute -bottom-8 -right-8 w-24 h-24 ${step.bgColor} rounded-full blur-xl opacity-30`} />
+                                        <div className="absolute -bottom-8 -right-8 w-24 h-24 rounded-full blur-xl opacity-30" style={{ backgroundColor: `${step.color}20` }} />
                                     </div>
                                     {i < 2 && (
                                         <div className="hidden sm:block absolute top-1/2 -right-3 sm:-right-4 -translate-y-1/2 text-[#d97757]/20 sm:text-[#d97757]/30 dark:text-[#d97757]/40 z-10">
@@ -293,22 +290,19 @@ export default function Home() {
                                     title: "Crea tu Perfil",
                                     desc: "Destaca tus habilidades y experiencia para atraer clientes.",
                                     icon: <Shield className="h-5 w-5 sm:h-6 sm:w-6" />,
-                                    color: "text-[#d97757]",
-                                    bgColor: "bg-[#d97757]/10 dark:bg-[#d97757]/20"
+                                    color: "#d97757"
                                 },
                                 {
                                     title: "Recibe Solicitudes",
                                     desc: "Accede a oportunidades de trabajo reales en tu zona.",
                                     icon: <Search className="h-5 w-5 sm:h-6 sm:w-6" />,
-                                    color: "text-[#6a9bcc]",
-                                    bgColor: "bg-[#6a9bcc]/10 dark:bg-[#6a9bcc]/20"
+                                    color: "#6a9bcc"
                                 },
                                 {
                                     title: "Gana Clientes",
                                     desc: "Construye tu reputación y fideliza a tus clientes.",
                                     icon: <Star className="h-5 w-5 sm:h-6 sm:w-6" />,
-                                    color: "text-[#788c5d]",
-                                    bgColor: "bg-[#788c5d]/10 dark:bg-[#788c5d]/20"
+                                    color: "#788c5d"
                                 }
                             ].map((step, i) => (
                                 <motion.div
@@ -319,7 +313,7 @@ export default function Home() {
                                     viewport={{ once: true }}
                                 >
                                     <div className="flex flex-col items-center text-center p-6 rounded-xl hover:bg-white/50 dark:hover:bg-white/5 transition-colors group">
-                                        <div className={`w-12 sm:w-14 h-12 sm:h-14 rounded-full ${step.bgColor} ${step.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                                        <div className="w-12 sm:w-14 h-12 sm:h-14 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300" style={{ backgroundColor: `${step.color}15`, color: step.color }}>
                                             {step.icon}
                                         </div>
                                         <h4 className="font-bold text-lg mb-2 text-stone-900 dark:text-foreground">{step.title}</h4>
