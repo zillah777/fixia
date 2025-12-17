@@ -102,23 +102,23 @@ export default function Home() {
     return (
         <div className="flex min-h-screen flex-col overflow-hidden bg-background">
             {/* Hero Section with Spotlight Effect */}
-            <section className="relative pt-12 pb-8 sm:pt-20 sm:pb-16 lg:pt-32 lg:pb-24 overflow-hidden">
-                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent opacity-70 dark:from-primary/10" />
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-primary/10 dark:bg-primary/20 blur-[120px] rounded-full pointer-events-none" />
+            <section className="relative pt-8 pb-6 sm:pt-20 sm:pb-16 lg:pt-32 lg:pb-24 overflow-hidden">
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#d97757]/5 via-transparent to-transparent opacity-70 dark:from-[#d97757]/10" />
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] sm:w-[1000px] h-[300px] sm:h-[500px] bg-gradient-to-b from-[#d97757]/10 to-[#6a9bcc]/10 dark:from-[#d97757]/20 dark:to-[#6a9bcc]/20 blur-3xl sm:blur-[120px] rounded-full pointer-events-none" />
 
                 <div className="container px-4 sm:px-6 text-center relative z-10">
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, ease: "easeOut" }}
-                        className="mx-auto max-w-4xl space-y-8"
+                        className="mx-auto max-w-4xl space-y-5 sm:space-y-8"
                     >
                         <motion.div
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ duration: 0.5, delay: 0.1 }}
                         >
-                            <Badge variant="outline" className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-full backdrop-blur-sm border-primary/30 bg-primary/10 text-primary font-medium text-xs sm:text-sm hover:bg-primary/20 transition-colors duration-300">
+                            <Badge variant="outline" className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-full backdrop-blur-sm border-[#d97757]/30 bg-[#d97757]/10 text-[#d97757] font-medium text-xs sm:text-sm hover:bg-[#d97757]/20 transition-colors duration-300">
                                 ✨ La forma más inteligente de contratar
                             </Badge>
                         </motion.div>
@@ -127,12 +127,12 @@ export default function Home() {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.8, ease: "easeOut" }}
-                            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight"
+                            className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight"
                         >
-                            <span className="block text-foreground mb-2 sm:mb-3 font-medium">
+                            <span className="block text-foreground mb-1 sm:mb-3 font-medium">
                                 Servicios confiables,
                             </span>
-                            <span className="block text-foreground mb-3 sm:mb-4">
+                            <span className="block text-foreground mb-2 sm:mb-4">
                                 sin complicaciones.
                             </span>
                             <Image
@@ -140,11 +140,11 @@ export default function Home() {
                                 alt="Fixia Logo"
                                 width={400}
                                 height={130}
-                                className="inline-block h-32 sm:h-48 md:h-64 lg:h-80 w-auto object-contain -mt-2 sm:-mt-4"
+                                className="inline-block h-24 sm:h-48 md:h-64 lg:h-80 w-auto object-contain -mt-1 sm:-mt-4"
                             />
                         </motion.h1>
 
-                        <p className="mx-auto max-w-2xl text-xl text-muted-foreground leading-relaxed">
+                        <p className="mx-auto max-w-2xl text-sm sm:text-lg md:text-xl text-muted-foreground leading-relaxed px-2">
                             Conectamos tus necesidades con los mejores profesionales verificados.
                             Desde reparaciones hasta proyectos especiales, con garantía total.
                         </p>
@@ -163,31 +163,31 @@ export default function Home() {
                             }}
                             whileHover={{ scale: 1.01 }}
                             whileTap={{ scale: 0.99 }}
-                            className="mx-auto w-full max-w-2xl bg-white dark:bg-card rounded-2xl shadow-xl shadow-primary/5 border border-border/50 backdrop-blur-md flex items-center p-2 gap-2 transition-all duration-300 ring-2 ring-transparent focus-within:ring-primary/20 focus-within:border-primary/50"
+                            className="mx-auto w-full max-w-2xl bg-white dark:bg-card rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl shadow-[#d97757]/10 border border-[#6a9bcc]/20 hover:border-[#d97757]/30 dark:border-border/50 backdrop-blur-md flex items-center p-1.5 sm:p-2 gap-2 transition-all duration-300 ring-2 ring-transparent focus-within:ring-[#d97757]/20 focus-within:border-[#d97757]/50"
                         >
-                            <div className="pl-3 text-muted-foreground flex-shrink-0">
-                                <Search className="h-5 w-5 text-primary/70" />
+                            <div className="pl-2 sm:pl-3 text-muted-foreground flex-shrink-0">
+                                <Search className="h-4 sm:h-5 w-4 sm:w-5" style={{ color: "#d97757" }} />
                             </div>
                             <Input
                                 name="search"
-                                className="border-none shadow-none bg-transparent h-12 text-base px-2 placeholder:text-muted-foreground/70 focus-visible:ring-0 flex-1 min-w-0" // min-w-0 crucial for flex child text overflow
-                                placeholder="Ej: Plomero, Electricista, Gasista..."
+                                className="border-none shadow-none bg-transparent h-10 sm:h-12 text-sm sm:text-base px-2 placeholder:text-muted-foreground/70 focus-visible:ring-0 flex-1 min-w-0"
+                                placeholder="Ej: Plomero, Electricista..."
                                 autoComplete="off"
                             />
                             <Button
                                 type="submit"
-                                size="lg"
-                                className="rounded-xl px-6 font-bold shadow-md h-11 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-primary-foreground transition-all"
+                                size="sm"
+                                className="rounded-lg sm:rounded-xl px-3 sm:px-6 font-bold shadow-md h-9 sm:h-11 bg-gradient-to-r from-[#d97757] to-[#d97757]/90 hover:from-[#d97757]/90 hover:to-[#d97757] text-white transition-all text-xs sm:text-base"
                             >
                                 Buscar
                             </Button>
                         </motion.form>
 
                         {/* Trust Badges */}
-                        <div className="flex flex-wrap justify-center gap-4 sm:gap-6 lg:gap-8 pt-6 sm:pt-8 opacity-60 hover:opacity-100 transition-all duration-500">
+                        <div className="flex flex-wrap justify-center gap-2 sm:gap-6 lg:gap-8 pt-4 sm:pt-8 opacity-60 hover:opacity-100 transition-all duration-500">
                             {["Profesionales Verificados", "Garantía de Calidad", "100% Confiable"].map((text, i) => (
-                                <div key={i} className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-medium">
-                                    <CheckCircle2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-accent flex-shrink-0" />
+                                <div key={i} className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-medium">
+                                    <CheckCircle2 className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" style={{ color: "#788c5d" }} />
                                     <span className="whitespace-nowrap">{text}</span>
                                 </div>
                             ))}
@@ -197,31 +197,31 @@ export default function Home() {
             </section>
 
             {/* How It Works Preview Section */}
-            <section className="py-20 sm:py-28 relative overflow-hidden bg-stone-50 dark:bg-muted/10">
-                <div className="absolute inset-0 opacity-30 pointer-events-none">
-                    <div className="absolute top-20 right-20 w-72 h-72 bg-[#d97757]/10 dark:bg-[#d97757]/20 rounded-full blur-3xl" />
-                    <div className="absolute bottom-20 left-20 w-72 h-72 bg-[#6a9bcc]/10 dark:bg-[#6a9bcc]/20 rounded-full blur-3xl" />
+            <section className="py-12 sm:py-20 lg:py-28 relative overflow-hidden bg-stone-50 dark:bg-muted/10">
+                <div className="absolute inset-0 opacity-20 sm:opacity-30 pointer-events-none">
+                    <div className="absolute top-10 sm:top-20 right-10 sm:right-20 w-48 sm:w-72 h-48 sm:h-72 bg-[#d97757]/10 dark:bg-[#d97757]/20 rounded-full blur-2xl sm:blur-3xl" />
+                    <div className="absolute bottom-10 sm:bottom-20 left-10 sm:left-20 w-48 sm:w-72 h-48 sm:h-72 bg-[#6a9bcc]/10 dark:bg-[#6a9bcc]/20 rounded-full blur-2xl sm:blur-3xl" />
                 </div>
                 <div className="container px-4 sm:px-6 relative z-10">
 
                     {/* Clients Flow */}
-                    <div className="mb-20">
-                        <div className="text-center mb-12">
+                    <div className="mb-16 sm:mb-20">
+                        <div className="text-center mb-8 sm:mb-12">
                             <motion.div
                                 initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
                             >
-                                <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mb-4 text-stone-900 dark:text-foreground">
+                                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight mb-2 sm:mb-4 text-stone-900 dark:text-foreground">
                                     ¿Cómo funciona?
                                 </h2>
-                                <p className="text-stone-600 dark:text-muted-foreground text-lg max-w-2xl mx-auto">
+                                <p className="text-stone-600 dark:text-muted-foreground text-base sm:text-lg max-w-2xl mx-auto px-2">
                                     La forma más simple de solucionar tus pendientes del hogar
                                 </p>
                             </motion.div>
                         </div>
 
-                        <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-8 max-w-5xl mx-auto">
                             {[
                                 {
                                     title: "1. Cuéntanos qué necesitas",
@@ -249,22 +249,22 @@ export default function Home() {
                                     key={i}
                                     initial={{ opacity: 0, y: 20 }}
                                     whileInView={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: i * 0.2 }}
+                                    transition={{ delay: i * 0.1 }}
                                     viewport={{ once: true }}
                                     className="relative group"
                                 >
-                                    <div className="h-full p-8 rounded-2xl bg-white dark:bg-card border border-stone-200 dark:border-border shadow-sm hover:shadow-lg hover:shadow-current/10 transition-all duration-300 text-center overflow-hidden">
-                                        <div className={`absolute top-0 right-0 w-32 h-32 ${step.bgColor} rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
-                                        <div className={`mx-auto w-14 h-14 rounded-xl ${step.bgColor} ${step.color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 relative z-10`}>
+                                    <div className="h-full p-5 sm:p-8 rounded-xl sm:rounded-2xl bg-white dark:bg-card border border-stone-200 dark:border-border shadow-sm hover:shadow-lg hover:shadow-current/10 transition-all duration-300 text-center overflow-hidden">
+                                        <div className={`absolute top-0 right-0 w-24 sm:w-32 h-24 sm:h-32 ${step.bgColor} rounded-full blur-xl sm:blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+                                        <div className={`mx-auto w-12 sm:w-14 h-12 sm:h-14 rounded-lg sm:rounded-xl ${step.bgColor} ${step.color} flex items-center justify-center mb-3 sm:mb-6 group-hover:scale-110 transition-transform duration-300 relative z-10 flex-shrink-0`}>
                                             {step.icon}
                                         </div>
-                                        <h3 className="text-xl font-bold mb-3 text-stone-900 dark:text-foreground relative z-10">{step.title}</h3>
-                                        <p className="text-stone-600 dark:text-muted-foreground leading-relaxed relative z-10">{step.desc}</p>
+                                        <h3 className="text-base sm:text-xl font-bold mb-2 sm:mb-3 text-stone-900 dark:text-foreground relative z-10">{step.title}</h3>
+                                        <p className="text-xs sm:text-sm text-stone-600 dark:text-muted-foreground leading-relaxed relative z-10">{step.desc}</p>
                                         <div className={`absolute -bottom-8 -right-8 w-24 h-24 ${step.bgColor} rounded-full blur-xl opacity-30`} />
                                     </div>
                                     {i < 2 && (
-                                        <div className="hidden md:block absolute top-1/2 -right-4 -translate-y-1/2 text-[#d97757]/30 dark:text-[#d97757]/40 z-10">
-                                            <ArrowRight className="h-6 w-6" />
+                                        <div className="hidden sm:block absolute top-1/2 -right-3 sm:-right-4 -translate-y-1/2 text-[#d97757]/20 sm:text-[#d97757]/30 dark:text-[#d97757]/40 z-10">
+                                            <ArrowRight className="h-5 sm:h-6 w-5 sm:w-6" />
                                         </div>
                                     )}
                                 </motion.div>
@@ -349,22 +349,22 @@ export default function Home() {
             </section>
 
             {/* Services Categories Section */}
-            <section className="py-12 sm:py-16 lg:py-20 relative overflow-hidden">
-                <div className="absolute inset-0 opacity-20 pointer-events-none">
-                    <div className="absolute top-10 left-10 w-96 h-96 bg-[#788c5d]/10 dark:bg-[#788c5d]/20 rounded-full blur-3xl" />
-                    <div className="absolute bottom-10 right-10 w-96 h-96 bg-[#d97757]/10 dark:bg-[#d97757]/20 rounded-full blur-3xl" />
+            <section className="py-10 sm:py-16 lg:py-20 relative overflow-hidden">
+                <div className="absolute inset-0 opacity-15 sm:opacity-20 pointer-events-none">
+                    <div className="absolute top-10 left-5 sm:left-10 w-64 sm:w-96 h-64 sm:h-96 bg-[#788c5d]/10 dark:bg-[#788c5d]/20 rounded-full blur-2xl sm:blur-3xl" />
+                    <div className="absolute bottom-10 right-5 sm:right-10 w-64 sm:w-96 h-64 sm:h-96 bg-[#d97757]/10 dark:bg-[#d97757]/20 rounded-full blur-2xl sm:blur-3xl" />
                 </div>
                 <div className="container px-4 sm:px-6 relative z-10">
-                    <div className="text-center mb-10 sm:mb-12 lg:mb-16">
-                        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight mb-2 sm:mb-3 text-foreground">
+                    <div className="text-center mb-8 sm:mb-12 lg:mb-16">
+                        <h2 className="text-2xl sm:text-4xl lg:text-5xl font-bold tracking-tight mb-2 sm:mb-3 text-foreground">
                             Servicios Populares
                         </h2>
-                        <p className="text-muted-foreground text-base sm:text-lg max-w-2xl mx-auto">
+                        <p className="text-muted-foreground text-sm sm:text-lg max-w-2xl mx-auto px-2">
                             Los profesionales más solicitados de tu zona
                         </p>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+                    <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
                         {categories.length > 0 ? categories.map((category, index) => {
                             const colors = [
                                 { accent: "#d97757", bg: "bg-[#d97757]/10 dark:bg-[#d97757]/20" },
@@ -382,36 +382,36 @@ export default function Home() {
                                 viewport={{ once: true }}
                             >
                                 <TiltCard
-                                    className="group relative h-48 sm:h-56 lg:h-64 rounded-2xl bg-gradient-to-br from-white to-muted/30 dark:from-card dark:to-muted/20 p-6 sm:p-7 shadow-md border border-border/40 backdrop-blur-sm hover:shadow-lg transition-all duration-300 cursor-pointer overflow-hidden"
+                                    className="group relative h-40 sm:h-56 lg:h-64 rounded-lg sm:rounded-2xl bg-gradient-to-br from-white to-muted/30 dark:from-card dark:to-muted/20 p-3 sm:p-7 shadow-sm sm:shadow-md border border-border/40 backdrop-blur-sm hover:shadow-lg transition-all duration-300 cursor-pointer overflow-hidden"
                                     onClick={() => router.push(`/services/${category.id}`)}
                                     style={{
                                         borderColor: `${color.accent}40`,
                                     }}
                                 >
                                     {/* Subtle background accent */}
-                                    <div className={`absolute -top-10 -right-10 w-40 h-40 ${color.bg} opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-full blur-2xl`} />
+                                    <div className={`absolute -top-10 -right-10 w-32 sm:w-40 h-32 sm:h-40 ${color.bg} opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-full blur-xl sm:blur-2xl`} />
 
                                     <div className="relative z-10 flex flex-col h-full justify-between">
                                         <motion.div
-                                            className="text-4xl sm:text-5xl mb-3 flex-shrink-0"
+                                            className="text-2xl sm:text-5xl mb-1 sm:mb-3 flex-shrink-0"
                                             whileHover={{ scale: 1.1, rotate: 5 }}
                                             transition={{ type: "spring", stiffness: 300 }}
                                         >
                                             {category.icon}
                                         </motion.div>
-                                        <div className="flex-1">
-                                            <h3 className="text-lg sm:text-xl font-bold mb-1 text-foreground">{category.name}</h3>
-                                            <p className="text-muted-foreground font-medium text-xs sm:text-sm">{category.count} Profesionales</p>
+                                        <div className="flex-1 min-w-0">
+                                            <h3 className="text-sm sm:text-xl font-bold mb-0.5 sm:mb-1 text-foreground truncate">{category.name}</h3>
+                                            <p className="text-muted-foreground font-medium text-xs">{category.count} Prof.</p>
                                         </div>
                                         <motion.div
-                                            className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg ${color.bg} flex items-center justify-center group-hover:scale-110 transition-all duration-300 mt-auto flex-shrink-0 group-hover:shadow-lg`}
+                                            className={`w-7 h-7 sm:w-10 sm:h-10 rounded-lg ${color.bg} flex items-center justify-center group-hover:scale-110 transition-all duration-300 mt-auto flex-shrink-0 group-hover:shadow-lg`}
                                             style={{
                                                 color: color.accent
                                             }}
                                             whileHover={{ scale: 1.1, rotate: 45 }}
                                             transition={{ type: "spring", stiffness: 400 }}
                                         >
-                                            <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
+                                            <ArrowRight className="h-3 sm:h-5 w-3 sm:w-5" />
                                         </motion.div>
                                     </div>
                                 </TiltCard>
@@ -474,10 +474,10 @@ export default function Home() {
             </section>
 
             {/* Animated Stats Section */}
-            <section className="py-16 sm:py-20 lg:py-28 relative overflow-hidden bg-gradient-to-b from-[#d97757]/5 via-[#6a9bcc]/5 to-[#788c5d]/5 dark:from-[#d97757]/10 dark:via-[#6a9bcc]/10 dark:to-[#788c5d]/10">
+            <section className="py-10 sm:py-20 lg:py-28 relative overflow-hidden bg-gradient-to-b from-[#d97757]/5 via-[#6a9bcc]/5 to-[#788c5d]/5 dark:from-[#d97757]/10 dark:via-[#6a9bcc]/10 dark:to-[#788c5d]/10">
                 <div className="absolute inset-0 bg-gradient-to-r from-[#d97757]/0 via-[#6a9bcc]/5 to-[#788c5d]/0 dark:via-[#6a9bcc]/10 pointer-events-none" />
                 <div className="container px-4 relative z-10">
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 md:gap-10 text-center">
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-10 text-center">
                         {stats.map((stat, index) => {
                             const accentColors = ["#d97757", "#6a9bcc", "#788c5d", "#d97757"];
                             const color = accentColors[index % accentColors.length];
@@ -493,7 +493,7 @@ export default function Home() {
                                 <motion.div
                                     whileHover={{ scale: 1.05 }}
                                     transition={{ type: "spring", stiffness: 300 }}
-                                    className="p-4 sm:p-6 rounded-2xl bg-white/50 dark:bg-card/50 backdrop-blur-sm border border-border/30 hover:shadow-lg transition-all duration-300"
+                                    className="p-3 sm:p-6 rounded-lg sm:rounded-2xl bg-white/50 dark:bg-card/50 backdrop-blur-sm border border-border/30 hover:shadow-lg transition-all duration-300"
                                     style={{
                                         borderColor: `${color}40`,
                                         boxShadow: `0 0 0 0 ${color}00`
@@ -505,10 +505,10 @@ export default function Home() {
                                         e.currentTarget.style.boxShadow = `0 0 0 0 ${color}00`;
                                     }}
                                 >
-                                    <div className="text-3xl sm:text-4xl md:text-5xl font-bold mb-2 sm:mb-3" style={{ color: color }}>
+                                    <div className="text-2xl sm:text-4xl lg:text-5xl font-bold mb-1 sm:mb-3" style={{ color: color }}>
                                         {stat.value}
                                     </div>
-                                    <div className="text-muted-foreground font-medium text-xs sm:text-sm md:text-base group-hover:text-foreground transition-colors">{stat.label}</div>
+                                    <div className="text-muted-foreground font-medium text-xs sm:text-sm lg:text-base group-hover:text-foreground transition-colors">{stat.label}</div>
                                 </motion.div>
                             </motion.div>
                         );
@@ -518,11 +518,11 @@ export default function Home() {
             </section>
 
             {/* Immersive CTA */}
-            <section className="py-16 sm:py-24 lg:py-32 px-4 relative overflow-hidden">
+            <section className="py-10 sm:py-24 lg:py-32 px-4 relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-b from-[#d97757]/10 via-[#6a9bcc]/5 to-[#788c5d]/10 dark:from-[#d97757]/15 dark:via-[#6a9bcc]/10 dark:to-[#788c5d]/15 pointer-events-none" />
-                <div className="absolute inset-0 opacity-30 pointer-events-none">
-                    <div className="absolute top-1/4 -right-32 w-96 h-96 bg-[#d97757]/20 dark:bg-[#d97757]/30 rounded-full blur-3xl" />
-                    <div className="absolute bottom-1/4 -left-32 w-96 h-96 bg-[#6a9bcc]/20 dark:bg-[#6a9bcc]/30 rounded-full blur-3xl" />
+                <div className="absolute inset-0 opacity-20 sm:opacity-30 pointer-events-none">
+                    <div className="absolute top-1/4 -right-24 sm:-right-32 w-48 sm:w-96 h-48 sm:h-96 bg-[#d97757]/20 dark:bg-[#d97757]/30 rounded-full blur-2xl sm:blur-3xl" />
+                    <div className="absolute bottom-1/4 -left-24 sm:-left-32 w-48 sm:w-96 h-48 sm:h-96 bg-[#6a9bcc]/20 dark:bg-[#6a9bcc]/30 rounded-full blur-2xl sm:blur-3xl" />
                 </div>
                 <div className="container px-4 text-center relative z-10">
                     <motion.div
@@ -532,8 +532,8 @@ export default function Home() {
                         viewport={{ once: true }}
                         className="relative inline-block w-full max-w-4xl group"
                     >
-                        <div className="absolute inset-0 bg-gradient-to-r from-[#d97757]/20 via-[#6a9bcc]/20 to-[#788c5d]/20 rounded-3xl blur-xl opacity-75 group-hover:opacity-100 transition-opacity duration-500" />
-                        <div className="relative bg-gradient-to-b from-white/90 to-muted/50 dark:from-card/90 dark:to-card/60 rounded-3xl p-8 sm:p-12 md:p-16 lg:p-20 shadow-2xl backdrop-blur-xl border border-[#d97757]/30 group-hover:border-[#d97757]/50 transition-all duration-300 overflow-hidden">
+                        <div className="absolute inset-0 bg-gradient-to-r from-[#d97757]/20 via-[#6a9bcc]/20 to-[#788c5d]/20 rounded-xl sm:rounded-3xl blur-lg sm:blur-xl opacity-60 sm:opacity-75 group-hover:opacity-100 transition-opacity duration-500" />
+                        <div className="relative bg-gradient-to-b from-white/90 to-muted/50 dark:from-card/90 dark:to-card/60 rounded-xl sm:rounded-3xl p-5 sm:p-12 md:p-16 lg:p-20 shadow-xl sm:shadow-2xl backdrop-blur-xl border border-[#d97757]/30 group-hover:border-[#d97757]/50 transition-all duration-300 overflow-hidden">
                             <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                                 <div className="absolute top-0 right-0 w-64 h-64 bg-[#d97757]/5 rounded-full blur-3xl" />
                                 <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#6a9bcc]/5 rounded-full blur-3xl" />
@@ -545,10 +545,9 @@ export default function Home() {
                                 viewport={{ once: true }}
                                 className="relative z-10"
                             >
-                                <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 tracking-tight leading-tight">
-                                    <span className="text-foreground">Soluciones expertas</span>
-                                    <br />
-                                    <span className="bg-gradient-to-r from-[#d97757] via-[#6a9bcc] to-[#788c5d] bg-clip-text text-transparent">para cualquier necesidad</span>
+                                <h2 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-3 sm:mb-6 tracking-tight leading-tight">
+                                    <span className="text-foreground block">Soluciones expertas</span>
+                                    <span className="bg-gradient-to-r from-[#d97757] via-[#6a9bcc] to-[#788c5d] bg-clip-text text-transparent block">para cualquier necesidad</span>
                                 </h2>
                             </motion.div>
                             <motion.p
@@ -556,7 +555,7 @@ export default function Home() {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.3, duration: 0.6 }}
                                 viewport={{ once: true }}
-                                className="text-base sm:text-lg md:text-xl text-foreground font-medium mb-8 sm:mb-10 max-w-2xl mx-auto leading-relaxed relative z-10"
+                                className="text-xs sm:text-lg md:text-xl text-foreground font-medium mb-6 sm:mb-10 max-w-2xl mx-auto leading-relaxed relative z-10 px-2"
                             >
                                 Conecta con profesionales calificados para llevar a cabo tus proyectos con total confianza y seguridad.
                             </motion.p>
@@ -565,16 +564,16 @@ export default function Home() {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.4, duration: 0.6 }}
                                 viewport={{ once: true }}
-                                className="flex flex-col xs:flex-row gap-3 sm:gap-4 justify-center flex-wrap relative z-10"
+                                className="flex flex-col sm:flex-row gap-2 sm:gap-4 justify-center flex-wrap relative z-10"
                             >
                                 <motion.div
                                     whileHover={{ scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}
                                     transition={{ type: "spring", stiffness: 400 }}
-                                    className="w-full xs:w-auto"
+                                    className="w-full sm:w-auto"
                                 >
                                     <Link href="/become-a-pro">
-                                        <Button size="lg" className="w-full xs:w-auto h-12 sm:h-13 lg:h-14 px-6 sm:px-8 lg:px-10 rounded-xl sm:rounded-full text-sm sm:text-base lg:text-lg bg-gradient-to-r from-[#d97757] to-[#d97757]/90 text-white shadow-lg hover:shadow-2xl hover:shadow-[#d97757]/40 hover:scale-105 transition-all font-semibold">
+                                        <Button size="sm" className="w-full sm:w-auto h-10 sm:h-13 lg:h-14 px-4 sm:px-8 lg:px-10 rounded-lg sm:rounded-full text-xs sm:text-base lg:text-lg bg-gradient-to-r from-[#d97757] to-[#d97757]/90 text-white shadow-md sm:shadow-lg hover:shadow-lg sm:hover:shadow-2xl hover:shadow-[#d97757]/40 hover:scale-105 transition-all font-semibold">
                                             Comenzar Ahora
                                         </Button>
                                     </Link>
@@ -583,10 +582,10 @@ export default function Home() {
                                     whileHover={{ scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}
                                     transition={{ type: "spring", stiffness: 400 }}
-                                    className="w-full xs:w-auto"
+                                    className="w-full sm:w-auto"
                                 >
                                     <Link href="/services">
-                                        <Button size="lg" variant="outline" className="w-full xs:w-auto h-12 sm:h-13 lg:h-14 px-6 sm:px-8 lg:px-10 rounded-xl sm:rounded-full text-sm sm:text-base lg:text-lg border-2 border-[#6a9bcc] text-[#6a9bcc] hover:bg-[#6a9bcc]/10 hover:shadow-lg hover:shadow-[#6a9bcc]/20 font-semibold transition-all">
+                                        <Button size="sm" variant="outline" className="w-full sm:w-auto h-10 sm:h-13 lg:h-14 px-4 sm:px-8 lg:px-10 rounded-lg sm:rounded-full text-xs sm:text-base lg:text-lg border-2 border-[#6a9bcc] text-[#6a9bcc] hover:bg-[#6a9bcc]/10 hover:shadow-md sm:hover:shadow-lg hover:shadow-[#6a9bcc]/20 font-semibold transition-all">
                                             Ver Servicios
                                         </Button>
                                     </Link>
