@@ -28,6 +28,8 @@ const nextConfig: NextConfig = {
                 hostname: 'images.unsplash.com',
             },
         ],
+        disableStaticImages: true,
+        unoptimized: process.env.NODE_ENV === 'production',
     },
     async headers() {
         return [
