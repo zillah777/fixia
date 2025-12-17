@@ -19,6 +19,11 @@ export function ProfessionalProfileForm({ initialData, onSave }: ProfessionalPro
     const [isLoading, setIsLoading] = useState(false)
     const [isUploading, setIsUploading] = useState(false)
     const [formData, setFormData] = useState({
+        // Registration data
+        yearsExperience: initialData?.yearsExperience || "",
+        education: initialData?.education || "",
+        bio: initialData?.bio || "",
+        // Settings/Additional data
         certification: initialData?.certification || "",
         licenseNumber: initialData?.licenseNumber || "",
         experience: initialData?.experience || "",
@@ -130,11 +135,55 @@ export function ProfessionalProfileForm({ initialData, onSave }: ProfessionalPro
 
     return (
         <div className="space-y-6">
+            {/* Registration Data - Education & Experience */}
+            <Card>
+                <CardHeader>
+                    <CardTitle>Información de Registro</CardTitle>
+                    <CardDescription>
+                        Datos ingresados durante tu registro (puedes editarlos aquí).
+                    </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                    <div className="grid md:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="yearsExperience">Años de Experiencia</Label>
+                            <Input
+                                id="yearsExperience"
+                                type="number"
+                                placeholder="Ej. 5"
+                                value={formData.yearsExperience}
+                                onChange={(e) => setFormData({ ...formData, yearsExperience: e.target.value })}
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="education">Educación / Formación</Label>
+                            <Input
+                                id="education"
+                                placeholder="Ej. Técnico en Electricidad"
+                                value={formData.education}
+                                onChange={(e) => setFormData({ ...formData, education: e.target.value })}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="space-y-2">
+                        <Label htmlFor="bio">Descripción Personal</Label>
+                        <Textarea
+                            id="bio"
+                            placeholder="Cuéntanos un poco sobre ti y tu experiencia..."
+                            className="min-h-[80px]"
+                            value={formData.bio}
+                            onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
+                        />
+                    </div>
+                </CardContent>
+            </Card>
+
             <Card>
                 <CardHeader>
                     <CardTitle>Credenciales Profesionales</CardTitle>
                     <CardDescription>
-                        Información que valida tu experiencia y aptitudes.
+                        Información adicional que valida tu experiencia y aptitudes.
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">

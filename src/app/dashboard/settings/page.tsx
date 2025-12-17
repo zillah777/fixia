@@ -127,7 +127,13 @@ export default function SettingsPage() {
                     })
 
                     if (data.role === 'PROFESSIONAL' && data.profile) {
+                        // Load ALL professional data from registration and profile
                         setProData({
+                            // Registration data
+                            yearsExperience: data.profile.yearsExperience || "",
+                            education: data.profile.education || data.profile.diploma || "",
+                            bio: data.profile.bio || data.profile.description || "",
+                            // Settings/Additional data
                             certification: data.profile.certification || data.profile.diploma || "",
                             licenseNumber: data.profile.licenseNumber || data.profile.professionalLicense || "",
                             experience: data.profile.experience || data.profile.experienceDetails || "",
