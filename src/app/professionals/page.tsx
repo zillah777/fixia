@@ -63,18 +63,18 @@ function ProfessionalsList() {
     }, [search, categoryFilter, locationFilter, user?.id, user?.role])
 
     return (
-        <div className="container mx-auto px-4 py-8">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+        <div className="container mx-auto px-4 py-6 sm:py-8">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 sm:mb-8 gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight">Profesionales Destacados</h1>
-                    <p className="text-muted-foreground">Encuentra al experto ideal para tu proyecto.</p>
+                    <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Profesionales Destacados</h1>
+                    <p className="text-sm sm:text-base text-muted-foreground">Encuentra al experto ideal para tu proyecto.</p>
                 </div>
             </div>
 
             {/* Filters - Mobile Optimized */}
-            <Card className="mb-8 border-none shadow-sm bg-muted/30">
-                <CardContent className="p-4 md:p-6">
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-3 md:gap-4">
+            <Card className="mb-6 sm:mb-8 border-none shadow-sm bg-muted/30">
+                <CardContent className="p-3 sm:p-4 md:p-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 md:gap-4">
                         <div className="relative md:col-span-2">
                             <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                             <Input
@@ -128,7 +128,7 @@ function ProfessionalsList() {
             {loading ? (
                 <div className="text-center py-12">Cargando profesionales...</div>
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6">
                     {professionals.map((pro) => (
                         <Card key={pro.id} className="overflow-hidden hover:shadow-lg transition-all duration-300 group border-border/50">
                             <CardHeader className="p-0">
@@ -141,9 +141,9 @@ function ProfessionalsList() {
                                     )}
                                 </div>
                             </CardHeader>
-                            <CardContent className="pt-0 px-6 pb-6 relative">
-                                <div className="flex justify-between items-end mb-4 -mt-10">
-                                    <Avatar className="h-24 w-24 border-[4px] border-background shadow-md">
+                            <CardContent className="pt-0 px-4 sm:px-6 pb-6 relative">
+                                <div className="flex justify-between items-end mb-4 -mt-8 sm:-mt-10">
+                                    <Avatar className="h-20 w-20 sm:h-24 sm:w-24 border-[4px] border-background shadow-md">
                                         <AvatarImage src={pro.avatar || `https://ui-avatars.com/api/?name=${pro.name}&background=random`} className="object-cover" />
                                         <AvatarFallback>{pro.name.substring(0, 2)}</AvatarFallback>
                                     </Avatar>

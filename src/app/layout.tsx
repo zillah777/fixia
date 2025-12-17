@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Poppins, Lora } from "next/font/google";
 import "./globals.css";
 import { ClientProviders } from "./client-providers";
@@ -56,6 +56,14 @@ export const metadata: Metadata = {
         shortcut: "/favicon.png",
         apple: "/apple-touch-icon.png"
     }
+};
+
+export const viewport: Viewport = {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 5,
+    userScalable: true,
+    viewportFit: 'cover',
 };
 
 export default function RootLayout({

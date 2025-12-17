@@ -55,18 +55,18 @@ export default function ServicesPage() {
     )
 
     return (
-        <div className="container mx-auto px-4 py-12">
-            <div className="text-center mb-12 space-y-4">
-                <h1 className="text-4xl font-bold tracking-tight">Encuentra el servicio que necesitas</h1>
-                <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+        <div className="container mx-auto px-4 py-8 sm:py-10 md:py-12">
+            <div className="text-center mb-10 sm:mb-12 space-y-3 sm:space-y-4">
+                <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">Encuentra el servicio que necesitas</h1>
+                <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
                     Explora nuestras categorías y conecta con profesionales calificados en tu zona.
                 </p>
 
-                <div className="max-w-md mx-auto relative">
-                    <Search className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
+                <div className="max-w-md mx-auto relative px-2 sm:px-0">
+                    <Search className="absolute left-3 sm:left-3 top-3 h-5 w-5 text-muted-foreground" />
                     <Input
                         placeholder="Buscar servicios (ej. Plomero, Electricista)..."
-                        className="pl-10 h-12 text-lg"
+                        className="pl-10 h-10 sm:h-12 text-base sm:text-lg"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                     />
@@ -74,13 +74,13 @@ export default function ServicesPage() {
             </div>
 
             {loading ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-5 lg:gap-6">
                     {[1, 2, 3, 4].map((i) => (
                         <Card key={i} className="h-48 animate-pulse bg-muted/50" />
                     ))}
                 </div>
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-5 lg:gap-6">
                     {filteredCategories.map((category) => {
                         const Icon = category.icon
                         return (
