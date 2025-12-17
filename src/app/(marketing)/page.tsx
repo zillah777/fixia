@@ -198,6 +198,10 @@ export default function Home() {
 
             {/* How It Works Preview Section */}
             <section className="py-20 sm:py-28 relative overflow-hidden bg-stone-50 dark:bg-muted/10">
+                <div className="absolute inset-0 opacity-30 pointer-events-none">
+                    <div className="absolute top-20 right-20 w-72 h-72 bg-[#d97757]/10 dark:bg-[#d97757]/20 rounded-full blur-3xl" />
+                    <div className="absolute bottom-20 left-20 w-72 h-72 bg-[#6a9bcc]/10 dark:bg-[#6a9bcc]/20 rounded-full blur-3xl" />
+                </div>
                 <div className="container px-4 sm:px-6 relative z-10">
 
                     {/* Clients Flow */}
@@ -223,19 +227,22 @@ export default function Home() {
                                     title: "1. Cuéntanos qué necesitas",
                                     desc: "Describe tu proyecto o reparación. Es gratis y te tomará menos de 2 minutos.",
                                     icon: <Search className="h-6 w-6" />,
-                                    color: "text-stone-700 dark:text-primary"
+                                    color: "text-[#d97757]",
+                                    bgColor: "bg-[#d97757]/10 dark:bg-[#d97757]/20"
                                 },
                                 {
                                     title: "2. Elige con Confianza",
                                     desc: "Recibe propuestas y compara perfiles verificados con reseñas reales.",
                                     icon: <CheckCircle2 className="h-6 w-6" />,
-                                    color: "text-stone-700 dark:text-primary"
+                                    color: "text-[#6a9bcc]",
+                                    bgColor: "bg-[#6a9bcc]/10 dark:bg-[#6a9bcc]/20"
                                 },
                                 {
                                     title: "3. Conecta Directo",
                                     desc: "Sin intermediarios. Habla directamente con el profesional y acuerda el precio.",
                                     icon: <Sparkles className="h-6 w-6" />,
-                                    color: "text-stone-700 dark:text-primary"
+                                    color: "text-[#788c5d]",
+                                    bgColor: "bg-[#788c5d]/10 dark:bg-[#788c5d]/20"
                                 }
                             ].map((step, i) => (
                                 <motion.div
@@ -246,15 +253,17 @@ export default function Home() {
                                     viewport={{ once: true }}
                                     className="relative group"
                                 >
-                                    <div className="h-full p-8 rounded-2xl bg-white dark:bg-card border border-stone-200 dark:border-border shadow-sm hover:shadow-md transition-all duration-300 text-center">
-                                        <div className={`mx-auto w-14 h-14 rounded-xl bg-stone-100 dark:bg-primary/10 ${step.color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
+                                    <div className="h-full p-8 rounded-2xl bg-white dark:bg-card border border-stone-200 dark:border-border shadow-sm hover:shadow-lg hover:shadow-current/10 transition-all duration-300 text-center overflow-hidden">
+                                        <div className={`absolute top-0 right-0 w-32 h-32 ${step.bgColor} rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+                                        <div className={`mx-auto w-14 h-14 rounded-xl ${step.bgColor} ${step.color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 relative z-10`}>
                                             {step.icon}
                                         </div>
-                                        <h3 className="text-xl font-bold mb-3 text-stone-900 dark:text-foreground">{step.title}</h3>
-                                        <p className="text-stone-600 dark:text-muted-foreground leading-relaxed">{step.desc}</p>
+                                        <h3 className="text-xl font-bold mb-3 text-stone-900 dark:text-foreground relative z-10">{step.title}</h3>
+                                        <p className="text-stone-600 dark:text-muted-foreground leading-relaxed relative z-10">{step.desc}</p>
+                                        <div className={`absolute -bottom-8 -right-8 w-24 h-24 ${step.bgColor} rounded-full blur-xl opacity-30`} />
                                     </div>
                                     {i < 2 && (
-                                        <div className="hidden md:block absolute top-1/2 -right-4 -translate-y-1/2 text-stone-300 dark:text-muted-foreground/30 z-10">
+                                        <div className="hidden md:block absolute top-1/2 -right-4 -translate-y-1/2 text-[#d97757]/30 dark:text-[#d97757]/40 z-10">
                                             <ArrowRight className="h-6 w-6" />
                                         </div>
                                     )}
@@ -271,7 +280,7 @@ export default function Home() {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
                             >
-                                <span className="text-sm font-semibold text-primary uppercase tracking-wider mb-2 block">Para Profesionales</span>
+                                <span className="text-sm font-semibold text-[#d97757] uppercase tracking-wider mb-2 block">Para Profesionales</span>
                                 <h3 className="text-2xl sm:text-3xl font-bold text-stone-900 dark:text-foreground mb-4">
                                     Haz crecer tu negocio
                                 </h3>
@@ -283,17 +292,23 @@ export default function Home() {
                                 {
                                     title: "Crea tu Perfil",
                                     desc: "Destaca tus habilidades y experiencia para atraer clientes.",
-                                    icon: <Shield className="h-5 w-5" />
+                                    icon: <Shield className="h-5 w-5" />,
+                                    color: "text-[#d97757]",
+                                    bgColor: "bg-[#d97757]/10 dark:bg-[#d97757]/20"
                                 },
                                 {
                                     title: "Recibe Solicitudes",
                                     desc: "Accede a oportunidades de trabajo reales en tu zona.",
-                                    icon: <Search className="h-5 w-5" />
+                                    icon: <Search className="h-5 w-5" />,
+                                    color: "text-[#6a9bcc]",
+                                    bgColor: "bg-[#6a9bcc]/10 dark:bg-[#6a9bcc]/20"
                                 },
                                 {
                                     title: "Gana Clientes",
                                     desc: "Construye tu reputación y fideliza a tus clientes.",
-                                    icon: <Star className="h-5 w-5" />
+                                    icon: <Star className="h-5 w-5" />,
+                                    color: "text-[#788c5d]",
+                                    bgColor: "bg-[#788c5d]/10 dark:bg-[#788c5d]/20"
                                 }
                             ].map((step, i) => (
                                 <motion.div
@@ -303,8 +318,8 @@ export default function Home() {
                                     transition={{ delay: i * 0.2 }}
                                     viewport={{ once: true }}
                                 >
-                                    <div className="flex flex-col items-center text-center p-6 rounded-xl hover:bg-white/50 dark:hover:bg-white/5 transition-colors">
-                                        <div className="w-12 h-12 rounded-full bg-stone-200 dark:bg-accent/20 text-stone-700 dark:text-accent flex items-center justify-center mb-4">
+                                    <div className="flex flex-col items-center text-center p-6 rounded-xl hover:bg-white/50 dark:hover:bg-white/5 transition-colors group">
+                                        <div className={`w-12 h-12 rounded-full ${step.bgColor} ${step.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
                                             {step.icon}
                                         </div>
                                         <h4 className="font-bold text-lg mb-2 text-stone-900 dark:text-foreground">{step.title}</h4>
@@ -316,7 +331,7 @@ export default function Home() {
 
                         <div className="text-center mt-8">
                             <Link href="/become-a-pro">
-                                <Button variant="outline" className="rounded-full border-stone-300 text-stone-700 hover:bg-stone-100 dark:border-accent dark:text-accent dark:hover:bg-accent/10">
+                                <Button variant="outline" className="rounded-full border-[#d97757] text-[#d97757] hover:bg-[#d97757]/10 dark:border-[#d97757] dark:text-[#d97757] dark:hover:bg-[#d97757]/20 font-semibold">
                                     Soy Profesional
                                 </Button>
                             </Link>
@@ -334,8 +349,12 @@ export default function Home() {
             </section>
 
             {/* Services Categories Section */}
-            <section className="py-12 sm:py-16 lg:py-20 relative">
-                <div className="container px-4 sm:px-6">
+            <section className="py-12 sm:py-16 lg:py-20 relative overflow-hidden">
+                <div className="absolute inset-0 opacity-20 pointer-events-none">
+                    <div className="absolute top-10 left-10 w-96 h-96 bg-[#788c5d]/10 dark:bg-[#788c5d]/20 rounded-full blur-3xl" />
+                    <div className="absolute bottom-10 right-10 w-96 h-96 bg-[#d97757]/10 dark:bg-[#d97757]/20 rounded-full blur-3xl" />
+                </div>
+                <div className="container px-4 sm:px-6 relative z-10">
                     <div className="text-center mb-10 sm:mb-12 lg:mb-16">
                         <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight mb-2 sm:mb-3 text-foreground">
                             Servicios Populares
@@ -346,7 +365,15 @@ export default function Home() {
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-                        {categories.length > 0 ? categories.map((category, index) => (
+                        {categories.length > 0 ? categories.map((category, index) => {
+                            const colors = [
+                                { accent: "#d97757", bg: "bg-[#d97757]/10 dark:bg-[#d97757]/20" },
+                                { accent: "#6a9bcc", bg: "bg-[#6a9bcc]/10 dark:bg-[#6a9bcc]/20" },
+                                { accent: "#788c5d", bg: "bg-[#788c5d]/10 dark:bg-[#788c5d]/20" },
+                                { accent: "#d97757", bg: "bg-[#d97757]/10 dark:bg-[#d97757]/20" }
+                            ];
+                            const color = colors[index % colors.length];
+                            return (
                             <motion.div
                                 key={category.id}
                                 initial={{ opacity: 0, y: 20 }}
@@ -355,11 +382,14 @@ export default function Home() {
                                 viewport={{ once: true }}
                             >
                                 <TiltCard
-                                    className="group relative h-48 sm:h-56 lg:h-64 rounded-2xl bg-gradient-to-br from-white to-muted/30 dark:from-card dark:to-muted/20 p-6 sm:p-7 shadow-md border border-border/40 backdrop-blur-sm hover:border-primary/50 hover:shadow-lg hover:shadow-primary/20 transition-all duration-300 cursor-pointer overflow-hidden"
+                                    className="group relative h-48 sm:h-56 lg:h-64 rounded-2xl bg-gradient-to-br from-white to-muted/30 dark:from-card dark:to-muted/20 p-6 sm:p-7 shadow-md border border-border/40 backdrop-blur-sm hover:shadow-lg transition-all duration-300 cursor-pointer overflow-hidden"
                                     onClick={() => router.push(`/services/${category.id}`)}
+                                    style={{
+                                        borderColor: `${color.accent}40`,
+                                    }}
                                 >
                                     {/* Subtle background accent */}
-                                    <div className="absolute -top-10 -right-10 w-40 h-40 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-full blur-2xl" />
+                                    <div className={`absolute -top-10 -right-10 w-40 h-40 ${color.bg} opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-full blur-2xl`} />
 
                                     <div className="relative z-10 flex flex-col h-full justify-between">
                                         <motion.div
@@ -374,7 +404,10 @@ export default function Home() {
                                             <p className="text-muted-foreground font-medium text-xs sm:text-sm">{category.count} Profesionales</p>
                                         </div>
                                         <motion.div
-                                            className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-accent/10 flex items-center justify-center group-hover:bg-accent group-hover:text-accent-foreground transition-colors duration-300 mt-auto flex-shrink-0"
+                                            className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg ${color.bg} flex items-center justify-center group-hover:scale-110 transition-all duration-300 mt-auto flex-shrink-0 group-hover:shadow-lg`}
+                                            style={{
+                                                color: color.accent
+                                            }}
                                             whileHover={{ scale: 1.1, rotate: 45 }}
                                             transition={{ type: "spring", stiffness: 400 }}
                                         >
@@ -383,7 +416,8 @@ export default function Home() {
                                     </div>
                                 </TiltCard>
                             </motion.div>
-                        )) : (
+                        );
+                        }) : (
                             <div className="col-span-4 text-center text-muted-foreground">Cargando categorías...</div>
                         )}
                     </div>
@@ -440,11 +474,14 @@ export default function Home() {
             </section>
 
             {/* Animated Stats Section */}
-            <section className="py-16 sm:py-20 lg:py-28 relative overflow-hidden bg-gradient-to-b from-primary/5 to-accent/5 dark:from-primary/10 dark:to-accent/10">
-                <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-accent/5 to-primary/0 dark:via-accent/10 pointer-events-none" />
+            <section className="py-16 sm:py-20 lg:py-28 relative overflow-hidden bg-gradient-to-b from-[#d97757]/5 via-[#6a9bcc]/5 to-[#788c5d]/5 dark:from-[#d97757]/10 dark:via-[#6a9bcc]/10 dark:to-[#788c5d]/10">
+                <div className="absolute inset-0 bg-gradient-to-r from-[#d97757]/0 via-[#6a9bcc]/5 to-[#788c5d]/0 dark:via-[#6a9bcc]/10 pointer-events-none" />
                 <div className="container px-4 relative z-10">
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 md:gap-10 text-center">
-                        {stats.map((stat, index) => (
+                        {stats.map((stat, index) => {
+                            const accentColors = ["#d97757", "#6a9bcc", "#788c5d", "#d97757"];
+                            const color = accentColors[index % accentColors.length];
+                            return (
                             <motion.div
                                 key={index}
                                 initial={{ opacity: 0, y: 20 }}
@@ -456,39 +493,62 @@ export default function Home() {
                                 <motion.div
                                     whileHover={{ scale: 1.05 }}
                                     transition={{ type: "spring", stiffness: 300 }}
-                                    className="p-4 sm:p-6 rounded-2xl bg-white/50 dark:bg-card/50 backdrop-blur-sm border border-border/30 hover:border-accent/50 hover:shadow-lg hover:shadow-accent/20 transition-all duration-300"
+                                    className="p-4 sm:p-6 rounded-2xl bg-white/50 dark:bg-card/50 backdrop-blur-sm border border-border/30 hover:shadow-lg transition-all duration-300"
+                                    style={{
+                                        borderColor: `${color}40`,
+                                        boxShadow: `0 0 0 0 ${color}00`
+                                    }}
+                                    onMouseEnter={(e) => {
+                                        e.currentTarget.style.boxShadow = `0 10px 30px ${color}20`;
+                                    }}
+                                    onMouseLeave={(e) => {
+                                        e.currentTarget.style.boxShadow = `0 0 0 0 ${color}00`;
+                                    }}
                                 >
-                                    <div className="text-3xl sm:text-4xl md:text-5xl font-bold mb-2 sm:mb-3 text-gradient-primary">
+                                    <div className="text-3xl sm:text-4xl md:text-5xl font-bold mb-2 sm:mb-3" style={{ color: color }}>
                                         {stat.value}
                                     </div>
                                     <div className="text-muted-foreground font-medium text-xs sm:text-sm md:text-base group-hover:text-foreground transition-colors">{stat.label}</div>
                                 </motion.div>
                             </motion.div>
-                        ))}
+                        );
+                        })}
                     </div>
                 </div>
             </section>
 
             {/* Immersive CTA */}
             <section className="py-16 sm:py-24 lg:py-32 px-4 relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 dark:via-primary/10 to-transparent pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-b from-[#d97757]/10 via-[#6a9bcc]/5 to-[#788c5d]/10 dark:from-[#d97757]/15 dark:via-[#6a9bcc]/10 dark:to-[#788c5d]/15 pointer-events-none" />
+                <div className="absolute inset-0 opacity-30 pointer-events-none">
+                    <div className="absolute top-1/4 -right-32 w-96 h-96 bg-[#d97757]/20 dark:bg-[#d97757]/30 rounded-full blur-3xl" />
+                    <div className="absolute bottom-1/4 -left-32 w-96 h-96 bg-[#6a9bcc]/20 dark:bg-[#6a9bcc]/30 rounded-full blur-3xl" />
+                </div>
                 <div className="container px-4 text-center relative z-10">
                     <motion.div
                         initial={{ scale: 0.9, opacity: 0 }}
                         whileInView={{ scale: 1, opacity: 1 }}
                         transition={{ duration: 0.6, type: "spring", stiffness: 100 }}
                         viewport={{ once: true }}
-                        className="bg-aurora p-[2px] rounded-3xl inline-block w-full max-w-4xl hover:shadow-2xl hover:shadow-primary/20 transition-all duration-500"
+                        className="relative inline-block w-full max-w-4xl group"
                     >
-                        <div className="bg-gradient-to-b from-white/80 to-muted/40 dark:from-card/80 dark:to-card/40 rounded-3xl p-8 sm:p-12 md:p-16 lg:p-20 shadow-lg backdrop-blur-xl border border-border/40 hover:border-primary/30 transition-all duration-300">
+                        <div className="absolute inset-0 bg-gradient-to-r from-[#d97757]/20 via-[#6a9bcc]/20 to-[#788c5d]/20 rounded-3xl blur-xl opacity-75 group-hover:opacity-100 transition-opacity duration-500" />
+                        <div className="relative bg-gradient-to-b from-white/90 to-muted/50 dark:from-card/90 dark:to-card/60 rounded-3xl p-8 sm:p-12 md:p-16 lg:p-20 shadow-2xl backdrop-blur-xl border border-[#d97757]/30 group-hover:border-[#d97757]/50 transition-all duration-300 overflow-hidden">
+                            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                                <div className="absolute top-0 right-0 w-64 h-64 bg-[#d97757]/5 rounded-full blur-3xl" />
+                                <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#6a9bcc]/5 rounded-full blur-3xl" />
+                            </div>
                             <motion.div
                                 initial={{ opacity: 0, y: 10 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.2, duration: 0.6 }}
                                 viewport={{ once: true }}
+                                className="relative z-10"
                             >
-                                <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 tracking-tight text-foreground leading-tight">
-                                    Soluciones expertas para cualquier necesidad
+                                <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 tracking-tight leading-tight">
+                                    <span className="text-foreground">Soluciones expertas</span>
+                                    <br />
+                                    <span className="bg-gradient-to-r from-[#d97757] via-[#6a9bcc] to-[#788c5d] bg-clip-text text-transparent">para cualquier necesidad</span>
                                 </h2>
                             </motion.div>
                             <motion.p
@@ -496,7 +556,7 @@ export default function Home() {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.3, duration: 0.6 }}
                                 viewport={{ once: true }}
-                                className="text-base sm:text-lg md:text-xl text-foreground font-medium mb-8 sm:mb-10 max-w-2xl mx-auto leading-relaxed"
+                                className="text-base sm:text-lg md:text-xl text-foreground font-medium mb-8 sm:mb-10 max-w-2xl mx-auto leading-relaxed relative z-10"
                             >
                                 Conecta con profesionales calificados para llevar a cabo tus proyectos con total confianza y seguridad.
                             </motion.p>
@@ -505,7 +565,7 @@ export default function Home() {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.4, duration: 0.6 }}
                                 viewport={{ once: true }}
-                                className="flex flex-col xs:flex-row gap-3 sm:gap-4 justify-center flex-wrap"
+                                className="flex flex-col xs:flex-row gap-3 sm:gap-4 justify-center flex-wrap relative z-10"
                             >
                                 <motion.div
                                     whileHover={{ scale: 1.05 }}
@@ -514,7 +574,7 @@ export default function Home() {
                                     className="w-full xs:w-auto"
                                 >
                                     <Link href="/become-a-pro">
-                                        <Button size="lg" className="w-full xs:w-auto h-12 sm:h-13 lg:h-14 px-6 sm:px-8 lg:px-10 rounded-xl sm:rounded-full text-sm sm:text-base lg:text-lg bg-primary text-primary-foreground shadow-md hover:shadow-xl hover:shadow-primary/30 hover:opacity-90 transition-all font-semibold">
+                                        <Button size="lg" className="w-full xs:w-auto h-12 sm:h-13 lg:h-14 px-6 sm:px-8 lg:px-10 rounded-xl sm:rounded-full text-sm sm:text-base lg:text-lg bg-gradient-to-r from-[#d97757] to-[#d97757]/90 text-white shadow-lg hover:shadow-2xl hover:shadow-[#d97757]/40 hover:scale-105 transition-all font-semibold">
                                             Comenzar Ahora
                                         </Button>
                                     </Link>
@@ -526,7 +586,7 @@ export default function Home() {
                                     className="w-full xs:w-auto"
                                 >
                                     <Link href="/services">
-                                        <Button size="lg" variant="outline" className="w-full xs:w-auto h-12 sm:h-13 lg:h-14 px-6 sm:px-8 lg:px-10 rounded-xl sm:rounded-full text-sm sm:text-base lg:text-lg border-2 hover:bg-muted/80 hover:shadow-lg hover:shadow-secondary/20 font-semibold transition-all">
+                                        <Button size="lg" variant="outline" className="w-full xs:w-auto h-12 sm:h-13 lg:h-14 px-6 sm:px-8 lg:px-10 rounded-xl sm:rounded-full text-sm sm:text-base lg:text-lg border-2 border-[#6a9bcc] text-[#6a9bcc] hover:bg-[#6a9bcc]/10 hover:shadow-lg hover:shadow-[#6a9bcc]/20 font-semibold transition-all">
                                             Ver Servicios
                                         </Button>
                                     </Link>
