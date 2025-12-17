@@ -57,16 +57,17 @@ export async function POST(req: Request) {
                 phone,
                 dni,
                 birthdate,
-                status: 'PENDING', // User must verify email before login
+                status: 'PENDING', // Email verification is mandatory before login
                 verificationToken,
-                // Auto-enable basic plan for professionals
+                // Professionals must subscribe to MercadoPago for benefits
+                // No auto-enable for professionals - they must pay for services
                 ...(role === "PROFESSIONAL" && {
-                    subscriptionPlan: "basic",
-                    subscriptionStatus: "active",
-                    subscriptionEndsAt: new Date(Date.now() + 100 * 365 * 24 * 60 * 60 * 1000), // 100 years for free plan
-                    canCreateServices: true,
-                    listingVisible: true,
-                    canReceiveBookings: true,
+                    subscriptionPlan: null,
+                    subscriptionStatus: null,
+                    subscriptionEndsAt: null,
+                    canCreateServices: false,  // Must pay subscription
+                    listingVisible: false,     // Must pay subscription
+                    canReceiveBookings: false, // Must pay subscription
                     profile: {
                         create: {
                             education: body.education || undefined,

@@ -35,10 +35,10 @@ export async function GET() {
         console.log("[TESTIMONIALS_DEBUG] Found reviews:", reviews.length)
 
         const formattedReviews = reviews.map(r => {
-            let avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(r.author.name)}&background=random&bold=true`
+            let avatarUrl = r.author.avatar || null
 
-            // Priority 1: Use portfolio image from profile
-            if (r.author.profile?.portfolioImages) {
+            // Priority 1: Use portfolio image from profile if no avatar
+            if (!avatarUrl && r.author.profile?.portfolioImages) {
                 try {
                     const images = JSON.parse(r.author.profile.portfolioImages)
                     if (Array.isArray(images) && images.length > 0 && images[0]) {
@@ -49,9 +49,10 @@ export async function GET() {
                 }
             }
 
-            // Priority 2: Use user avatar if exists
-            if (!avatarUrl && r.author.avatar) {
-                avatarUrl = r.author.avatar
+            // Fallback: Generate UI Avatar
+            if (!avatarUrl) {
+                const name = r.author.name || "Usuario"
+                avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random&bold=true`
             }
 
             return {

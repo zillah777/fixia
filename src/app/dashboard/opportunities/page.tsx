@@ -8,6 +8,7 @@ import { CATEGORIES } from "@/config/categories"
 import { Loader2, Info, Search } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { StandardizedEmptyState } from "@/components/onboarding/standardized-empty-state"
+import { LeadsHelp } from "@/components/onboarding/form-help-context"
 
 import { useRouter } from "next/navigation"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
@@ -51,53 +52,67 @@ export default function OpportunitiesPage() {
     }, [])
 
     return (
-        <div className="space-y-6 pb-20 md:pb-0">
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-                <div>
-                    <h1 className="text-3xl font-bold tracking-tight">Oportunidades de Trabajo</h1>
-                    <p className="text-muted-foreground">
-                        {user?.role === 'PROFESSIONAL'
-                            ? "Encuentra nuevos clientes y envía tus presupuestos."
-                            : "Explora la demanda actual de servicios."}
-                    </p>
+        <div className="space-y-8 pb-20 md:pb-10 animate-in fade-in duration-500">
+            {/* Header Section */}
+            <div className="bg-white/50 dark:bg-card/50 backdrop-blur-xl p-6 md:p-8 rounded-[2rem] border border-white/20 shadow-xl shadow-stone-200/50 dark:shadow-none relative overflow-hidden group">
+                <div className="absolute top-0 right-0 p-4 opacity-50 group-hover:opacity-100 transition-opacity">
+                    <LeadsHelp />
+                </div>
+                <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent pointer-events-none" />
+                <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                    <div>
+                        <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70 mb-2">Oportunidades de Trabajo</h1>
+                        <p className="text-muted-foreground font-medium max-w-2xl text-base">
+                            {user?.role === 'PROFESSIONAL'
+                                ? "Encuentra nuevos clientes potenciales y envía tus mejores propuestas para ganar el trabajo."
+                                : "Explora la demanda actual de servicios en el mercado."}
+                        </p>
+                    </div>
                 </div>
             </div>
 
-            {/* Client Guidance Banner */}
+            {/* Client Guidance Banner - Refined */}
             {user?.role === 'CLIENT' && (
-                <Alert className="border-secondary/20 bg-secondary/5">
-                    <Info className="h-4 w-4 text-secondary" />
-                    <AlertTitle className="text-blue-900">Vista de Mercado</AlertTitle>
-                    <AlertDescription className="text-secondary">
+                <Alert className="border-blue-200/50 bg-blue-50/50 dark:bg-blue-900/10 backdrop-blur-sm rounded-2xl">
+                    <Info className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                    <AlertTitle className="text-blue-900 dark:text-blue-300 font-semibold ml-2">Vista de Mercado</AlertTitle>
+                    <AlertDescription className="text-blue-800 dark:text-blue-400/80 ml-2 mt-1 font-medium">
                         Estas son solicitudes activas de otros usuarios. Para crear tu propia solicitud y recibir propuestas, ve a <strong>Mis Solicitudes</strong>.
                     </AlertDescription>
                 </Alert>
             )}
 
             {isLoading ? (
-                <div className="flex items-center justify-center py-20">
-                    <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                <div className="flex flex-col items-center justify-center py-24 space-y-4">
+                    <div className="relative">
+                        <div className="absolute inset-0 bg-primary/20 blur-xl rounded-full animate-pulse" />
+                        <Loader2 className="h-12 w-12 animate-spin text-primary relative z-10" />
+                    </div>
+                    <p className="text-muted-foreground font-medium animate-pulse">Buscando oportunidades...</p>
                 </div>
             ) : (
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                     {requests.length > 0 ? requests.map((req) => (
                         user?.role === 'PROFESSIONAL' ? (
-                            <RichRequestCard
-                                key={req.id}
-                                data={req as RequestData}
-                                onClick={() => router.push(`/dashboard/opportunities/${req.id}`)}
-                            />
+                            <div key={req.id} className="transform transition-all duration-300 hover:scale-[1.02]">
+                                <RichRequestCard
+                                    data={req as RequestData}
+                                    onClick={() => router.push(`/dashboard/opportunities/${req.id}`)}
+                                />
+                            </div>
                         ) : (
-                            <TeaserCard key={req.id} data={req} />
+                            <div key={req.id} className="opacity-90 hover:opacity-100 transition-opacity">
+                                <TeaserCard data={req} />
+                            </div>
                         )
                     )) : (
                         <div className="col-span-full">
                             <StandardizedEmptyState
                                 icon={Search}
                                 title="No hay oportunidades disponibles"
-                                description="Por el momento no hay solicitudes activas. Vuelve pronto para ver nuevas oportunidades."
+                                description="Por el momento no hay solicitudes activas en tu categoría o zona. ¡Vuelve a intentar pronto!"
                                 action={{
-                                    label: "Actualizar",
+                                    label: "Actualizar Listado",
                                     onClick: () => window.location.reload(),
                                 }}
                             />

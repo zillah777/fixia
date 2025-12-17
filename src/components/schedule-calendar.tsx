@@ -90,53 +90,88 @@ export function ScheduleCalendar() {
                     <CardTitle className="text-lg">Calendario</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                    {/* Month Navigation */}
-                    <div className="flex items-center justify-between">
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={handlePrevMonth}
-                            className="h-8 w-8 p-0"
-                        >
-                            <ChevronLeft className="h-4 w-4" />
-                        </Button>
-                        <h3 className="text-sm font-semibold capitalize text-center flex-1">
-                            {monthName}
-                        </h3>
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={handleNextMonth}
-                            className="h-8 w-8 p-0"
-                        >
-                            <ChevronRight className="h-4 w-4" />
-                        </Button>
+                    {/* Month/Year Navigation */}
+                    <div className="flex items-center justify-between gap-2">
+                        <div className="flex gap-1 flex-1">
+                            <select
+                                value={selectedDate.getMonth()}
+                                onChange={(e) => {
+                                    const newDate = new Date(selectedDate)
+                                    newDate.setMonth(parseInt(e.target.value))
+                                    setSelectedDate(newDate)
+                                }}
+                                className="h-8 rounded-md border border-input bg-background px-2 py-1 text-sm font-medium w-[110px]"
+                            >
+                                {Array.from({ length: 12 }, (_, i) => (
+                                    <option key={i} value={i}>
+                                        {new Date(0, i).toLocaleDateString("es-ES", { month: "long" })}
+                                    </option>
+                                ))}
+                            </select>
+                            <select
+                                value={selectedDate.getFullYear()}
+                                onChange={(e) => {
+                                    const newDate = new Date(selectedDate)
+                                    newDate.setFullYear(parseInt(e.target.value))
+                                    setSelectedDate(newDate)
+                                }}
+                                className="h-8 rounded-md border border-input bg-background px-2 py-1 text-sm font-medium w-[80px]"
+                            >
+                                {Array.from({ length: 10 }, (_, i) => {
+                                    const year = new Date().getFullYear() + i
+                                    return (
+                                        <option key={year} value={year}>
+                                            {year}
+                                        </option>
+                                    )
+                                })}
+                            </select>
+                        </div>
+
+                        <div className="flex gap-1">
+                            <Button
+                                variant="outline"
+                                size="icon"
+                                onClick={handlePrevMonth}
+                                className="h-8 w-8"
+                            >
+                                <ChevronLeft className="h-4 w-4" />
+                            </Button>
+                            <Button
+                                variant="outline"
+                                size="icon"
+                                onClick={handleNextMonth}
+                                className="h-8 w-8"
+                            >
+                                <ChevronRight className="h-4 w-4" />
+                            </Button>
+                        </div>
                     </div>
 
                     {/* Weekday Headers */}
-                    <div className="grid grid-cols-7 gap-2">
-                        {["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sab"].map((day) => (
-                            <div key={day} className="text-center text-xs font-semibold text-muted-foreground h-8">
+                    <div className="grid grid-cols-7 gap-1">
+                        {["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"].map((day) => (
+                            <div key={day} className="text-center text-xs font-semibold text-muted-foreground h-8 flex items-center justify-center">
                                 {day}
                             </div>
                         ))}
                     </div>
 
                     {/* Calendar Days */}
-                    <div className="grid grid-cols-7 gap-2">
+                    <div className="grid grid-cols-7 gap-1">
                         {days.map((day, index) => (
                             <button
                                 key={index}
                                 onClick={() => day && setSelectedDate(day)}
-                                className={`h-8 rounded text-sm font-medium transition-colors ${
-                                    !day
-                                        ? "text-transparent"
+                                disabled={!day}
+                                className={`h-10 w-full rounded-md text-sm font-medium transition-all flex items-center justify-center relative touch-manipulation ${!day
+                                        ? "invisible"
                                         : isSelected(day)
-                                        ? "bg-primary text-primary-foreground"
-                                        : isToday(day)
-                                        ? "bg-secondary/10 dark:bg-blue-900/50 text-primary border border-primary"
-                                        : "hover:bg-muted text-foreground"
-                                }`}
+                                            ? "bg-primary text-primary-foreground shadow-sm"
+                                            : isToday(day)
+                                                ? "bg-accent/20 text-accent border border-accent"
+                                                : "hover:bg-muted text-foreground"
+                                    }`}
                             >
                                 {day?.getDate()}
                             </button>
@@ -145,17 +180,16 @@ export function ScheduleCalendar() {
 
                     {/* Stats */}
                     <div className="pt-4 border-t space-y-2 text-xs">
-                        <div className="flex justify-between">
-                            <span className="text-muted-foreground">Seleccionado:</span>
-                            <span className="font-semibold">
-                                {selectedDate.toLocaleDateString("es-ES")}
+                        <div className="flex justify-between items-center">
+                            <span className="text-muted-foreground">Fecha:</span>
+                            <span className="font-semibold bg-muted px-2 py-1 rounded">
+                                {selectedDate.toLocaleDateString("es-ES", { weekday: 'short', day: 'numeric', month: 'long' })}
                             </span>
                         </div>
-                        <div className="flex justify-between">
-                            <span className="text-muted-foreground">Disponibles:</span>
-                            <Badge variant="secondary">
-                                {TIME_SLOTS.filter((s) => s.available).length}/
-                                {TIME_SLOTS.length}
+                        <div className="flex justify-between items-center">
+                            <span className="text-muted-foreground">Turnos:</span>
+                            <Badge variant="outline" className="font-mono">
+                                {TIME_SLOTS.filter((s) => s.available).length} disp.
                             </Badge>
                         </div>
                     </div>
@@ -184,13 +218,12 @@ export function ScheduleCalendar() {
                                     slot.available && setSelectedTime(slot.time)
                                 }
                                 disabled={!slot.available}
-                                className={`h-12 rounded-lg border-2 flex items-center justify-center font-medium transition-all text-sm ${
-                                    !slot.available
+                                className={`h-12 rounded-lg border-2 flex items-center justify-center font-medium transition-all text-sm ${!slot.available
                                         ? "border-gray-200 bg-gray-50 text-gray-400 dark:border-gray-700 dark:bg-gray-900 cursor-not-allowed"
                                         : selectedTime === slot.time
-                                        ? "border-primary bg-primary text-primary-foreground"
-                                        : "border-border hover:border-primary hover:bg-muted"
-                                }`}
+                                            ? "border-primary bg-primary text-primary-foreground"
+                                            : "border-border hover:border-primary hover:bg-muted"
+                                    }`}
                             >
                                 <Clock className="h-4 w-4 mr-1" />
                                 {slot.time}

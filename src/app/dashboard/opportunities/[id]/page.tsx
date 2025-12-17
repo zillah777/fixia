@@ -11,6 +11,7 @@ import { ProposalForm } from "@/components/proposals/proposal-form"
 import { useAuth } from "@/providers/auth-provider"
 import { CATEGORIES } from "@/config/categories"
 import { Separator } from "@/components/ui/separator"
+import { getAvatarUrl, getInitials } from "@/lib/avatar-utils"
 
 export default function OpportunityDetailsPage() {
     const params = useParams()
@@ -40,10 +41,10 @@ export default function OpportunityDetailsPage() {
             }
         }
 
-        if (params.id && user) {
+        if (params && params.id && user) {
             fetchRequest()
         }
-    }, [params.id, user])
+    }, [params, user])
 
     if (isLoading) {
         return <div className="min-h-screen flex items-center justify-center">Cargando detalles...</div>
@@ -144,8 +145,8 @@ export default function OpportunityDetailsPage() {
                         <CardContent>
                             <div className="flex items-center gap-4">
                                 <Avatar className="h-12 w-12 border">
-                                    <AvatarImage src={`https://ui-avatars.com/api/?name=${request.client.name}&background=random`} />
-                                    <AvatarFallback>{request.client.name[0]}</AvatarFallback>
+                                    <AvatarImage src={getAvatarUrl(request.client.avatar, request.client.name)} />
+                                    <AvatarFallback>{getInitials(request.client.name)}</AvatarFallback>
                                 </Avatar>
                                 <div>
                                     <p className="font-semibold text-lg">{request.client.name}</p>

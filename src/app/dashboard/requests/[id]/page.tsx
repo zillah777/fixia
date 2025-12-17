@@ -22,6 +22,7 @@ import { RatingGate } from "@/components/match/rating-gate"
 import { toast } from "sonner"
 import { useAuth } from "@/providers/auth-provider"
 import { useConfirmDialog } from "@/hooks/use-confirm-dialog"
+import { getAvatarUrl, getInitials } from "@/lib/avatar-utils"
 
 export default function RequestDetailPage() {
     const params = useParams()
@@ -48,6 +49,7 @@ export default function RequestDetailPage() {
     // Fetch Request Data
     useEffect(() => {
         const fetchRequest = async () => {
+            if (!params || !params.id) return;
             try {
                 const res = await fetch(`/api/requests/${params.id}`)
                 if (res.ok) {
@@ -68,10 +70,13 @@ export default function RequestDetailPage() {
                 setIsLoading(false)
             }
         }
-        fetchRequest()
-    }, [params.id])
+        if (params?.id) {
+            fetchRequest()
+        }
+    }, [params])
 
     const handleAcceptHire = async () => {
+        if (!params?.id) return;
         try {
             const res = await fetch("/api/matches/accept", {
                 method: "POST",
@@ -141,10 +146,12 @@ export default function RequestDetailPage() {
             })
 
             // Refresh request data to get match info
-            const refreshRes = await fetch(`/api/requests/${params.id}`)
-            if (refreshRes.ok) {
-                const refreshedData = await refreshRes.json()
-                setRequest(refreshedData)
+            if (params?.id) {
+                const refreshRes = await fetch(`/api/requests/${params.id}`)
+                if (refreshRes.ok) {
+                    const refreshedData = await refreshRes.json()
+                    setRequest(refreshedData)
+                }
             }
 
         } catch (error: any) {
@@ -166,10 +173,12 @@ export default function RequestDetailPage() {
             toast.success("Propuesta rechazada")
 
             // Refresh to update proposals list
-            const refreshRes = await fetch(`/api/requests/${params.id}`)
-            if (refreshRes.ok) {
-                const refreshedData = await refreshRes.json()
-                setRequest(refreshedData)
+            if (params?.id) {
+                const refreshRes = await fetch(`/api/requests/${params.id}`)
+                if (refreshRes.ok) {
+                    const refreshedData = await refreshRes.json()
+                    setRequest(refreshedData)
+                }
             }
 
         } catch (error) {
@@ -200,6 +209,7 @@ export default function RequestDetailPage() {
             '¿Estás seguro de eliminar esta solicitud? Esta acción no se puede deshacer.',
             async () => {
                 try {
+                    if (!params?.id) return;
                     const res = await fetch(`/api/requests/${params.id}`, {
                         method: "DELETE",
                     })
@@ -236,7 +246,7 @@ export default function RequestDetailPage() {
         id: p.id,
         provider: p.provider,
         proName: p.provider.name || "Profesional",
-        proAvatar: `https://ui-avatars.com/api/?name=${p.provider.name}&background=random`,
+        proAvatar: getAvatarUrl(p.provider.avatar, p.provider.name),
         rating: p.provider.profile?.ratingAvg || 0,
         reviewsCount: 0,
         price: Number(p.price),
@@ -256,7 +266,7 @@ export default function RequestDetailPage() {
                     router.push(`/dashboard/matches/${request.match?.id}`)
                 }}
                 proName={selectedPro?.proName || request?.match?.provider?.name || "Profesional"}
-                proAvatar={selectedPro?.proAvatar || `https://ui-avatars.com/api/?name=${request?.match?.provider?.name}&background=random`}
+                proAvatar={selectedPro?.proAvatar || getAvatarUrl(request?.match?.provider?.avatar, request?.match?.provider?.name)}
                 proPhone={request?.match?.provider?.phone || ""}
                 requestTitle={request.title}
                 price={selectedPro?.price || 0}

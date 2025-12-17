@@ -10,7 +10,7 @@ export async function GET(request: Request) {
         const session = await getSession();
 
         if (!session) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+            return NextResponse.json({ error: "No autorizado" }, { status: 401 });
         }
 
         const { searchParams } = new URL(request.url);
@@ -55,7 +55,7 @@ export async function GET(request: Request) {
         }
     } catch (error) {
         console.error("Error fetching requests:", error);
-        return NextResponse.json({ error: "Error fetching requests" }, { status: 500 });
+        return NextResponse.json({ error: "Error al obtener solicitudes" }, { status: 500 });
     }
 }
 
@@ -63,14 +63,14 @@ export async function POST(request: Request) {
     try {
         const session = await getSession();
         if (!session) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+            return NextResponse.json({ error: "No autorizado" }, { status: 401 });
         }
 
         const data = await request.json();
 
         // Basic validation
         if (!data.title || !data.categoryId || !data.location) {
-            return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+            return NextResponse.json({ error: "Faltan campos requeridos" }, { status: 400 });
         }
 
         const newRequest = await prisma.request.create({
@@ -125,6 +125,6 @@ export async function POST(request: Request) {
         });
     } catch (error) {
         console.error("Error creating request:", error);
-        return NextResponse.json({ error: "Error creating request" }, { status: 500 });
+        return NextResponse.json({ error: "Error al crear la solicitud" }, { status: 500 });
     }
 }

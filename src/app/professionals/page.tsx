@@ -71,48 +71,55 @@ function ProfessionalsList() {
                 </div>
             </div>
 
-            {/* Filters */}
-            <Card className="mb-8">
-                <CardContent className="p-4">
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                        <div className="relative">
-                            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+            {/* Filters - Mobile Optimized */}
+            <Card className="mb-8 border-none shadow-sm bg-muted/30">
+                <CardContent className="p-4 md:p-6">
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-3 md:gap-4">
+                        <div className="relative md:col-span-2">
+                            <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                             <Input
-                                placeholder="Buscar por nombre o rol..."
-                                className="pl-9"
+                                placeholder="🔍 Buscar por nombre, oficio..."
+                                className="pl-10 h-10 bg-background border-border/60 focus:bg-background transition-colors"
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
                             />
                         </div>
 
                         <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                            <SelectTrigger>
+                            <SelectTrigger className="h-10 bg-background border-border/60">
                                 <SelectValue placeholder="Categoría" />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="all">Todas las categorías</SelectItem>
-                                <SelectItem value="plomeria">Plomería</SelectItem>
-                                <SelectItem value="electricidad">Electricidad</SelectItem>
-                                <SelectItem value="gas">Gasista</SelectItem>
-                                <SelectItem value="pintura">Pintura</SelectItem>
-                                <SelectItem value="carpinteria">Carpintería</SelectItem>
+                                <SelectItem value="all">🛠️ Todas</SelectItem>
+                                <SelectItem value="plomeria">💧 Plomería</SelectItem>
+                                <SelectItem value="electricidad">⚡ Electricidad</SelectItem>
+                                <SelectItem value="gas">🔥 Gasista</SelectItem>
+                                <SelectItem value="pintura">🎨 Pintura</SelectItem>
+                                <SelectItem value="carpinteria">🪚 Carpintería</SelectItem>
                             </SelectContent>
                         </Select>
 
-                        <div className="relative">
-                            <MapPin className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                        <div className="relative hidden md:block">
+                            {/* Hidden on mobile to save space, or kept if essential. Let's keep simpler. */}
+                            <MapPin className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                             <Input
-                                placeholder="Ubicación..."
-                                className="pl-9"
+                                placeholder="Ubicación"
+                                className="pl-10 h-10 bg-background border-border/60"
                                 value={locationFilter}
                                 onChange={(e) => setLocationFilter(e.target.value)}
                             />
                         </div>
 
-                        <Button variant="outline" className="w-full">
-                            <Filter className="mr-2 h-4 w-4" />
-                            Más Filtros
-                        </Button>
+                        <div className="md:hidden relative">
+                            {/* Mobile Location */}
+                            <MapPin className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                            <Input
+                                placeholder="Ubicación (Opcional)"
+                                className="pl-10 h-10 bg-background border-border/60"
+                                value={locationFilter}
+                                onChange={(e) => setLocationFilter(e.target.value)}
+                            />
+                        </div>
                     </div>
                 </CardContent>
             </Card>
@@ -123,40 +130,52 @@ function ProfessionalsList() {
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {professionals.map((pro) => (
-                        <Card key={pro.id} className="overflow-hidden hover:shadow-md transition-shadow">
+                        <Card key={pro.id} className="overflow-hidden hover:shadow-lg transition-all duration-300 group border-border/50">
                             <CardHeader className="p-0">
-                                <div className="h-24 bg-gradient-to-r from-secondary to-primary relative">
+                                <div className="h-28 bg-gradient-to-r from-primary/80 to-primary/40 relative">
+                                    <div className="absolute inset-0 bg-grid-white/10 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.5))]" />
                                     {pro.verified && (
-                                        <Badge className="absolute top-2 right-2 bg-white/20 hover:bg-white/30 text-white border-none backdrop-blur-sm">
-                                            Verificado
+                                        <Badge className="absolute top-3 right-3 bg-green-500/90 text-white border-0 backdrop-blur-sm shadow-sm gap-1 pl-1 pr-2">
+                                            <CheckCircle className="h-3 w-3" /> Verificado
                                         </Badge>
                                     )}
                                 </div>
                             </CardHeader>
-                            <CardContent className="pt-0 px-6 pb-6">
-                                <div className="relative -mt-12 mb-4 flex justify-between items-end">
-                                    <Avatar className="h-24 w-24 border-4 border-background">
-                                        <AvatarImage src={pro.avatar || `https://ui-avatars.com/api/?name=${pro.name}&background=random`} />
+                            <CardContent className="pt-0 px-6 pb-6 relative">
+                                <div className="flex justify-between items-end mb-4 -mt-10">
+                                    <Avatar className="h-24 w-24 border-[4px] border-background shadow-md">
+                                        <AvatarImage src={pro.avatar || `https://ui-avatars.com/api/?name=${pro.name}&background=random`} className="object-cover" />
                                         <AvatarFallback>{pro.name.substring(0, 2)}</AvatarFallback>
                                     </Avatar>
-                                    <div className="flex items-center gap-1 bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-sm font-medium dark:bg-yellow-900 dark:text-yellow-200">
-                                        <Star className="h-3 w-3 fill-yellow-600 text-yellow-600" />
-                                        {Number(pro.rating).toFixed(1)} ({pro.reviews})
+
+                                    <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-bold shadow-sm ${Number(pro.rating) > 0
+                                        ? "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400"
+                                        : "bg-stone-100 text-stone-500 dark:bg-muted"
+                                        }`}>
+                                        <Star className={`h-4 w-4 ${Number(pro.rating) > 0 ? "fill-yellow-500 text-yellow-500" : "text-stone-300"}`} />
+                                        {Number(pro.rating) > 0 ? (
+                                            <>
+                                                {Number(pro.rating).toFixed(1)} <span className="text-xs font-normal opacity-70">({pro.reviews})</span>
+                                            </>
+                                        ) : (
+                                            <span className="text-xs font-medium">Nuevo</span>
+                                        )}
                                     </div>
                                 </div>
 
-                                <div className="mb-4">
-                                    <h3 className="text-xl font-bold">{pro.name}</h3>
-                                    <p className="text-primary font-medium">{pro.role}</p>
-                                    <div className="flex items-center text-muted-foreground text-sm mt-1">
-                                        <MapPin className="h-3 w-3 mr-1" />
-                                        {pro.location}
-                                    </div>
+                                <div className="space-y-1 mb-4">
+                                    <h3 className="text-xl font-bold group-hover:text-primary transition-colors line-clamp-1" title={pro.name}>{pro.name}</h3>
+                                    <p className="text-primary font-medium text-sm">{pro.role}</p>
+                                </div>
+
+                                <div className="flex items-center text-muted-foreground text-xs mb-5">
+                                    <MapPin className="h-3.5 w-3.5 mr-1.5 flex-shrink-0" />
+                                    <span className="truncate">{pro.location}</span>
                                 </div>
 
                                 {/* Trust Badges */}
-                                {pro.profile?.badges && (
-                                    <div className="mb-4 pb-4 border-b">
+                                {pro.profile?.badges && pro.profile.badges.length > 0 && (
+                                    <div className="mb-5 pb-5 border-b border-border/40">
                                         <TrustBadgesGroup
                                             badges={(pro.profile?.badges || []) as any}
                                             size="sm"
@@ -164,22 +183,27 @@ function ProfessionalsList() {
                                     </div>
                                 )}
 
-                                <div className="flex flex-wrap gap-2 mb-4">
-                                    {pro.tags && pro.tags.map((tag: string) => (
-                                        <Badge key={tag} variant="secondary" className="text-xs">
+                                <div className="flex flex-wrap gap-2 mb-5 min-h-[1.5rem]">
+                                    {pro.tags && pro.tags.slice(0, 3).map((tag: string) => (
+                                        <Badge key={tag} variant="secondary" className="text-[10px] px-2 h-5 bg-stone-100 dark:bg-muted text-stone-600 dark:text-stone-400">
                                             {tag}
                                         </Badge>
                                     ))}
+                                    {pro.tags && pro.tags.length > 3 && (
+                                        <span className="text-[10px] text-muted-foreground self-center">+{pro.tags.length - 3}</span>
+                                    )}
                                 </div>
 
-                                <div className="flex justify-between items-center text-sm">
-                                    <span className="text-muted-foreground">Precio estimado:</span>
-                                    <span className="font-semibold">{pro.price}</span>
+                                <div className="flex justify-between items-center text-sm pt-2">
+                                    <div className="flex flex-col">
+                                        <span className="text-[10px] uppercase text-muted-foreground font-semibold tracking-wider">Desde</span>
+                                        <span className="font-bold text-lg text-primary">{pro.price.includes("$") ? pro.price.split("Desde ")[1] || pro.price : pro.price}</span>
+                                    </div>
                                 </div>
                             </CardContent>
-                            <CardFooter className="bg-muted/50 px-6 py-4">
+                            <CardFooter className="bg-stone-50/50 dark:bg-muted/10 px-6 py-4 border-t border-border/40">
                                 <Link href={`/professionals/${pro.id}`} className="w-full">
-                                    <Button className="w-full">Ver Perfil</Button>
+                                    <Button className="w-full shadow-sm hover:shadow-md transition-all font-semibold" variant="outline">Ver Perfil</Button>
                                 </Link>
                             </CardFooter>
                         </Card>

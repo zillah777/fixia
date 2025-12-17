@@ -23,6 +23,7 @@ export async function GET(
                     select: {
                         id: true,
                         name: true,
+                        avatar: true, // Added avatar
                         profile: true
                     }
                 },
@@ -32,6 +33,7 @@ export async function GET(
                             select: {
                                 id: true,
                                 name: true,
+                                avatar: true, // Added avatar
                                 profile: true
                             }
                         }

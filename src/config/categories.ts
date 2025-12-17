@@ -29,6 +29,7 @@ export const CATEGORIES: Category[] = [
     { id: "camaras", label: "Cámaras de Seguridad / Alarmas", group: "Tecnología" },
     { id: "domotica", label: "Domótica y Casa Inteligente", group: "Tecnología" },
     { id: "impresoras", label: "Reparación de Impresoras", group: "Tecnología" },
+    { id: "electronica", label: "Electrónica (TV/Audio/Video)", group: "Tecnología" },
 
     // --- AUTOMOTOR ---
     { id: "mecanica", label: "Mecánica Ligera", group: "Automotor" },

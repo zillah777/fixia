@@ -89,7 +89,20 @@ export function ServicesManager() {
                 body: JSON.stringify(newService)
             })
 
-            if (!res.ok) throw new Error("Error creating service")
+            if (!res.ok) {
+                const errorData = await res.json().catch(() => ({}));
+                if (res.status === 403) {
+                    toast.error("Tu suscripción no permite esta acción", {
+                        description: "Necesitas un plan activo o verificarte para crear servicios.",
+                        action: {
+                            label: "Ver Planes",
+                            onClick: () => window.location.href = "/pricing"
+                        }
+                    });
+                    return;
+                }
+                throw new Error(errorData.error || "Error creating service");
+            }
 
             const createdService = await res.json()
             toast.success("Servicio creado correctamente")
@@ -103,6 +116,7 @@ export function ServicesManager() {
             setNewServiceId(createdService.id)
             fetchServices()
         } catch (error) {
+            console.error(error);
             toast.error("Error al crear servicio")
         } finally {
             setIsCreating(false)

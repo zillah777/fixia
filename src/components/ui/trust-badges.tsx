@@ -1,91 +1,125 @@
 "use client"
 
 import React from "react"
-import { CheckCircle2, Award, Zap, Lock, Heart, TrendingUp } from "lucide-react"
+import { CheckCircle2, Award, Zap, Lock, Heart, Flame, ShieldCheck, Trophy } from "lucide-react"
 import { cn } from "@/lib/utils"
+
+// Map DB badge strings to internal variant names
+export const BADGE_MAPPING: Record<string, "verified" | "expert" | "fast" | "trending"> = {
+  "VERIFIED": "verified",
+  "EXPERT": "expert",
+  "FAST": "fast",
+  "TRENDING": "trending"
+}
 
 interface TrustBadgeProps {
   variant?: "verified" | "expert" | "fast" | "secure" | "favorite" | "trending"
   size?: "sm" | "md" | "lg"
   showLabel?: boolean
   className?: string
+  animate?: boolean
 }
 
 const badgeConfig = {
   verified: {
-    icon: CheckCircle2,
+    icon: ShieldCheck,
     label: "Verificado",
-    color: "text-emerald-600 dark:text-emerald-400",
-    bgColor: "bg-accent/5 dark:bg-accent/20",
-    borderColor: "border-accent/20 dark:border-accent/30",
+    // Premium Blue/Cyan Gradient
+    gradient: "bg-gradient-to-r from-blue-500 to-cyan-500",
+    textClass: "text-blue-700 dark:text-blue-300",
+    bgClass: "bg-blue-50 dark:bg-blue-950/40",
+    borderClass: "border-blue-200 dark:border-blue-800",
+    iconColor: "text-white",
   },
   expert: {
-    icon: Award,
+    icon: Trophy,
     label: "Experto",
-    color: "text-amber-600 dark:text-amber-400",
-    bgColor: "bg-amber-50 dark:bg-amber-950/30",
-    borderColor: "border-amber-200 dark:border-amber-800",
+    // Premium Gold/Amber Gradient
+    gradient: "bg-gradient-to-r from-amber-400 to-orange-500",
+    textClass: "text-amber-800 dark:text-amber-300",
+    bgClass: "bg-amber-50 dark:bg-amber-950/40",
+    borderClass: "border-amber-200 dark:border-amber-800",
+    iconColor: "text-white",
   },
   fast: {
     icon: Zap,
-    label: "Respuesta Rápida",
-    color: "text-orange-600 dark:text-orange-400",
-    bgColor: "bg-orange-50 dark:bg-orange-950/30",
-    borderColor: "border-orange-200 dark:border-orange-800",
+    label: "Rayo",
+    // Premium Electric Purple/Violet Gradient
+    gradient: "bg-gradient-to-r from-violet-500 to-fuchsia-500",
+    textClass: "text-violet-800 dark:text-violet-300",
+    bgClass: "bg-violet-50 dark:bg-violet-950/40",
+    borderClass: "border-violet-200 dark:border-violet-800",
+    iconColor: "text-white",
   },
-  secure: {
+  trending: {
+    icon: Flame,
+    label: "Trending",
+    // Premium Red/Orange Gradient
+    gradient: "bg-gradient-to-r from-rose-500 to-orange-500",
+    textClass: "text-rose-800 dark:text-rose-300",
+    bgClass: "bg-rose-50 dark:bg-rose-950/40",
+    borderClass: "border-rose-200 dark:border-rose-800",
+    iconColor: "text-white",
+  },
+  secure: { // Utility badge, kept simpler
     icon: Lock,
-    label: "Pago Seguro",
-    color: "text-primary dark:text-accent",
-    bgColor: "bg-primary/5 dark:bg-primary/10",
-    borderColor: "border-primary/20 dark:border-primary/30",
+    label: "Seguro",
+    gradient: "bg-stone-500",
+    textClass: "text-stone-600",
+    bgClass: "bg-stone-100",
+    borderClass: "border-stone-200",
+    iconColor: "text-white",
   },
   favorite: {
     icon: Heart,
     label: "Favorito",
-    color: "text-destructive dark:text-red-400",
-    bgColor: "bg-destructive/5 dark:bg-red-950/30",
-    borderColor: "border-destructive/20 dark:border-red-800",
-  },
-  trending: {
-    icon: TrendingUp,
-    label: "En Tendencia",
-    color: "text-teal-600 dark:text-teal-400",
-    bgColor: "bg-accent/5 dark:bg-accent/20",
-    borderColor: "border-accent/20 dark:border-accent/30",
-  },
+    gradient: "bg-pink-500",
+    textClass: "text-pink-600",
+    bgClass: "bg-pink-50",
+    borderClass: "border-pink-200",
+    iconColor: "text-white",
+  }
 }
 
 const sizeConfig = {
-  sm: "h-7 w-7 text-xs",
-  md: "h-8 w-8 text-sm",
-  lg: "h-10 w-10 text-base",
+  sm: { container: "px-2 py-0.5 text-[10px]", icon: "h-3 w-3" },
+  md: { container: "px-3 py-1 text-xs", icon: "h-3.5 w-3.5" },
+  lg: { container: "px-4 py-1.5 text-sm", icon: "h-4 w-4" },
 }
 
 export function TrustBadge({
   variant = "verified",
   size = "md",
-  showLabel = false,
+  showLabel = true,
   className,
+  animate = true
 }: TrustBadgeProps) {
   const config = badgeConfig[variant]
   const Icon = config.icon
-  const sizeClass = sizeConfig[size]
+  const sizes = sizeConfig[size]
 
   return (
     <div
       className={cn(
-        "inline-flex items-center gap-2 px-3 py-2 rounded-full border transition-all duration-300",
-        config.bgColor,
-        config.borderColor,
-        "hover:shadow-md hover:scale-105",
+        "inline-flex items-center gap-1.5 rounded-full border shadow-sm transition-all duration-300 select-none group",
+        config.bgClass,
+        config.borderClass,
+        sizes.container,
+        animate && "hover:scale-105 hover:shadow-md",
         className
       )}
       title={config.label}
     >
-      <Icon className={cn("flex-shrink-0", config.color, sizeClass)} />
+      {/* Icon Circle */}
+      <div className={cn(
+        "rounded-full p-0.5 flex items-center justify-center shadow-sm",
+        config.gradient
+      )}>
+        <Icon className={cn(sizes.icon, config.iconColor)} strokeWidth={2.5} />
+      </div>
+
       {showLabel && (
-        <span className={cn("font-semibold whitespace-nowrap", config.color)}>
+        <span className={cn("font-bold tracking-tight", config.textClass)}>
           {config.label}
         </span>
       )}
@@ -94,7 +128,7 @@ export function TrustBadge({
 }
 
 interface TrustBadgesGroupProps {
-  badges: Array<"verified" | "expert" | "fast" | "secure" | "favorite" | "trending">
+  badges: string[] // Expecting DB strings like "VERIFIED", "EXPERT"
   size?: "sm" | "md" | "lg"
   showLabels?: boolean
   className?: string
@@ -103,14 +137,21 @@ interface TrustBadgesGroupProps {
 export function TrustBadgesGroup({
   badges,
   size = "sm",
-  showLabels = false,
+  showLabels = true,
   className,
 }: TrustBadgesGroupProps) {
+  // Filter only valid badges
+  const validBadges = badges
+    .map(b => BADGE_MAPPING[b])
+    .filter(Boolean)
+
+  if (validBadges.length === 0) return null
+
   return (
     <div className={cn("flex flex-wrap gap-2", className)}>
-      {badges.map((badge) => (
+      {validBadges.map((badge, idx) => (
         <TrustBadge
-          key={badge}
+          key={`${badge}-${idx}`}
           variant={badge}
           size={size}
           showLabel={showLabels}

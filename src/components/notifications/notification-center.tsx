@@ -151,18 +151,25 @@ export function NotificationCenter() {
                                                 <span className="h-2 w-2 rounded-full bg-secondary shrink-0" />
                                             )}
                                             <span className={cn("font-medium text-sm line-clamp-1",
-                                                notification.type === 'MATCH' && "text-pink-600",
-                                                (notification.type === 'PROPOSAL' || notification.type === 'NEW_PROPOSAL') && "text-secondary",
+                                                (notification.type === 'MATCH' || notification.type === 'MATCH_COMPLETED' || notification.type === 'PROPOSAL_ACCEPTED') && "text-pink-600",
+                                                (notification.type === 'PROPOSAL' || notification.type === 'NEW_PROPOSAL' || notification.type === 'NEW_OPPORTUNITY') && "text-secondary",
+                                                (notification.type === 'MATCH_UPDATE') && "text-blue-600",
+                                                (notification.type === 'NEW_REVIEW') && "text-yellow-600",
                                                 notification.type === 'SYSTEM' && "text-gray-600",
                                                 notification.type === 'VERIFICATION' && "text-accent",
                                                 notification.type === 'SUBSCRIPTION' && "text-amber-600",
                                             )}>
                                                 {notification.type === 'MATCH' ? '¡Nuevo Match!' :
                                                     (notification.type === 'PROPOSAL' || notification.type === 'NEW_PROPOSAL') ? 'Nueva Propuesta' :
-                                                        notification.type === 'VERIFICATION' ? 'Verificación' :
-                                                            notification.type === 'SUBSCRIPTION' ? 'Suscripción' :
-                                                                notification.type === 'SYSTEM' ? 'Sistema' :
-                                                                    notification.type}
+                                                        notification.type === 'MATCH_COMPLETED' ? 'Trabajo Completado' :
+                                                            notification.type === 'MATCH_UPDATE' ? 'Actualización de Trabajo' :
+                                                                notification.type === 'PROPOSAL_ACCEPTED' ? 'Propuesta Aceptada' :
+                                                                    notification.type === 'NEW_REVIEW' ? 'Nueva Reseña' :
+                                                                        notification.type === 'NEW_OPPORTUNITY' ? 'Nueva Oportunidad' :
+                                                                            notification.type === 'VERIFICATION' ? 'Verificación' :
+                                                                                notification.type === 'SUBSCRIPTION' ? 'Suscripción' :
+                                                                                    notification.type === 'SYSTEM' ? 'Sistema' :
+                                                                                        notification.type}
                                             </span>
                                         </div>
                                         <span className="text-[10px] text-muted-foreground whitespace-nowrap">

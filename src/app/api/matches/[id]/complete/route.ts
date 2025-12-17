@@ -13,7 +13,7 @@ export async function POST(
         const session = await getSession()
         if (!session) {
             console.error("[MATCH_COMPLETE_POST] Unauthorized: No session found")
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+            return NextResponse.json({ error: "No autorizado" }, { status: 401 })
         }
 
         const { id: matchId } = await params
@@ -24,7 +24,7 @@ export async function POST(
             console.log("[MATCH_COMPLETE_POST] Raw body:", bodyText)
         } catch (e) {
             console.error("[MATCH_COMPLETE_POST] Error reading body text:", e)
-            return NextResponse.json({ error: "Error reading body" }, { status: 400 })
+            return NextResponse.json({ error: "Error al leer el cuerpo de la petición" }, { status: 400 })
         }
 
         let body;
@@ -32,7 +32,7 @@ export async function POST(
             body = bodyText ? JSON.parse(bodyText) : {}
         } catch (e) {
             console.error("[MATCH_COMPLETE_POST] Error parsing JSON body:", e)
-            return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 })
+            return NextResponse.json({ error: "Cuerpo JSON inválido" }, { status: 400 })
         }
 
         console.log("[MATCH_COMPLETE_POST] Parsed body:", body)
@@ -50,7 +50,8 @@ export async function POST(
                 id: true,
                 providerId: true,
                 clientId: true,
-                isCompleted: true
+                isCompleted: true,
+                requestId: true
             }
         })
 
@@ -128,6 +129,12 @@ export async function POST(
             })
             updatedMatch.isCompleted = true
 
+            // Trigger Badge Recalculation for Provider
+            // We use 'void' to not await this promise and block the response
+            void import("@/services/badge.service").then(({ BadgeService }) => {
+                BadgeService.recalculateBadges(updatedMatch.providerId)
+            })
+
             // NOTIFY BOTH: READY FOR REVIEW
             // Client
             await notifyUser({
@@ -158,6 +165,6 @@ export async function POST(
         if (error instanceof Error) {
             console.error("[MATCH_COMPLETE_POST] Stack:", error.stack)
         }
-        return NextResponse.json({ error: "Internal Server Error", details: String(error) }, { status: 500 })
+        return NextResponse.json({ error: "Error interno del servidor", details: String(error) }, { status: 500 })
     }
 }

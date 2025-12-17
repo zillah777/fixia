@@ -18,7 +18,7 @@ export async function POST(request: Request) {
         }
 
         const body = await request.json();
-        
+
         // Validate with Zod
         const validation = reviewSchema.safeParse(body);
         if (!validation.success) {
@@ -115,6 +115,11 @@ export async function POST(request: Request) {
             }).catch(err => console.error("Failed to update rating:", err));
         }
 
+        // Trigger Badge Recalculation for Target User (Provider)
+        void import("@/services/badge.service").then(({ BadgeService }) => {
+            BadgeService.recalculateBadges(targetId)
+        })
+
         return NextResponse.json(review, { status: 201 });
     } catch (error) {
         console.error("[REVIEWS_POST_ERROR]", error);
@@ -150,7 +155,7 @@ export async function GET(request: Request) {
             }
         }
 
-        const where = matchId ? { matchId } : { targetId: userId };
+        const where = matchId ? { matchId } : { targetId: userId as string };
 
         // Get reviews with author data (fetched separately to avoid Prisma relation issues)
         const reviews = await prisma.review.findMany({

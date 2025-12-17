@@ -119,29 +119,33 @@ export async function POST(request: Request) {
                     );
                 }
 
-                // Activate subscription
+                // Activate subscription and convert to PROFESSIONAL if CLIENT
                 const subscriptionEndDate = new Date();
                 subscriptionEndDate.setDate(subscriptionEndDate.getDate() + 30);
 
                 const updatedUser = await prisma.user.update({
                     where: { id: userId },
                     data: {
+                        // Convert CLIENT to PROFESSIONAL on payment
                         role: "PROFESSIONAL",
+                        // Activate subscription
                         subscriptionStatus: "active",
                         subscriptionPlan: "professional_monthly",
                         subscriptionEndsAt: subscriptionEndDate,
                         status: "ACTIVE",
                         subscriptionId: paymentData.id?.toString(),
+                        // Enable all professional features
                         canCreateServices: true,
                         listingVisible: true,
                         canReceiveBookings: true,
+                        // Billing info
                         lastRenewalAt: new Date(),
                         nextBillingDate: subscriptionEndDate,
                         autoRenew: true,
                     },
                 });
 
-                console.log(`[WEBHOOK] Subscription activated for user ${userId} (Payment: ${paymentData.id})`);
+                console.log(`[WEBHOOK] Subscription activated for user ${userId} (Payment: ${paymentData.id}) - Role converted to PROFESSIONAL`);
             } else if (paymentData.status === "rejected" || paymentData.status === "cancelled") {
                 // Handle failed/cancelled payments
                 const userId = paymentData.metadata.user_id;

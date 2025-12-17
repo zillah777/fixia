@@ -21,7 +21,7 @@ export async function POST(request: Request) {
         }
 
         const body = await request.json();
-        
+
         // Validate with Zod
         const validation = proposalSchema.safeParse(body);
         if (!validation.success) {
@@ -79,6 +79,11 @@ export async function POST(request: Request) {
                 },
             },
         });
+
+        // Trigger Badge Recalculation due to new proposal activity (Trending/Fast badges)
+        void import("@/services/badge.service").then(({ BadgeService }) => {
+            BadgeService.recalculateBadges(providerId)
+        })
 
         return NextResponse.json(proposal, { status: 201 });
     } catch (error) {

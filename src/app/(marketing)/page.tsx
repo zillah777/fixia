@@ -149,7 +149,7 @@ export default function Home() {
                             Desde reparaciones hasta proyectos especiales, con garantía total.
                         </p>
 
-                        {/* Floating Search Bar - Fully Responsive */}
+                        {/* Floating Search Bar - Fully Responsive - Optimized Mobile */}
                         <motion.form
                             onSubmit={(e) => {
                                 e.preventDefault()
@@ -161,24 +161,24 @@ export default function Home() {
                                     window.location.href = '/services'
                                 }
                             }}
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
-                            className="mx-auto w-full max-w-2xl p-1 sm:p-1.5 bg-white dark:bg-card rounded-2xl shadow-lg border border-border/50 backdrop-blur-sm flex items-center gap-1 sm:gap-2 transition-all duration-300"
+                            whileHover={{ scale: 1.01 }}
+                            whileTap={{ scale: 0.99 }}
+                            className="mx-auto w-full max-w-2xl bg-white dark:bg-card rounded-2xl shadow-xl shadow-primary/5 border border-border/50 backdrop-blur-md flex items-center p-2 gap-2 transition-all duration-300 ring-2 ring-transparent focus-within:ring-primary/20 focus-within:border-primary/50"
                         >
-                            <div className="pl-3 sm:pl-4 text-muted-foreground flex-shrink-0">
-                                <motion.div
-                                    whileHover={{ scale: 1.1 }}
-                                    transition={{ type: "spring", stiffness: 300 }}
-                                >
-                                    <Search className="h-4 w-4 sm:h-5 sm:w-5" />
-                                </motion.div>
+                            <div className="pl-3 text-muted-foreground flex-shrink-0">
+                                <Search className="h-5 w-5 text-primary/70" />
                             </div>
                             <Input
                                 name="search"
-                                className="border-none shadow-none bg-transparent h-10 sm:h-12 text-sm sm:text-base placeholder:text-muted-foreground/60 focus-visible:ring-0 flex-1"
-                                placeholder="¿Qué servicio necesitas?"
+                                className="border-none shadow-none bg-transparent h-12 text-base px-2 placeholder:text-muted-foreground/70 focus-visible:ring-0 flex-1 min-w-0" // min-w-0 crucial for flex child text overflow
+                                placeholder="Ej: Plomero, Electricista, Gasista..."
+                                autoComplete="off"
                             />
-                            <Button type="submit" size="sm" className="rounded-xl px-3 sm:px-6 text-xs sm:text-sm bg-primary text-primary-foreground hover:bg-primary/90 shadow-md transition-all whitespace-nowrap font-semibold flex-shrink-0 h-9 sm:h-10">
+                            <Button
+                                type="submit"
+                                size="lg"
+                                className="rounded-xl px-6 font-bold shadow-md h-11 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-primary-foreground transition-all"
+                            >
                                 Buscar
                             </Button>
                         </motion.form>

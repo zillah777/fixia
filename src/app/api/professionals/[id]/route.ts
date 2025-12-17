@@ -116,22 +116,29 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
             }
         }
 
+        // Calculate rating dynamically if needed
+        let rating = pro.profile?.ratingAvg || 0;
+        if ((!rating || rating === 0) && pro.reviewsReceived.length > 0) {
+            const total = pro.reviewsReceived.reduce((acc, review) => acc + review.score, 0);
+            rating = total / pro.reviewsReceived.length;
+        }
+
         const formattedPro = {
             id: pro.id,
             name: pro.name,
             role: tags[0] || "Profesional",
-            rating: pro.profile?.ratingAvg || 0,
+            rating: rating,
             reviewsCount: pro._count.reviewsReceived,
             location: pro.location || "Ubicación no disponible",
-            image: pro.avatar || `https://ui-avatars.com/api/?name=${pro.name}&background=random`,
+            image: pro.avatar, // Let getAvatarUrl handle nulls in frontend if raw usage
             bio: pro.profile?.bio || "Sin biografía.",
             verified: isVerified,
-            isFavorite, // Added field
-            favoriteId, // Added field
+            isFavorite,
+            favoriteId,
             joinedDate: pro.createdAt.toLocaleDateString(),
             skills: tags,
             portfolio: portfolioImages,
-            badges: badges, // Return badges
+            badges: badges,
             reviews: pro.reviewsReceived.map(r => ({
                 id: r.id,
                 user: r.author.name,

@@ -81,7 +81,7 @@ const formSchema = z.object({
     diploma: z.string().optional(),
     courses: z.string().optional(),
     professionalLicense: z.string().optional(),
-    yearsExperience: z.coerce.number().int().min(0).max(50).optional().or(z.literal("")),
+    yearsExperience: z.union([z.string(), z.number()]).optional().transform(val => val === "" ? undefined : Number(val)),
     experienceDetails: z.string().optional(),
     availability: z.object({
         morning: z.boolean().optional(),
@@ -120,7 +120,12 @@ function RegisterForm() {
             professionalLicense: "",
             yearsExperience: undefined,
             experienceDetails: "",
-            availability: {},
+            availability: {
+                morning: false,
+                afternoon: false,
+                evening: false,
+                weekend: false
+            },
             workRadius: "Mi ciudad",
             workZones: "",
         },
@@ -129,7 +134,18 @@ function RegisterForm() {
     const role = form.watch("role")
 
 
+    function onInvalid(errors: any) {
+        console.error("Form validation errors:", errors);
+        const firstErrorKey = Object.keys(errors)[0];
+        if (firstErrorKey) {
+            toast.error(`Error en ${firstErrorKey}: ${errors[firstErrorKey]?.message || "Verifica los datos"}`);
+        } else {
+            toast.error("Por favor revisa el formulario, hay campos inválidos.");
+        }
+    }
+
     async function onSubmit(values: z.infer<typeof formSchema>) {
+        console.log("Submitting values:", values);
         setIsLoading(true)
         try {
             const response = await fetch("/api/auth/register", {
@@ -153,7 +169,7 @@ function RegisterForm() {
                 router.push("/auth/verify-email");
             }
         } catch (error) {
-            console.error(error);
+            console.error("Registration error:", error);
             toast.error(error instanceof Error ? error.message : "Ocurrió un error al crear la cuenta");
         } finally {
             setIsLoading(false)
@@ -184,7 +200,7 @@ function RegisterForm() {
                 </CardHeader>
                 <CardContent>
                     <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                        <form onSubmit={form.handleSubmit(onSubmit, onInvalid)} className="space-y-4">
                             <FormField
                                 control={form.control}
                                 name="role"

@@ -263,6 +263,192 @@ const REGISTRATION_FORM_TOPICS: HelpTopic[] = [
  * Exported help drawer configurations for easy integration
  */
 
+const DASHBOARD_TOPICS: HelpTopic[] = [
+    {
+        id: "dashboard-overview",
+        title: "Panel de Control",
+        description: "Tu centro de comando para gestionar todo en Fixia",
+        tips: [
+            "Visualiza tus estadísticas clave de un vistazo",
+            "Accede rápidamente a tus últimas actividades",
+            "Verifica tu estado de suscripción o verificación",
+            "Usa el buscador para encontrar lo que necesitas",
+        ],
+    },
+    {
+        id: "dashboard-stats",
+        title: "Estadísticas",
+        description: "Entiende tus métricas de rendimiento",
+        tips: [
+            "Las gráficas muestran tu actividad de la última semana",
+            "Monitorea tus ingresos o gastos (próximamente)",
+            "Identifica tendencias en tus servicios o solicitudes",
+        ],
+    },
+]
+
+const LEADS_TOPICS: HelpTopic[] = [
+    {
+        id: "leads-overview",
+        title: "Oportunidades de Trabajo",
+        description: "Encuentra nuevos clientes buscando tus servicios",
+        tips: [
+            "Revisa las oportunidades diariamente",
+            "Usa los filtros para encontrar trabajos en tu zona",
+            "Lee bien la descripción antes de postularte",
+            "Sé rápido: los primeros en contactar suelen ganar",
+        ],
+    },
+    {
+        id: "leads-trust",
+        title: "Confianza y Reputación",
+        description: "Cómo destacar entre otros profesionales",
+        tips: [
+            "Completa tu perfil al 100% para generar confianza",
+            "Solicita la insignia de Verificado subiendo tu DNI",
+            "Pide a tus clientes que te califiquen al terminar",
+            "Responde rápido para ganar la insignia 'Rayo'",
+        ],
+    },
+]
+
+const BADGE_TOPICS: HelpTopic[] = [
+    {
+        id: "badge-verified",
+        title: "Insignia Verificado",
+        description: "Valida tu identidad y genera máxima confianza",
+        tips: [
+            "Sube tu DNI o Cédula vigente",
+            "Es el factor #1 que miran los clientes",
+            "Aumenta tus chances de contratación un 50%",
+        ],
+    },
+    {
+        id: "badge-expert",
+        title: "Insignia Experto 🏆",
+        description: "Para los mejores profesionales de la plataforma",
+        tips: [
+            "Completa al menos 10 trabajos en Fixia",
+            "Mantén un promedio de calificación mayor a 4.5 estrellas",
+            "Demuestra consistencia y calidad en el tiempo",
+        ],
+    },
+    {
+        id: "badge-trending",
+        title: "Insignia Trending 🔥",
+        description: "Destaca por tu actividad reciente",
+        tips: [
+            "Envía más de 5 propuestas en una semana",
+            "Mantente activo buscando oportunidades",
+            "Indica a los clientes que estás disponible ahora",
+        ],
+    },
+    {
+        id: "badge-fast",
+        title: "Insignia Rayo ⚡",
+        description: "Premia tu velocidad de respuesta",
+        tips: [
+            "Responde a las solicitudes en menos de 2 horas",
+            "Mantén este ritmo en tus últimas 5 propuestas",
+            "Los clientes valoran mucho la rapidez",
+        ],
+    },
+]
+
+// ... (other constants remain the same if not modified)
+
+export function LeadsHelp() {
+    return (
+        <HelpDrawer
+            topics={[...LEADS_TOPICS, ...BADGE_TOPICS]}
+            defaultTopic="leads-overview"
+        />
+    )
+}
+
+export function DashboardHelp() {
+    return (
+        <HelpDrawer
+            topics={[...DASHBOARD_TOPICS, ...BADGE_TOPICS]}
+            defaultTopic="dashboard-overview"
+        />
+    )
+}
+
+// ... (other exports)
+
+const SUBSCRIPTION_TOPICS: HelpTopic[] = [
+    {
+        id: "sub-benefits",
+        title: "Beneficios Premium",
+        description: "Por qué suscribirse a Fixia Profesional",
+        tips: [
+            "Destaca sobre la competencia con el distintivo PRO",
+            "Acceso ilimitado a ciertas oportunidades",
+            "Menores comisiones por servicio",
+            "Soporte prioritario",
+        ],
+    },
+    {
+        id: "sub-billing",
+        title: "Facturación",
+        description: "Gestión de tus pagos y facturas",
+        tips: [
+            "Puedes cancelar en cualquier momento",
+            "Los pagos son procesados de forma segura",
+            "Descarga tus facturas desde el panel de configuración",
+        ],
+    },
+]
+
+const REQUESTS_LIST_TOPICS: HelpTopic[] = [
+    {
+        id: "req-tracking",
+        title: "Seguimiento de Solicitudes",
+        description: "Gestiona tus búsquedas de servicios",
+        tips: [
+            "Ve el estado de cada solicitud (Abierta, En Proceso, Cerrada)",
+            "Revisa las propuestas recibidas de profesionales",
+            "Cancela solicitudes que ya no necesites",
+        ],
+    },
+    {
+        id: "req-hiring",
+        title: "Contratación",
+        description: "Cómo elegir al mejor profesional",
+        tips: [
+            "Compara perfiles, calificaciones y precios",
+            "Habla con el profesional antes de confirmar",
+            "Usa el chat de Fixia para mantener registro",
+            "No aceptes pagos fuera de la plataforma por seguridad inicial",
+        ],
+    },
+]
+
+const BOOKINGS_TOPICS: HelpTopic[] = [
+    {
+        id: "bookings-status",
+        title: "Estado de Trabajos",
+        description: "Controla el progreso de tus servicios contratados",
+        tips: [
+            "Confirma cuando el trabajo haya iniciado",
+            "Marca como completado solo cuando estés 100% satisfecho",
+            "Reporta cualquier problema inmediatamente",
+        ],
+    },
+    {
+        id: "bookings-rating",
+        title: "Calificaciones",
+        description: "Ayuda a la comunidad calificando",
+        tips: [
+            "Sé honesto y detallado en tu reseña",
+            "Valora puntualidad, calidad y trato",
+            "Tus reseñas ayudan a otros usuarios a elegir mejor",
+            "Los profesionales valoran mucho tu feedback",
+        ],
+    },
+]
+
 export function RequestFormHelp() {
     return (
         <HelpDrawer
@@ -304,6 +490,35 @@ export function RegistrationFormHelp() {
         <HelpDrawer
             topics={REGISTRATION_FORM_TOPICS}
             defaultTopic="register-role"
+        />
+    )
+}
+
+
+
+export function SubscriptionHelp() {
+    return (
+        <HelpDrawer
+            topics={SUBSCRIPTION_TOPICS}
+            defaultTopic="sub-benefits"
+        />
+    )
+}
+
+export function RequestsListHelp() {
+    return (
+        <HelpDrawer
+            topics={REQUESTS_LIST_TOPICS}
+            defaultTopic="req-tracking"
+        />
+    )
+}
+
+export function BookingsHelp() {
+    return (
+        <HelpDrawer
+            topics={BOOKINGS_TOPICS}
+            defaultTopic="bookings-status"
         />
     )
 }
