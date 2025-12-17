@@ -11,6 +11,7 @@ import { NotificationCenter } from "@/components/notifications/notification-cent
 import { Badge } from "@/components/ui/badge"
 import { useAuth } from "@/providers/auth-provider"
 import { ProfessionalProfileAlert } from "@/components/professional-profile-alert"
+import { ClientProfileAlert } from "@/components/client-profile-alert"
 
 const container = {
     hidden: { opacity: 0 },
@@ -128,6 +129,9 @@ export default function DashboardPage() {
 
             {/* Professional Profile Completion Alert */}
             <ProfessionalProfileAlert />
+
+            {/* Client Profile Completion Alert */}
+            <ClientProfileAlert />
 
             {/* Bento Grid */}
             <motion.div
