@@ -115,11 +115,11 @@ export function HelpDrawer({ trigger, topics = DEFAULT_TOPICS, defaultTopic }: H
                 <Button
                     variant="outline"
                     size="icon"
-                    className="rounded-full"
+                    className="rounded-full border-[#6a9bcc]/30 hover:bg-[#6a9bcc]/10 hover:text-[#6a9bcc]"
                     onClick={() => setIsOpen(true)}
                     title="Ayuda"
                 >
-                    <HelpCircle className="h-5 w-5" />
+                    <HelpCircle className="h-5 w-5" style={{ color: "#6a9bcc" }} />
                 </Button>
             )}
 

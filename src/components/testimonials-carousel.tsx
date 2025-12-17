@@ -110,18 +110,18 @@ export function TestimonialsCarousel({ testimonials }: TestimonialsCarouselProps
                     size="icon"
                     onClick={scrollPrev}
                     disabled={!canScrollPrev}
-                    className="rounded-full"
+                    className="rounded-full border-[#6a9bcc]/30 hover:bg-[#6a9bcc]/10 hover:text-[#6a9bcc] transition-colors"
                 >
-                    <ChevronLeft className="h-4 w-4" />
+                    <ChevronLeft className="h-4 w-4" style={{ color: "#6a9bcc" }} />
                 </Button>
                 <Button
                     variant="outline"
                     size="icon"
                     onClick={scrollNext}
                     disabled={!canScrollNext}
-                    className="rounded-full"
+                    className="rounded-full border-[#6a9bcc]/30 hover:bg-[#6a9bcc]/10 hover:text-[#6a9bcc] transition-colors"
                 >
-                    <ChevronRight className="h-4 w-4" />
+                    <ChevronRight className="h-4 w-4" style={{ color: "#6a9bcc" }} />
                 </Button>
             </div>
         </div>

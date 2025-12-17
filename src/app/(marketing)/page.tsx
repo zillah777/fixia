@@ -393,7 +393,11 @@ export default function Home() {
 
                                     <div className="relative z-10 flex flex-col h-full justify-between">
                                         <motion.div
-                                            className="text-2xl sm:text-5xl mb-1 sm:mb-3 flex-shrink-0"
+                                            className="text-2xl sm:text-5xl mb-1 sm:mb-3 flex-shrink-0 p-2 sm:p-3 rounded-lg sm:rounded-xl w-fit"
+                                            style={{
+                                                backgroundColor: `${color.accent}20`,
+                                                color: color.accent
+                                            }}
                                             whileHover={{ scale: 1.1, rotate: 5 }}
                                             transition={{ type: "spring", stiffness: 300 }}
                                         >

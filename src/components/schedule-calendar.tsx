@@ -133,17 +133,17 @@ export function ScheduleCalendar() {
                                 variant="outline"
                                 size="icon"
                                 onClick={handlePrevMonth}
-                                className="h-8 w-8"
+                                className="h-8 w-8 border-[#6a9bcc]/30 hover:bg-[#6a9bcc]/10 hover:text-[#6a9bcc]"
                             >
-                                <ChevronLeft className="h-4 w-4" />
+                                <ChevronLeft className="h-4 w-4" style={{ color: "#6a9bcc" }} />
                             </Button>
                             <Button
                                 variant="outline"
                                 size="icon"
                                 onClick={handleNextMonth}
-                                className="h-8 w-8"
+                                className="h-8 w-8 border-[#6a9bcc]/30 hover:bg-[#6a9bcc]/10 hover:text-[#6a9bcc]"
                             >
-                                <ChevronRight className="h-4 w-4" />
+                                <ChevronRight className="h-4 w-4" style={{ color: "#6a9bcc" }} />
                             </Button>
                         </div>
                     </div>
@@ -222,10 +222,10 @@ export function ScheduleCalendar() {
                                         ? "border-gray-200 bg-gray-50 text-gray-400 dark:border-gray-700 dark:bg-gray-900 cursor-not-allowed"
                                         : selectedTime === slot.time
                                             ? "border-primary bg-primary text-primary-foreground"
-                                            : "border-border hover:border-primary hover:bg-muted"
+                                            : "border-border hover:border-[#d97757]/30 hover:bg-[#d97757]/5"
                                     }`}
                             >
-                                <Clock className="h-4 w-4 mr-1" />
+                                <Clock className="h-4 w-4 mr-1" style={{ color: slot.available ? "#d97757" : "inherit" }} />
                                 {slot.time}
                             </button>
                         ))}

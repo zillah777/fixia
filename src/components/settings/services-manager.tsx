@@ -187,7 +187,7 @@ export function ServicesManager() {
                                 <div className="space-y-2">
                                     <Label>Precio Base (Estimado)</Label>
                                     <div className="relative">
-                                        <DollarSign className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                                        <DollarSign className="absolute left-3 top-2.5 h-4 w-4" style={{ color: "#d97757" }} />
                                         <Input
                                             type="number"
                                             className="pl-9"
@@ -207,8 +207,8 @@ export function ServicesManager() {
                                             onChange={(e) => setTagInput(e.target.value)}
                                             onKeyDown={(e) => e.key === 'Enter' && handleAddTag()}
                                         />
-                                        <Button size="icon" variant="outline" onClick={handleAddTag}>
-                                            <Plus className="h-4 w-4" />
+                                        <Button size="icon" variant="outline" onClick={handleAddTag} className="border-[#6a9bcc]/30 hover:bg-[#6a9bcc]/10 hover:text-[#6a9bcc]">
+                                            <Plus className="h-4 w-4" style={{ color: "#6a9bcc" }} />
                                         </Button>
                                     </div>
                                     <div className="flex flex-wrap gap-2 mt-1">
@@ -288,10 +288,10 @@ export function ServicesManager() {
                                             <Button
                                                 variant="ghost"
                                                 size="icon"
-                                                className="text-muted-foreground hover:text-destructive h-10 w-10"
+                                                className="h-10 w-10 hover:bg-red-500/10 transition-colors"
                                                 onClick={() => handleDelete(service.id)}
                                             >
-                                                <Trash2 className="h-4 w-4" />
+                                                <Trash2 className="h-4 w-4" style={{ color: "#d97757" }} />
                                             </Button>
                                         </div>
                                     )
