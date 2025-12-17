@@ -70,6 +70,20 @@ export function PWAInstallGuide({ trigger }: { trigger?: React.ReactNode }) {
                                 <p className="text-xs text-muted-foreground">¡Listo! Fixia aparecerá en tu pantalla de inicio.</p>
                             </div>
                         </div>
+                        <div className="flex items-start gap-4 bg-amber-50 dark:bg-amber-900/20 p-3 rounded-lg border border-amber-200 dark:border-amber-900">
+                            <div className="bg-amber-100 dark:bg-amber-900 p-2 rounded-lg">
+                                <span className="text-lg">⚡</span>
+                            </div>
+                            <div className="space-y-1 flex-1">
+                                <h4 className="font-bold text-sm text-amber-900 dark:text-amber-100">4. IMPORTANTE: Cerrar y reabrir desde el icono</h4>
+                                <p className="text-xs text-amber-800 dark:text-amber-200">Para que las notificaciones push funcionen correctamente:</p>
+                                <ul className="text-xs text-amber-800 dark:text-amber-200 space-y-1 mt-2 list-disc list-inside">
+                                    <li>Cierra completamente el navegador (Safari)</li>
+                                    <li>Abre Fixia desde el icono en tu pantalla de inicio</li>
+                                    <li>Las notificaciones ahora estarán activas ✓</li>
+                                </ul>
+                            </div>
+                        </div>
                     </TabsContent>
                     <TabsContent value="android" className="space-y-4 py-4">
                         <div className="flex items-start gap-4">
@@ -97,6 +111,20 @@ export function PWAInstallGuide({ trigger }: { trigger?: React.ReactNode }) {
                             <div className="space-y-1">
                                 <h4 className="font-medium text-sm">3. Confirma la instalación</h4>
                                 <p className="text-xs text-muted-foreground">Fixia se instalará y aparecerá en tu lista de apps.</p>
+                            </div>
+                        </div>
+                        <div className="flex items-start gap-4 bg-amber-50 dark:bg-amber-900/20 p-3 rounded-lg border border-amber-200 dark:border-amber-900">
+                            <div className="bg-amber-100 dark:bg-amber-900 p-2 rounded-lg">
+                                <span className="text-lg">⚡</span>
+                            </div>
+                            <div className="space-y-1 flex-1">
+                                <h4 className="font-bold text-sm text-amber-900 dark:text-amber-100">4. IMPORTANTE: Cerrar y reabrir desde el icono</h4>
+                                <p className="text-xs text-amber-800 dark:text-amber-200">Para que las notificaciones push funcionen correctamente:</p>
+                                <ul className="text-xs text-amber-800 dark:text-amber-200 space-y-1 mt-2 list-disc list-inside">
+                                    <li>Cierra completamente Chrome</li>
+                                    <li>Abre Fixia desde el icono en tu pantalla de inicio</li>
+                                    <li>Las notificaciones ahora estarán activas ✓</li>
+                                </ul>
                             </div>
                         </div>
                     </TabsContent>
