@@ -23,16 +23,32 @@ export default function CheckoutPage() {
 
     const handlePayment = async () => {
         setStatus("loading")
-        // Simulate payment processing
-        await new Promise(resolve => setTimeout(resolve, 2000))
+        try {
+            // Create checkout preference and get MercadoPago URL
+            const response = await fetch("/api/checkout", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ plan: "professional" })
+            });
 
-        setStatus("success")
-        toast.success("¡Pago exitoso! Bienvenido a Fixia PRO.")
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error || "Error al procesar el pago");
+            }
 
-        // Redirect after success
-        setTimeout(() => {
-            router.push("/dashboard")
-        }, 2000)
+            const data = await response.json();
+
+            // Redirect to MercadoPago for payment
+            if (data.url) {
+                window.location.href = data.url;
+            } else {
+                throw new Error("No payment URL received");
+            }
+        } catch (error) {
+            console.error("Payment error:", error);
+            toast.error(error instanceof Error ? error.message : "Error al procesar el pago");
+            setStatus("processing");
+        }
     }
 
     if (status === "success") {

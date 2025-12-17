@@ -15,7 +15,7 @@ const checkoutSchema = z.object({
  * SECURITY: POST /api/checkout
  * Requirements:
  * - User must be authenticated (session required)
- * - User must be a PROFESSIONAL role
+ * - User must be PROFESSIONAL or CLIENT (client can convert to professional)
  * - User must not have active subscription
  * - Rate limiting applied per user
  */
@@ -57,11 +57,11 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        // SECURITY: Only professionals can checkout
-        if (user.role !== 'PROFESSIONAL') {
-            console.warn(`[CHECKOUT_AUTH] Non-professional checkout attempt: ${userId}`);
+        // SECURITY: Allow both PROFESSIONAL and CLIENT (client → professional conversion)
+        if (user.role !== 'PROFESSIONAL' && user.role !== 'CLIENT') {
+            console.warn(`[CHECKOUT_AUTH] Invalid role checkout attempt: ${userId}, role: ${user.role}`);
             return new NextResponse(
-                JSON.stringify({ error: 'Debe ser profesional para suscribirse' }),
+                JSON.stringify({ error: 'Rol de usuario inválido para suscripción' }),
                 { status: 403, headers: { 'Content-Type': 'application/json' } }
             );
         }
