@@ -11,6 +11,7 @@ import { Star, MapPin, CheckCircle, Calendar, Shield, Heart } from "lucide-react
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { getAvatarUrl, getInitials } from "@/lib/avatar-utils";
+import { TrustBadgesGroup } from "@/components/ui/trust-badges";
 
 function ProfessionalProfile() {
     const params = useParams();
@@ -137,13 +138,7 @@ function ProfessionalProfile() {
                                     {pro.badges && pro.badges.length > 0 && (
                                         <div className="pt-2 text-left">
                                             <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">Reconocimientos</h4>
-                                            <div className="flex flex-wrap gap-2">
-                                                {pro.badges.map((badge: string, i: number) => (
-                                                    <Badge key={i} variant="outline" className="text-xs py-1 px-2 border-primary/20 bg-primary/5 text-primary/80">
-                                                        {badge}
-                                                    </Badge>
-                                                ))}
-                                            </div>
+                                            <TrustBadgesGroup badges={pro.badges} size="sm" showLabels={true} />
                                         </div>
                                     )}
                                 </div>
@@ -282,7 +277,7 @@ function ProfessionalProfile() {
                                                     </div>
                                                 </div>
                                                 <p className="text-muted-foreground text-sm italic relative pl-4 border-l-2 border-primary/20">
-                                                    "{review.comment}"
+                                                    &quot;{review.comment}&quot;
                                                 </p>
                                             </div>
                                         ))}

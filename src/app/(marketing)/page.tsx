@@ -14,7 +14,7 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/h
 import { TestimonialsCarousel } from "@/components/testimonials-carousel"
 
 // 3D Tilt Card Component
-function TiltCard({ children, className, onClick }: { children: React.ReactNode, className?: string, onClick?: () => void }) {
+function TiltCard({ children, className, onClick, style }: { children: React.ReactNode, className?: string, onClick?: () => void, style?: React.CSSProperties }) {
     const mouseX = useMotionValue(0);
     const mouseY = useMotionValue(0);
 
@@ -34,6 +34,7 @@ function TiltCard({ children, className, onClick }: { children: React.ReactNode,
                 mouseY.set(0);
             }}
             style={{
+                ...style,
                 transformStyle: "preserve-3d",
                 rotateX: useTransform(mouseY, [-300, 300], [10, -10]),
                 rotateY: useTransform(mouseX, [-300, 300], [-10, 10]),
@@ -102,7 +103,7 @@ export default function Home() {
     return (
         <div className="flex min-h-screen flex-col overflow-hidden bg-background">
             {/* Hero Section with Spotlight Effect */}
-            <section className="relative pt-8 pb-6 sm:pt-20 sm:pb-16 lg:pt-32 lg:pb-24 overflow-hidden">
+            <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden py-12">
                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#d97757]/5 via-transparent to-transparent opacity-70 dark:from-[#d97757]/10" />
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] sm:w-[1000px] h-[300px] sm:h-[500px] bg-gradient-to-b from-[#d97757]/10 to-[#6a9bcc]/10 dark:from-[#d97757]/20 dark:to-[#6a9bcc]/20 blur-3xl sm:blur-[120px] rounded-full pointer-events-none" />
 
@@ -135,19 +136,16 @@ export default function Home() {
                             transition={{ duration: 0.8, ease: "easeOut" }}
                             className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight"
                         >
-                            <span className="block text-foreground mb-1 sm:mb-3 font-medium">
-                                Servicios confiables,
-                            </span>
-                            <span className="block text-foreground mb-2 sm:mb-4">
-                                sin complicaciones.
-                            </span>
-                            <Image
-                                src="/logo.png"
-                                alt="Fixia Logo"
-                                width={400}
-                                height={130}
-                                className="inline-block h-24 sm:h-48 md:h-64 lg:h-80 w-auto object-contain -mt-1 sm:-mt-4"
-                            />
+                            <div className="flex justify-center w-full mb-6 sm:mb-10">
+                                <Image
+                                    src="/logo.png"
+                                    alt="Fixia Logo"
+                                    width={600}
+                                    height={200}
+                                    className="h-64 sm:h-80 md:h-[350px] lg:h-[400px] w-auto object-contain"
+                                    priority
+                                />
+                            </div>
                         </motion.h1>
 
                         <p className="mx-auto max-w-2xl text-sm sm:text-lg md:text-xl text-muted-foreground leading-relaxed px-2">
@@ -374,53 +372,53 @@ export default function Home() {
                             ];
                             const color = colors[index % colors.length];
                             return (
-                            <motion.div
-                                key={category.id}
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                transition={{ delay: index * 0.1, duration: 0.5 }}
-                                viewport={{ once: true }}
-                            >
-                                <TiltCard
-                                    className="group relative h-40 sm:h-56 lg:h-64 rounded-lg sm:rounded-2xl bg-gradient-to-br from-white to-muted/30 dark:from-card dark:to-muted/20 p-3 sm:p-7 shadow-sm sm:shadow-md border border-border/40 backdrop-blur-sm hover:shadow-lg transition-all duration-300 cursor-pointer overflow-hidden"
-                                    onClick={() => router.push(`/services/${category.id}`)}
-                                    style={{
-                                        borderColor: `${color.accent}40`,
-                                    }}
+                                <motion.div
+                                    key={category.id}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: index * 0.1, duration: 0.5 }}
+                                    viewport={{ once: true }}
                                 >
-                                    {/* Subtle background accent */}
-                                    <div className={`absolute -top-10 -right-10 w-32 sm:w-40 h-32 sm:h-40 ${color.bg} opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-full blur-xl sm:blur-2xl`} />
+                                    <TiltCard
+                                        className="group relative h-40 sm:h-56 lg:h-64 rounded-lg sm:rounded-2xl bg-gradient-to-br from-white to-muted/30 dark:from-card dark:to-muted/20 p-3 sm:p-7 shadow-sm sm:shadow-md border border-border/40 backdrop-blur-sm hover:shadow-lg transition-all duration-300 cursor-pointer overflow-hidden"
+                                        onClick={() => router.push(`/services/${category.id}`)}
+                                        style={{
+                                            borderColor: `${color.accent}40`,
+                                        }}
+                                    >
+                                        {/* Subtle background accent */}
+                                        <div className={`absolute -top-10 -right-10 w-32 sm:w-40 h-32 sm:h-40 ${color.bg} opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-full blur-xl sm:blur-2xl`} />
 
-                                    <div className="relative z-10 flex flex-col h-full justify-between">
-                                        <motion.div
-                                            className="text-2xl sm:text-5xl mb-1 sm:mb-3 flex-shrink-0 p-2 sm:p-3 rounded-lg sm:rounded-xl w-fit"
-                                            style={{
-                                                backgroundColor: `${color.accent}20`,
-                                                color: color.accent
-                                            }}
-                                            whileHover={{ scale: 1.1, rotate: 5 }}
-                                            transition={{ type: "spring", stiffness: 300 }}
-                                        >
-                                            {category.icon}
-                                        </motion.div>
-                                        <div className="flex-1 min-w-0">
-                                            <h3 className="text-sm sm:text-xl font-bold mb-0.5 sm:mb-1 text-foreground truncate">{category.name}</h3>
-                                            <p className="text-muted-foreground font-medium text-xs">{category.count} Prof.</p>
+                                        <div className="relative z-10 flex flex-col h-full justify-between">
+                                            <motion.div
+                                                className="text-2xl sm:text-5xl mb-1 sm:mb-3 flex-shrink-0 p-2 sm:p-3 rounded-lg sm:rounded-xl w-fit"
+                                                style={{
+                                                    backgroundColor: `${color.accent}20`,
+                                                    color: color.accent
+                                                }}
+                                                whileHover={{ scale: 1.1, rotate: 5 }}
+                                                transition={{ type: "spring", stiffness: 300 }}
+                                            >
+                                                {category.icon}
+                                            </motion.div>
+                                            <div className="flex-1 min-w-0">
+                                                <h3 className="text-sm sm:text-xl font-bold mb-0.5 sm:mb-1 text-foreground truncate">{category.name}</h3>
+                                                <p className="text-muted-foreground font-medium text-xs">{category.count} Prof.</p>
+                                            </div>
+                                            <motion.div
+                                                className={`w-7 h-7 sm:w-10 sm:h-10 rounded-lg ${color.bg} flex items-center justify-center group-hover:scale-110 transition-all duration-300 mt-auto flex-shrink-0 group-hover:shadow-lg`}
+                                                style={{
+                                                    color: color.accent
+                                                }}
+                                                whileHover={{ scale: 1.1, rotate: 45 }}
+                                                transition={{ type: "spring", stiffness: 400 }}
+                                            >
+                                                <ArrowRight className="h-3 sm:h-5 w-3 sm:w-5" />
+                                            </motion.div>
                                         </div>
-                                        <motion.div
-                                            className={`w-7 h-7 sm:w-10 sm:h-10 rounded-lg ${color.bg} flex items-center justify-center group-hover:scale-110 transition-all duration-300 mt-auto flex-shrink-0 group-hover:shadow-lg`}
-                                            style={{
-                                                color: color.accent
-                                            }}
-                                            whileHover={{ scale: 1.1, rotate: 45 }}
-                                            transition={{ type: "spring", stiffness: 400 }}
-                                        >
-                                            <ArrowRight className="h-3 sm:h-5 w-3 sm:w-5" />
-                                        </motion.div>
-                                    </div>
-                                </TiltCard>
-                            </motion.div>
-                        );
+                                    </TiltCard>
+                                </motion.div>
+                            );
                         }) : (
                             <div className="col-span-4 text-center text-muted-foreground">Cargando categorías...</div>
                         )}
@@ -486,36 +484,36 @@ export default function Home() {
                             const accentColors = ["#d97757", "#6a9bcc", "#788c5d", "#d97757"];
                             const color = accentColors[index % accentColors.length];
                             return (
-                            <motion.div
-                                key={index}
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                transition={{ delay: index * 0.1, duration: 0.6 }}
-                                viewport={{ once: true }}
-                                className="group"
-                            >
                                 <motion.div
-                                    whileHover={{ scale: 1.05 }}
-                                    transition={{ type: "spring", stiffness: 300 }}
-                                    className="p-3 sm:p-6 rounded-lg sm:rounded-2xl bg-white/50 dark:bg-card/50 backdrop-blur-sm border border-border/30 hover:shadow-lg transition-all duration-300"
-                                    style={{
-                                        borderColor: `${color}40`,
-                                        boxShadow: `0 0 0 0 ${color}00`
-                                    }}
-                                    onMouseEnter={(e) => {
-                                        e.currentTarget.style.boxShadow = `0 10px 30px ${color}20`;
-                                    }}
-                                    onMouseLeave={(e) => {
-                                        e.currentTarget.style.boxShadow = `0 0 0 0 ${color}00`;
-                                    }}
+                                    key={index}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: index * 0.1, duration: 0.6 }}
+                                    viewport={{ once: true }}
+                                    className="group"
                                 >
-                                    <div className="text-2xl sm:text-4xl lg:text-5xl font-bold mb-1 sm:mb-3" style={{ color: color }}>
-                                        {stat.value}
-                                    </div>
-                                    <div className="text-muted-foreground font-medium text-xs sm:text-sm lg:text-base group-hover:text-foreground transition-colors">{stat.label}</div>
+                                    <motion.div
+                                        whileHover={{ scale: 1.05 }}
+                                        transition={{ type: "spring", stiffness: 300 }}
+                                        className="p-3 sm:p-6 rounded-lg sm:rounded-2xl bg-white/50 dark:bg-card/50 backdrop-blur-sm border border-border/30 hover:shadow-lg transition-all duration-300"
+                                        style={{
+                                            borderColor: `${color}40`,
+                                            boxShadow: `0 0 0 0 ${color}00`
+                                        }}
+                                        onMouseEnter={(e) => {
+                                            e.currentTarget.style.boxShadow = `0 10px 30px ${color}20`;
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            e.currentTarget.style.boxShadow = `0 0 0 0 ${color}00`;
+                                        }}
+                                    >
+                                        <div className="text-2xl sm:text-4xl lg:text-5xl font-bold mb-1 sm:mb-3" style={{ color: color }}>
+                                            {stat.value}
+                                        </div>
+                                        <div className="text-muted-foreground font-medium text-xs sm:text-sm lg:text-base group-hover:text-foreground transition-colors">{stat.label}</div>
+                                    </motion.div>
                                 </motion.div>
-                            </motion.div>
-                        );
+                            );
                         })}
                     </div>
                 </div>

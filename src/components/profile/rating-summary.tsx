@@ -103,7 +103,7 @@ export function RatingSummary({
                                 </div>
                                 {review.comment && (
                                     <p className="text-xs text-muted-foreground line-clamp-2 italic">
-                                        "{review.comment}"
+                                        &quot;{review.comment}&quot;
                                     </p>
                                 )}
                             </div>

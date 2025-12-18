@@ -75,6 +75,9 @@ export default async function VerificationDetailPage(
 
     async function handleReject() {
         "use server"
+        if (!verification) {
+            redirect("/admin/verifications")
+        }
         await prisma.verificationRequest.update({
             where: { id: verification.id },
             data: { status: "REJECTED" }

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useParams, useRouter } from "next/navigation"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -24,6 +25,7 @@ export default function OpportunityDetailsPage() {
     useEffect(() => {
         const fetchRequest = async () => {
             try {
+                if (!params?.id) return
                 const res = await fetch(`/api/requests/${params.id}`)
                 if (res.ok) {
                     const data = await res.json()
@@ -128,7 +130,7 @@ export default function OpportunityDetailsPage() {
                                         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                                             {images.map((img: string, i: number) => (
                                                 <div key={i} className="relative aspect-square rounded-lg overflow-hidden bg-gray-100 border">
-                                                    <img src={img} alt={`Adjunto ${i + 1}`} className="object-cover w-full h-full" />
+                                                    <Image src={img} alt={`Adjunto ${i + 1}`} fill className="object-cover" />
                                                 </div>
                                             ))}
                                         </div>

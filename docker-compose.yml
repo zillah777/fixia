@@ -49,7 +49,7 @@ services:
     container_name: fixia-tunnel
     image: cloudflare/cloudflared:latest
     restart: always
-    command: tunnel run --token ${TUNNEL_TOKEN}
+    command: tunnel run --token ${TUNNEL_TOKEN} --protocol http2
     depends_on:
       - app
     network_mode: service:app

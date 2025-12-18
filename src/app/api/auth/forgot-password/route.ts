@@ -43,7 +43,7 @@ export async function POST(req: Request) {
         });
 
         // Send password reset email (non-blocking)
-        sendPasswordResetEmail(user.email, user.name, resetToken).catch(error => {
+        sendPasswordResetEmail(user.email, user.name || 'Usuario', resetToken).catch(error => {
             console.error('Failed to send password reset email:', error);
         });
 

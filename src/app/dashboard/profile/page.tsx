@@ -56,7 +56,7 @@ export default function ProfilePage() {
             <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
                 <div className="relative">
                     <Avatar className="h-20 w-20 md:h-24 md:w-24 border-4 border-white shadow-lg">
-                        <AvatarImage src={getAvatarUrl(user?.avatar, user?.name)} alt={user?.name || "User"} className="object-cover" />
+                        <AvatarImage src={getAvatarUrl(user?.avatar || undefined, user?.name || undefined)} alt={user?.name || "User"} className="object-cover" />
                         <AvatarFallback className="text-xl md:text-2xl font-bold bg-muted text-gray-500">
                             {getInitials(user?.name || "User")}
                         </AvatarFallback>

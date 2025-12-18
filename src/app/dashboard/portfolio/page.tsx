@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { useAuth } from "@/providers/auth-provider"
 import { useRouter } from "next/navigation"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Upload, X, Loader2, Image as ImageIcon } from "lucide-react"
@@ -159,10 +160,11 @@ export default function PortfolioPage() {
                                         </div>
                                     ) : image ? (
                                         <>
-                                            <img
+                                            <Image
                                                 src={image}
                                                 alt={`Trabajo ${index + 1}`}
-                                                className="h-full w-full object-cover"
+                                                fill
+                                                className="object-cover"
                                             />
                                             <Button
                                                 variant="destructive"

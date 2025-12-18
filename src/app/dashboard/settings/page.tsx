@@ -11,9 +11,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Switch } from "@/components/ui/switch"
 import { Separator } from "@/components/ui/separator"
-import { Camera, Save, Facebook, Instagram, Twitter, Trash2 } from "lucide-react"
+import { Info, Camera, Save, Facebook, Instagram, Twitter, Trash2 } from "lucide-react"
 import { toast } from "sonner"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 import { VerificationRequestForm } from "@/components/trust/verification-request-form"
+import { CertificationRequestForm } from "@/components/trust/certification-request-form"
 import { ProfessionalProfileForm } from "@/components/settings/professional-profile-form"
 import { PushSubscriptionButton } from "@/components/settings/push-subscription-button"
 import { PWAInstallGuide } from "@/components/pwa/pwa-install-guide"
@@ -293,11 +295,28 @@ export default function SettingsPage() {
                     <TabsTrigger value="account" className="whitespace-nowrap w-full md:w-auto">Cuenta</TabsTrigger>
                     <TabsTrigger value="notifications" className="whitespace-nowrap w-full md:w-auto">Notificaciones</TabsTrigger>
                     <TabsTrigger value="verification" className="whitespace-nowrap w-full md:w-auto">Verificación</TabsTrigger>
+                    {user?.role === 'PROFESSIONAL' && <TabsTrigger value="certifications" className="whitespace-nowrap w-full md:w-auto">Certificaciones</TabsTrigger>}
                 </TabsList>
 
                 <TabsContent value="verification" className="space-y-4">
                     <VerificationRequestForm />
                 </TabsContent>
+
+                {user?.role === 'PROFESSIONAL' && (
+                    <TabsContent value="certifications" className="space-y-4">
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Certificaciones Profesionales</CardTitle>
+                                <CardDescription>
+                                    Subí títulos, diplomas o certificaciones profesionales para verificar tus credenciales.
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <CertificationRequestForm />
+                            </CardContent>
+                        </Card>
+                    </TabsContent>
+                )}
 
                 <TabsContent value="profile" className="space-y-4">
                     <Card>
@@ -542,6 +561,12 @@ export default function SettingsPage() {
                 )}
 
                 <TabsContent value="notifications" className="space-y-4">
+                    <Alert className="bg-blue-50 border-blue-200 dark:bg-blue-900/20 dark:border-blue-800">
+                        <Info className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                        <AlertDescription className="text-xs font-medium text-blue-700 dark:text-blue-300">
+                            Si quieres recibir notificaciones instala la App como indica las instrucciones y luego activa notificaciones PUSH en &quot;Notificaciones&quot;
+                        </AlertDescription>
+                    </Alert>
                     <Card>
                         <CardHeader>
                             <CardTitle>Preferencias de Notificación</CardTitle>

@@ -10,18 +10,12 @@ import { toast } from "sonner";
 
 function VerifyEmailContent() {
     const searchParams = useSearchParams();
-    const token = searchParams.get("token");
+    const token = searchParams ? searchParams.get("token") : null;
     const [status, setStatus] = useState<"pending" | "verifying" | "success" | "error">("pending");
     const [email, setEmail] = useState("");
     const [isResending, setIsResending] = useState(false);
 
-    useEffect(() => {
-        if (token) {
-            verifyToken();
-        }
-    }, [token]);
-
-    const verifyToken = async () => {
+    const verifyToken = React.useCallback(async () => {
         setStatus("verifying");
         try {
             const res = await fetch("/api/auth/verify-email", {
@@ -42,7 +36,13 @@ function VerifyEmailContent() {
             toast.error("Error al verificar email");
             console.error("Verification error:", error);
         }
-    };
+    }, [token]);
+
+    useEffect(() => {
+        if (token) {
+            verifyToken();
+        }
+    }, [token, verifyToken]);
 
     const handleResendEmail = async () => {
         if (!email) {

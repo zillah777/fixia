@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { useParams, useRouter } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -40,13 +40,7 @@ export default function PublicProfilePage() {
     const [profile, setProfile] = useState<UserProfile | null>(null)
     const [loading, setLoading] = useState(true)
 
-    useEffect(() => {
-        if (userId) {
-            fetchProfile()
-        }
-    }, [userId])
-
-    const fetchProfile = async () => {
+    const fetchProfile = useCallback(async () => {
         try {
             const res = await fetch(`/api/users/${userId}/profile`)
             if (res.ok) {
@@ -61,7 +55,13 @@ export default function PublicProfilePage() {
         } finally {
             setLoading(false)
         }
-    }
+    }, [userId])
+
+    useEffect(() => {
+        if (userId) {
+            fetchProfile()
+        }
+    }, [userId, fetchProfile])
 
     if (loading) {
         return (
@@ -143,8 +143,8 @@ export default function PublicProfilePage() {
                                             <Star
                                                 key={star}
                                                 className={`h-5 w-5 ${star <= averageRating
-                                                        ? 'fill-yellow-400 text-yellow-400'
-                                                        : 'fill-gray-200 text-gray-200'
+                                                    ? 'fill-yellow-400 text-yellow-400'
+                                                    : 'fill-gray-200 text-gray-200'
                                                     }`}
                                             />
                                         ))}
@@ -176,8 +176,8 @@ export default function PublicProfilePage() {
                                                 <Star
                                                     key={star}
                                                     className={`h-4 w-4 ${star <= review.score
-                                                            ? 'fill-yellow-400 text-yellow-400'
-                                                            : 'fill-gray-200 text-gray-200'
+                                                        ? 'fill-yellow-400 text-yellow-400'
+                                                        : 'fill-gray-200 text-gray-200'
                                                         }`}
                                                 />
                                             ))}

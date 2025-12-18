@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Search, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -30,11 +30,7 @@ export default function ClientsPage() {
     const [totalPages, setTotalPages] = useState(1)
     const debouncedSearch = useDebounce(search, 300)
 
-    useEffect(() => {
-        fetchClients()
-    }, [debouncedSearch, page])
-
-    const fetchClients = async () => {
+    const fetchClients = useCallback(async () => {
         setLoading(true)
         try {
             let url = `/api/users?role=CLIENT&page=${page}&limit=20`
@@ -60,7 +56,11 @@ export default function ClientsPage() {
         } finally {
             setLoading(false)
         }
-    }
+    }, [debouncedSearch, page])
+
+    useEffect(() => {
+        fetchClients()
+    }, [fetchClients])
 
     return (
         <div className="space-y-6">

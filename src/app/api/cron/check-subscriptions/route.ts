@@ -51,9 +51,8 @@ export async function GET(request: Request) {
         data: {
           userId: user.id,
           type: "SUBSCRIPTION",
-          message: "Tu período de prueba de 30 días ha finalizado. Para seguir usando Fixia como profesional, debes suscribirte ahora.",
-          actionUrl: "/dashboard/subscription/checkout",
-          title: "Período de prueba finalizado"
+          message: "Período de prueba finalizado: Tu período de prueba de 30 días ha finalizado. Para seguir usando Fixia como profesional, debes suscribirte ahora.",
+          actionUrl: "/dashboard/subscription/checkout"
         }
       })
 

@@ -9,7 +9,7 @@ import { CheckCircle2, XCircle, AlertCircle } from "lucide-react"
 export default function SubscriptionStatusPage() {
     const router = useRouter()
     const params = useParams()
-    const status = params.status as string
+    const status = (params && params.status) ? (params.status as string) : ""
 
     useEffect(() => {
         // Here you would typically verify the payment status with your backend

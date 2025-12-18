@@ -27,12 +27,24 @@ export async function POST(request: NextRequest) {
             )
         }
 
-        // TODO: Upload files to storage service (e.g., S3, Cloudinary)
-        // For now, we'll just store the file names
-        const idFrontUrl = `https://storage.example.com/${session.user.id}/${idFront.name}`
-        const idBackUrl = `https://storage.example.com/${session.user.id}/${idBack.name}`
+        const { uploadToCloudinary } = await import("@/lib/cloudinary")
+
+        // Helper function to upload File to Cloudinary
+        const uploadFile = async (file: File, folder: string) => {
+            const buffer = Buffer.from(await file.arrayBuffer())
+            const timestamp = Date.now()
+            const filename = `${file.name.split('.')[0]}_${timestamp}`
+            const result = await uploadToCloudinary(buffer, filename, folder)
+            return result.secure_url
+        }
+
+        const folder = `verifications/${session.user.id}`
+
+        // Upload files to Cloudinary
+        const idFrontUrl = await uploadFile(idFront, folder)
+        const idBackUrl = await uploadFile(idBack, folder)
         const certificateUrl = certificate
-            ? `https://storage.example.com/${session.user.id}/${certificate.name}`
+            ? await uploadFile(certificate, folder)
             : null
 
         // Create or update verification request
@@ -50,6 +62,7 @@ export async function POST(request: NextRequest) {
                 idBack: idBackUrl,
                 certificationUrl: certificateUrl,
                 status: "PENDING",
+                updatedAt: new Date(),
             },
         })
 

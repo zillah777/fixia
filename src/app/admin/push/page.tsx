@@ -21,8 +21,8 @@ export default async function TestPushPage() {
     });
 
     return (
-        <div className="container mx-auto py-10 max-w-4xl">
-            <h1 className="text-3xl font-bold mb-8">Panel de Prueba de Notificaciones</h1>
+        <div className="space-y-6">
+            <h1 className="text-2xl font-bold">Panel de Prueba de Notificaciones</h1>
 
             <div className="grid gap-6">
                 <Card>

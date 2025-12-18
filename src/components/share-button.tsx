@@ -54,7 +54,7 @@ export function ShareButton({ slug, title }: ShareButtonProps) {
         <div className="bg-muted/30 rounded-xl p-6 border">
             <h3 className="font-bold text-lg mb-4">Compartir</h3>
             <div className="space-y-2">
-                {navigator.share && (
+                {typeof navigator !== 'undefined' && !!navigator.share && (
                     <Button
                         onClick={handleShare}
                         variant="outline"

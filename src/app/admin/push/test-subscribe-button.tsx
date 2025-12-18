@@ -4,8 +4,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Bell } from "lucide-react";
 import { toast } from "sonner";
-
-const VAPID_PUBLIC_KEY = 'BAe4hkL2QSfUlgegiIkitfH5L8tEFMBxe4KZTUA231yXmiaapWzAjHlFOVJNIbCUS1eq5-WSoUSB66Y09ubefto';
+import { VAPID_PUBLIC_KEY } from "@/lib/web-push-keys";
 
 function urlBase64ToUint8Array(base64String: string) {
     const padding = '='.repeat((4 - base64String.length % 4) % 4);

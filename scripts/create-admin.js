@@ -1,49 +1,44 @@
-#!/usr/bin/env node
+const { PrismaClient } = require('@prisma/client');
+const bcrypt = require('bcryptjs');
 
-const { spawn } = require('child_process');
-const path = require('path');
+const prisma = new PrismaClient();
 
-// Direct database query using psql in the container
-const command = `psql -h db -U postgres -d fixia -c "
-INSERT INTO \\\"User\\\" (id, email, name, password, role, status, \\\"completedOnboarding\\\", \\\"subscriptionStatus\\\", \\\"subscriptionEndsAt\\\", \\\"listingVisible\\\", \\\"canCreateServices\\\", \\\"canReceiveBookings\\\", \\\"createdAt\\\", \\\"updatedAt\\\")
-VALUES (
-  gen_random_uuid(),
-  'admin@fixia.app',
-  'Admin Fixia',
-  '\\$2a\\$10\\$YOHh0ApKJ61iI2hYG1C4TOxL/8tdhk9CEG2q3R2gjvGJjdVsLZMAi',
-  'ADMIN',
-  'ACTIVE',
-  true,
-  'active',
-  '2099-12-31',
-  false,
-  false,
-  false,
-  NOW(),
-  NOW()
-)
-ON CONFLICT (email) DO UPDATE SET updated_at = NOW()
-RETURNING id, email, role;
-"`;
+async function main() {
+    const email = 'admin@fixia.app';
+    const password = 'Lunitamia123.';
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-console.log('Creating admin user...\n');
-const proc = spawn('sh', ['-c', command]);
+    console.log(`Checking for admin user: ${email}...`);
 
-proc.stdout.on('data', (data) => {
-  console.log(data.toString());
-});
+    const user = await prisma.user.upsert({
+        where: { email },
+        update: {
+            password: hashedPassword,
+            role: 'ADMIN',
+            status: 'ACTIVE',
+            completedOnboarding: true,
+        },
+        create: {
+            email,
+            name: 'Fixia Admin',
+            password: hashedPassword,
+            role: 'ADMIN',
+            status: 'ACTIVE',
+            dni: '00000000',
+            phone: '1111111111',
+            birthdate: new Date('1990-01-01'),
+            completedOnboarding: true,
+        },
+    });
 
-proc.stderr.on('data', (data) => {
-  console.error(data.toString());
-});
+    console.log(`Admin user created/updated successfully: ${user.id}`);
+}
 
-proc.on('close', (code) => {
-  if (code === 0) {
-    console.log('\n✅ Admin user created successfully!');
-    console.log('📧 Email: admin@fixia.app');
-    console.log('🔐 Password: admin123');
-  } else {
-    console.error('\n❌ Error creating admin user');
-  }
-  process.exit(code);
-});
+main()
+    .catch((e) => {
+        console.error(e);
+        process.exit(1);
+    })
+    .finally(async () => {
+        await prisma.$disconnect();
+    });

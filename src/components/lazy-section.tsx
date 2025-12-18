@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import Image from "next/image"
 import { Skeleton } from "@/components/ui/skeleton"
 
 interface LazySectionProps {
@@ -43,13 +44,14 @@ export function LazySection({
             { threshold }
         )
 
-        if (ref.current) {
-            observer.observe(ref.current)
+        const currentRef = ref.current
+        if (currentRef) {
+            observer.observe(currentRef)
         }
 
         return () => {
-            if (ref.current) {
-                observer.unobserve(ref.current)
+            if (currentRef) {
+                observer.unobserve(currentRef)
             }
         }
     }, [threshold, triggerOnce])
@@ -100,28 +102,28 @@ export function LazyImage({
             { threshold: 0.1 }
         )
 
-        if (ref.current) {
-            observer.observe(ref.current)
+        const currentRef = ref.current
+        if (currentRef) {
+            observer.observe(currentRef)
         }
 
         return () => {
-            if (ref.current) {
-                observer.unobserve(ref.current)
+            if (currentRef) {
+                observer.unobserve(currentRef)
             }
         }
     }, [src])
 
     return (
-        <img
-            ref={ref}
+        <Image
+            ref={ref as any}
             src={imageSrc}
             alt={alt}
-            loading="lazy"
+            fill
             onLoad={() => setIsLoading(false)}
-            className={`transition-opacity duration-300 ${
-                isLoading ? "opacity-50" : "opacity-100"
-            }`}
-            {...props}
+            className={`transition-opacity duration-300 object-cover ${isLoading ? "opacity-50" : "opacity-100"
+                }`}
+            {...(props as any)}
         />
     )
 }

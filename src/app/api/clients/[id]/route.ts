@@ -16,16 +16,12 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
                         status: true
                     }
                 },
-                reviewsGiven: {
+                reviewsWritten: {
                     include: {
-                        professional: {
+                        target: {
                             select: {
-                                user: {
-                                    select: {
-                                        name: true,
-                                        image: true
-                                    }
-                                }
+                                name: true,
+                                avatar: true
                             }
                         }
                     },
@@ -35,7 +31,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
                 _count: {
                     select: {
                         requests: true,
-                        reviewsGiven: true
+                        reviewsWritten: true
                     }
                 }
             }
@@ -48,18 +44,18 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
         const formattedClient = {
             id: client.id,
             name: client.name,
-            image: client.image || client.avatar || `https://ui-avatars.com/api/?name=${client.name}&background=random`,
+            image: client.avatar || `https://ui-avatars.com/api/?name=${client.name}&background=random`,
             location: client.location || "Buenos Aires, Argentina",
             joinedDate: client.createdAt.toLocaleDateString('es-AR', { month: 'long', year: 'numeric' }),
             stats: {
                 requestsMade: client._count.requests,
-                reviewsGiven: client._count.reviewsGiven,
+                reviewsGiven: client._count.reviewsWritten,
                 activeRequests: client.requests.filter(r => r.status === 'OPEN').length
             },
-            reviews: client.reviewsGiven.map(r => ({
+            reviews: client.reviewsWritten.map(r => ({
                 id: r.id,
-                professionalName: r.professional?.user?.name || "Profesional",
-                professionalImage: r.professional?.user?.image,
+                professionalName: r.target?.name || "Profesional",
+                professionalImage: r.target?.avatar,
                 rating: r.score,
                 comment: r.comment,
                 date: r.createdAt.toLocaleDateString('es-AR')

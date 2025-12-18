@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
 import { z } from "zod";
+import { notifyUser } from "@/lib/notifications";
 
 const proposalSchema = z.object({
     requestId: z.string().uuid("Invalid request ID"),
@@ -84,6 +85,15 @@ export async function POST(request: Request) {
         void import("@/services/badge.service").then(({ BadgeService }) => {
             BadgeService.recalculateBadges(providerId)
         })
+
+        // Notify client
+        void notifyUser({
+            userId: serviceRequest.clientId,
+            type: "NEW_PROPOSAL",
+            title: "Nueva Propuesta",
+            message: `${session.user.name} ha enviado una propuesta para tu solicitud.`,
+            actionUrl: `/dashboard/requests/${requestId}`,
+        });
 
         return NextResponse.json(proposal, { status: 201 });
     } catch (error) {

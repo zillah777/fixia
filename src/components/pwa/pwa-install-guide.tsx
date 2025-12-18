@@ -57,7 +57,7 @@ export function PWAInstallGuide({ trigger }: { trigger?: React.ReactNode }) {
                                 <PlusSquare className="h-6 w-6 text-stone-900 dark:text-white" />
                             </div>
                             <div className="space-y-1">
-                                <h4 className="font-medium text-sm">2. Selecciona "Agregar a Inicio"</h4>
+                                <h4 className="font-medium text-sm">2. Selecciona &quot;Agregar a Inicio&quot;</h4>
                                 <p className="text-xs text-muted-foreground">Desliza hacia abajo en el menú hasta encontrar esta opción.</p>
                             </div>
                         </div>
@@ -66,7 +66,7 @@ export function PWAInstallGuide({ trigger }: { trigger?: React.ReactNode }) {
                                 <span className="font-bold text-blue-500 text-lg px-1">Add</span>
                             </div>
                             <div className="space-y-1">
-                                <h4 className="font-medium text-sm">3. Confirma tocando "Agregar"</h4>
+                                <h4 className="font-medium text-sm">3. Confirma tocando &quot;Agregar&quot;</h4>
                                 <p className="text-xs text-muted-foreground">¡Listo! Fixia aparecerá en tu pantalla de inicio.</p>
                             </div>
                         </div>
@@ -100,8 +100,8 @@ export function PWAInstallGuide({ trigger }: { trigger?: React.ReactNode }) {
                                 <Download className="h-6 w-6 text-stone-900 dark:text-white" />
                             </div>
                             <div className="space-y-1">
-                                <h4 className="font-medium text-sm">2. Toca "Instalar aplicación"</h4>
-                                <p className="text-xs text-muted-foreground">O selecciona "Agregar a la pantalla principal".</p>
+                                <h4 className="font-medium text-sm">2. Toca &quot;Instalar aplicación&quot;</h4>
+                                <p className="text-xs text-muted-foreground">O selecciona &quot;Agregar a la pantalla principal&quot;.</p>
                             </div>
                         </div>
                         <div className="flex items-start gap-4">

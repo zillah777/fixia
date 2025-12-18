@@ -105,7 +105,7 @@ export async function POST(request: Request) {
                         type: "NEW_OPPORTUNITY",
                         title: "¡Nueva Oportunidad!",
                         message: `Hay una nueva solicitud en tu categoría: ${data.title}.`,
-                        actionUrl: `/ dashboard / opportunities`
+                        actionUrl: `/dashboard/opportunities`
                     })
                 );
                 // Execute in background so we don't block the response

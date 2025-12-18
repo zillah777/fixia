@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import prisma from "@/lib/prisma"
 import { getSession } from "@/lib/auth"
+import { notifyUser } from "@/lib/notifications"
 
 export const dynamic = 'force-dynamic';
 
@@ -48,26 +49,22 @@ export async function POST(
             return NextResponse.json({ error: "No tienes permiso para rechazar esta propuesta o ya fue procesada" }, { status: 403 })
         }
 
-        // Transaction
-        await prisma.$transaction(async (tx) => {
-            // Update status
-            await tx.proposal.update({
-                where: { id: proposalId },
-                data: { status: "REJECTED" }
-            })
-
-            // Create notification
-            if (notificationTargetId) {
-                await tx.notification.create({
-                    data: {
-                        userId: notificationTargetId,
-                        type: "PROPOSAL_REJECTED",
-                        message: notificationMessage,
-                        actionUrl: `/dashboard/requests/${proposal.requestId}`
-                    }
-                })
-            }
+        // Update status
+        await prisma.proposal.update({
+            where: { id: proposalId },
+            data: { status: "REJECTED" }
         })
+
+        // Send notification
+        if (notificationTargetId) {
+            await notifyUser({
+                userId: notificationTargetId,
+                type: "PROPOSAL_REJECTED",
+                title: "Actualización de Propuesta",
+                message: notificationMessage,
+                actionUrl: `/dashboard/requests/${proposal.requestId}`
+            })
+        }
 
         return NextResponse.json({ success: true, message: "Propuesta rechazada" })
 

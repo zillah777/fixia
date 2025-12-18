@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { toast } from "sonner"
 import { Shield, CheckCircle, AlertCircle, Upload, Loader2 } from "lucide-react"
+import Image from "next/image"
 
 export default function VerificationPage() {
     const [status, setStatus] = useState("NOT_STARTED") // NOT_STARTED, PENDING, APPROVED, REJECTED
@@ -169,46 +170,76 @@ export default function VerificationPage() {
                         <div className="space-y-4">
                             <div className="space-y-2">
                                 <Label>Frente del DNI</Label>
-                                <div className="border-2 border-dashed rounded-lg p-8 text-center hover:bg-muted/50 transition-colors cursor-pointer relative">
+                                <div
+                                    className={`border-2 rounded-xl p-8 flex flex-col items-center justify-center transition-all cursor-pointer relative overflow-hidden h-40 ${idFront
+                                        ? 'border-solid border-accent/30 bg-accent/5'
+                                        : 'border-dashed border-gray-200 hover:bg-gray-50'
+                                        }`}
+                                    onClick={() => document.getElementById('dni-front')?.click()}
+                                >
                                     {uploadingFront ? (
                                         <Loader2 className="h-8 w-8 mx-auto text-muted-foreground animate-spin" />
+                                    ) : idFront ? (
+                                        <>
+                                            <Image src={idFront} alt="DNI Frente" fill className="object-contain p-2" />
+                                            <div className="absolute inset-0 flex items-center justify-center bg-black/5 opacity-0 hover:opacity-100 transition-opacity">
+                                                <span className="text-white text-sm font-medium bg-black/40 px-2 py-1 rounded">Click para cambiar</span>
+                                            </div>
+                                        </>
                                     ) : (
-                                        <Upload className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
+                                        <>
+                                            <Upload className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
+                                            <p className="text-sm text-muted-foreground">
+                                                Arrastra tu imagen aquí o haz clic para subir
+                                            </p>
+                                        </>
                                     )}
-                                    <p className="text-sm text-muted-foreground">
-                                        {uploadingFront ? "Subiendo..." : "Arrastra tu imagen aquí o haz clic para subir"}
-                                    </p>
                                     <Input
+                                        id="dni-front"
                                         type="file"
-                                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                        className="hidden"
                                         accept="image/*"
                                         onChange={(e) => handleFileChange(e, 'front')}
                                         disabled={uploadingFront}
                                     />
                                 </div>
-                                {idFront && <p className="text-sm text-accent flex items-center gap-1"><CheckCircle className="h-3 w-3" /> Imagen cargada</p>}
                             </div>
 
                             <div className="space-y-2">
                                 <Label>Dorso del DNI</Label>
-                                <div className="border-2 border-dashed rounded-lg p-8 text-center hover:bg-muted/50 transition-colors cursor-pointer relative">
+                                <div
+                                    className={`border-2 rounded-xl p-8 flex flex-col items-center justify-center transition-all cursor-pointer relative overflow-hidden h-40 ${idBack
+                                        ? 'border-solid border-accent/30 bg-accent/5'
+                                        : 'border-dashed border-gray-200 hover:bg-gray-50'
+                                        }`}
+                                    onClick={() => document.getElementById('dni-back')?.click()}
+                                >
                                     {uploadingBack ? (
                                         <Loader2 className="h-8 w-8 mx-auto text-muted-foreground animate-spin" />
+                                    ) : idBack ? (
+                                        <>
+                                            <Image src={idBack} alt="DNI Dorso" fill className="object-contain p-2" />
+                                            <div className="absolute inset-0 flex items-center justify-center bg-black/5 opacity-0 hover:opacity-100 transition-opacity">
+                                                <span className="text-white text-sm font-medium bg-black/40 px-2 py-1 rounded">Click para cambiar</span>
+                                            </div>
+                                        </>
                                     ) : (
-                                        <Upload className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
+                                        <>
+                                            <Upload className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
+                                            <p className="text-sm text-muted-foreground">
+                                                Arrastra tu imagen aquí o haz clic para subir
+                                            </p>
+                                        </>
                                     )}
-                                    <p className="text-sm text-muted-foreground">
-                                        {uploadingBack ? "Subiendo..." : "Arrastra tu imagen aquí o haz clic para subir"}
-                                    </p>
                                     <Input
+                                        id="dni-back"
                                         type="file"
-                                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                        className="hidden"
                                         accept="image/*"
                                         onChange={(e) => handleFileChange(e, 'back')}
                                         disabled={uploadingBack}
                                     />
                                 </div>
-                                {idBack && <p className="text-sm text-accent flex items-center gap-1"><CheckCircle className="h-3 w-3" /> Imagen cargada</p>}
                             </div>
                         </div>
 

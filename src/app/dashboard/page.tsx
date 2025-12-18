@@ -100,8 +100,9 @@ export default function DashboardPage() {
     }, [])
 
     const chartData = React.useMemo(() => {
-        if ((stats as any).weeklyStats) {
-            return (stats as any).weeklyStats;
+        const weeklyStats = (stats as any).weeklyStats;
+        if (weeklyStats) {
+            return weeklyStats;
         }
 
         // Fallback for other roles (Client/Admin) if not yet implemented
@@ -115,7 +116,7 @@ export default function DashboardPage() {
             name: new Date(date).toLocaleDateString('es-AR', { weekday: 'short' }),
             activity: stats.recentActivity.filter(a => a.date.startsWith(date)).length
         }));
-    }, [stats.recentActivity, (stats as any).weeklyStats]);
+    }, [stats]);
 
     return (
         <div className="min-h-screen font-sans pb-12">

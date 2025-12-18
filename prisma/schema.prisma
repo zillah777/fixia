@@ -19,6 +19,8 @@ model User {
   password                String
   location                String?
   verificationToken       String?
+  resetToken              String?
+  resetTokenExpires       DateTime?
   role                    UserRole             @default(CLIENT)
   status                  UserStatus           @default(ACTIVE)
   subscriptionId          String?
@@ -50,7 +52,9 @@ model User {
   reviewsReceived         Review[]             @relation("ReviewTarget")
   services                Service[]            @relation("ProviderServices")
   verificationRequest     VerificationRequest?
+  certifications         CertificationVerification[]
   pushSubscriptions       PushSubscription[]
+  preference              UserPreference?
 
   @@index([role])
   @@index([subscriptionStatus])
@@ -70,6 +74,24 @@ model VerificationRequest {
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
   user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model CertificationVerification {
+  id                String   @id @default(uuid())
+  userId            String
+  title             String
+  issuingBody       String
+  issueDate         DateTime
+  certificateImage  String
+  certificateNumber String?
+  status            String   @default("PENDING")
+  adminNote         String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([status])
 }
 
 model Profile {
@@ -307,4 +329,15 @@ model PushSubscription {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+}
+
+model UserPreference {
+  id                  String   @id @default(cuid())
+  userId              String   @unique
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dismissedTrialAlert Boolean  @default(false)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  @@map("user_preferences")
 }

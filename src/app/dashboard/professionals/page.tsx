@@ -1,7 +1,7 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { Search, Loader2, Filter } from "lucide-react"
+import { useState, useEffect, useCallback } from "react"
+import { Search, Loader2, Filter, Star, MapPin, ArrowLeft, Users } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
@@ -35,11 +35,7 @@ export default function ProfessionalsPage() {
     const [totalPages, setTotalPages] = useState(1)
     const debouncedSearch = useDebounce(search, 300)
 
-    useEffect(() => {
-        fetchProfessionals()
-    }, [debouncedSearch, page])
-
-    const fetchProfessionals = async () => {
+    const fetchProfessionals = useCallback(async () => {
         setLoading(true)
         try {
             let url = `/api/professionals?page=${page}&limit=20`
@@ -65,7 +61,11 @@ export default function ProfessionalsPage() {
         } finally {
             setLoading(false)
         }
-    }
+    }, [debouncedSearch, page])
+
+    useEffect(() => {
+        fetchProfessionals()
+    }, [fetchProfessionals])
 
     return (
         <div className="space-y-6">
@@ -106,7 +106,7 @@ export default function ProfessionalsPage() {
                     <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
                 </div>
             ) : professionals.length === 0 ? (
-                /* Empty State */
+                /* Empty State for no search results */
                 <StandardizedEmptyState
                     icon={Search}
                     title="No se encontraron profesionales"
@@ -133,7 +133,7 @@ export default function ProfessionalsPage() {
                                 bio={professional.profile?.bio}
                                 location={
                                     professional.profile?.locationLat
-                                        ? `Lat: ${professional.profile.locationLat.toFixed(2)}, Lng: ${professional.profile.locationLng?.toFixed(2)}`
+                                        ? `Lat: ${professional.profile.locationLat.toFixed(2)}, Lng: ${professional.profile.locationLng?.toFixed(2)} `
                                         : undefined
                                 }
                                 badges={

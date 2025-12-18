@@ -9,10 +9,12 @@ import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Star, MapPin, Search, Filter } from "lucide-react"
+import { Star, MapPin, Search, Filter, CheckCircle } from "lucide-react"
 import { Professional } from "@/types/professional"
 import { useAuth } from "@/providers/auth-provider"
 import { TrustBadgesGroup } from "@/components/ui/trust-badges"
+import { Skeleton } from "@/components/ui/skeleton"
+import { StandardizedEmptyState } from "@/components/onboarding/standardized-empty-state"
 
 function ProfessionalsList() {
     const searchParams = useSearchParams()
@@ -126,7 +128,29 @@ function ProfessionalsList() {
 
             {/* Results Grid */}
             {loading ? (
-                <div className="text-center py-12">Cargando profesionales...</div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6">
+                    {[1, 2, 3, 4, 5, 6].map((i) => (
+                        <Card key={i} className="overflow-hidden border-border/50">
+                            <Skeleton className="h-28 w-full" />
+                            <CardContent className="pt-0 px-4 sm:px-6 pb-6 relative">
+                                <div className="flex justify-between items-end mb-4 -mt-8 sm:-mt-10">
+                                    <Skeleton className="h-20 w-20 sm:h-24 sm:w-24 rounded-full border-[4px] border-background" />
+                                    <Skeleton className="h-8 w-24 rounded-full" />
+                                </div>
+                                <div className="space-y-2 mb-4">
+                                    <Skeleton className="h-6 w-3/4" />
+                                    <Skeleton className="h-4 w-1/2" />
+                                </div>
+                                <Skeleton className="h-4 w-full mb-5" />
+                                <div className="flex gap-2 mb-5">
+                                    <Skeleton className="h-5 w-16" />
+                                    <Skeleton className="h-5 w-16" />
+                                </div>
+                                <Skeleton className="h-10 w-full" />
+                            </CardContent>
+                        </Card>
+                    ))}
+                </div>
             ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6">
                     {professionals.map((pro) => (
@@ -212,16 +236,19 @@ function ProfessionalsList() {
             )}
 
             {!loading && professionals.length === 0 && (
-                <div className="text-center py-12">
-                    <p className="text-muted-foreground text-lg">No se encontraron profesionales con esos criterios.</p>
-                    <Button variant="link" onClick={() => {
-                        setSearch("")
-                        setCategoryFilter("all")
-                        setLocationFilter("")
-                    }}>
-                        Limpiar filtros
-                    </Button>
-                </div>
+                <StandardizedEmptyState
+                    icon={Search}
+                    title="No se encontraron profesionales"
+                    description="No hay profesionales que coincidan con tus criterios de búsqueda."
+                    action={{
+                        label: "Limpiar filtros",
+                        onClick: () => {
+                            setSearch("")
+                            setCategoryFilter("all")
+                            setLocationFilter("")
+                        }
+                    }}
+                />
             )}
         </div>
     )

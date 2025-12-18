@@ -11,6 +11,7 @@ import { SmartBudgetSuggestion } from "@/components/requests/smart-budget-sugges
 import { ArrowLeft, Camera, MapPin } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import Image from "next/image"
 import { toast } from "sonner"
 import { CATEGORIES } from "@/config/categories"
 import { CategorySelector } from "@/components/shared/category-selector"
@@ -214,7 +215,7 @@ export default function CreateRequestPage() {
                                     {/* Image Previews */}
                                     {images.map((url, idx) => (
                                         <div key={idx} className="aspect-square rounded-xl bg-gray-100 relative group overflow-hidden">
-                                            <img src={url} alt={`Preview ${idx}`} className="w-full h-full object-cover" />
+                                            <Image src={url} alt={`Preview ${idx}`} fill className="object-cover" />
                                             <button
                                                 type="button"
                                                 onClick={() => removeImage(idx)}

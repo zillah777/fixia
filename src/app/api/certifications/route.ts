@@ -97,12 +97,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      certification: {
-        id: certification.id,
-        status: certification.status,
-        createdAt: certification.createdAt,
-        message: 'Solicitud de certificación enviada. El administrador la revisará en breve.',
-      },
+      certification, // Return the full object
     }, { status: 201 });
 
   } catch (error) {
@@ -141,14 +136,6 @@ export async function GET(req: NextRequest) {
 
     const certifications = await prisma.certificationVerification.findMany({
       where: { userId: session.user.id },
-      select: {
-        id: true,
-        title: true,
-        status: true,
-        createdAt: true,
-        updatedAt: true,
-        adminNote: true,
-      },
       orderBy: { createdAt: 'desc' },
     });
 

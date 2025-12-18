@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import prisma from "@/lib/prisma"
 import { getSession } from "@/lib/auth"
+import { notifyUser } from "@/lib/notifications"
 
 export const dynamic = 'force-dynamic';
 
@@ -63,14 +64,13 @@ export async function PATCH(
             })
 
             // 4. Notify the professional
-            await tx.notification.create({
-                data: {
-                    userId: proposal.providerId,
-                    type: "PROPOSAL_ACCEPTED",
-                    message: `¡Tu propuesta para "${proposal.request.title}" fue aceptada! Ya puedes coordinar con el cliente.`,
-                    actionUrl: `/dashboard/matches/${match.id}`
-                }
-            })
+            await notifyUser({
+                userId: proposal.providerId,
+                type: "PROPOSAL_ACCEPTED",
+                title: "¡Propuesta Aceptada!",
+                message: `Tu propuesta para "${proposal.request.title}" fue aceptada.`,
+                actionUrl: `/dashboard/matches/${match.id}`
+            });
 
             return match
         })

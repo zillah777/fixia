@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { ArrowLeft, MapPin, Calendar, Clock, Share2, MoreVertical, Trash2, Check, X, AlertTriangle, MessageCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -332,7 +333,7 @@ export default function RequestDetailPage() {
                         <div className={`grid gap-4 ${request.images.length > 1 ? 'grid-cols-2' : 'grid-cols-1'}`}>
                             {request.images.map((img: string, i: number) => (
                                 <div key={i} className="aspect-video rounded-2xl overflow-hidden bg-gray-100 relative group">
-                                    <img src={img} alt={`Foto ${i + 1}`} className="w-full h-full object-cover" />
+                                    <Image src={img} alt={`Foto ${i + 1}`} fill className="object-cover" />
                                 </div>
                             ))}
                         </div>

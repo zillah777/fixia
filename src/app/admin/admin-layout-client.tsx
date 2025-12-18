@@ -9,6 +9,7 @@ import {
     LayoutDashboard,
     Users,
     ShieldCheck,
+    Award,
     Settings,
     LogOut,
     Menu,
@@ -39,6 +40,11 @@ export default function AdminLayoutClient({
             icon: ShieldCheck,
         },
         {
+            title: "Certificaciones",
+            href: "/admin/certifications",
+            icon: Award,
+        },
+        {
             title: "Usuarios",
             href: "/admin/users",
             icon: Users,
@@ -50,7 +56,7 @@ export default function AdminLayoutClient({
         },
         {
             title: "Test Push",
-            href: "/test-push",
+            href: "/admin/push",
             icon: Bell,
         },
     ]

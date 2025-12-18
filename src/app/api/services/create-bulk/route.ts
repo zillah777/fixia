@@ -46,10 +46,11 @@ export async function POST(request: NextRequest) {
                 .map((service) =>
                     prisma.service.create({
                         data: {
-                            name: service.name,
+                            title: service.name,
                             description: service.description || "",
                             price: service.priceFrom ? parseFloat(service.priceFrom) : 0,
                             providerId: session.user.id,
+                            categoryId: "service_offer",
                         },
                     })
                 )

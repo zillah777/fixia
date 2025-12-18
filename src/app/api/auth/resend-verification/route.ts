@@ -47,7 +47,7 @@ export async function POST(req: Request) {
         });
 
         // Send verification email with NEW token (non-blocking)
-        sendVerificationEmail(user.email, user.name, newToken).catch(error => {
+        sendVerificationEmail(user.email, user.name || 'Usuario', newToken).catch(error => {
             console.error('Failed to send verification email:', error);
         });
 

@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { X, Plus, Image as ImageIcon, Briefcase, FileText } from "lucide-react"
 import { toast } from "sonner"
+import Image from "next/image"
 
 interface ProfessionalProfileFormProps {
     initialData: any
@@ -265,7 +266,7 @@ export function ProfessionalProfileForm({ initialData, onSave }: ProfessionalPro
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         {Array.isArray(formData.portfolioImages) && formData.portfolioImages.map((img: string, i: number) => (
                             <div key={i} className="relative aspect-square rounded-lg overflow-hidden border group">
-                                <img src={img} alt={`Portafolio ${i + 1}`} className="w-full h-full object-cover" />
+                                <Image src={img} alt={`Portafolio ${i + 1}`} fill className="object-cover" />
                                 <button
                                     onClick={() => handleRemoveImage(i)}
                                     className="absolute top-1 right-1 bg-black/50 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-destructive"

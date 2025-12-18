@@ -59,6 +59,9 @@ export function ProfessionalProfileAlert() {
     const hasCertification = certificationsData?.certifications?.some((c: any) => c.status === "APPROVED")
     const hasPhoto = profileData?.avatar
 
+    const needsPhoto = !hasPhoto
+    const needsIdentityVerification = !dniVerified
+    const needsCertifications = !hasCertification
     const isComplete = !needsPhoto && !needsIdentityVerification && !needsCertifications
 
     // We show the congrats message if complete, even if all items are done

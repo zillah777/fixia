@@ -1,7 +1,6 @@
 import webpush from 'web-push';
 
-// VAPID keys generated for Fixia
-const publicVapidKey = 'BAe4hkL2QSfUlgegiIkitfH5L8tEFMBxe4KZTUA231yXmiaapWzAjHlFOVJNIbCUS1eq5-WSoUSB66Y09ubefto';
+import { VAPID_PUBLIC_KEY as publicVapidKey } from './web-push-keys';
 const privateVapidKey = 'bOanZ4G6LXTYHUFvZ-vruDdAgqBLCYrP91EO4Fjis_0';
 
 webpush.setVapidDetails(

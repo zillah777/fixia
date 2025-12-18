@@ -73,6 +73,9 @@ export function ClientProfileAlert() {
 
     const profileDataComplete = hasBio && hasPhone && hasSocialLinks
 
+    const needsPhoto = !hasPhoto
+    const needsDniVerification = !dniVerified
+    const needsProfileData = !profileDataComplete
     const isComplete = !needsPhoto && !needsDniVerification && !needsProfileData
 
     // If complete and NOT dismissed, we show the congrats instead of returning null

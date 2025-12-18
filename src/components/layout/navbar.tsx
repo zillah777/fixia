@@ -41,7 +41,6 @@ export function Navbar() {
         window.addEventListener("scroll", handleScroll)
         return () => window.removeEventListener("scroll", handleScroll)
     }, [])
-
     const closeSheet = () => setIsSheetOpen(false)
 
     return (
@@ -70,7 +69,7 @@ export function Navbar() {
                                         <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg mb-2 w-full max-w-[280px]">
                                             <Avatar className="h-10 w-10">
                                                 <AvatarImage
-                                                    src={getAvatarUrl(user.avatar || undefined, user.name)}
+                                                    src={getAvatarUrl(user.avatar ?? undefined, user.name || undefined)}
                                                     alt={user.name || "User"}
                                                 />
                                                 <AvatarFallback>{getInitials(user.name || "User")}</AvatarFallback>
@@ -179,7 +178,7 @@ export function Navbar() {
                                 alt="Fixia Logo"
                                 width={180}
                                 height={60}
-                                className="h-10 md:h-16 w-auto object-contain"
+                                className="h-14 md:h-20 w-auto object-contain"
                                 priority
                             />
                         </Link>
@@ -238,7 +237,7 @@ export function Navbar() {
                                     <Button variant="ghost" size="icon" className="rounded-full relative h-12 w-12 border border-muted-foreground/20">
                                         <Avatar className="h-8 w-8">
                                             <AvatarImage
-                                                src={getAvatarUrl(user.avatar || undefined, user.name)}
+                                                src={getAvatarUrl(user.avatar || undefined, user.name || undefined)}
                                                 alt={user.name || "User"}
                                                 className="object-cover"
                                             />

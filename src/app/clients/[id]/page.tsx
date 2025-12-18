@@ -11,7 +11,7 @@ import { useParams } from "next/navigation";
 
 function ClientProfile() {
     const params = useParams();
-    const id = params.id as string;
+    const id = params?.id as string;
     const [client, setClient] = React.useState<any>(null)
     const [loading, setLoading] = React.useState(true)
     const [error, setError] = React.useState("")
@@ -146,7 +146,7 @@ function ClientProfile() {
                                                 ))}
                                             </div>
                                             <p className="text-muted-foreground text-sm">
-                                                "{review.comment}"
+                                                &quot;{review.comment}&quot;
                                             </p>
                                         </div>
                                     </div>

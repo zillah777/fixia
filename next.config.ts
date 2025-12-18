@@ -7,10 +7,10 @@ const nextConfig: NextConfig = {
     },
     output: 'standalone',
     typescript: {
-        ignoreBuildErrors: true,
+        ignoreBuildErrors: false,
     },
     eslint: {
-        ignoreDuringBuilds: true,
+        ignoreDuringBuilds: false,
     },
     staticPageGenerationTimeout: 120,
     onDemandEntries: {
@@ -29,7 +29,7 @@ const nextConfig: NextConfig = {
             },
         ],
         disableStaticImages: true,
-        unoptimized: process.env.NODE_ENV === 'production',
+        // unoptimized: false, // Default is false (optimized)
     },
     async headers() {
         return [

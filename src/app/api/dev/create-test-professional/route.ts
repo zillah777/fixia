@@ -96,18 +96,17 @@ export async function POST(req: Request) {
         phone,
         dni,
         birthdate: birthdate ? new Date(birthdate) : new Date('1990-01-01'),
-        status: 'VERIFIED', // Automatically verified for testing
+        status: 'ACTIVE', // Automatically active for testing
         // Enable all professional features for testing
         canCreateServices: true,
         listingVisible: true,
         canReceiveBookings: true,
-        subscriptionPlan: 'PROFESSIONAL',
         subscriptionStatus: 'ACTIVE',
         subscriptionEndsAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // 1 year from now
         // Create professional profile
         profile: {
           create: {
-            category: category || 'plomeria',
+            bio: "Este es un perfil profesional de prueba con todas las funciones habilitadas.",
             yearsExperience: 5,
             workRadius: 'Mi ciudad',
             availability: JSON.stringify({
@@ -121,17 +120,9 @@ export async function POST(req: Request) {
             }),
             tags: JSON.stringify(['testing', 'development']),
             badges: JSON.stringify([
-              {
-                id: 'verified',
-                name: 'Verificado',
-                icon: 'shield-check',
-                color: 'green',
-              },
+              "VERIFIED" // Normalizing to string badge
             ]),
-            rating: 5,
-            reviews: 0,
-            responseTime: '< 1 hora',
-            completedJobs: 0,
+            ratingAvg: 5.0,
           },
         },
       },

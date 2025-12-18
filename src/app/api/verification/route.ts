@@ -6,7 +6,7 @@ import { rateLimit } from '@/lib/rate-limit';
 
 export const dynamic = 'force-dynamic';
 
-// SECURITY: Configure rate limiting for verification uploads (1 per user per hour)
+// SECURITY: Configure rate limiting for verification uploads (10 per user per hour)
 const verificationLimiter = rateLimit({
     interval: 60 * 60 * 1000, // 1 hour
     uniqueTokenPerInterval: 1000,
@@ -35,8 +35,8 @@ const verificationSchema = z.object({
  * - User must be authenticated
  * - userId in URL must match authenticated user (prevent impersonation)
  * - Only Cloudinary URLs allowed (prevent external file injection)
- * - Rate limited to 1 submission per hour per user
- * - Only professionals can submit verification
+ * - Rate limited to 10 submissions per hour per user
+ * - Both clients and professionals can submit verification
  */
 export async function POST(req: NextRequest) {
     try {
@@ -58,7 +58,7 @@ export async function POST(req: NextRequest) {
         // STEP 2: RATE LIMITING - Prevent spam submissions
         // ======================================================================
         try {
-            await verificationLimiter.check(1, authenticatedUserId);
+            await verificationLimiter.check(10, authenticatedUserId);
         } catch (error) {
             console.warn(`[VERIFICATION_RATELIMIT] User exceeded limit: ${authenticatedUserId}`);
             return new NextResponse(
@@ -95,11 +95,12 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        // SECURITY: Only professionals can verify identity
-        if (user.role !== 'PROFESSIONAL') {
-            console.warn(`[VERIFICATION_AUTH] Non-professional verification: ${authenticatedUserId}`);
+        // SECURITY: Both professionals and clients can verify identity
+        // Previously restricted to PROFESSIONAL, now allowed for both roles.
+        if (user.role !== 'PROFESSIONAL' && user.role !== 'CLIENT') {
+            console.warn(`[VERIFICATION_AUTH] Unauthorized role for verification: ${user.role} - ${authenticatedUserId}`);
             return new NextResponse(
-                JSON.stringify({ error: 'Solo profesionales pueden verificar su identidad' }),
+                JSON.stringify({ error: 'Acceso denegado: Rol no autorizado para verificación' }),
                 { status: 403, headers: { 'Content-Type': 'application/json' } }
             );
         }
@@ -115,7 +116,7 @@ export async function POST(req: NextRequest) {
         let verificationRequest;
 
         if (existingRequest) {
-            // SECURITY: Only allow resubmission if previously rejected
+            // SECURITY: Only allow resubmission if previously rejected or pending (for updates)
             if (existingRequest.status !== 'REJECTED' && existingRequest.status !== 'PENDING') {
                 console.warn(
                     `[VERIFICATION_AUTH] Cannot resubmit with status: ${existingRequest.status}`
@@ -252,8 +253,8 @@ export async function GET(req: NextRequest) {
                 verificationRequest.status === 'APPROVED'
                     ? 'Tu identidad ha sido verificada.'
                     : verificationRequest.status === 'REJECTED'
-                    ? `Tu verificación fue rechazada. Razón: ${verificationRequest.adminNote || 'No especificada'}`
-                    : 'Tu solicitud está siendo revisada.',
+                        ? `Tu verificación fue rechazada. Razón: ${verificationRequest.adminNote || 'No especificada'}`
+                        : 'Tu solicitud está siendo revisada.',
         });
 
     } catch (error) {

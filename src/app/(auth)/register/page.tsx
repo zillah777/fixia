@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, Suspense, useEffect } from "react"
+import { useState, Suspense, useEffect, useRef } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { useRouter, useSearchParams } from "next/navigation"
@@ -100,10 +100,12 @@ const formSchema = z.object({
 function RegisterForm() {
     const router = useRouter()
     const searchParams = useSearchParams()
-    const defaultRole = searchParams.get("role") === "professional" ? "PROFESSIONAL" : "CLIENT"
+    const defaultRole = searchParams?.get("role") === "professional" ? "PROFESSIONAL" : "CLIENT"
 
     const { user } = useAuth()
     const [isLoading, setIsLoading] = useState(false)
+
+
 
     // SECURITY: If user is already logged in, redirect to dashboard
     // Use useEffect to avoid returning null which breaks Radix UI Portal cleanup
@@ -187,15 +189,15 @@ function RegisterForm() {
     }
 
     return (
-        <div className="flex min-h-screen items-center justify-center flex-col bg-muted/50 p-4">
-            <Link href="/" className="flex items-center justify-center gap-2 mb-16 md:mb-24 pl-8 md:pl-0">
-                <div className="relative h-24 w-auto aspect-[3/1]">
+        <div className="flex min-h-screen items-center justify-center md:pt-20 flex-col bg-muted/50 p-4">
+            <Link href="/" className="flex items-center justify-center gap-2 mb-12 sm:mb-16 md:mb-12 pl-0 md:pl-0">
+                <div className="relative w-full flex justify-center">
                     <Image
                         src="/logo.png"
                         alt="Fixia Logo"
-                        width={270}
-                        height={90}
-                        className="object-contain w-48 sm:w-60 md:w-72"
+                        width={400}
+                        height={130}
+                        className="object-contain w-80 sm:w-96"
                         style={{ height: "auto" }}
                         priority
                     />

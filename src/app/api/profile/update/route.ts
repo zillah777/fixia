@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
                 name,
                 phone: phone || null,
                 location: location || null,
-                image: avatar || null,
+                avatar: avatar || null,
             },
         })
 

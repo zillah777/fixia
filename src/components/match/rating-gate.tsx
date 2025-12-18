@@ -83,7 +83,7 @@ export function RatingGate({
     // Poll every 3 seconds to check if other user has rated
     const interval = setInterval(checkRatings, 3000)
     return () => clearInterval(interval)
-  }, [matchId, clientId, providerId, isClient, onBothRated, refreshTrigger])
+  }, [matchId, clientId, providerId, isClient, onBothRated, refreshTrigger, hasTriggeredCallback])
 
   if (loading) {
     return (

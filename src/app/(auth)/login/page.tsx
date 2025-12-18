@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
@@ -40,7 +40,6 @@ export default function LoginPage() {
     const [showPassword, setShowPassword] = useState(false)
 
     // SECURITY: If user is already logged in, redirect to dashboard
-    // Use useEffect to avoid returning null which breaks Radix UI Portal cleanup
     useEffect(() => {
         if (user) {
             router.push(user.role === 'ADMIN' ? '/admin' : '/dashboard')
@@ -93,20 +92,21 @@ export default function LoginPage() {
     }
 
     return (
-        <div className="flex min-h-screen items-center justify-center md:items-start md:pt-32 bg-muted/50 p-4">
+        <div className="flex min-h-screen items-center justify-center md:pt-20 bg-muted/50 p-4">
             <div className="w-full max-w-md space-y-8">
                 {/* Logo */}
-                <Link href="/" className="flex items-center justify-center gap-2 mb-12 sm:mb-16 md:mb-24 pl-20 md:pl-0">
-                    <div className="relative h-24 w-auto aspect-[3/1]">
+                <Link href="/" className="flex items-center justify-center gap-2 mb-12 sm:mb-16 md:mb-12 pl-1 md:pl-0">
+                    <div className="relative w-full flex justify-center">
                         <Image
                             src="/logo.png"
                             alt="Fixia Logo"
-                            width={270}
-                            height={90}
-                            className="object-contain w-48 sm:w-60 md:w-72"
+                            width={400}
+                            height={130}
+                            className="object-contain w-80 sm:w-96"
                             style={{ height: "auto" }}
                             priority
                         />
+
                     </div>
                 </Link>
 

@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import Image from "next/image"
 import { User } from "@prisma/client"
 import { Loader2, Upload } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -20,7 +21,7 @@ export function OnboardingStepProfile({ user, onError }: OnboardingStepProfilePr
         phone: user.phone || "",
         location: user.location || "",
         bio: "",
-        avatar: user.image || "",
+        avatar: (user as any).avatar || (user as any).image || "",
     })
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -82,10 +83,11 @@ export function OnboardingStepProfile({ user, onError }: OnboardingStepProfilePr
                 <div className="flex gap-4 items-start">
                     <div className="w-24 h-24 rounded-full bg-muted border-2 border-border/40 flex items-center justify-center flex-shrink-0 overflow-hidden">
                         {formData.avatar ? (
-                            <img
+                            <Image
                                 src={formData.avatar}
                                 alt="Avatar"
-                                className="w-full h-full object-cover"
+                                fill
+                                className="object-cover"
                             />
                         ) : (
                             <div className="text-muted-foreground text-3xl">

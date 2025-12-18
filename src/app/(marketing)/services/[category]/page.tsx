@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { useParams } from "next/navigation"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input"
 import { Star, Search, ArrowLeft } from "lucide-react"
 import { StandardizedEmptyState } from "@/components/onboarding/standardized-empty-state"
 import Link from "next/link"
+import Image from "next/image"
 
 interface Service {
     id: string
@@ -33,13 +34,7 @@ export default function CategoryServicesPage() {
     const [loading, setLoading] = useState(true)
     const [search, setSearch] = useState("")
 
-    useEffect(() => {
-        if (category) {
-            fetchServices()
-        }
-    }, [category, search])
-
-    const fetchServices = async () => {
+    const fetchServices = useCallback(async () => {
         setLoading(true)
         try {
             const queryParams = new URLSearchParams()
@@ -56,7 +51,13 @@ export default function CategoryServicesPage() {
         } finally {
             setLoading(false)
         }
-    }
+    }, [category, search])
+
+    useEffect(() => {
+        if (category) {
+            fetchServices()
+        }
+    }, [category, fetchServices])
 
     const categoryNames: Record<string, string> = {
         plomeria: "Plomería",
@@ -120,10 +121,11 @@ export default function CategoryServicesPage() {
                             <CardHeader className="p-0">
                                 {service.images && service.images.length > 0 ? (
                                     <div className="h-48 w-full relative">
-                                        <img
+                                        <Image
                                             src={service.images[0]}
                                             alt={service.title}
-                                            className="w-full h-full object-cover"
+                                            fill
+                                            className="object-cover"
                                         />
                                     </div>
                                 ) : (

@@ -3,48 +3,45 @@
  *
  * These functions help set up the RLS context in API routes and server actions
  * where the Next.js middleware may not automatically set the context.
- *
- * Usage:
- * - In API routes: Call setRLSContext() at the start of your handler
- * - In Server Actions: Call setRLSContext() at the start of the action
- * - In Protected Components: Use getSession() and pass to setRLSContext()
  */
 
-import { getServerSession } from 'next-auth'
-import { authConfig } from '@/auth.config'
+import { getSession } from './auth'
+import { rlsStorage } from './prisma'
 
 /**
  * Set RLS context from session data
  * Call this in API routes or server actions to ensure RLS policies are enforced
  */
-export async function setRLSContext() {
-    const session = await getServerSession(authConfig)
+export async function setRLSContext(): Promise<{ userId: string | null; userRole: string | null }> {
+    const session = await getSession()
 
-    if (!session?.user) {
-        // Clear context if no user
-        (globalThis as any).__rls_context = {
-            userId: null,
-            userRole: null
-        }
-        return null
-    }
+    const userId = session?.user?.id || null
+    const userRole = session?.user?.role || null
 
     const rlsContext = {
-        userId: session.user.id,
-        userRole: session.user.role
+        userId,
+        userRole
     }
 
-    // Store in thread-local storage for Prisma middleware
-    (globalThis as any).__rls_context = rlsContext
+        // Set globally for non-AsyncLocalStorage environments (like middleware)
+        ; (globalThis as any).__rls_context = rlsContext
 
     return rlsContext
+}
+
+/**
+ * Run block with RLS context (Thread-safe via AsyncLocalStorage)
+ */
+export async function runWithRLS<T>(fn: () => Promise<T>): Promise<T> {
+    const context = await setRLSContext()
+    return rlsStorage.run(context, fn)
 }
 
 /**
  * Get current RLS context (for debugging/verification)
  */
 export function getRLSContext() {
-    return (globalThis as any).__rls_context || {
+    return rlsStorage.getStore() || (globalThis as any).__rls_context || {
         userId: null,
         userRole: null
     }
@@ -69,7 +66,7 @@ export function clearRLSContext() {
 export async function verifyUserCanAccess(
     requiredRole?: 'CLIENT' | 'PROFESSIONAL' | 'ADMIN'
 ): Promise<boolean> {
-    const session = await getServerSession(authConfig)
+    const session = await getSession()
 
     if (!session?.user) {
         return false
@@ -87,7 +84,7 @@ export async function verifyUserCanAccess(
  * Throws error if not authenticated
  */
 export async function requireAuth() {
-    const session = await getServerSession(authConfig)
+    const session = await getSession()
 
     if (!session?.user) {
         throw new Error('Unauthorized: User not authenticated')

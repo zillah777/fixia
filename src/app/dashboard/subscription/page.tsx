@@ -125,8 +125,8 @@ export default function SubscriptionPage() {
                                 {isSubscriptionTrial
                                     ? "Estás en tu período de prueba de 30 días. Disfruta de todos los beneficios sin costo."
                                     : isSubscriptionCancelled
-                                    ? "Tu suscripción ha sido cancelada pero aún tienes acceso hasta la fecha de vencimiento."
-                                    : "Estás disfrutando de todos los beneficios de Fixia Pro."
+                                        ? "Tu suscripción ha sido cancelada pero aún tienes acceso hasta la fecha de vencimiento."
+                                        : "Estás disfrutando de todos los beneficios de Fixia Pro."
                                 }
                             </CardDescription>
                         </CardHeader>
@@ -157,7 +157,7 @@ export default function SubscriptionPage() {
                                             <AlertDialogHeader>
                                                 <AlertDialogTitle>¿Estás seguro?</AlertDialogTitle>
                                                 <AlertDialogDescription>
-                                                    Al cancelar, mantendrás tus beneficios hasta el final del período actual. Después, tu cuenta volverá al estado "Cliente" y tus ofertas dejarán de ser visibles.
+                                                    Al cancelar, mantendrás tus beneficios hasta el final del período actual. Después, tu cuenta volverá al estado &quot;Cliente&quot; y tus ofertas dejarán de ser visibles.
                                                 </AlertDialogDescription>
                                             </AlertDialogHeader>
                                             <AlertDialogFooter>

@@ -1,12 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Bell, X } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/providers/auth-provider";
-
-const VAPID_PUBLIC_KEY = 'BAe4hkL2QSfUlgegiIkitfH5L8tEFMBxe4KZTUA231yXmiaapWzAjHlFOVJNIbCUS1eq5-WSoUSB66Y09ubefto';
+import { VAPID_PUBLIC_KEY } from "@/lib/web-push-keys";
 
 function urlBase64ToUint8Array(base64String: string) {
     const padding = '='.repeat((4 - base64String.length % 4) % 4);
@@ -29,18 +28,21 @@ export function PushNotificationManager() {
     const [subscription, setSubscription] = useState<PushSubscription | null>(null);
     const [isDismissed, setIsDismissed] = useState(true); // Default to true to avoid flash
 
-    useEffect(() => {
-        // Check if dismissed in localStorage
-        const dismissed = localStorage.getItem('push_notification_dismissed');
-        setIsDismissed(dismissed === 'true');
-
-        if ('serviceWorker' in navigator && 'PushManager' in window) {
-            setIsSupported(true);
-            registerServiceWorker();
+    const saveSubscription = useCallback(async (sub: PushSubscription) => {
+        try {
+            await fetch('/api/push/subscribe', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(sub),
+            });
+        } catch (error) {
+            console.error('Failed to save subscription:', error);
         }
     }, []);
 
-    async function registerServiceWorker() {
+    const registerServiceWorker = useCallback(async () => {
         try {
             const registration = await navigator.serviceWorker.register('/sw.js', {
                 scope: '/',
@@ -57,21 +59,18 @@ export function PushNotificationManager() {
         } catch (error) {
             console.error('Service Worker registration failed:', error);
         }
-    }
+    }, [saveSubscription]);
 
-    async function saveSubscription(sub: PushSubscription) {
-        try {
-            await fetch('/api/push/subscribe', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(sub),
-            });
-        } catch (error) {
-            console.error('Failed to save subscription:', error);
+    useEffect(() => {
+        // Check if dismissed in localStorage
+        const dismissed = localStorage.getItem('push_notification_dismissed');
+        setIsDismissed(dismissed === 'true');
+
+        if ('serviceWorker' in navigator && 'PushManager' in window) {
+            setIsSupported(true);
+            registerServiceWorker();
         }
-    }
+    }, [registerServiceWorker]);
 
     async function subscribeToPush() {
         try {

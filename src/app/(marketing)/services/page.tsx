@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { Skeleton } from "@/components/ui/skeleton"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -75,8 +76,18 @@ export default function ServicesPage() {
 
             {loading ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-5 lg:gap-6">
-                    {[1, 2, 3, 4].map((i) => (
-                        <Card key={i} className="h-48 animate-pulse bg-muted/50" />
+                    {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+                        <Card key={i} className="h-48 overflow-hidden">
+                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                <Skeleton className="h-6 w-24" />
+                                <Skeleton className="h-6 w-6 rounded-full" />
+                            </CardHeader>
+                            <CardContent className="space-y-3">
+                                <Skeleton className="h-4 w-full" />
+                                <Skeleton className="h-4 w-2/3" />
+                                <Skeleton className="h-6 w-20 rounded-full mt-4" />
+                            </CardContent>
+                        </Card>
                     ))}
                 </div>
             ) : (

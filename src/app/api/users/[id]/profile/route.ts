@@ -31,7 +31,7 @@ export async function GET(
                         badges: true
                     }
                 },
-                ReviewTarget: {
+                reviewsReceived: {
                     select: {
                         id: true,
                         score: true,
@@ -57,7 +57,7 @@ export async function GET(
         // Format response
         const response = {
             ...user,
-            reviews: user.ReviewTarget
+            reviews: user.reviewsReceived
         }
 
         return NextResponse.json(response)

@@ -60,7 +60,7 @@ async function createTestProfessional(input: TestProfessionalInput) {
         phone,
         dni,
         birthdate: new Date('1990-01-01'),
-        status: 'VERIFIED',
+        status: 'ACTIVE',
         // Enable all features for testing
         canCreateServices: true,
         listingVisible: true,
@@ -71,7 +71,7 @@ async function createTestProfessional(input: TestProfessionalInput) {
         // Create profile
         profile: {
           create: {
-            category,
+            bio: 'Profesional de prueba para Fixia.',
             yearsExperience: 5,
             workRadius: 'Mi ciudad',
             availability: JSON.stringify({
@@ -82,19 +82,11 @@ async function createTestProfessional(input: TestProfessionalInput) {
               friday: { start: '09:00', end: '18:00' },
               saturday: { start: '09:00', end: '13:00' },
             }),
-            tags: JSON.stringify(['testing', 'development']),
+            tags: JSON.stringify(['testing', 'development', category]),
             badges: JSON.stringify([
-              {
-                id: 'verified',
-                name: 'Verificado',
-                icon: 'shield-check',
-                color: 'green',
-              },
+              'CERTIFIED'
             ]),
-            rating: 5,
-            reviews: 0,
-            responseTime: '< 1 hora',
-            completedJobs: 0,
+            ratingAvg: 5,
           },
         },
       },

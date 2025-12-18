@@ -54,13 +54,13 @@ export default function HelpPage() {
                         <AccordionItem value="basic-1">
                             <AccordionTrigger>¿Cómo me registro en Fixia?</AccordionTrigger>
                             <AccordionContent>
-                                Ir a la página de inicio, hacer clic en "Iniciar Sesión" o "Registrarme", completar tu información personal y verificar tu correo electrónico. ¡Listo! Ya puedes comenzar a buscar profesionales o publicar solicitudes.
+                                Ir a la página de inicio, hacer clic en &quot;Iniciar Sesión&quot; o &quot;Registrarme&quot;, completar tu información personal y verificar tu correo electrónico. ¡Listo! Ya puedes comenzar a buscar profesionales o publicar solicitudes.
                             </AccordionContent>
                         </AccordionItem>
                         <AccordionItem value="basic-2">
                             <AccordionTrigger>¿Cómo publico una solicitud de servicio?</AccordionTrigger>
                             <AccordionContent>
-                                Una vez registrado, ve a "Crear Solicitud", selecciona el tipo de servicio, describe lo que necesitas, especifica tu ubicación y presupuesto. Los profesionales cercanos verán tu solicitud y podrán enviar propuestas.
+                                Una vez registrado, ve a &quot;Crear Solicitud&quot;, selecciona el tipo de servicio, describe lo que necesitas, especifica tu ubicación y presupuesto. Los profesionales cercanos verán tu solicitud y podrán enviar propuestas.
                             </AccordionContent>
                         </AccordionItem>
                         <AccordionItem value="basic-3">
@@ -95,7 +95,7 @@ export default function HelpPage() {
                         <AccordionItem value="security-2">
                             <AccordionTrigger>¿Cómo puedo verificar que un profesional es auténtico?</AccordionTrigger>
                             <AccordionContent>
-                                Los profesionales verificados tienen una insignia de "Verificado" en su perfil. Esto significa que hemos validado su identidad, documentación y certificaciones profesionales. También puedes revisar sus calificaciones y reseñas de otros clientes.
+                                Los profesionales verificados tienen una insignia de &quot;Verificado&quot; en su perfil. Esto significa que hemos validado su identidad, documentación y certificaciones profesionales. También puedes revisar sus calificaciones y reseñas de otros clientes.
                             </AccordionContent>
                         </AccordionItem>
                         <AccordionItem value="security-3">

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useCallback } from "react"
 import { Card, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
@@ -33,6 +33,18 @@ export default function MatchesPage() {
     const [ratingRefreshTrigger, setRatingRefreshTrigger] = useState(0)
     const scrollRef = useRef<HTMLDivElement>(null)
 
+    const fetchMessages = useCallback(async (matchId: string, silent = false) => {
+        try {
+            const res = await fetch(`/api/messages?matchId=${matchId}`)
+            if (res.ok) {
+                const data: Message[] = await res.json()
+                setMessages(data)
+            }
+        } catch (error) {
+            if (!silent) console.error("Failed to fetch messages", error)
+        }
+    }, [])
+
     // Poll for messages every 5 seconds
     useEffect(() => {
         let interval: NodeJS.Timeout
@@ -45,7 +57,18 @@ export default function MatchesPage() {
         }
 
         return () => clearInterval(interval)
-    }, [selectedMatch])
+    }, [selectedMatch, fetchMessages])
+
+    // Scroll to bottom on new messages
+    const handleSelectMatch = useCallback((match: Match) => {
+        setSelectedMatch(match)
+        setMessages([]) // Clear previous messages while loading
+        fetchMessages(match.id)
+        setShowChatOnMobile(true) // Show chat on mobile
+
+        // Update URL to match ID for better refreshing support (optional)
+        // router.push(`/dashboard/matches/${match.id}`, { scroll: false })
+    }, [fetchMessages])
 
     // Scroll to bottom on new messages
     useEffect(() => {
@@ -54,14 +77,7 @@ export default function MatchesPage() {
         }
     }, [messages])
 
-    useEffect(() => {
-        const load = async () => {
-            await fetchMatches()
-        }
-        load()
-    }, [])
-
-    const fetchMatches = async () => {
+    const fetchMatches = useCallback(async () => {
         try {
             const res = await fetch("/api/matches")
             if (res.ok) {
@@ -94,29 +110,13 @@ export default function MatchesPage() {
         } finally {
             setLoading(false)
         }
-    }
+    }, [params?.id, selectedMatch, fetchMessages, handleSelectMatch]) // handleSelectMatch is not dependency because it's used inside fetchMatches only if certain conditions met, but let's be safe. Wait, handleSelectMatch uses fetchMessages too.
 
-    const fetchMessages = async (matchId: string, silent = false) => {
-        try {
-            const res = await fetch(`/api/messages?matchId=${matchId}`)
-            if (res.ok) {
-                const data: Message[] = await res.json()
-                setMessages(data)
-            }
-        } catch (error) {
-            if (!silent) console.error("Failed to fetch messages", error)
-        }
-    }
+    useEffect(() => {
+        fetchMatches()
+    }, [fetchMatches])
 
-    const handleSelectMatch = (match: Match) => {
-        setSelectedMatch(match)
-        setMessages([]) // Clear previous messages while loading
-        fetchMessages(match.id)
-        setShowChatOnMobile(true) // Show chat on mobile
 
-        // Update URL to match ID for better refreshing support (optional)
-        // router.push(`/dashboard/matches/${match.id}`, { scroll: false })
-    }
 
     const handleSendMessage = async (e: React.FormEvent) => {
         e.preventDefault()

@@ -33,7 +33,6 @@ export async function GET(request: Request) {
             role: true,
             profile: {
               select: {
-                category: true,
                 yearsExperience: true,
               }
             }

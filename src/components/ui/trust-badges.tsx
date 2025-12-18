@@ -5,15 +5,16 @@ import { CheckCircle2, Award, Zap, Lock, Heart, Flame, ShieldCheck, Trophy } fro
 import { cn } from "@/lib/utils"
 
 // Map DB badge strings to internal variant names
-export const BADGE_MAPPING: Record<string, "verified" | "expert" | "fast" | "trending"> = {
+export const BADGE_MAPPING: Record<string, "verified" | "expert" | "fast" | "trending" | "certified"> = {
   "VERIFIED": "verified",
   "EXPERT": "expert",
   "FAST": "fast",
-  "TRENDING": "trending"
+  "TRENDING": "trending",
+  "CERTIFIED": "certified"
 }
 
 interface TrustBadgeProps {
-  variant?: "verified" | "expert" | "fast" | "secure" | "favorite" | "trending"
+  variant?: "verified" | "expert" | "fast" | "secure" | "favorite" | "trending" | "certified"
   size?: "sm" | "md" | "lg"
   showLabel?: boolean
   className?: string
@@ -77,6 +78,15 @@ const badgeConfig = {
     textClass: "text-pink-600",
     bgClass: "bg-pink-50",
     borderClass: "border-pink-200",
+    iconColor: "text-white",
+  },
+  certified: {
+    icon: Award,
+    label: "Certificado",
+    gradient: "bg-gradient-to-r from-emerald-500 to-teal-500",
+    textClass: "text-emerald-700 dark:text-emerald-300",
+    bgClass: "bg-emerald-50 dark:bg-emerald-950/40",
+    borderClass: "border-emerald-200 dark:border-emerald-800",
     iconColor: "text-white",
   }
 }

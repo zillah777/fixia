@@ -1,11 +1,15 @@
 import { PrismaClient } from '@prisma/client'
+import { AsyncLocalStorage } from 'async_hooks'
+
+// ============================================================================
+// SECURITY: Row-Level Security (RLS) Context Storage
+// ============================================================================
+export const rlsStorage = new AsyncLocalStorage<{
+    userId: string | null;
+    userRole: string | null;
+}>();
 
 const prismaClientSingleton = () => {
-    // Fix for localhost resolution on Windows/Node 18+
-    // const url = process.env.DATABASE_URL
-    // if (url && url.includes('localhost')) {
-    //     process.env.DATABASE_URL = url.replace('localhost', '127.0.0.1')
-    // }
     return new PrismaClient()
 }
 
@@ -15,54 +19,51 @@ const globalForPrisma = globalThis as unknown as {
     prisma: PrismaClientSingleton | undefined
 }
 
-const prisma = globalForPrisma.prisma ?? prismaClientSingleton()
+const basePrisma = globalForPrisma.prisma ?? prismaClientSingleton()
 
 // ============================================================================
-// SECURITY: Middleware for Row-Level Security (RLS) Context
+// SECURITY: Prisma Client Extension for RLS
 // ============================================================================
-// This middleware sets PostgreSQL session variables for RLS policies
-// to identify the current user and their role in the database layer
-// TODO: Migrate to Prisma Client Extensions for Prisma 6+
-/*
-prisma.$use(async (params, next) => {
-    // Only set context for operations - skip for introspection, etc.
-    if (!params.action || params.action === 'findMany' || params.action === 'findFirst' ||
-        params.action === 'findUnique' || params.action === 'create' || params.action === 'update' ||
-        params.action === 'delete' || params.action === 'upsert') {
+// This extension sets PostgreSQL session variables for RLS policies
+// before every database operation to identify the current user.
+const prisma = basePrisma.$extends({
+    query: {
+        $allModels: {
+            async $allOperations({ args, query }) {
+                // Get current user context from AsyncLocalStorage
+                // Fallback to globalThis for backward compatibility during transition
+                const userContext = rlsStorage.getStore() || (globalThis as any).__rls_context || {
+                    userId: null,
+                    userRole: null
+                }
 
-        // Get current user context from thread-local storage or request context
-        // This will be set by middleware.ts before database operations
-        const userContext = (globalThis as any).__rls_context || {
-            userId: null,
-            userRole: null
-        }
+                try {
+                    // Set PostgreSQL session variables for RLS policies
+                    if (userContext.userId && userContext.userRole) {
+                        await basePrisma.$executeRawUnsafe(
+                            `SELECT set_config('app.current_user_id', $1, true),
+                                    set_config('app.current_user_role', $2, true)`,
+                            userContext.userId,
+                            userContext.userRole
+                        )
+                    } else {
+                        // Clear context for anonymous access
+                        await basePrisma.$executeRawUnsafe(
+                            `SELECT set_config('app.current_user_id', '', true),
+                                    set_config('app.current_user_role', '', true)`
+                        )
+                    }
+                } catch (error) {
+                    // Log but don't block - RLS will deny access if context is missing
+                    console.error('[SECURITY] Failed to set RLS context:', error)
+                }
 
-        try {
-            // Set PostgreSQL session variables for RLS policies
-            // These can be accessed in RLS policies via current_setting()
-            if (userContext.userId && userContext.userRole) {
-                await prisma.$executeRawUnsafe(
-                    `SELECT set_config('app.current_user_id', $1, true),
-                            set_config('app.current_user_role', $2, true)`,
-                    userContext.userId,
-                    userContext.userRole
-                )
-            } else {
-                // Clear context if no user logged in
-                await prisma.$executeRawUnsafe(
-                    `SELECT set_config('app.current_user_id', '', true),
-                            set_config('app.current_user_role', '', true)`
-                )
-            }
-        } catch (error) {
-            console.error('Failed to set RLS context:', error)
-        }
-    }
-
-    return next(params)
+                return query(args)
+            },
+        },
+    },
 })
-*/
+
+if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = basePrisma
 
 export default prisma
-
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma

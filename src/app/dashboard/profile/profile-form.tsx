@@ -355,7 +355,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
                                             placeholder="Escribe una habilidad y presiona Enter..."
                                         />
                                         <p className="text-xs text-muted-foreground">
-                                            Palabras clave que describen tus habilidades (ej. "Electricidad", "Plomería", "Urgencias").
+                                            Palabras clave que describen tus habilidades (ej. &quot;Electricidad&quot;, &quot;Plomería&quot;, &quot;Urgencias&quot;).
                                         </p>
                                         {isEditing && <TagsFieldHelper />}
                                     </div>

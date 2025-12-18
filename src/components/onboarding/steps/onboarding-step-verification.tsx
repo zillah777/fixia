@@ -4,6 +4,7 @@ import { useState } from "react"
 import { User } from "@prisma/client"
 import { Loader2, Upload, AlertCircle, CheckCircle2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import Image from "next/image"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Alert, AlertDescription } from "@/components/ui/alert"
@@ -104,79 +105,139 @@ export function OnboardingStepVerification({ user, onError }: OnboardingStepVeri
                 {/* ID Front */}
                 <div className="space-y-3">
                     <Label>Cédula de Identidad - Frente *</Label>
-                    <label className="cursor-pointer block">
+                    <div
+                        className={`border-2 rounded-xl p-4 flex flex-col items-center justify-center transition-all cursor-pointer relative overflow-hidden h-40 ${documents.idFront
+                            ? 'border-solid border-primary/30 bg-primary/5'
+                            : 'border-dashed border-border/40 hover:border-border'
+                            }`}
+                        onClick={() => !isLoading && document.getElementById('id-front-input')?.click()}
+                    >
+                        {documents.idFront ? (
+                            <>
+                                <Image
+                                    src={URL.createObjectURL(documents.idFront)}
+                                    alt="Frente"
+                                    fill
+                                    className="object-contain p-2"
+                                    unoptimized
+                                />
+                                <div className="absolute inset-0 flex items-center justify-center bg-black/5 opacity-0 hover:opacity-100 transition-opacity">
+                                    <span className="text-white text-xs font-medium bg-black/40 px-2 py-1 rounded">Click para cambiar</span>
+                                </div>
+                            </>
+                        ) : (
+                            <>
+                                <Upload className="h-6 w-6 text-muted-foreground mb-2" />
+                                <div className="text-center">
+                                    <p className="font-medium text-sm text-primary">Haz clic para subir</p>
+                                    <p className="text-xs text-muted-foreground">Frente del DNI</p>
+                                </div>
+                            </>
+                        )}
                         <input
                             type="file"
+                            id="id-front-input"
                             accept="image/*"
                             onChange={(e) => handleFileChange(e, "idFront")}
                             disabled={isLoading}
                             className="hidden"
                         />
-                        <div className="p-4 border-2 border-dashed border-border/40 rounded-lg hover:border-border transition-colors text-center space-y-2">
-                            <Upload className="h-6 w-6 text-muted-foreground mx-auto" />
-                            <div>
-                                <p className="font-medium text-sm">
-                                    {documents.idFront ? documents.idFront.name : "Haz clic para subir"}
-                                </p>
-                                <p className="text-xs text-muted-foreground">
-                                    JPG, PNG. Máximo 5MB
-                                </p>
-                            </div>
-                        </div>
-                    </label>
+                    </div>
                 </div>
 
                 {/* ID Back */}
                 <div className="space-y-3">
                     <Label>Cédula de Identidad - Dorso *</Label>
-                    <label className="cursor-pointer block">
+                    <div
+                        className={`border-2 rounded-xl p-4 flex flex-col items-center justify-center transition-all cursor-pointer relative overflow-hidden h-40 ${documents.idBack
+                            ? 'border-solid border-primary/30 bg-primary/5'
+                            : 'border-dashed border-border/40 hover:border-border'
+                            }`}
+                        onClick={() => !isLoading && document.getElementById('id-back-input')?.click()}
+                    >
+                        {documents.idBack ? (
+                            <>
+                                <Image
+                                    src={URL.createObjectURL(documents.idBack)}
+                                    alt="Dorso"
+                                    fill
+                                    className="object-contain p-2"
+                                    unoptimized
+                                />
+                                <div className="absolute inset-0 flex items-center justify-center bg-black/5 opacity-0 hover:opacity-100 transition-opacity">
+                                    <span className="text-white text-xs font-medium bg-black/40 px-2 py-1 rounded">Click para cambiar</span>
+                                </div>
+                            </>
+                        ) : (
+                            <>
+                                <Upload className="h-6 w-6 text-muted-foreground mb-2" />
+                                <div className="text-center">
+                                    <p className="font-medium text-sm text-primary">Haz clic para subir</p>
+                                    <p className="text-xs text-muted-foreground">Dorso del DNI</p>
+                                </div>
+                            </>
+                        )}
                         <input
                             type="file"
+                            id="id-back-input"
                             accept="image/*"
                             onChange={(e) => handleFileChange(e, "idBack")}
                             disabled={isLoading}
                             className="hidden"
                         />
-                        <div className="p-4 border-2 border-dashed border-border/40 rounded-lg hover:border-border transition-colors text-center space-y-2">
-                            <Upload className="h-6 w-6 text-muted-foreground mx-auto" />
-                            <div>
-                                <p className="font-medium text-sm">
-                                    {documents.idBack ? documents.idBack.name : "Haz clic para subir"}
-                                </p>
-                                <p className="text-xs text-muted-foreground">
-                                    JPG, PNG. Máximo 5MB
-                                </p>
-                            </div>
-                        </div>
-                    </label>
+                    </div>
                 </div>
 
                 {/* Certificate (Optional) */}
                 <div className="space-y-3">
                     <Label>Certificado Profesional (Opcional)</Label>
-                    <label className="cursor-pointer block">
+                    <div
+                        className={`border-2 rounded-xl p-4 flex flex-col items-center justify-center transition-all cursor-pointer relative overflow-hidden h-40 ${documents.certificate
+                            ? 'border-solid border-primary/30 bg-primary/5'
+                            : 'border-dashed border-border/40 hover:border-border'
+                            }`}
+                        onClick={() => !isLoading && document.getElementById('certificate-input')?.click()}
+                    >
+                        {documents.certificate ? (
+                            documents.certificate.type === "application/pdf" ? (
+                                <div className="text-center p-4">
+                                    <CheckCircle2 className="h-8 w-8 text-primary mx-auto mb-2" />
+                                    <p className="text-sm font-medium truncate max-w-[200px]">{documents.certificate.name}</p>
+                                    <p className="text-xs text-muted-foreground">(PDF cargado)</p>
+                                </div>
+                            ) : (
+                                <>
+                                    <Image
+                                        src={URL.createObjectURL(documents.certificate)}
+                                        alt="Certificado"
+                                        fill
+                                        className="object-contain p-2"
+                                        unoptimized
+                                    />
+                                    <div className="absolute inset-0 flex items-center justify-center bg-black/5 opacity-0 hover:opacity-100 transition-opacity">
+                                        <span className="text-white text-xs font-medium bg-black/40 px-2 py-1 rounded">Click para cambiar</span>
+                                    </div>
+                                </>
+                            )
+                        ) : (
+                            <>
+                                <Upload className="h-6 w-6 text-muted-foreground mb-2" />
+                                <div className="text-center">
+                                    <p className="font-medium text-sm text-primary">Haz clic para subir</p>
+                                    <p className="text-xs text-muted-foreground">JPG, PNG, PDF</p>
+                                </div>
+                            </>
+                        )}
                         <input
                             type="file"
+                            id="certificate-input"
                             accept="image/*,.pdf"
                             onChange={(e) => handleFileChange(e, "certificate")}
                             disabled={isLoading}
                             className="hidden"
                         />
-                        <div className="p-4 border-2 border-dashed border-border/40 rounded-lg hover:border-border transition-colors text-center space-y-2">
-                            <Upload className="h-6 w-6 text-muted-foreground mx-auto" />
-                            <div>
-                                <p className="font-medium text-sm">
-                                    {documents.certificate
-                                        ? documents.certificate.name
-                                        : "Haz clic para subir"}
-                                </p>
-                                <p className="text-xs text-muted-foreground">
-                                    JPG, PNG, PDF. Máximo 5MB
-                                </p>
-                            </div>
-                        </div>
-                    </label>
-                    <p className="text-xs text-muted-foreground">
+                    </div>
+                    <p className="text-[10px] text-muted-foreground">
                         Certificados o títulos profesionales ayudan a generar más confianza con los clientes.
                     </p>
                 </div>

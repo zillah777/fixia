@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import prisma from "@/lib/prisma"
 import { getSession } from "@/lib/auth"
 import { z } from "zod"
+import { notifyUser } from "@/lib/notifications"
 
 export const dynamic = 'force-dynamic';
 
@@ -15,8 +16,9 @@ const verificationReviewSchema = z.object({
 
 export async function PATCH(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   try {
     const session = await getSession()
 
@@ -31,7 +33,7 @@ export async function PATCH(
 
     // Get existing verification
     const existingVerification = await prisma.verificationRequest.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: { user: true }
     })
 
@@ -44,7 +46,7 @@ export async function PATCH(
 
     // Update verification request
     const verification = await prisma.verificationRequest.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         status,
         adminNote,
@@ -73,9 +75,18 @@ export async function PATCH(
         }
       })
       console.info('[ADMIN_VERIFICATION] Approved verification', {
-        verificationId: params.id,
+        verificationId: id,
         userId: verification.userId,
         userName: verification.user?.name
+      })
+
+      // Notify User
+      await notifyUser({
+        userId: verification.userId,
+        type: "SYSTEM",
+        title: "¡Identidad Verificada!",
+        message: "Tu solicitud de verificación de identidad ha sido aprobada. Ya podés disfrutar de todos los beneficios.",
+        actionUrl: "/dashboard"
       })
     } else if (status === "REJECTED") {
       // Reset permissions if rejected
@@ -88,9 +99,18 @@ export async function PATCH(
         }
       })
       console.warn('[ADMIN_VERIFICATION] Rejected verification', {
-        verificationId: params.id,
+        verificationId: id,
         userId: verification.userId,
         reason: adminNote
+      })
+
+      // Notify User
+      await notifyUser({
+        userId: verification.userId,
+        type: "SYSTEM",
+        title: "Verificación Rechazada",
+        message: `Tu solicitud de verificación fue rechazada por la siguiente razón: ${adminNote || 'No se especificó razón'}. Por favor revisá tus documentos e intentá de nuevo.`,
+        actionUrl: "/dashboard/settings"
       })
     }
 

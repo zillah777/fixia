@@ -15,8 +15,9 @@ const certificationReviewSchema = z.object({
 
 export async function PATCH(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   try {
     const session = await getSession()
 
@@ -31,7 +32,7 @@ export async function PATCH(
 
     // Get existing certification
     const existingCertification = await prisma.certificationVerification.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: { user: true }
     })
 
@@ -44,7 +45,7 @@ export async function PATCH(
 
     // Update certification request
     const certification = await prisma.certificationVerification.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         status,
         adminNote,
@@ -62,43 +63,63 @@ export async function PATCH(
       }
     })
 
-    // If approved, add badge to user profile
+    // If approved, update user profile and notify
     if (status === "APPROVED") {
-      const userProfile = await prisma.profile.findUnique({
-        where: { userId: certification.userId }
-      })
+      await prisma.$transaction(async (tx) => {
+        const userProfile = await tx.profile.findUnique({
+          where: { userId: certification.userId }
+        })
 
-      if (userProfile) {
-        const badges = userProfile.badges ? JSON.parse(userProfile.badges) : []
+        if (userProfile) {
+          let badges: string[] = []
+          try {
+            const parsed = JSON.parse(userProfile.badges || "[]")
+            // Handle both legacy string array and the new object-based attempt (though we'll normalize to strings)
+            badges = Array.isArray(parsed) ? parsed.map(b => typeof b === 'string' ? b : (b.type === 'certification' ? 'CERTIFIED' : '')) : []
+            badges = badges.filter(Boolean)
+          } catch (e) {
+            console.error("Error parsing badges:", e)
+          }
 
-        // Check if certification badge already exists
-        const certBadgeExists = badges.some((b: any) => b.id === `cert-${existingCertification.id}`)
+          if (!badges.includes("CERTIFIED")) {
+            badges.push("CERTIFIED")
+          }
 
-        if (!certBadgeExists) {
-          badges.push({
-            id: `cert-${existingCertification.id}`,
-            name: `Certificado: ${existingCertification.title}`,
-            icon: 'certificate',
-            color: 'blue',
-            type: 'certification'
-          })
-
-          await prisma.profile.update({
+          await tx.profile.update({
             where: { userId: certification.userId },
             data: { badges: JSON.stringify(badges) }
           })
         }
-      }
+
+        // Notification
+        await tx.notification.create({
+          data: {
+            userId: certification.userId,
+            type: "SYSTEM",
+            message: `¡Tu certificación "${existingCertification.title}" ha sido aprobada!`,
+            actionUrl: "/dashboard/settings?tab=certifications"
+          }
+        })
+      })
 
       console.info('[ADMIN_CERTIFICATION] Approved certification', {
-        certificationId: params.id,
+        certificationId: id,
         userId: certification.userId,
-        title: existingCertification.title,
-        userName: certification.user?.name
+        title: existingCertification.title
       })
     } else if (status === "REJECTED") {
+      // Notify Rejection
+      await prisma.notification.create({
+        data: {
+          userId: certification.userId,
+          type: "SYSTEM",
+          message: `Tu certificación "${existingCertification.title}" ha sido rechazada. Nota: ${adminNote || 'Sin detalles adicional'}`,
+          actionUrl: "/dashboard/settings?tab=certifications"
+        }
+      })
+
       console.warn('[ADMIN_CERTIFICATION] Rejected certification', {
-        certificationId: params.id,
+        certificationId: id,
         userId: certification.userId,
         reason: adminNote
       })
@@ -128,8 +149,9 @@ export async function PATCH(
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   try {
     const session = await getSession()
 
@@ -139,7 +161,7 @@ export async function GET(
     }
 
     const certification = await prisma.certificationVerification.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         user: {
           select: {
@@ -149,7 +171,6 @@ export async function GET(
             role: true,
             profile: {
               select: {
-                category: true,
                 yearsExperience: true,
               }
             }

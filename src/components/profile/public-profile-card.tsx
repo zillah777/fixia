@@ -10,6 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { getAvatarUrl, getInitials } from "@/lib/avatar-utils"
 import { cn } from "@/lib/utils"
 import { toast } from "sonner"
+import { TrustBadgesGroup } from "@/components/ui/trust-badges"
 
 interface PublicProfileCardProps {
     id: string
@@ -96,109 +97,95 @@ export function PublicProfileCard({
                                 <AvatarImage src={getAvatarUrl(avatar, name)} />
                                 <AvatarFallback>{getInitials(name)}</AvatarFallback>
                             </Avatar>
-                        <div className="flex gap-2">
-                            {isProfessional && (
-                                <Button
-                                    size="icon"
-                                    variant="ghost"
-                                    className={cn(
-                                        "h-8 w-8 transition-colors",
-                                        isFavorite
-                                            ? "text-red-500 hover:bg-red-50 dark:hover:bg-red-950"
-                                            : "text-muted-foreground hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950"
-                                    )}
-                                    onClick={handleFavoriteClick}
-                                    disabled={isLoading}
-                                >
-                                    <Heart
-                                        className="h-4 w-4"
-                                        fill={isFavorite ? "currentColor" : "none"}
-                                    />
-                                </Button>
-                            )}
-                            <Badge
-                                variant={isProfessional ? "default" : "secondary"}
-                                className="text-xs"
-                            >
-                                {isProfessional ? "Profesional" : "Cliente"}
-                            </Badge>
-                        </div>
-                    </div>
-                </CardHeader>
-
-                <CardContent className="space-y-4">
-                    {/* Name */}
-                    <div>
-                        <h3 className="text-lg font-semibold line-clamp-2">{name}</h3>
-                    </div>
-
-                    {/* Bio */}
-                    {bio && (
-                        <p className="text-sm text-muted-foreground line-clamp-3">{bio}</p>
-                    )}
-
-                    {/* Metadata */}
-                    <div className="space-y-2">
-                        {isProfessional && location && (
-                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                                <MapPin className="h-4 w-4 shrink-0" />
-                                <span className="truncate">{location}</span>
-                            </div>
-                        )}
-
-                        {displayEmail && (
-                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                                <Mail className="h-4 w-4 shrink-0" />
-                                <span className="truncate text-xs">{displayEmail}</span>
-                            </div>
-                        )}
-                    </div>
-
-                    {/* Rating (Professionals only) */}
-                    {isProfessional && reviewCount > 0 && (
-                        <div className="flex items-center gap-2 pt-2 border-t">
-                            <div className="flex items-center gap-0.5">
-                                {[1, 2, 3, 4, 5].map((star) => (
-                                    <Star
-                                        key={star}
+                            <div className="flex gap-2">
+                                {isProfessional && (
+                                    <Button
+                                        size="icon"
+                                        variant="ghost"
                                         className={cn(
-                                            "h-3.5 w-3.5",
-                                            star <= Math.round(averageRating)
-                                                ? "fill-yellow-400 text-yellow-400"
-                                                : "fill-gray-200 text-gray-200"
+                                            "h-8 w-8 transition-colors",
+                                            isFavorite
+                                                ? "text-red-500 hover:bg-red-50 dark:hover:bg-red-950"
+                                                : "text-muted-foreground hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950"
                                         )}
-                                    />
-                                ))}
-                            </div>
-                            <span className="text-xs text-muted-foreground">
-                                {averageRating.toFixed(1)} ({reviewCount})
-                            </span>
-                        </div>
-                    )}
-
-                    {/* Badges (Professionals only) */}
-                    {isProfessional && badges && badges.length > 0 && (
-                        <div className="flex flex-wrap gap-1 pt-2 border-t">
-                            {badges.slice(0, 3).map((badge) => (
+                                        onClick={handleFavoriteClick}
+                                        disabled={isLoading}
+                                    >
+                                        <Heart
+                                            className="h-4 w-4"
+                                            fill={isFavorite ? "currentColor" : "none"}
+                                        />
+                                    </Button>
+                                )}
                                 <Badge
-                                    key={badge}
-                                    variant="outline"
-                                    className="text-[10px] px-2 py-0.5"
+                                    variant={isProfessional ? "default" : "secondary"}
+                                    className="text-xs"
                                 >
-                                    <BadgeIcon className="h-2.5 w-2.5 mr-1" />
-                                    {badge}
+                                    {isProfessional ? "Profesional" : "Cliente"}
                                 </Badge>
-                            ))}
-                            {badges.length > 3 && (
-                                <Badge variant="outline" className="text-[10px] px-2 py-0.5">
-                                    +{badges.length - 3} más
-                                </Badge>
+                            </div>
+                        </div>
+                    </CardHeader>
+
+                    <CardContent className="space-y-4">
+                        {/* Name */}
+                        <div>
+                            <h3 className="text-lg font-semibold line-clamp-2">{name}</h3>
+                        </div>
+
+                        {/* Bio */}
+                        {bio && (
+                            <p className="text-sm text-muted-foreground line-clamp-3">{bio}</p>
+                        )}
+
+                        {/* Metadata */}
+                        <div className="space-y-2">
+                            {isProfessional && location && (
+                                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                    <MapPin className="h-4 w-4 shrink-0" />
+                                    <span className="truncate">{location}</span>
+                                </div>
+                            )}
+
+                            {displayEmail && (
+                                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                    <Mail className="h-4 w-4 shrink-0" />
+                                    <span className="truncate text-xs">{displayEmail}</span>
+                                </div>
                             )}
                         </div>
-                    )}
 
-                </CardContent>
-            </Card>
+                        {/* Rating (Professionals only) */}
+                        {isProfessional && reviewCount > 0 && (
+                            <div className="flex items-center gap-2 pt-2 border-t">
+                                <div className="flex items-center gap-0.5">
+                                    {[1, 2, 3, 4, 5].map((star) => (
+                                        <Star
+                                            key={star}
+                                            className={cn(
+                                                "h-3.5 w-3.5",
+                                                star <= Math.round(averageRating)
+                                                    ? "fill-yellow-400 text-yellow-400"
+                                                    : "fill-gray-200 text-gray-200"
+                                            )}
+                                        />
+                                    ))}
+                                </div>
+                                <span className="text-xs text-muted-foreground">
+                                    {averageRating.toFixed(1)} ({reviewCount})
+                                </span>
+                            </div>
+                        )}
+
+                        {/* Badges (Professionals only) */}
+                        {isProfessional && badges && badges.length > 0 && (
+                            <div className="pt-2 border-t">
+                                <TrustBadgesGroup badges={badges} size="sm" showLabels={true} />
+                            </div>
+                        )}
+
+                    </CardContent>
+                </Card>
             </div>
         </Link>
     )
