@@ -117,7 +117,13 @@ export default function Home() {
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ duration: 0.5, delay: 0.1 }}
+                            className="space-y-3"
                         >
+                            <Badge variant="outline" className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-full backdrop-blur-sm border-emerald-300 bg-emerald-50 text-emerald-700 font-bold text-xs sm:text-sm hover:bg-emerald-100 transition-colors duration-300">
+                                <Sparkles className="h-3 w-3 sm:h-4 sm:w-4 mr-1 inline" />
+                                Primer mes GRATIS para profesionales
+                            </Badge>
+                            <div className="h-0.5" />
                             <Badge variant="outline" className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-full backdrop-blur-sm border-[#d97757]/30 bg-[#d97757]/10 text-[#d97757] font-medium text-xs sm:text-sm hover:bg-[#d97757]/20 transition-colors duration-300">
                                 ✨ La forma más inteligente de contratar
                             </Badge>

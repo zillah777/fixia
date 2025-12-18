@@ -12,6 +12,7 @@ import { Badge } from "@/components/ui/badge"
 import { useAuth } from "@/providers/auth-provider"
 import { ProfessionalProfileAlert } from "@/components/professional-profile-alert"
 import { ClientProfileAlert } from "@/components/client-profile-alert"
+import { TrialAlert } from "@/components/trial-alert"
 
 const container = {
     hidden: { opacity: 0 },
@@ -52,7 +53,23 @@ export default function DashboardPage() {
                 description: "Ahora tienes acceso completo a todas las funciones."
             })
         }
-    }, [searchParams])
+        if (searchParams?.get('first_login') === 'true') {
+            if (user?.subscriptionStatus === 'trial') {
+                toast.success("¡Bienvenido a Fixia! 🎉", {
+                    description: "Tenés 30 días gratis para explorar todas las funcionalidades profesionales.",
+                    duration: 8000,
+                    action: {
+                        label: "Ver detalles",
+                        onClick: () => window.location.href = "/dashboard/subscription"
+                    }
+                })
+            } else {
+                toast.success("¡Bienvenido de nuevo! 👋", {
+                    duration: 5000
+                })
+            }
+        }
+    }, [searchParams, user])
 
     const [stats, setStats] = React.useState({
         completedRequests: 0,
@@ -126,6 +143,9 @@ export default function DashboardPage() {
                     </div>
                 </div>
             </header>
+
+            {/* Trial Subscription Alert */}
+            <TrialAlert />
 
             {/* Professional Profile Completion Alert */}
             <ProfessionalProfileAlert />
