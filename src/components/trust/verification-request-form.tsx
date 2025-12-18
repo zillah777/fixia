@@ -20,7 +20,14 @@ export function VerificationRequestForm() {
             setFiles(prev => ({ ...prev, [type]: file }))
             const reader = new FileReader()
             reader.onloadend = () => {
-                setPreviews(prev => ({ ...prev, [type]: reader.result as string }))
+                const result = reader.result as string
+                setPreviews(prev => ({ ...prev, [type]: result }))
+                // Show confirmation that file was selected
+                const sideLabel = type === "front" ? "Frente" : "Dorso"
+                toast.success(`${sideLabel} del DNI cargado`, {
+                    description: "Puedes ver el preview arriba. Cuando termines, haz click en 'Enviar Documentos'.",
+                    duration: 3000
+                })
             }
             reader.readAsDataURL(file)
         }
@@ -153,11 +160,20 @@ export function VerificationRequestForm() {
                         <div className="space-y-2">
                             <Label>DNI Frente</Label>
                             <div
-                                className="border-2 border-dashed border-gray-200 rounded-xl p-8 flex flex-col items-center justify-center hover:bg-gray-50 transition-colors cursor-pointer relative overflow-hidden h-40"
+                                className={`border-2 rounded-xl p-8 flex flex-col items-center justify-center transition-all cursor-pointer relative overflow-hidden h-40 ${
+                                    previews.front
+                                        ? 'border-solid border-green-300 bg-green-50'
+                                        : 'border-dashed border-gray-200 hover:bg-gray-50'
+                                }`}
                                 onClick={() => document.getElementById('dni-front')?.click()}
                             >
                                 {previews.front ? (
-                                    <img src={previews.front} alt="DNI Frente" className="absolute inset-0 w-full h-full object-cover" />
+                                    <>
+                                        <img src={previews.front} alt="DNI Frente" className="absolute inset-0 w-full h-full object-contain p-2" />
+                                        <div className="absolute inset-0 flex items-center justify-center bg-black/5 opacity-0 hover:opacity-100 transition-opacity">
+                                            <span className="text-white text-sm font-medium">Click para cambiar</span>
+                                        </div>
+                                    </>
                                 ) : (
                                     <>
                                         <Upload className="h-8 w-8 text-gray-400 mb-2" />
@@ -176,11 +192,20 @@ export function VerificationRequestForm() {
                         <div className="space-y-2">
                             <Label>DNI Dorso</Label>
                             <div
-                                className="border-2 border-dashed border-gray-200 rounded-xl p-8 flex flex-col items-center justify-center hover:bg-gray-50 transition-colors cursor-pointer relative overflow-hidden h-40"
+                                className={`border-2 rounded-xl p-8 flex flex-col items-center justify-center transition-all cursor-pointer relative overflow-hidden h-40 ${
+                                    previews.back
+                                        ? 'border-solid border-green-300 bg-green-50'
+                                        : 'border-dashed border-gray-200 hover:bg-gray-50'
+                                }`}
                                 onClick={() => document.getElementById('dni-back')?.click()}
                             >
                                 {previews.back ? (
-                                    <img src={previews.back} alt="DNI Dorso" className="absolute inset-0 w-full h-full object-cover" />
+                                    <>
+                                        <img src={previews.back} alt="DNI Dorso" className="absolute inset-0 w-full h-full object-contain p-2" />
+                                        <div className="absolute inset-0 flex items-center justify-center bg-black/5 opacity-0 hover:opacity-100 transition-opacity">
+                                            <span className="text-white text-sm font-medium">Click para cambiar</span>
+                                        </div>
+                                    </>
                                 ) : (
                                     <>
                                         <Upload className="h-8 w-8 text-gray-400 mb-2" />
