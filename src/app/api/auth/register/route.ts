@@ -59,15 +59,15 @@ export async function POST(req: Request) {
                 birthdate,
                 status: 'PENDING', // Email verification is mandatory before login
                 verificationToken,
-                // Professionals must subscribe to MercadoPago for benefits
-                // No auto-enable for professionals - they must pay for services
+                // TRIAL PROMOTION: Professionals get 30 days free trial
+                // After trial expires, they must pay for continued access
                 ...(role === "PROFESSIONAL" && {
-                    subscriptionPlan: null,
-                    subscriptionStatus: null,
-                    subscriptionEndsAt: null,
-                    canCreateServices: false,  // Must pay subscription
-                    listingVisible: false,     // Must pay subscription
-                    canReceiveBookings: false, // Must pay subscription
+                    subscriptionPlan: "professional_plan",
+                    subscriptionStatus: "trial", // 30-day trial period
+                    subscriptionEndsAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
+                    canCreateServices: true,     // Enabled during trial
+                    listingVisible: true,        // Visible in marketplace during trial
+                    canReceiveBookings: true,    // Can receive proposals during trial
                     profile: {
                         create: {
                             education: body.education || undefined,
@@ -83,7 +83,7 @@ export async function POST(req: Request) {
                             workRadius: body.workRadius || "Mi ciudad",
                             workZones: body.workZones || undefined,
                             tags: body.tags && Array.isArray(body.tags) ? JSON.stringify(body.tags) : "[]",
-                            badges: JSON.stringify([]) // Empty initially, will be VERIFIED after payment
+                            badges: JSON.stringify(["TRIAL"]) // Trial badge visible during free period
                         }
                     }
                 })

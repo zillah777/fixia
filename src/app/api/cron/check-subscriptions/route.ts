@@ -20,6 +20,47 @@ export async function GET(request: Request) {
 
     const now = new Date()
 
+    // PHASE 0: Handle expired trials - NO grace period for trials, expire immediately
+    const expiredTrials = await prisma.user.findMany({
+      where: {
+        role: "PROFESSIONAL",
+        subscriptionStatus: "trial",
+        subscriptionEndsAt: {
+          lt: now  // Trial has expired
+        }
+      }
+    })
+
+    console.log(`[CRON] Found ${expiredTrials.length} users with expired trials`)
+
+    // Disable features for expired trials immediately (no grace period)
+    let expiredTrialCount = 0
+    for (const user of expiredTrials) {
+      await prisma.user.update({
+        where: { id: user.id },
+        data: {
+          subscriptionStatus: "expired",
+          canCreateServices: false,
+          listingVisible: false,
+          canReceiveBookings: false
+        }
+      })
+
+      // Send notification about trial expiration and need to subscribe
+      await prisma.notification.create({
+        data: {
+          userId: user.id,
+          type: "SUBSCRIPTION",
+          message: "Tu período de prueba de 30 días ha finalizado. Para seguir usando Fixia como profesional, debes suscribirte ahora.",
+          actionUrl: "/dashboard/subscription/checkout",
+          title: "Período de prueba finalizado"
+        }
+      })
+
+      console.log(`[CRON] Trial expired for user ${user.id}, features disabled`)
+      expiredTrialCount++
+    }
+
     // PHASE 1: Send warning emails to professionals with expiring subscriptions (7 days left)
     const expiringUsers = await prisma.user.findMany({
       where: {
@@ -114,6 +155,7 @@ export async function GET(request: Request) {
       success: true,
       timestamp: now.toISOString(),
       stats: {
+        expiredTrials: expiredTrialCount,
         expiringInSevenDays: expiringUsers.length,
         gracePeriodExpired: disabledCount,
         cancelledAndExpired: expiredCount

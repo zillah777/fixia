@@ -5,7 +5,7 @@ import prisma from "@/lib/prisma"
  * Check if user can create services
  * Requirements:
  * - PROFESSIONAL role
- * - Active subscription (with 7-day grace period)
+ * - Active subscription (with 7-day grace period) OR Trial subscription (no grace period)
  * - Identity verified (VERIFIED badge)
  */
 export async function canUserCreateServices(): Promise<boolean> {
@@ -38,14 +38,21 @@ export async function canUserCreateServices(): Promise<boolean> {
   }
   const isVerified = badges.includes("VERIFIED")
 
-  // Check subscription is active WITH 7-day grace period
+  // Check subscription status
   const now = new Date()
   const subscriptionEnd = user.subscriptionEndsAt ? new Date(user.subscriptionEndsAt) : null
-  const gracePeriodEnd = subscriptionEnd ? new Date(subscriptionEnd.getTime() + 7 * 24 * 60 * 60 * 1000) : null
 
-  const subscriptionActive = user.subscriptionStatus === "active" &&
-    gracePeriodEnd &&
-    gracePeriodEnd > now
+  let subscriptionActive = false
+
+  // Trial subscription (no grace period - expires immediately)
+  if (user.subscriptionStatus === "trial") {
+    subscriptionActive = subscriptionEnd !== null && subscriptionEnd > now
+  }
+  // Active subscription (with 7-day grace period)
+  else if (user.subscriptionStatus === "active") {
+    const gracePeriodEnd = subscriptionEnd ? new Date(subscriptionEnd.getTime() + 7 * 24 * 60 * 60 * 1000) : null
+    subscriptionActive = gracePeriodEnd !== null && gracePeriodEnd > now
+  }
 
   // Allow professionals with active subscription to create services
   // Verification is optional for now - can be enforced later if needed
@@ -56,7 +63,7 @@ export async function canUserCreateServices(): Promise<boolean> {
  * Check if user can receive bookings
  * Requirements:
  * - PROFESSIONAL role
- * - Active subscription (with 7-day grace period)
+ * - Active subscription (with 7-day grace period) OR Trial subscription (no grace period)
  * - Identity verified (VERIFIED badge)
  */
 export async function canUserReceiveBookings(): Promise<boolean> {
@@ -89,14 +96,21 @@ export async function canUserReceiveBookings(): Promise<boolean> {
   }
   const isVerified = badges.includes("VERIFIED")
 
-  // Check subscription with grace period
+  // Check subscription status
   const now = new Date()
   const subscriptionEnd = user.subscriptionEndsAt ? new Date(user.subscriptionEndsAt) : null
-  const gracePeriodEnd = subscriptionEnd ? new Date(subscriptionEnd.getTime() + 7 * 24 * 60 * 60 * 1000) : null
 
-  const subscriptionActive = user.subscriptionStatus === "active" &&
-    gracePeriodEnd &&
-    gracePeriodEnd > now
+  let subscriptionActive = false
+
+  // Trial subscription (no grace period - expires immediately)
+  if (user.subscriptionStatus === "trial") {
+    subscriptionActive = subscriptionEnd !== null && subscriptionEnd > now
+  }
+  // Active subscription (with 7-day grace period)
+  else if (user.subscriptionStatus === "active") {
+    const gracePeriodEnd = subscriptionEnd ? new Date(subscriptionEnd.getTime() + 7 * 24 * 60 * 60 * 1000) : null
+    subscriptionActive = gracePeriodEnd !== null && gracePeriodEnd > now
+  }
 
   // Allow professionals with active subscription to receive bookings
   // Verification is optional for now - can be enforced later if needed
@@ -107,7 +121,7 @@ export async function canUserReceiveBookings(): Promise<boolean> {
  * Check if user's listing is visible in search/marketplace
  * Requirements:
  * - PROFESSIONAL role
- * - Active subscription (with 7-day grace period)
+ * - Active subscription (with 7-day grace period) OR Trial subscription (no grace period)
  * - Identity verified (VERIFIED badge)
  */
 export async function isUserListingVisible(): Promise<boolean> {
@@ -140,14 +154,21 @@ export async function isUserListingVisible(): Promise<boolean> {
   }
   const isVerified = badges.includes("VERIFIED")
 
-  // Check subscription with grace period
+  // Check subscription status
   const now = new Date()
   const subscriptionEnd = user.subscriptionEndsAt ? new Date(user.subscriptionEndsAt) : null
-  const gracePeriodEnd = subscriptionEnd ? new Date(subscriptionEnd.getTime() + 7 * 24 * 60 * 60 * 1000) : null
 
-  const subscriptionActive = user.subscriptionStatus === "active" &&
-    gracePeriodEnd &&
-    gracePeriodEnd > now
+  let subscriptionActive = false
+
+  // Trial subscription (no grace period - expires immediately)
+  if (user.subscriptionStatus === "trial") {
+    subscriptionActive = subscriptionEnd !== null && subscriptionEnd > now
+  }
+  // Active subscription (with 7-day grace period)
+  else if (user.subscriptionStatus === "active") {
+    const gracePeriodEnd = subscriptionEnd ? new Date(subscriptionEnd.getTime() + 7 * 24 * 60 * 60 * 1000) : null
+    subscriptionActive = gracePeriodEnd !== null && gracePeriodEnd > now
+  }
 
   // Allow professionals with active subscription to have visible listings
   // Verification is optional for now - can be enforced later if needed
@@ -156,6 +177,7 @@ export async function isUserListingVisible(): Promise<boolean> {
 
 /**
  * Check if user has active subscription
+ * Includes both "active" (with grace period) and "trial" (without grace period) statuses
  * Used for displaying subscription status in UI
  */
 export async function hasActiveSubscription(): Promise<boolean> {
@@ -170,17 +192,29 @@ export async function hasActiveSubscription(): Promise<boolean> {
     }
   })
 
-  if (!user) return false
+  if (!user || !user.subscriptionEndsAt) return false
 
   const now = new Date()
-  return user.subscriptionStatus === "active" &&
-    user.subscriptionEndsAt &&
-    new Date(user.subscriptionEndsAt) > now
+  const subscriptionEnd = new Date(user.subscriptionEndsAt)
+
+  // Trial subscription (no grace period)
+  if (user.subscriptionStatus === "trial") {
+    return subscriptionEnd > now
+  }
+
+  // Active subscription (with 7-day grace period)
+  if (user.subscriptionStatus === "active") {
+    const gracePeriodEnd = new Date(subscriptionEnd.getTime() + 7 * 24 * 60 * 60 * 1000)
+    return gracePeriodEnd > now
+  }
+
+  return false
 }
 
 /**
  * Calculate days remaining in subscription
  * Returns 0 if subscription is expired or not active
+ * Works for both "trial" and "active" subscription statuses
  */
 export async function getSubscriptionDaysRemaining(): Promise<number> {
   const session = await getSession()
@@ -194,7 +228,12 @@ export async function getSubscriptionDaysRemaining(): Promise<number> {
     }
   })
 
-  if (!user || user.subscriptionStatus !== "active" || !user.subscriptionEndsAt) {
+  if (!user || !user.subscriptionEndsAt) {
+    return 0
+  }
+
+  // Only calculate for trial or active subscriptions
+  if (user.subscriptionStatus !== "trial" && user.subscriptionStatus !== "active") {
     return 0
   }
 
@@ -207,6 +246,7 @@ export async function getSubscriptionDaysRemaining(): Promise<number> {
 
 /**
  * Check if user is in grace period (subscription expired but within 7 days)
+ * Only applies to "active" subscriptions - "trial" has no grace period
  */
 export async function isInGracePeriod(): Promise<boolean> {
   const session = await getSession()
@@ -220,6 +260,7 @@ export async function isInGracePeriod(): Promise<boolean> {
     }
   })
 
+  // Grace period only applies to "active" subscriptions, not "trial"
   if (!user || user.subscriptionStatus !== "active" || !user.subscriptionEndsAt) {
     return false
   }
