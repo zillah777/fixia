@@ -6,7 +6,7 @@ import { rateLimit } from '@/lib/rate-limit';
 
 export const dynamic = 'force-dynamic';
 
-// SECURITY: Rate limit uploads (10 per user per day)
+// SECURITY: Rate limit uploads (100 per user per day)
 const uploadLimiter = rateLimit({
     interval: 24 * 60 * 60 * 1000, // 24 hours
     uniqueTokenPerInterval: 1000,
@@ -14,7 +14,7 @@ const uploadLimiter = rateLimit({
 
 // SECURITY: Validation schema for upload requests
 const uploadSchema = z.object({
-    uploadType: z.enum(['verification', 'portfolio', 'profile', 'request_image']),
+    uploadType: z.enum(['verification', 'portfolio', 'profile', 'request_image', 'certification']),
     tags: z.string().optional(),
 });
 
@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
         // STEP 2: RATE LIMITING
         // ======================================================================
         try {
-            await uploadLimiter.check(10, userId);
+            await uploadLimiter.check(100, userId);
         } catch (error) {
             console.warn(`[UPLOAD_RATELIMIT] User exceeded daily upload limit: ${userId}`);
             return new NextResponse(
@@ -138,7 +138,7 @@ export async function PUT(req: NextRequest) {
         // ======================================================================
         const body = await req.json();
         const { uploadType, publicId, secureUrl, fileSize } = z.object({
-            uploadType: z.enum(['verification', 'portfolio', 'profile', 'request_image']),
+            uploadType: z.enum(['verification', 'portfolio', 'profile', 'request_image', 'certification']),
             publicId: z.string(),
             secureUrl: z.string().url(),
             fileSize: z.number().max(5 * 1024 * 1024), // Max 5MB
