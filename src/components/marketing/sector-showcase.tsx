@@ -2,12 +2,14 @@
 
 import { motion } from "framer-motion"
 import Image from "next/image"
+import Link from "next/link"
 import { ArrowRight, Home, Building2, Briefcase } from "lucide-react"
 import { TiltCard } from "@/components/ui/tilt-card"
 
 const sectors = [
     {
         title: "Hogares",
+        slug: "hogares",
         desc: "Mantenimiento integral, reparaciones y mejoras para tu casa.",
         image: "/assets/marketing/home-service.png",
         icon: <Home className="h-6 w-6" />,
@@ -15,6 +17,7 @@ const sectors = [
     },
     {
         title: "Oficinas",
+        slug: "oficinas",
         desc: "Soporte técnico, instalaciones y servicios preventivos corporativos.",
         image: "/assets/marketing/office-service.png",
         icon: <Briefcase className="h-6 w-6" />,
@@ -22,6 +25,7 @@ const sectors = [
     },
     {
         title: "Locales y Empresas",
+        slug: "empresas",
         desc: "Soluciones a gran escala para comercios, industrias y startups.",
         image: "/assets/marketing/commercial-service.png",
         icon: <Building2 className="h-6 w-6" />,
