@@ -11,16 +11,18 @@ const slides = [
     {
         image: "/assets/marketing/client-hero.png",
         title: "Soluciones a un Clic",
-        highlight: "Para tu Día a Día",
-        desc: "Encontrá al profesional ideal para tu hogar en segundos. Confiable, rápido y cerca tuyo.",
-        cta: "Buscar Servicio"
+        highlight: "Para tu Hogar",
+        desc: "Encontrá al profesional ideal para tu casa en segundos. Confiable, rápido y cerca tuyo.",
+        cta: "Buscar Servicio",
+        filter: "sepia(0.3) saturate(1.2) hue-rotate(-20deg)" // Adjusting to remove green vibe
     },
     {
         image: "/assets/marketing/pro-hero.png",
-        title: "Tu Talento en Acción",
-        highlight: "Haz Crecer tu Oficina",
+        title: "Oficios que Cumplen",
+        highlight: "Profesionales de Verdad",
         desc: "Conectamos especialistas independientes con clientes que valoran el trabajo bien hecho.",
-        cta: "Ser Profesional"
+        cta: "Ser Profesional",
+        filter: "none"
     }
 ]
 
@@ -51,6 +53,7 @@ export function ImmersiveHero() {
                         alt={slides[current].title}
                         fill
                         className="object-cover object-center"
+                        style={{ filter: slides[current].filter }}
                         priority
                     />
                     <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent dark:from-black/90 dark:via-black/60" />
@@ -112,13 +115,28 @@ export function ImmersiveHero() {
                         </form>
                     </motion.div>
 
-                    <div className="flex gap-2">
+                    {/* Premium Slider Navigation */}
+                    <div className="flex items-center gap-4">
                         {slides.map((_, i) => (
                             <button
                                 key={i}
                                 onClick={() => setCurrent(i)}
-                                className={`w-12 h-1.5 rounded-full transition-all duration-500 ${current === i ? "bg-[#d97757] w-20" : "bg-white/30"}`}
-                            />
+                                className="group relative py-4 outline-none"
+                            >
+                                <div
+                                    className={`h-1 rounded-full transition-all duration-700 ease-out ${current === i ? "bg-[#d97757] w-16 sm:w-24" : "bg-white/20 w-8 sm:w-12 group-hover:bg-white/40"
+                                        }`}
+                                />
+                                <span className={`absolute -top-1 left-0 text-[10px] font-bold tracking-widest uppercase transition-opacity duration-300 ${current === i ? "opacity-100 text-[#d97757]" : "opacity-0"
+                                    }`}>
+                                    0{i + 1}
+                                    <motion.span
+                                        initial={{ width: 0 }}
+                                        animate={{ width: current === i ? "100%" : 0 }}
+                                        className="block h-[1px] bg-[#d97757]"
+                                    />
+                                </span>
+                            </button>
                         ))}
                     </div>
                 </div>
