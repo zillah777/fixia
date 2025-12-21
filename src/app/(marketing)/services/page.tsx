@@ -6,7 +6,8 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Search, Wrench, Zap, Droplets, Paintbrush, Hammer, Truck, Scissors, Smartphone, Briefcase } from "lucide-react"
+import { Search, Wrench, Zap, Droplets, Paintbrush, Hammer, Truck, Scissors, Smartphone, Briefcase, Sparkles, ArrowRight } from "lucide-react"
+import { motion } from "framer-motion"
 import { StandardizedEmptyState } from "@/components/onboarding/standardized-empty-state"
 import Link from "next/link"
 
@@ -56,18 +57,28 @@ export default function ServicesPage() {
     )
 
     return (
-        <div className="container mx-auto px-4 py-8 sm:py-10 md:py-12">
-            <div className="text-center mb-10 sm:mb-12 space-y-3 sm:space-y-4">
-                <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">Encuentra el servicio que necesitas</h1>
-                <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
-                    Explora nuestras categorías y conecta con profesionales calificados en tu zona.
+        <div className="container mx-auto px-4 py-12 lg:py-20">
+            <div className="text-center mb-16 space-y-6 relative overflow-visible">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#6a9bcc]/10 text-[#6a9bcc] text-[10px] font-black tracking-widest uppercase mb-4 border border-[#6a9bcc]/20">
+                    <Sparkles className="h-3 w-3" />
+                    <span>Excelencia en cada oficio</span>
+                </div>
+                <h1 className="text-4xl md:text-6xl font-black tracking-tight text-[#141413] dark:text-[#faf9f5]">
+                    Encuentra el servicio <br />
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#d97757] via-[#6a9bcc] to-[#788c5d]">
+                        que necesitas hoy.
+                    </span>
+                </h1>
+                <p className="text-lg text-[#b0aea5] max-w-2xl mx-auto font-medium leading-relaxed">
+                    Nuestra red de profesionales verificados está lista para transformar tus ideas en realidades tangibles.
                 </p>
 
-                <div className="max-w-md mx-auto relative px-2 sm:px-0">
-                    <Search className="absolute left-3 sm:left-3 top-3 h-5 w-5 text-muted-foreground" />
+                <div className="max-w-xl mx-auto relative group mt-10">
+                    <div className="absolute inset-x-0 -bottom-2 h-12 bg-[#d97757]/10 blur-2xl group-hover:bg-[#d97757]/20 transition-all rounded-full" />
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-[#b0aea5] z-10" />
                     <Input
-                        placeholder="Buscar servicios (ej. Plomero, Electricista)..."
-                        className="pl-10 h-10 sm:h-12 text-base sm:text-lg"
+                        placeholder="¿Qué estás buscando? (ej. Plomero, Gasista 24hs)..."
+                        className="pl-12 pr-4 h-14 text-lg bg-white dark:bg-[#1c1c1b] border-2 border-[#e8e6dc] dark:border-white/5 rounded-2xl focus:border-[#d97757] dark:focus:border-[#d97757] transition-all relative z-10 shadow-sm group-hover:shadow-md"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                     />
@@ -75,43 +86,58 @@ export default function ServicesPage() {
             </div>
 
             {loading ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-5 lg:gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-                        <Card key={i} className="h-48 overflow-hidden">
-                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                <Skeleton className="h-6 w-24" />
-                                <Skeleton className="h-6 w-6 rounded-full" />
-                            </CardHeader>
-                            <CardContent className="space-y-3">
-                                <Skeleton className="h-4 w-full" />
-                                <Skeleton className="h-4 w-2/3" />
-                                <Skeleton className="h-6 w-20 rounded-full mt-4" />
-                            </CardContent>
-                        </Card>
+                        <Card key={i} className="h-64 border-none bg-white dark:bg-[#1c1c1b] rounded-[32px] animate-pulse" />
                     ))}
                 </div>
             ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-5 lg:gap-6">
-                    {filteredCategories.map((category) => {
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8">
+                    {filteredCategories.map((category, i) => {
                         const Icon = category.icon
+                        const colors = [
+                            'from-[#d97757]',
+                            'from-[#6a9bcc]',
+                            'from-[#788c5d]'
+                        ]
+                        const accentColor = i % 3 === 0 ? '#d97757' : i % 3 === 1 ? '#6a9bcc' : '#788c5d';
+
                         return (
                             <Link href={`/services/${category.id}`} key={category.id}>
-                                <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer group">
-                                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                        <CardTitle className="text-lg font-medium group-hover:text-primary transition-colors">
-                                            {category.name}
-                                        </CardTitle>
-                                        <Icon className="h-6 w-6 text-muted-foreground group-hover:text-primary transition-colors" />
-                                    </CardHeader>
-                                    <CardContent>
-                                        <p className="text-sm text-muted-foreground mb-4">
-                                            {category.description}
-                                        </p>
-                                        <Badge variant="secondary">
-                                            {category.count} Profesionales
-                                        </Badge>
-                                    </CardContent>
-                                </Card>
+                                <motion.div
+                                    initial={{ opacity: 0, scale: 0.95 }}
+                                    whileInView={{ opacity: 1, scale: 1 }}
+                                    viewport={{ once: true }}
+                                    transition={{ delay: (i % 4) * 0.1 }}
+                                >
+                                    <Card className="group h-full border-none shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] transition-all duration-500 cursor-pointer bg-white dark:bg-[#1c1c1b] rounded-[32px] p-8 relative overflow-hidden flex flex-col justify-between">
+                                        <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${colors[i % 3]} to-transparent opacity-[0.03] group-hover:opacity-[0.08] transition-opacity duration-500`} />
+
+                                        <div>
+                                            <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-8 relative z-10 transition-transform group-hover:scale-110 duration-500"
+                                                style={{ backgroundColor: `${accentColor}10`, color: accentColor }}>
+                                                <Icon className="h-8 w-8" />
+                                                <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent" />
+                                            </div>
+
+                                            <h3 className="text-xl font-black text-[#141413] dark:text-[#faf9f5] mb-3 group-hover:text-[#d97757] transition-colors">
+                                                {category.name}
+                                            </h3>
+                                            <p className="text-sm text-[#b0aea5] font-medium leading-relaxed mb-6">
+                                                {category.description}
+                                            </p>
+                                        </div>
+
+                                        <div className="flex items-center justify-between pt-4 border-t border-[#e8e6dc]/30 dark:border-white/5">
+                                            <Badge variant="secondary" className="bg-[#faf9f5] dark:bg-[#141413] text-[#141413] dark:text-[#faf9f5] border-none font-black text-[10px] uppercase tracking-wider py-1 px-3">
+                                                {category.count} Pros
+                                            </Badge>
+                                            <div className="w-8 h-8 rounded-full flex items-center justify-center bg-[#faf9f5] dark:bg-[#141413] text-[#b0aea5] group-hover:bg-[#d97757] group-hover:text-white transition-all duration-300">
+                                                <ArrowRight className="h-4 w-4" />
+                                            </div>
+                                        </div>
+                                    </Card>
+                                </motion.div>
                             </Link>
                         )
                     })}

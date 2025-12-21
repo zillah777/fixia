@@ -12,38 +12,9 @@ import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card"
 import { TestimonialsCarousel } from "@/components/testimonials-carousel"
+import { TiltCard } from "@/components/ui/tilt-card"
+import { Skeleton } from "@/components/ui/skeleton"
 
-// 3D Tilt Card Component
-function TiltCard({ children, className, onClick, style }: { children: React.ReactNode, className?: string, onClick?: () => void, style?: React.CSSProperties }) {
-    const mouseX = useMotionValue(0);
-    const mouseY = useMotionValue(0);
-
-    function handleMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent) {
-        const { left, top, width, height } = currentTarget.getBoundingClientRect();
-        mouseX.set(clientX - left - width / 2);
-        mouseY.set(clientY - top - height / 2);
-    }
-
-    return (
-        <motion.div
-            className={className}
-            onClick={onClick}
-            onMouseMove={handleMouseMove}
-            onMouseLeave={() => {
-                mouseX.set(0);
-                mouseY.set(0);
-            }}
-            style={{
-                ...style,
-                transformStyle: "preserve-3d",
-                rotateX: useTransform(mouseY, [-300, 300], [10, -10]),
-                rotateY: useTransform(mouseX, [-300, 300], [-10, 10]),
-            }}
-        >
-            {children}
-        </motion.div>
-    );
-}
 
 export default function Home() {
     const router = useRouter();
@@ -142,7 +113,7 @@ export default function Home() {
                                     alt="Fixia Logo"
                                     width={600}
                                     height={200}
-                                    className="h-64 sm:h-80 md:h-[350px] lg:h-[400px] w-auto object-contain"
+                                    className="h-32 sm:h-48 md:h-64 lg:h-80 xl:h-[400px] w-auto object-contain"
                                     priority
                                 />
                             </div>
@@ -420,7 +391,11 @@ export default function Home() {
                                 </motion.div>
                             );
                         }) : (
-                            <div className="col-span-4 text-center text-muted-foreground">Cargando categorías...</div>
+                            <div className="col-span-2 sm:col-span-2 lg:col-span-4 grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 w-full">
+                                {[...Array(4)].map((_, i) => (
+                                    <Skeleton key={i} className="h-40 sm:h-56 lg:h-64 rounded-lg sm:rounded-2xl" />
+                                ))}
+                            </div>
                         )}
                     </div>
                 </div>
@@ -480,7 +455,7 @@ export default function Home() {
                 <div className="absolute inset-0 bg-gradient-to-r from-[#d97757]/0 via-[#6a9bcc]/5 to-[#788c5d]/0 dark:via-[#6a9bcc]/10 pointer-events-none" />
                 <div className="container px-4 relative z-10">
                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-10 text-center">
-                        {stats.map((stat, index) => {
+                        {stats[0].value !== "0" ? stats.map((stat, index) => {
                             const accentColors = ["#d97757", "#6a9bcc", "#788c5d", "#d97757"];
                             const color = accentColors[index % accentColors.length];
                             return (
@@ -514,7 +489,13 @@ export default function Home() {
                                     </motion.div>
                                 </motion.div>
                             );
-                        })}
+                        }) : (
+                            <div className="col-span-2 lg:col-span-4 grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-10 w-full">
+                                {[...Array(4)].map((_, i) => (
+                                    <Skeleton key={i} className="h-20 sm:h-32 rounded-lg sm:rounded-2xl" />
+                                ))}
+                            </div>
+                        )}
                     </div>
                 </div>
             </section>

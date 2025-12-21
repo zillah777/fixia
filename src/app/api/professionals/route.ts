@@ -19,7 +19,7 @@ export async function GET(request: Request) {
             role: "PROFESSIONAL",
             status: "ACTIVE",
             listingVisible: true,  // Only show professionals with active listings
-            subscriptionStatus: "active",  // Only show active subscriptions
+            subscriptionStatus: { in: ["active", "trial"] },  // Show active or trial subscriptions
             subscriptionEndsAt: {
                 gt: new Date()  // Subscription not expired
             }

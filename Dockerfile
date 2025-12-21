@@ -8,7 +8,8 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci --legacy-peer-deps
 COPY . .
-RUN npx prisma generate
+ENV DATABASE_URL="postgresql://johndoe:randompassword@localhost:5432/mydb?schema=public"
+RUN ./node_modules/.bin/prisma generate
 ENV NEXT_TELEMETRY_DISABLED 1
 RUN npm run build
 

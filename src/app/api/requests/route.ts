@@ -5,6 +5,16 @@ import { notifyUser } from "@/lib/notifications";
 
 export const dynamic = 'force-dynamic';
 
+function safeParseJSON(value: string | null | undefined, fallback: any = []) {
+    if (!value) return fallback;
+    try {
+        return JSON.parse(value);
+    } catch (e) {
+        console.error("Failed to parse JSON field:", value, e);
+        return fallback;
+    }
+}
+
 export async function GET(request: Request) {
     try {
         const session = await getSession();
@@ -32,8 +42,8 @@ export async function GET(request: Request) {
             });
             const formattedRequests = requests.map(req => ({
                 ...req,
-                images: JSON.parse(req.images || "[]"),
-                tags: JSON.parse(req.tags || "[]")
+                images: safeParseJSON(req.images),
+                tags: safeParseJSON(req.tags)
             }));
             return NextResponse.json(formattedRequests);
         } else {
@@ -48,8 +58,8 @@ export async function GET(request: Request) {
             });
             const formattedRequests = requests.map(req => ({
                 ...req,
-                images: JSON.parse(req.images || "[]"),
-                tags: JSON.parse(req.tags || "[]")
+                images: safeParseJSON(req.images),
+                tags: safeParseJSON(req.tags)
             }));
             return NextResponse.json(formattedRequests);
         }
@@ -120,8 +130,8 @@ export async function POST(request: Request) {
 
         return NextResponse.json({
             ...newRequest,
-            images: JSON.parse(newRequest.images),
-            tags: JSON.parse(newRequest.tags)
+            images: safeParseJSON(newRequest.images),
+            tags: safeParseJSON(newRequest.tags)
         });
     } catch (error) {
         console.error("Error creating request:", error);

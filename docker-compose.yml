@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   app:
     container_name: fixia-app
@@ -16,7 +14,7 @@ services:
       db:
         condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "wget -q -O- http://127.0.0.1:3000/ > /dev/null 2>&1 || exit 1"]
+      test: [ "CMD-SHELL", "wget -q -O- http://127.0.0.1:3000/ > /dev/null 2>&1 || exit 1" ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -37,7 +35,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d fixia"]
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d fixia" ]
       interval: 10s
       timeout: 5s
       retries: 5

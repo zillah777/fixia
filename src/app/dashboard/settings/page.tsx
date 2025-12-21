@@ -109,6 +109,32 @@ export default function SettingsPage() {
         }
     }
 
+    const handleDeleteAvatar = async () => {
+        setIsUploading(true)
+        const toastId = toast.loading("Eliminando foto...")
+
+        try {
+            const res = await fetch("/api/users/profile", {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    avatar: null
+                }),
+                credentials: "include"
+            })
+
+            if (!res.ok) throw new Error("Error eliminando foto")
+
+            await refreshUser()
+            toast.success("Foto de perfil eliminada", { id: toastId })
+        } catch (error) {
+            console.error("Delete error:", error)
+            toast.error("Error al eliminar la foto de perfil", { id: toastId })
+        } finally {
+            setIsUploading(false)
+        }
+    }
+
     const [proData, setProData] = useState<any>(null)
 
     // Fetch initial data
@@ -328,14 +354,32 @@ export default function SettingsPage() {
                         </CardHeader>
                         <CardContent className="space-y-6">
                             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
-                                <div className="relative group cursor-pointer" onClick={() => document.getElementById('avatar-upload')?.click()}>
-                                    <Avatar className="h-20 w-20 sm:h-24 sm:w-24 transition-opacity group-hover:opacity-80">
-                                        <AvatarImage src={user?.avatar || `https://ui-avatars.com/api/?name=${user?.name}&background=random`} />
-                                        <AvatarFallback>{user?.name?.charAt(0)}</AvatarFallback>
-                                    </Avatar>
-                                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/20 rounded-full">
-                                        <Camera className="h-8 w-8 text-white" />
+                                <div className="relative group">
+                                    <div className="cursor-pointer" onClick={() => document.getElementById('avatar-upload')?.click()}>
+                                        <Avatar className="h-20 w-20 sm:h-24 sm:w-24 transition-opacity group-hover:opacity-80">
+                                            <AvatarImage src={user?.avatar || `https://ui-avatars.com/api/?name=${user?.name}&background=random`} />
+                                            <AvatarFallback>{user?.name?.charAt(0)}</AvatarFallback>
+                                        </Avatar>
+                                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/20 rounded-full">
+                                            <Camera className="h-8 w-8 text-white" />
+                                        </div>
                                     </div>
+
+                                    {user?.avatar && (
+                                        <Button
+                                            size="icon"
+                                            variant="destructive"
+                                            className="absolute -top-1 -right-1 rounded-full h-8 w-8 shadow-md"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleDeleteAvatar();
+                                            }}
+                                            disabled={isUploading}
+                                        >
+                                            <Trash2 className="h-4 w-4" />
+                                        </Button>
+                                    )}
+
                                     <Button size="icon" variant="secondary" className="absolute bottom-0 right-0 rounded-full h-8 w-8 shadow-md pointer-events-none">
                                         <Camera className="h-4 w-4" />
                                     </Button>

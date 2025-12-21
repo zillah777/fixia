@@ -9,7 +9,8 @@ import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Star, MapPin, Search, Filter, CheckCircle } from "lucide-react"
+import { Star, MapPin, Search, Filter, CheckCircle, Sparkles } from "lucide-react"
+import { motion } from "framer-motion"
 import { Professional } from "@/types/professional"
 import { useAuth } from "@/providers/auth-provider"
 import { TrustBadgesGroup } from "@/components/ui/trust-badges"
@@ -152,85 +153,94 @@ function ProfessionalsList() {
                     ))}
                 </div>
             ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 overflow-visible">
                     {professionals.map((pro) => (
-                        <Card key={pro.id} className="overflow-hidden hover:shadow-lg transition-all duration-300 group border-border/50">
-                            <CardHeader className="p-0">
-                                <div className="h-28 bg-gradient-to-r from-primary/80 to-primary/40 relative">
-                                    <div className="absolute inset-0 bg-grid-white/10 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.5))]" />
-                                    {pro.verified && (
-                                        <Badge className="absolute top-3 right-3 bg-green-500/90 text-white border-0 backdrop-blur-sm shadow-sm gap-1 pl-1 pr-2">
-                                            <CheckCircle className="h-3 w-3" /> Verificado
-                                        </Badge>
-                                    )}
-                                </div>
-                            </CardHeader>
-                            <CardContent className="pt-0 px-4 sm:px-6 pb-6 relative">
-                                <div className="flex justify-between items-end mb-4 -mt-8 sm:-mt-10">
-                                    <Avatar className="h-20 w-20 sm:h-24 sm:w-24 border-[4px] border-background shadow-md">
-                                        <AvatarImage src={pro.avatar || `https://ui-avatars.com/api/?name=${pro.name}&background=random`} className="object-cover" />
-                                        <AvatarFallback>{pro.name.substring(0, 2)}</AvatarFallback>
-                                    </Avatar>
+                        <motion.div
+                            key={pro.id}
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.5 }}
+                        >
+                            <Card className="group h-full overflow-hidden border-none bg-white dark:bg-[#1c1c1b] shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_50px_rgba(217,119,87,0.1)] transition-all duration-500 rounded-[32px] relative flex flex-col">
+                                <CardHeader className="p-0 relative">
+                                    <div className="h-32 w-full overflow-hidden relative">
+                                        <div className="absolute inset-0 bg-gradient-to-r from-[#d97757]/80 to-[#6a9bcc]/40 group-hover:scale-110 transition-transform duration-700" />
+                                        <div className="absolute inset-0 bg-grid-white/20 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.5))]" />
+                                    </div>
 
-                                    <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-bold shadow-sm ${Number(pro.rating) > 0
-                                        ? "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400"
-                                        : "bg-stone-100 text-stone-500 dark:bg-muted"
-                                        }`}>
-                                        <Star className={`h-4 w-4 ${Number(pro.rating) > 0 ? "fill-yellow-500 text-yellow-500" : "text-stone-300"}`} />
-                                        {Number(pro.rating) > 0 ? (
-                                            <>
-                                                {Number(pro.rating).toFixed(1)} <span className="text-xs font-normal opacity-70">({pro.reviews})</span>
-                                            </>
-                                        ) : (
-                                            <span className="text-xs font-medium">Nuevo</span>
+                                    {pro.verified && (
+                                        <div className="absolute top-4 right-4 z-20">
+                                            <Badge className="bg-white/95 dark:bg-[#141413]/90 text-[#788c5d] border-none shadow-sm backdrop-blur-md gap-1 px-3 py-1 font-bold text-[10px] uppercase tracking-wider">
+                                                <CheckCircle className="h-3 w-3 fill-[#788c5d] text-white" /> Certificado
+                                            </Badge>
+                                        </div>
+                                    )}
+
+                                    <div className="absolute -bottom-10 left-6 z-20">
+                                        <div className="relative">
+                                            <Avatar className="h-20 w-20 sm:h-24 sm:w-24 border-[6px] border-[#faf9f5] dark:border-[#1c1c1b] shadow-2xl rounded-[28px] overflow-hidden">
+                                                <AvatarImage src={pro.avatar || `https://ui-avatars.com/api/?name=${pro.name}&background=random`} className="object-cover" />
+                                                <AvatarFallback className="bg-[#e8e6dc] text-[#141413] font-bold">{pro.name.substring(0, 2)}</AvatarFallback>
+                                            </Avatar>
+                                            <div className="absolute -bottom-1 -right-1 h-6 w-6 bg-[#788c5d] border-[3px] border-[#faf9f5] dark:border-[#1c1c1b] rounded-full" />
+                                        </div>
+                                    </div>
+                                </CardHeader>
+
+                                <CardContent className="pt-14 px-6 pb-6 flex-grow">
+                                    <div className="flex justify-between items-start mb-4">
+                                        <div className="space-y-1">
+                                            <h3 className="text-xl font-black text-[#141413] dark:text-[#faf9f5] group-hover:text-[#d97757] transition-colors leading-tight">{pro.name}</h3>
+                                            <p className="text-[#d97757] font-bold text-xs uppercase tracking-widest">{pro.role}</p>
+                                        </div>
+                                        <div className="flex flex-col items-end">
+                                            <div className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-black shadow-sm ${Number(pro.rating) > 0
+                                                ? "bg-[#faf9f5] text-[#141413] border border-[#e8e6dc]"
+                                                : "bg-[#e8e6dc]/30 text-[#b0aea5]"
+                                                }`}>
+                                                <Star className={`h-3.5 w-3.5 ${Number(pro.rating) > 0 ? "fill-[#d97757] text-[#d97757]" : "text-[#b0aea5]"}`} />
+                                                {Number(pro.rating) > 0 ? Number(pro.rating).toFixed(1) : "Nuev@"}
+                                            </div>
+                                            <span className="text-[10px] text-[#b0aea5] mt-1 font-medium">{pro.reviews} reseñas</span>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex items-center text-[#b0aea5] text-xs font-medium mb-6">
+                                        <div className="flex items-center bg-[#faf9f5] dark:bg-[#141413]/50 px-3 py-1.5 rounded-full border border-[#e8e6dc]/40">
+                                            <MapPin className="h-3 w-3 mr-1.5 text-[#6a9bcc]" />
+                                            <span className="truncate">{pro.location}</span>
+                                        </div>
+                                    </div>
+
+                                    {/* Skills Badges */}
+                                    <div className="flex flex-wrap gap-1.5 mb-6 min-h-[1.5rem]">
+                                        {pro.tags && pro.tags.slice(0, 3).map((tag: string) => (
+                                            <Badge key={tag} variant="secondary" className="text-[9px] px-2.5 h-6 bg-[#e8e6dc]/40 dark:bg-[#141413]/40 text-[#141413] dark:text-[#faf9f5] border-none font-bold uppercase tracking-tighter">
+                                                {tag}
+                                            </Badge>
+                                        ))}
+                                        {pro.tags && pro.tags.length > 3 && (
+                                            <span className="text-[10px] text-[#b0aea5] self-center ml-1">+{pro.tags.length - 3}</span>
                                         )}
                                     </div>
-                                </div>
 
-                                <div className="space-y-1 mb-4">
-                                    <h3 className="text-xl font-bold group-hover:text-primary transition-colors line-clamp-1" title={pro.name}>{pro.name}</h3>
-                                    <p className="text-primary font-medium text-sm">{pro.role}</p>
-                                </div>
-
-                                <div className="flex items-center text-muted-foreground text-xs mb-5">
-                                    <MapPin className="h-3.5 w-3.5 mr-1.5 flex-shrink-0" />
-                                    <span className="truncate">{pro.location}</span>
-                                </div>
-
-                                {/* Trust Badges */}
-                                {pro.profile?.badges && pro.profile.badges.length > 0 && (
-                                    <div className="mb-5 pb-5 border-b border-border/40">
-                                        <TrustBadgesGroup
-                                            badges={(pro.profile?.badges || []) as any}
-                                            size="sm"
-                                        />
+                                    <div className="flex justify-between items-center bg-[#faf9f5] dark:bg-[#141413]/30 p-4 rounded-2xl border border-[#e8e6dc]/50 dark:border-white/5 mx-[-8px]">
+                                        <div className="flex flex-col">
+                                            <span className="text-[9px] uppercase text-[#b0aea5] font-black tracking-widest">Inversión</span>
+                                            <span className="font-black text-lg text-[#141413] dark:text-[#faf9f5]">
+                                                {pro.price.includes("$") ? pro.price.split("Desde ")[1] || pro.price : pro.price}
+                                            </span>
+                                        </div>
+                                        <Link href={`/professionals/${pro.id}`}>
+                                            <Button size="sm" className="bg-[#141413] dark:bg-[#faf9f5] text-white dark:text-[#141413] rounded-xl font-bold px-4 hover:bg-[#d97757] dark:hover:bg-[#d97757] transition-colors border-none">
+                                                Ver Perfil
+                                            </Button>
+                                        </Link>
                                     </div>
-                                )}
-
-                                <div className="flex flex-wrap gap-2 mb-5 min-h-[1.5rem]">
-                                    {pro.tags && pro.tags.slice(0, 3).map((tag: string) => (
-                                        <Badge key={tag} variant="secondary" className="text-[10px] px-2 h-5 bg-stone-100 dark:bg-muted text-stone-600 dark:text-stone-400">
-                                            {tag}
-                                        </Badge>
-                                    ))}
-                                    {pro.tags && pro.tags.length > 3 && (
-                                        <span className="text-[10px] text-muted-foreground self-center">+{pro.tags.length - 3}</span>
-                                    )}
-                                </div>
-
-                                <div className="flex justify-between items-center text-sm pt-2">
-                                    <div className="flex flex-col">
-                                        <span className="text-[10px] uppercase text-muted-foreground font-semibold tracking-wider">Desde</span>
-                                        <span className="font-bold text-lg text-primary">{pro.price.includes("$") ? pro.price.split("Desde ")[1] || pro.price : pro.price}</span>
-                                    </div>
-                                </div>
-                            </CardContent>
-                            <CardFooter className="bg-stone-50/50 dark:bg-muted/10 px-6 py-4 border-t border-border/40">
-                                <Link href={`/professionals/${pro.id}`} className="w-full">
-                                    <Button className="w-full shadow-sm hover:shadow-md transition-all font-semibold" variant="outline">Ver Perfil</Button>
-                                </Link>
-                            </CardFooter>
-                        </Card>
+                                </CardContent>
+                            </Card>
+                        </motion.div>
                     ))}
                 </div>
             )}

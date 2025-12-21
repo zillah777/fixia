@@ -15,6 +15,7 @@ import {
     Menu,
     X,
     Bell,
+    Rocket,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/providers/auth-provider"
@@ -33,6 +34,11 @@ export default function AdminLayoutClient({
             title: "Dashboard",
             href: "/admin/dashboard",
             icon: LayoutDashboard,
+        },
+        {
+            title: "Crecimiento",
+            href: "/admin/growth",
+            icon: Rocket,
         },
         {
             title: "Verificaciones",
@@ -66,7 +72,7 @@ export default function AdminLayoutClient({
             {/* Sidebar (Desktop) */}
             <aside className="hidden w-64 flex-col border-r bg-black text-white md:flex fixed h-screen left-0 top-0 z-40">
                 <div className="flex h-16 items-center border-b border-gray-800 px-6">
-                    <Link href="/admin/dashboard" className="flex items-center gap-2 font-bold text-lg">
+                    <Link href="/" className="flex items-center gap-2 font-bold text-lg">
                         <Image
                             src="/logo.png"
                             alt="Fixia Logo"
@@ -123,7 +129,7 @@ export default function AdminLayoutClient({
                     <div className="fixed inset-0 z-50 bg-black/80 md:hidden">
                         <div className="fixed inset-y-0 left-0 w-64 bg-black text-white p-4 flex flex-col h-full">
                             <div className="flex justify-between items-center mb-8">
-                                <div className="flex items-center gap-2">
+                                <Link href="/" className="flex items-center gap-2">
                                     <Image
                                         src="/logo.png"
                                         alt="Fixia Logo"
@@ -132,7 +138,7 @@ export default function AdminLayoutClient({
                                         className="h-10 w-auto object-contain"
                                     />
                                     <span className="font-bold text-xl text-destructive">ADMIN</span>
-                                </div>
+                                </Link>
                                 <Button variant="ghost" size="icon" onClick={() => setIsMobileMenuOpen(false)}>
                                     <X className="h-6 w-6" />
                                 </Button>

@@ -42,7 +42,13 @@ export async function GET(request: Request) {
         role: true,
         status: true,
         createdAt: true,
-        subscriptionStatus: true
+        subscriptionStatus: true,
+        _count: {
+          select: {
+            matchesAsProvider: true,
+            requests: true
+          }
+        }
       },
       orderBy: { createdAt: "desc" },
       take: 100

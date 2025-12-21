@@ -113,9 +113,13 @@ export default function OpportunityDetailsPage() {
                             {(() => {
                                 let images: string[] = []
                                 try {
-                                    if (request.images && request.images !== "[]") {
-                                        const parsed = JSON.parse(request.images)
-                                        if (Array.isArray(parsed)) images = parsed
+                                    if (request.images) {
+                                        if (Array.isArray(request.images)) {
+                                            images = request.images
+                                        } else if (typeof request.images === "string" && request.images !== "[]") {
+                                            const parsed = JSON.parse(request.images)
+                                            if (Array.isArray(parsed)) images = parsed
+                                        }
                                     }
                                 } catch (e) {
                                     console.error("Failed to parse request images", e)

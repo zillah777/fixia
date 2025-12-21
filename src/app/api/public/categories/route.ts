@@ -37,7 +37,17 @@ export async function GET() {
             }
         })
 
-        // Only return real categories from the database
+        // If no real categories found, return defaults with "0+" count to avoid empty state
+        if (categories.length === 0) {
+            return NextResponse.json(Object.entries(CATEGORY_CONFIG).map(([id, config]) => ({
+                id: id.toLowerCase(),
+                name: id.charAt(0) + id.slice(1).toLowerCase(),
+                icon: config.icon,
+                count: "0+",
+                color: config.color
+            })))
+        }
+
         return NextResponse.json(categories)
     } catch (error) {
         return NextResponse.json({ error: "Error fetching categories" }, { status: 500 })

@@ -44,7 +44,8 @@ export function ClientProfileAlert() {
     }
 
     // Check completion status
-    const hasPhoto = profileData?.avatar
+    const avatarValue = profileData?.avatar || user?.avatar
+    const hasPhoto = Boolean(avatarValue && typeof avatarValue === 'string' && avatarValue.trim() !== "")
 
     // Check DNI verification - look at verificationRequest status
     const dniVerified = profileData?.verificationRequest?.status === "APPROVED"

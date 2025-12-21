@@ -29,18 +29,25 @@ export function PushNotificationManager() {
     const [isDismissed, setIsDismissed] = useState(true); // Default to true to avoid flash
 
     const saveSubscription = useCallback(async (sub: PushSubscription) => {
+        if (!user) return; // Only sync with backend if user is logged in
+
         try {
-            await fetch('/api/push/subscribe', {
+            const res = await fetch('/api/push/subscribe', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(sub),
             });
+
+            if (res.status === 401) {
+                console.warn('[PUSH_SUBSCRIBE] Unauthorized - skipping sync');
+                return;
+            }
         } catch (error) {
             console.error('Failed to save subscription:', error);
         }
-    }, []);
+    }, [user]);
 
     const registerServiceWorker = useCallback(async () => {
         try {

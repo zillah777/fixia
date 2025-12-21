@@ -80,7 +80,7 @@ export default function DashboardLayout({
         <div className="flex min-h-screen bg-background">
             {/* Mobile Header */}
             <div className="md:hidden fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-4 bg-background/80 backdrop-blur-md border-b">
-                <div className="relative h-12 w-32">
+                <Link href="/" className="relative h-12 w-32">
                     <Image
                         src="/logo.png"
                         alt="Fixia Logo"
@@ -88,7 +88,7 @@ export default function DashboardLayout({
                         className="object-contain"
                         sizes="128px"
                     />
-                </div>
+                </Link>
                 <Sheet open={isOpen} onOpenChange={setIsOpen}>
                     <SheetTrigger asChild>
                         <Button variant="ghost" size="icon" className="rounded-full">
@@ -102,7 +102,7 @@ export default function DashboardLayout({
                                 <SheetDescription>Navegación principal del panel de control</SheetDescription>
                             </SheetHeader>
                             <div className="p-6">
-                                <div className="relative h-12 w-36 mb-4">
+                                <Link href="/" className="relative h-12 w-36 mb-4 block">
                                     <Image
                                         src="/logo.png"
                                         alt="Fixia Logo"
@@ -110,7 +110,7 @@ export default function DashboardLayout({
                                         className="object-contain"
                                         sizes="160px"
                                     />
-                                </div>
+                                </Link>
                                 {user && (
                                     <DropdownMenu>
                                         <DropdownMenuTrigger asChild>

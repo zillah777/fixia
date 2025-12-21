@@ -38,7 +38,14 @@ export default function MatchesPage() {
             const res = await fetch(`/api/messages?matchId=${matchId}`)
             if (res.ok) {
                 const data: Message[] = await res.json()
-                setMessages(data)
+                // Only update if data has actually changed to prevent flickering
+                setMessages(prev => {
+                    if (prev.length === data.length &&
+                        prev[prev.length - 1]?.id === data[data.length - 1]?.id) {
+                        return prev;
+                    }
+                    return data;
+                })
             }
         } catch (error) {
             if (!silent) console.error("Failed to fetch messages", error)
@@ -61,21 +68,20 @@ export default function MatchesPage() {
 
     // Scroll to bottom on new messages
     const handleSelectMatch = useCallback((match: Match) => {
+        if (selectedMatch?.id === match.id) return; // Already selected
         setSelectedMatch(match)
-        setMessages([]) // Clear previous messages while loading
+        // setMessages([]) // REMOVED: Don't clear immediately to avoid "jump" if we click fast
         fetchMessages(match.id)
         setShowChatOnMobile(true) // Show chat on mobile
-
-        // Update URL to match ID for better refreshing support (optional)
-        // router.push(`/dashboard/matches/${match.id}`, { scroll: false })
-    }, [fetchMessages])
+    }, [fetchMessages, selectedMatch?.id])
 
     // Scroll to bottom on new messages
     useEffect(() => {
         if (scrollRef.current) {
-            scrollRef.current.scrollIntoView({ behavior: "smooth" })
+            // "auto" is faster and prevents the weird "scrolled-back" flicker on mobile
+            scrollRef.current.scrollIntoView({ behavior: "auto" })
         }
-    }, [messages])
+    }, [messages.length]) // Only scroll when message count changes
 
     const fetchMatches = useCallback(async () => {
         try {

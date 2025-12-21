@@ -57,7 +57,8 @@ export function ProfessionalProfileAlert() {
 
     const dniVerified = verificationData?.status === "APPROVED"
     const hasCertification = certificationsData?.certifications?.some((c: any) => c.status === "APPROVED")
-    const hasPhoto = profileData?.avatar
+    const avatarValue = profileData?.avatar || user?.avatar
+    const hasPhoto = Boolean(avatarValue && typeof avatarValue === 'string' && avatarValue.trim() !== "")
 
     const needsPhoto = !hasPhoto
     const needsIdentityVerification = !dniVerified

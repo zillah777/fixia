@@ -4,6 +4,16 @@ import { getSession } from "@/lib/auth"
 
 export const dynamic = 'force-dynamic';
 
+function safeParseJSON(value: string | null | undefined, fallback: any = []) {
+    if (!value) return fallback;
+    try {
+        return JSON.parse(value);
+    } catch (e) {
+        console.error("Failed to parse JSON field:", value, e);
+        return fallback;
+    }
+}
+
 export async function GET(
     request: Request,
     { params }: { params: Promise<{ id: string }> }
@@ -49,15 +59,15 @@ export async function GET(
 
         const formattedRequest = {
             ...requestData,
-            images: JSON.parse(requestData.images || "[]"),
-            tags: JSON.parse(requestData.tags || "[]"),
+            images: safeParseJSON(requestData.images),
+            tags: safeParseJSON(requestData.tags),
             client: {
                 ...requestData.client,
                 profile: requestData.client.profile ? {
                     ...requestData.client.profile,
-                    badges: JSON.parse(requestData.client.profile.badges || "[]"),
-                    tags: JSON.parse(requestData.client.profile.tags || "[]"),
-                    portfolioImages: JSON.parse(requestData.client.profile.portfolioImages || "[]")
+                    badges: safeParseJSON(requestData.client.profile.badges),
+                    tags: safeParseJSON(requestData.client.profile.tags),
+                    portfolioImages: safeParseJSON(requestData.client.profile.portfolioImages)
                 } : null
             },
             proposals: requestData.proposals.map(p => ({
@@ -66,9 +76,9 @@ export async function GET(
                     ...p.provider,
                     profile: p.provider.profile ? {
                         ...p.provider.profile,
-                        badges: JSON.parse(p.provider.profile.badges || "[]"),
-                        tags: JSON.parse(p.provider.profile.tags || "[]"),
-                        portfolioImages: JSON.parse(p.provider.profile.portfolioImages || "[]")
+                        badges: safeParseJSON(p.provider.profile.badges),
+                        tags: safeParseJSON(p.provider.profile.tags),
+                        portfolioImages: safeParseJSON(p.provider.profile.portfolioImages)
                     } : null
                 }
             }))
